@@ -1,67 +1,22 @@
-/* 共通リセット */
-* {
+body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+  background-color: #ffffff;
 }
 
-body {
-  font-family: "Helvetica Neue", "Hiragino Sans", sans-serif;
-  background-color: #fff;
-  color: #222;
-  line-height: 1.6;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ヒーローセクション */
-.hero {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.hero-image img {
-  max-width: 100%;
+img {
+  width: 100%;
+  max-width: 600px;
   height: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-bottom: 30px;
-}
-
-.hero-text h1 {
-  font-size: 2rem;
-  margin-bottom: 16px;
-}
-
-.hero-text p {
-  font-size: 1.1rem;
-  color: #555;
   margin-bottom: 24px;
-}
-
-.cta-button {
-  display: inline-block;
-  background-color: #00c853;
-  color: #fff;
-  padding: 14px 28px;
-  font-size: 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
-}
-
-.cta-button:hover {
-  background-color: #009624;
-}
-
-/* スマホ対応 */
-@media (max-width: 768px) {
-  .hero-text h1 {
-    font-size: 1.5rem;
-  }
-
-  .cta-button {
-    width: 90%;
-    max-width: 320px;
-    font-size: 1.1rem;
-  }
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
