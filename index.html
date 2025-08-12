@@ -1,25 +1,150 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>ジョージアで、はじまる。</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>ジョージアで、はじまる。｜Grena Group</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<main>
-  <img src="1.jpg" alt="画像1">
-  <img src="2.jpg" alt="画像2">
-  <img src="3.jpg" alt="画像3">
-  <img src="4.jpg" alt="画像4">
-  <img src="5.jpg" alt="画像5">
-  <img src="6.jpg" alt="画像6">
-  <img src="7.jpg" alt="画像7">
-  <img src="8.jpg" alt="画像8">
-  <img src="9.jpg" alt="画像9">
-  <img src="10.jpg" alt="画像10">
-  <img src="11.jpg" alt="画像11">
-</main>
-  <script src="script.js"></script>
+
+  <!-- ヒーロー -->
+  <header class="hero" style="--hero:url('1.jpg')">
+    <div class="hero__overlay"></div>
+    <div class="container hero__inner">
+      <h1 class="hero__title">ジョージアで、 はじまる。</h1>
+      <p class="hero__lead">国に縛られない、合法的で安心な資産の持ち方</p>
+      <ul class="hero__bullets">
+        <li>法人税0%、銀行利息10％以上が“合法”で手に入る国</li>
+        <li>EU加盟候補国 × 現地法準拠で「安全に始められる」</li>
+        <li>渡航不要・現地法律事務所とMoU締結済み</li>
+      </ul>
+      <a href="#cta" class="btn btn--primary">無料相談はこちら</a>
+    </div>
+  </header>
+
+  <!-- キャッチ帯（2枚） -->
+  <section class="band">
+    <div class="container band__inner">
+      <div class="band__card">
+        <img src="2.jpg" alt="税制メリット" />
+        <h2>法人税0%を、制度に則って安全に。</h2>
+        <p>現地法準拠の枠組みで、はじめから正しく。</p>
+      </div>
+      <div class="band__card">
+        <img src="9.jpg" alt="国際対応" />
+        <h2>国際展開 × 高金利で資産を守る。</h2>
+        <p>外貨ベース、世界基準で設計。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 風景3枚 -->
+  <section class="gallery">
+    <div class="container">
+      <div class="gallery__grid">
+        <figure><img src="3.jpg" alt="トビリシの街並み" /></figure>
+        <figure><img src="4.jpg" alt="ジョージアの風景" /></figure>
+        <figure><img src="5.jpg" alt="高原と山岳" /></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ジョージアってどんな国？ -->
+  <section class="about">
+    <div class="container">
+      <h2 class="sec-title">ジョージアってどんな国？</h2>
+      <p class="about__lead">
+        EU加盟候補国。銀行金利は二桁台が一般的で、外貨建ての資産形成と相性が良い国です。
+        税制は起業・フリーランスに寛容で、制度に沿えば<strong>法人税0％〜・個人1％</strong>といった選択肢も可能。
+        現地法律事務所と連携し、適法・安全にスタートできます。
+      </p>
+    </div>
+  </section>
+
+  <!-- 2列カード（法人/個人） -->
+  <section class="services" id="services">
+    <div class="container services__grid">
+      <article class="svc">
+        <img class="svc__icon" src="10.jpg" alt="法人設立" />
+        <h3 class="svc__title">ジョージア法人設立</h3>
+        <p class="svc__sub">渡航不要・完全オンライン／PwC準拠で安心サポート</p>
+        <a class="btn btn--ghost" href="#corp-acc">詳しく見る</a>
+      </article>
+
+      <article class="svc">
+        <img class="svc__icon" src="11.jpg" alt="個人事業主" />
+        <h3 class="svc__title">ジョージア個人事業主</h3>
+        <p class="svc__sub">税率1%（条件あり）／副業・ノマドにも最適</p>
+        <a class="btn btn--ghost" href="#sole-acc">詳しく見る</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- アコーディオン：法人 -->
+  <section class="accordion container" id="corp-acc" aria-label="法人設立サポート 詳細">
+    <h4 class="acc-heading">法人設立サポート（法人）</h4>
+
+    <button class="acc" aria-expanded="false">世界基準の法人設立サポート</button>
+    <div class="panel"><p>現地法律事務所と共同で登記・定款整備。MoU締結済み。</p></div>
+
+    <button class="acc" aria-expanded="false">渡航不要・完全オンライン手続き</button>
+    <div class="panel"><p>オンラインでKYC/書類提出まで完結。来店不要。</p></div>
+
+    <button class="acc" aria-expanded="false">国際送金対応の銀行口座開設</button>
+    <div class="panel"><p>外貨建て・カード発行・ネットバンキング対応。</p></div>
+
+    <button class="acc" aria-expanded="false">信頼性の高い登記・会計管理</button>
+    <div class="panel"><p>PwC準拠の会計運用。年次申告も現地で対応。</p></div>
+
+    <button class="acc" aria-expanded="false">日本との二重課税リスクの整理</button>
+    <div class="panel"><p>税務判断は行いませんが、制度上の論点を事前整理。</p></div>
+  </section>
+
+  <!-- アコーディオン：個人 -->
+  <section class="accordion container" id="sole-acc" aria-label="個人事業主サポート 詳細">
+    <h4 class="acc-heading">個人事業主サポート（個人）</h4>
+
+    <button class="acc" aria-expanded="false">税率1％の正規制度（条件あり）</button>
+    <div class="panel"><p>IE制度を活用した1%課税。要件確認を丁寧に実施。</p></div>
+
+    <button class="acc" aria-expanded="false">英語不要のフルサポート</button>
+    <div class="panel"><p>申請・窓口対応は日本語で。書類は二言語で整備。</p></div>
+
+    <button class="acc" aria-expanded="false">副業/国際収入にも対応</button>
+    <div class="panel"><p>国外クライアントの請求・着金までサポート。</p></div>
+
+    <button class="acc" aria-expanded="false">外貨ベースの資産設計</button>
+    <div class="panel"><p>高金利口座の活用・通貨分散の基本をレクチャー。</p></div>
+  </section>
+
+  <!-- 画面下に常時表示CTA -->
+  <div class="sticky-cta" id="cta">
+    <div class="sticky-cta__inner container">
+      <a href="#contact" class="btn btn--primary">今すぐ無料相談</a>
+      <a href="#diag" class="btn btn--outline">適性診断を試す</a>
+    </div>
+  </div>
+
+  <!-- JS（アコーディオン & スムーズスクロール） -->
+  <script>
+    // アコーディオン
+    document.querySelectorAll(".acc").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const expanded = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", String(!expanded));
+        btn.classList.toggle("is-open");
+        btn.nextElementSibling.style.maxHeight =
+          !expanded ? btn.nextElementSibling.scrollHeight + "px" : null;
+      });
+    });
+    // スムーズスクロール
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click", e=>{
+        const id = a.getAttribute("href");
+        if(id.length>1){ e.preventDefault(); document.querySelector(id)?.scrollIntoView({behavior:"smooth"}); }
+      });
+    });
+  </script>
 </body>
 </html>
