@@ -1,9 +1,9 @@
-/* =========================================================
-   style.css ー 完全統合版（このファイル1本でOK）
-   ※ 既存の style.css を丸ごと置き換えてください
-   ========================================================= */
+/* =======================================================
+   style.css  —  FULL REPLACE (2025-08-14)
+   これ1本で動くように統合・整理済み
+   ======================================================= */
 
-/* ===== 基本テーマ（色・影・フォント） ===== */
+/* ===== 基本テーマ（色＆影） ===== */
 :root{
   --c-bg:#0b1220;
   --c-ink:#0b1220;
@@ -12,76 +12,83 @@
   --c-primary-d:#0e63d3;
   --c-surface:#ffffff;
   --c-muted:#f5f7fb;
-  --border:#e6eaf2;
-  --shadow:0 10px 30px rgba(20,35,70,.06);
+  --border:#e5e7eb;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
 
-  --font-heading: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
-  --font-body:     ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+  /* タイポ */
+  --font-heading: ui-sans-serif, -apple-system, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+  --font-body: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
 }
 
 *{ box-sizing:border-box }
 html,body{ margin:0; padding:0 }
-body{
-  font-family: var(--font-body);
-  color:#222;
-  line-height:1.7;
-  background:#fff;
-  /* 画面下の固定CTAぶんの余白（本文が隠れないように） */
-  padding-bottom:80px;
-}
 img{ max-width:100%; height:auto; display:block }
 a{ color:var(--c-primary); text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:var(--c-primary-d) }
-.container{ width:min(1100px, 92%); margin:auto }
 
-/* ===== 見出し（H2） ===== */
+body{
+  font-family: var(--font-body);
+  color: var(--c-ink);
+  line-height: 1.7;
+  background:#fff;
+  /* 画面下の固定CTAぶんの余白 */
+  padding-bottom:80px;
+}
+
+/* ===== レイアウト共通 ===== */
+.container{ width:min(1100px, 92%); margin:auto }
+section{ scroll-margin-top:88px; margin-bottom:3em }
+
+/* ===== 見出し（プロっぽく太め＆下線） ===== */
 section > h2{
-  font-family:var(--font-heading);
+  font-family: var(--font-heading);
   font-weight:800;
   letter-spacing:.01em;
   line-height:1.25;
-  font-size:clamp(22px, 3.2vw, 32px);
-  margin:0 0 .8em;
-  text-wrap:balance;
+  font-size: clamp(22px, 2.8vw, 30px);
+  margin:0 0 .6em;
+  padding-bottom:.3em;
+  border-bottom:2px solid #eaeaea;
 }
+.price-promo, .accordion summary, .btn{ font-variant-numeric: tabular-nums }
 
-/* ===== ヒーロー（任意） ===== */
+/* ===== 任意：ヒーロー ===== */
 .hero{
-  position:relative; min-height:68vh; display:grid; place-items:center; background:#000;
-  background-image:var(--hero); background-size:cover; background-position:center;
+  position:relative;min-height:68vh;display:grid;place-items:center;background:#000;
+  background-image:var(--hero);background-size:cover;background-position:center
 }
-.hero__overlay{ position:absolute; inset:0; background:rgba(0,0,0,.35) }
-.hero__inner{ position:relative; color:#fff; text-align:center }
-.hero__title{ font-size:clamp(28px, 4.5vw, 56px); margin:0 0 .3em }
-.hero__lead{ font-size:clamp(16px, 2.2vw, 22px); margin:0 0 .6em }
-.hero__bullets{ list-style:none; padding:0; margin:0 0 1.2em; font-weight:600 }
-.hero__bullets li+li{ margin-top:.25em }
+.hero__overlay{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.hero__inner{position:relative;color:#fff;text-align:center}
+.hero__title{font-size: clamp(28px, 4.5vw, 56px);margin:0 0 .3em}
+.hero__lead{font-size: clamp(16px, 2.2vw, 22px);margin:0 0 .6em}
+.hero__bullets{list-style:none;padding:0;margin:0 0 1.2em;font-weight:600}
+.hero__bullets li+li{margin-top:.25em}
 
-/* ===== 2カラムカード／ギャラリー／サービス（任意） ===== */
-.band{ padding:48px 0; background:var(--c-muted) }
-.band__inner{ display:grid; gap:20px; grid-template-columns:repeat(2,1fr) }
-.band__card{ background:#fff; border-radius:14px; box-shadow:var(--shadow); padding:18px }
-.band__card h2{ font-size:clamp(18px,2.2vw,22px); margin:.6em 0 .2em }
-.band__card p{ color:var(--c-ink-sub); margin:0 }
+/* ===== セクション（例：2カラムやサービス） ===== */
+.band{padding:48px 0;background:var(--c-muted)}
+.band__inner{display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
+.band__card{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:18px}
+.band__card h2{font-size:clamp(18px,2.2vw,22px);margin:.6em 0 .2em}
+.band__card p{color:var(--c-ink-sub);margin:0}
 
-.gallery{ padding:40px 0 }
-.gallery__grid{ display:grid; gap:14px; grid-template-columns:repeat(3,1fr) }
-.gallery__grid figure{ margin:0; border-radius:12px; overflow:hidden; box-shadow:var(--shadow) }
+.gallery{padding:40px 0}
+.gallery__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+.gallery__grid figure{margin:0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
 
-.services{ padding:28px 0; background:var(--c-muted) }
-.services__grid{ display:grid; gap:20px; grid-template-columns:repeat(2,1fr) }
-.svc{ background:#fff; border-radius:14px; box-shadow:var(--shadow); padding:20px; text-align:center }
-.svc__icon{ height:160px; object-fit:cover; border-radius:10px; margin-bottom:12px }
-.svc__title{ margin:.2em 0 }
-.svc__sub{ color:var(--c-ink-sub); margin:0 0 12px }
+.services{padding:28px 0;background:var(--c-muted)}
+.services__grid{display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
+.svc{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:20px;text-align:center}
+.svc__icon{height:160px;object-fit:cover;border-radius:10px;margin-bottom:12px}
+.svc__title{margin:.2em 0}
+.svc__sub{color:var(--c-ink-sub);margin:0 0 12px}
 
-/* ===== アコーディオン（<details>版：最終スタイル） ===== */
+/* ===== アコーディオン（<details>最終版） ===== */
 .accordion{ padding:36px 0 }
 .accordion details{
-  border:1px solid var(--border);
+  border:1px solid #e7ebf2;
   border-radius:12px;
   background:#fff;
-  box-shadow:var(--shadow);
+  box-shadow:0 10px 30px rgba(20,35,70,.05);
   overflow:hidden;
   transition: box-shadow .25s ease, transform .2s ease;
 }
@@ -90,64 +97,70 @@ section > h2{
 .accordion summary{
   list-style:none;
   cursor:pointer;
-  padding:14px 52px 14px 16px;   /* 右側の＋/−に余裕 */
+  padding:14px 52px 14px 16px; /* 右側の＋/−余白 */
   font-weight:800;
   font-size:16px;
-  position:relative;
   display:flex; align-items:center; gap:.6rem;
+  position:relative;
   background: linear-gradient(180deg, #fff, #fbfcff);
   border-bottom:1px solid #eef2f7;
 }
-.accordion summary::-webkit-details-marker{ display:none } /* Chrome/Safari */
+.accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{
-  outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px;
+  outline:3px solid rgba(23,128,255,.35);
+  outline-offset:2px; border-radius:8px;
 }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
+.accordion details[open]{
+  box-shadow:0 14px 36px rgba(20,35,70,.08);
+  transform:translateY(-1px);
+}
 .accordion details[open] summary{
   background: linear-gradient(180deg, #f9fbff, #f4f8ff);
 }
-/* ＋／− ボタン風 */
+
+/* ＋／−の角丸ボックス */
 .accordion summary::after{
   content:"+";
   position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; font-weight:900;
-  background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; transition:.2s;
+  width:22px; height:22px; border-radius:6px;
+  display:grid; place-items:center; line-height:1; font-size:14px;
+  background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff;
+  font-weight:900; transition:.2s;
 }
 .accordion details[open] > summary::after{
   content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
 }
 
+/* 本文 */
 .accordion .content{
   padding:12px 16px 16px;
-  border-top:1px solid var(--border);
+  border-top:1px solid #e5e7eb;
   background:#fbfdff;
   color:#374151;
-  font-size:15px;
 }
 .accordion .content > :first-child{ margin-top:0 }
-.accordion .content > :last-child{ margin-bottom:0 }
+.accordion .content > :last-child{  margin-bottom:0 }
 
-/* 表（横スクロール対策含む） */
+/* 表（スマホは横スクロール許可） */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
-  font-size:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff;
+  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
 }
 .accordion .content thead th{
-  background:#f6f8fc; font-weight:800; text-align:left;
-  padding:10px 12px; border-bottom:1px solid var(--border);
+  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
 }
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 箇条書き（※アコーディオン内だけチェック風） */
-.accordion .content ul{ list-style:none; padding-left:0; margin-left:0 }
-.accordion .content li{ padding-left:1.6rem; position:relative; margin:.25rem 0 }
+/* 箇条書き（■はHTMLから削除済み前提。見映えを統一） */
+.accordion .content ul{ list-style: none; padding-left:0; margin-left:0 }
+.accordion .content li{
+  position:relative; padding-left:1.8em; margin:.35rem 0;
+}
 .accordion .content li::before{
-  content:""; position:absolute; left:.35rem; top:.55em;
-  width:.65rem; height:.65rem; border-radius:3px;
-  border:2px solid #2b6bff; transform: rotate(45deg);
-  border-left-color:transparent; border-top-color:transparent;
+  content:"✔";
+  position:absolute; left:.2em; top:.1em;
+  color:#2b6bff; font-size:1em; line-height:1;
 }
 
 /* ===== 価格ボックス ===== */
@@ -155,19 +168,19 @@ section > h2{
   background: linear-gradient(180deg, #fbfcff, #f6f8ff);
   border:1px solid #e6ebf7;
   border-radius:12px;
-  box-shadow: var(--shadow);
+  box-shadow:0 10px 30px rgba(20,35,70,.06);
   padding:16px 16px 14px; margin:14px 0;
 }
 .price-promo .row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px }
 .price-promo .label{ color:#475569; font-weight:700 }
 .price-promo .old{ color:#94a3b8; text-decoration:line-through }
-.price-promo .now{ font-weight:900; font-size:clamp(20px, 2.6vw, 24px); color:#d32f2f; letter-spacing:.02em }
+.price-promo .now{ font-weight:900; font-size: clamp(20px, 2.6vw, 24px); color:#d32f2f; letter-spacing:.02em }
 .price-promo .meta{ font-size:.86em; color:#475569; margin-top:6px; line-height:1.6 }
 .price-promo .meta small{ display:block; opacity:.95 }
 .price-promo .proof{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; color:#0b1220 }
 .price-promo .proof span{
   border-radius:999px; border:1px solid #e6ebf7; background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700;
+  box-shadow:0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700
 }
 
 /* ===== ボタン ===== */
@@ -175,7 +188,7 @@ section > h2{
       transition: transform .06s ease, box-shadow .2s ease, background-color .2s }
 .btn--primary{
   background: linear-gradient(180deg, #1780ff, #0f6bf0); color:#fff;
-  box-shadow: 0 10px 24px rgba(23,128,255,.24);
+  box-shadow:0 10px 24px rgba(23,128,255,.24);
 }
 .btn--primary:hover{ transform: translateY(-1px); box-shadow:0 12px 28px rgba(23,128,255,.28) }
 .btn--ghost{ border:2px solid var(--c-primary); color:var(--c-primary); background:#fff }
@@ -183,30 +196,33 @@ section > h2{
 
 /* ===== 画面下の固定CTA ===== */
 .sticky-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9999;
+  position: fixed; left:0; right:0; bottom:0; z-index:9999;
   display:flex; gap:12px; justify-content:center; align-items:center;
   padding:12px;
-  background:rgba(255,255,255,.86);
-  backdrop-filter:saturate(140%) blur(8px);
+  background: rgba(255,255,255,.86);
   border-top:1px solid #e6eaf2;
   box-shadow:0 -8px 26px rgba(20,35,70,.08);
+  backdrop-filter: saturate(140%) blur(8px);
 }
 .sticky-cta a{
-  display:inline-block; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:800;
+  display:inline-block; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:800
 }
 .cta-primary{ background:#1780ff; color:#fff }
 .cta-secondary{ background:#f0f3f7; color:#111 }
 
 /* ===== レスポンシブ ===== */
 @media (max-width: 900px){
-  .band__inner{ grid-template-columns:1fr }
-  .gallery__grid{ grid-template-columns:1fr }
-  .services__grid{ grid-template-columns:1fr }
-  .svc__icon{ height:140px }
-  section > h2{ font-size:clamp(20px, 4.4vw, 28px) }
+  .band__inner{grid-template-columns:1fr}
+  .gallery__grid{grid-template-columns:1fr}
+  .services__grid{grid-template-columns:1fr}
+  .svc__icon{height:140px}
+  section > h2{ font-size: clamp(20px, 4.4vw, 28px) }
 }
-
+@media (min-width:768px){
+  .sticky-cta{ justify-content:flex-end; padding:12px 24px; gap:10px }
+}
 @media (max-width: 600px){
+  .price-promo{ padding:14px }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
