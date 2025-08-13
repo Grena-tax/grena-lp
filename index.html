@@ -5,6 +5,24 @@
   <title>ジョージアで、はじまる。｜Grena Group</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- 固定ボタンのスタイル（直書き） -->
+  <style>
+    .sticky-cta{
+      position: fixed; left:0; right:0; bottom:0;
+      display:flex; gap:12px; justify-content:center; align-items:center;
+      padding:12px; background:rgba(255,255,255,.95); backdrop-filter:saturate(140%) blur(6px);
+      border-top:1px solid rgba(0,0,0,.06); z-index:9999;
+    }
+    .sticky-cta a{
+      display:inline-block; text-decoration:none; padding:12px 16px; border-radius:10px; font-weight:700
+    }
+    .cta-primary{ background:#1780ff; color:#fff }
+    .cta-secondary{ background:#f0f3f7; color:#111 }
+    @media (min-width:768px){
+      .sticky-cta{ justify-content:flex-end; padding:12px 24px; gap:10px }
+    }
+  </style>
 </head>
 <body>
 
@@ -118,12 +136,10 @@
     <div class="panel"><p>高金利口座の活用・通貨分散の基本をレクチャー。</p></div>
   </section>
 
-  <!-- 画面下に常時表示CTA -->
+  <!-- 画面下に常時表示CTA（※この1つだけ残す） -->
   <div class="sticky-cta" id="cta">
-    <div class="sticky-cta__inner container">
-      <a href="#contact" class="btn btn--primary">今すぐ無料相談</a>
-      <a href="#diag" class="btn btn--outline">適性診断を試す</a>
-    </div>
+    <a href="#contact" class="cta-primary">今すぐ無料相談</a>
+    <a href="#check" class="cta-secondary">適性診断を試す</a>
   </div>
 
   <!-- JS（アコーディオン & スムーズスクロール） -->
@@ -146,14 +162,5 @@
       });
     });
   </script>
-  <div class="sticky-cta" id="cta">
-  <a href="#contact" class="cta-primary">今すぐ無料相談</a>
-  <a href="#check" class="cta-secondary">適性診断を試す</a>
-</div>
-  <!-- 下部に常時表示の固定ボタン（sticky CTA） -->
-<div class="sticky-cta" id="cta">
-  <a href="#contact" class="cta-primary">今すぐ無料相談</a>
-  <a href="#check" class="cta-secondary">適性診断を試す</a>
-</div>
 </body>
 </html>
