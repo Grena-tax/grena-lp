@@ -150,3 +150,56 @@ h2 .kicker{
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+/* 全体フォント＆カラー調整 */
+body {
+  font-family: "Noto Sans JP", "Segoe UI", Roboto, sans-serif;
+  color: #222;
+  line-height: 1.7;
+}
+
+/* 見出しデザイン */
+section > h2 {
+  font-weight: 800;
+  font-size: clamp(22px, 2.8vw, 30px);
+  letter-spacing: .01em;
+  margin-bottom: .6em;
+  padding-bottom: .3em;
+  border-bottom: 2px solid #eaeaea;
+}
+
+/* リスト装飾 */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+ul li {
+  position: relative;
+  padding-left: 1.8em;
+  margin-bottom: .4em;
+}
+ul li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #2b6bff;
+  font-size: 1em;
+}
+
+/* 強調エリア（価格や注意文） */
+.price-promo {
+  background: #f8faff;
+  border: 1px solid #e1e7f5;
+  padding: 1.2em;
+  border-radius: 10px;
+}
+.price-promo .now {
+  font-size: 1.5em;
+  color: #e60033;
+  font-weight: bold;
+}
+
+/* セクション間の余白 */
+section {
+  margin-bottom: 3em;
+}
