@@ -178,38 +178,45 @@ a:hover{color:var(--c-primary-d)}
   display:flex; align-items:center; gap:.6rem;
   position:relative;
 }
-.accordion summary::-webkit-details-marker{display:none} /* Chrome/Safari */
+/* --- details/summary（最終版）--- */
+.accordion{ padding:32px 0 }
+.accordion details{
+  border:1px solid #e5e7eb; border-radius:12px; background:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.04); overflow:hidden;
+}
+.accordion details + details{ margin-top:12px }
+
+/* summary 行 */
+.accordion summary{
+  list-style:none; cursor:pointer;
+  padding:14px 48px 14px 16px; font-weight:800; font-size:15px;
+  display:flex; align-items:center; gap:.6rem; position:relative; background:#fff;
+}
+.accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{
-  outline:3px solid rgba(23,128,255,.35);
-  outline-offset:2px;
-  border-radius:8px;
+  outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px;
 }
 
 /* 開閉アイコン（+ / −） */
 .accordion summary::after{
-  content:"+";
-  position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  font-weight:900; color:#64748b;
-  transition:transform .2s, color .2s;
+  content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  font-weight:900; color:#64748b; transition:transform .2s, color .2s;
 }
-.accordion details[open] > summary::after{
-  content:"−"; color:#0b1220; transform:translateY(-50%) rotate(0.001deg);
-}
+.accordion details[open] > summary{ background:#f7fbff }
+.accordion details[open] > summary::after{ content:"−"; color:#0b1220 }
 
-/* 中身 */
+/* 本文 */
 .accordion .content{
-  padding:0 14px 14px 14px;
-  color:#374151;
+  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fafafa; color:#374151;
 }
 .accordion .content > :first-child{ margin-top:0 }
-.accordion .content > :last-child{ margin-bottom:0 }
-
-/* 小要素の統一（箇条書き、見出し、表） */
+.accordion .content > :last-child{  margin-bottom:0 }
 .accordion .content h4{ margin:16px 0 6px; font-size:16px }
 .accordion .content ul{ padding-left:1.1rem; margin:.3rem 0 .6rem }
 .accordion .content li{ margin:.25rem 0 }
 .accordion .content p.text-sm{ color:#64748b }
 
+/* 表 */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden;
@@ -220,7 +227,12 @@ a:hover{color:var(--c-primary-d)}
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 価格ボックス（既存 .price-promo を微強化） */
+/* 表がはみ出すとき（スマホ） */
+@media (max-width: 600px){
+  .accordion .content{ padding:12px 12px 14px }
+  .accordion summary{ padding:12px 42px 12px 12px }
+  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+}
 .price-promo{ border:1px solid #e5e7eb; background:#f9fafb; border-radius:12px; padding:14px 16px }
 .price-promo .row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px }
 .price-promo .label{ color:#475569; font-weight:700 }
