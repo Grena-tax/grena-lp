@@ -1,4 +1,4 @@
-/* ===== ベース ===== */
+/* =============== 基本テーマ =============== */
 :root{
   --c-bg:#0b1220;
   --c-ink:#0b1220;
@@ -6,6 +6,8 @@
   --c-primary:#1178ff;
   --c-primary-d:#0e63d3;
   --c-surface:#ffffff;
+  --c-muted:#f5f7fb;
+  --border:#e5e7eb;
   --shadow:0 10px 30px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box}
@@ -15,15 +17,15 @@ body{
   color:var(--c-ink);
   line-height:1.7;
   background:#fff;
-  /* 固定CTAぶんの下余白（本文が隠れないように） */
+  /* 画面下の固定CTAぶんの余白 */
   padding-bottom:80px;
 }
 img{max-width:100%;height:auto;display:block}
-
-/* ===== コンテナ ===== */
+a{color:var(--c-primary);text-decoration:underline;text-underline-offset:2px}
+a:hover{color:var(--c-primary-d)}
 .container{width:min(1100px, 92%);margin:auto}
 
-/* ===== ヒーロー ===== */
+/* =============== ヒーロー（任意） =============== */
 .hero{
   position:relative;min-height:68vh;display:grid;place-items:center;background:#000;
   background-image:var(--hero);background-size:cover;background-position:center
@@ -35,55 +37,105 @@ img{max-width:100%;height:auto;display:block}
 .hero__bullets{list-style:none;padding:0;margin:0 0 1.2em;font-weight:600}
 .hero__bullets li+li{margin-top:.25em}
 
-/* ===== バンド（2カード） ===== */
-.band{padding:48px 0;background:#f7f8fb}
-.band__inner{display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
-.band__card{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:18px}
-.band__card h2{font-size:clamp(18px,2.2vw,22px);margin:.6em 0 .2em}
-.band__card p{color:var(--c-ink-sub);margin:0}
-
-/* ===== ギャラリー3 ===== */
-.gallery{padding:40px 0}
-.gallery__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
-.gallery__grid figure{margin:0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
-
-/* ===== セクション共通 ===== */
+/* =============== セクション共通 =============== */
 .sec-title{font-size:clamp(22px,3vw,28px);margin:0 0 .6em}
 .about{padding:40px 0;background:#fff}
 .about__lead{color:#334155}
 
-/* ===== サービス2列カード ===== */
-.services{padding:28px 0;background:#f7f8fb}
+/* =============== 2カラムカード / ギャラリー（任意） =============== */
+.band{padding:48px 0;background:var(--c-muted)}
+.band__inner{display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
+.band__card{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:18px}
+.band__card h2{font-size:clamp(18px,2.2vw,22px);margin:.6em 0 .2em}
+.band__card p{color:var(--c-ink-sub);margin:0}
+.gallery{padding:40px 0}
+.gallery__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr)}
+.gallery__grid figure{margin:0;border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+
+/* =============== サービスカード（任意） =============== */
+.services{padding:28px 0;background:var(--c-muted)}
 .services__grid{display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
 .svc{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:20px;text-align:center}
 .svc__icon{height:160px;object-fit:cover;border-radius:10px;margin-bottom:12px}
 .svc__title{margin:.2em 0}
 .svc__sub{color:var(--c-ink-sub);margin:0 0 12px}
 
-/* ===== アコーディオン ===== */
+/* =============== アコーディオン（<details>版） =============== */
 .accordion{padding:32px 0}
-.acc-heading{margin:0 0 .8em}
-.acc{
-  width:100%;text-align:left;background:#fff;border:1px solid #e5e7eb;border-radius:10px;
-  padding:14px 44px 14px 14px;font-size:15px;font-weight:700;cursor:pointer;position:relative
+.accordion details{
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 2px 12px rgba(0,0,0,.03);
+  overflow:hidden;
 }
-.acc + .panel{
-  overflow:hidden;max-height:0;transition:max-height .25s ease;border-left:3px solid #e5e7eb;
-  margin:8px 0 16px;padding:0 12px;border-radius:0 8px 8px 0;background:#fafafa
+.accordion details+details{margin-top:12px}
+.accordion summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 48px 14px 16px;
+  font-weight:800;
+  font-size:15px;
+  position:relative;
+  background:#fff;
 }
-.acc.is-open{border-color:#bcd8ff;background:#f6faff}
-.acc::after{content:"＋";position:absolute;right:14px;top:50%;transform:translateY(-50%);transition:.2s}
-.acc.is-open::after{content:"－"}
-.panel p{margin:12px 0}
+.accordion summary::-webkit-details-marker{display:none}
+.accordion summary:after{
+  content:"+";
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-weight:900;color:#334155;
+  transition:transform .2s ease;
+}
+.accordion details[open] summary{background:#f7fbff}
+.accordion details[open] summary:after{content:"–"}
+.accordion .content{
+  padding:12px 16px 16px;
+  border-top:1px solid var(--border);
+  background:#fafafa;
+}
+.accordion .content p{margin:12px 0}
+.accordion .content ul{margin:.4em 0 .8em 1.2em}
+.accordion .content ol{margin:.4em 0 .8em 1.4em}
+.accordion .content li+li{margin-top:.25em}
 
-/* ===== ボタン ===== */
-.btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700}
+/* 表・注意書きなど */
+.accordion .content table{
+  width:100%;border-collapse:collapse;margin:.6em 0;border:1px solid var(--border);background:#fff
+}
+.accordion .content th,
+.accordion .content td{
+  border:1px solid var(--border);padding:.55rem .6rem;font-size:14px;vertical-align:top
+}
+.accordion .content thead th{background:#f1f5f9;font-weight:800}
+
+/* =============== バッジなどのUI小物 =============== */
+.badge, .limited-badge{
+  display:inline-block;background:#ef4444;color:#fff;
+  border-radius:999px;padding:.25rem .6rem;font-size:.78em;font-weight:800
+}
+
+/* =============== 価格ボックス（先着/通常 どちらも） =============== */
+.price-promo{
+  border:1px solid var(--border);background:#f9fafb;border-radius:12px;
+  padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)
+}
+.price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.price-promo .label{color:#475569;font-weight:700}
+.price-promo .old{color:#64748b;text-decoration:line-through}
+.price-promo .now{font-weight:900;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+.price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+.price-promo .meta small{display:block;opacity:.95}
+.price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+.price-promo .proof span{background:#fff;border:1px solid var(--border);border-radius:999px;padding:.25rem .6rem;font-weight:700}
+
+/* =============== ボタン =============== */
+.btn{display:inline-block;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:800}
 .btn--primary{background:var(--c-primary);color:#fff}
 .btn--primary:hover{background:var(--c-primary-d)}
 .btn--ghost{border:2px solid var(--c-primary);color:var(--c-primary);background:#fff}
 .btn--outline{border:2px solid #cbd5e1;color:#0b1220;background:#fff}
 
-/* ===== 画面下の固定CTA（1定義のみ。fixedで統一） ===== */
+/* =============== 画面下の固定CTA =============== */
 .sticky-cta{
   position: fixed; left:0; right:0; bottom:0; z-index:9999;
   display:flex; gap:12px; justify-content:center; align-items:center;
@@ -91,12 +143,12 @@ img{max-width:100%;height:auto;display:block}
   border-top:1px solid rgba(0,0,0,.06);
 }
 .sticky-cta a{
-  display:inline-block; text-decoration:none; padding:12px 16px; border-radius:10px; font-weight:700
+  display:inline-block; text-decoration:none; padding:12px 16px; border-radius:10px; font-weight:800
 }
 .cta-primary{ background:#1780ff; color:#fff }
 .cta-secondary{ background:#f0f3f7; color:#111 }
 
-/* ===== レスポンシブ ===== */
+/* =============== レスポンシブ =============== */
 @media (max-width: 900px){
   .band__inner{grid-template-columns:1fr}
   .gallery__grid{grid-template-columns:1fr}
