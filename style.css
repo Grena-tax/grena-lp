@@ -1,4 +1,5 @@
-/* ====== 1) タイポ強化：見出しと数字を上品に ====== */
+/* ====== Polished add-on (drop-in) ====== */
+/* 1) タイポ強化：見出しと数字を上品に */
 :root{
   --font-heading: ui-sans-serif, -apple-system, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
   --font-body: ui-sans-serif, -apple-system, "SF Pro Text", "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
@@ -13,12 +14,12 @@ section > h2{
 }
 .price-promo, .accordion summary, .btn{ font-variant-numeric: tabular-nums }
 
-/* ====== 2) 余白とコンテナ：ゆとりを持たせる ====== */
-.container{ width:min(1060px, 90%); }
-section{ scroll-margin-top: 88px; } /* 固定CTAぶん見出しが隠れない */
-.accordion{ padding: 36px 0 } /* ほんの少しだけゆとり */
+/* 2) 余白とコンテナ：ゆとり */
+.container{ width:min(1060px, 90%) }
+section{ scroll-margin-top: 88px } /* 固定CTAぶん見出しが隠れない */
+.accordion{ padding: 36px 0 }
 
-/* ====== 3) 見出しに“肩書き”バッジ（任意） ====== */
+/* 3) 見出しに“肩書き”バッジ（任意） */
 h2 .kicker{
   display:inline-block; margin-right:.6rem; padding:.22rem .55rem;
   font-size:.72em; font-weight:800; letter-spacing:.04em;
@@ -26,76 +27,104 @@ h2 .kicker{
 }
 /* 使い方例: <h2><span class="kicker">Official</span> ジョージア法人設立 …</h2> */
 
-/* ====== 4) アコーディオン：高級ノート感の質感 ====== */
+/* 4) アコーディオン：高級ノート感の質感（<details>版の最終スタイル） */
 .accordion details{
   border:1px solid #e7ebf2;
+  border-radius:12px;
+  background:#fff;
   box-shadow: 0 10px 30px rgba(20, 35, 70, .05);
+  overflow:hidden;
   transition: box-shadow .25s ease, transform .2s ease;
 }
-.accordion details[open]{
-  box-shadow: 0 14px 36px rgba(20, 35, 70, .08);
-  transform: translateY(-1px);
-}
+.accordion details + details{ margin-top:12px }
+
 .accordion summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 52px 14px 16px; /* 右側の＋/−に余裕 */
+  font-weight:800; font-size:16px; position:relative;
+  display:flex; align-items:center; gap:.6rem;
   background: linear-gradient(180deg, #fff, #fbfcff);
   border-bottom:1px solid #eef2f7;
 }
+.accordion summary::-webkit-details-marker{ display:none }
+.accordion summary:focus-visible{
+  outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px;
+}
+.accordion details[open]{ box-shadow: 0 14px 36px rgba(20, 35, 70, .08); transform: translateY(-1px) }
 .accordion details[open] summary{
   background: linear-gradient(180deg, #f9fbff, #f4f8ff);
 }
+
+/* ＋／− ボックス */
 .accordion summary::after{
-  width:22px; height:22px; border-radius:6px;
-  display:grid; place-items:center; line-height:1; font-size:14px;
-  background:#eef4ff; color:#3657ff;
-  border:1px solid #dbe7ff;
+  content:"+";
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
+  line-height:1; font-size:14px;
+  background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff;
+  font-weight:900; transition:.2s;
 }
 .accordion details[open] > summary::after{
-  background:#e6f2ff; color:#143cff; border-color:#c7dbff;
-}
-.accordion .content{
-  background: #fbfdff;
+  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
 }
 
-/* 箇条書きをドット→チェックへ（LP内だけ） */
-.accordion .content ul{
-  list-style:none; padding-left:0; margin-left:0;
+.accordion .content{
+  padding:12px 16px 16px;
+  border-top:1px solid #e5e7eb;
+  background:#fbfdff;
+  color:#374151;
 }
-.accordion .content ul li{
-  padding-left:1.6rem; position:relative;
+.accordion .content > :first-child{ margin-top:0 }
+.accordion .content > :last-child{  margin-bottom:0 }
+
+/* 表（はみ出し対策含む） */
+.accordion .content table{
+  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
+  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden;
+  background:#fff;
 }
-.accordion .content ul li::before{
+.accordion .content thead th{
+  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
+}
+.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
+.accordion .content tr:last-child td{ border-bottom:none }
+
+/* 箇条書き：■をHTMLから削除した前提で、チェック風に */
+.accordion .content ul{ list-style:none; padding-left:0; margin-left:0 }
+.accordion .content li{ padding-left:1.6rem; position:relative; margin:.25rem 0 }
+.accordion .content li::before{
   content:""; position:absolute; left:.35rem; top:.55em;
   width:.65rem; height:.65rem; border-radius:3px;
   border:2px solid #2b6bff; transform: rotate(45deg);
   border-left-color:transparent; border-top-color:transparent;
 }
 
-/* ====== 5) 価格ボックス：上位プランの“箱感” ====== */
+/* 5) 価格ボックス：上位プランの“箱感” */
 .price-promo{
   background: linear-gradient(180deg, #fbfcff, #f6f8ff);
   border:1px solid #e6ebf7;
+  border-radius:12px;
   box-shadow: 0 10px 30px rgba(20,35,70,.06);
+  padding:16px 16px 14px; margin:14px 0;
 }
-.price-promo .now{
-  font-size: clamp(20px, 2.6vw, 24px);
-  letter-spacing: .02em;
-}
-.price-promo .badge{
-  background: linear-gradient(180deg, #ff6b6b, #ef4444);
-  box-shadow: 0 4px 12px rgba(239,68,68,.25);
-  border: none;
-}
+.price-promo .row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px }
+.price-promo .label{ color:#475569; font-weight:700 }
+.price-promo .old{ color:#94a3b8; text-decoration:line-through }
+.price-promo .now{ font-weight:900; font-size: clamp(20px, 2.6vw, 24px); color:#d32f2f; letter-spacing:.02em }
+.price-promo .meta{ font-size:.86em; color:#475569; margin-top:6px; line-height:1.6 }
+.price-promo .meta small{ display:block; opacity:.95 }
+.price-promo .proof{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; color:#0b1220 }
 .price-promo .proof span{
-  border-radius: 999px;
-  border-color:#e6ebf7;
-  background:#fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  border-radius: 999px; border:1px solid #e6ebf7; background:#fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700
 }
 
-/* ====== 6) ボタン：角丸・影・ホバーで“手触り” ====== */
+/* 6) ボタン：角丸・影・ホバー */
 .btn{ border-radius:14px; transition: transform .06s ease, box-shadow .2s ease, background-color .2s }
 .btn--primary{
   background: linear-gradient(180deg, #1780ff, #0f6bf0);
+  color:#fff;
   box-shadow: 0 10px 24px rgba(23,128,255,.24);
 }
 .btn--primary:hover{ transform: translateY(-1px); box-shadow:0 12px 28px rgba(23,128,255,.28) }
@@ -103,7 +132,7 @@ h2 .kicker{
 .cta-primary{ border-radius:12px }
 .cta-secondary{ border-radius:12px }
 
-/* ====== 7) Sticky CTA：うっすらガラス + 境界線強化 ====== */
+/* 7) Sticky CTA：ガラス感 */
 .sticky-cta{
   background: rgba(255,255,255,.86);
   border-top: 1px solid #e6eaf2;
@@ -111,7 +140,7 @@ h2 .kicker{
   backdrop-filter: saturate(140%) blur(8px);
 }
 
-/* ====== 8) メディア調整：余白と読みやすさ ====== */
+/* 8) メディア調整 */
 @media (max-width: 900px){
   section > h2{ font-size: clamp(20px, 4.4vw, 28px) }
 }
@@ -119,30 +148,5 @@ h2 .kicker{
   .price-promo{ padding:14px }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
+  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
-/* ====== 仕上げのタイポ＆余白 ====== */
-:root{
-  --font-heading: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
-  --font-body: var(--font-heading);
-}
-
-body{ font-family: var(--font-body) }
-
-section > h2{
-  font-family: var(--font-heading);
-  font-weight: 800;
-  letter-spacing: .01em;
-  line-height: 1.25;
-  margin: 0 0 .8rem;
-}
-
-.accordion summary{
-  font-size: 16px;                 /* 見出しをほんの少しだけ大きく */
-  padding: 14px 52px 14px 16px;    /* 右側の＋/−に余裕を足す */
-}
-
-.accordion .content{
-  font-size: 15px;
-}
-
-.accordion .content ul{ list-style: disc; padding-left: 1.2rem } /* “■”削除後の自然な箇条書き */
