@@ -120,3 +120,29 @@ h2 .kicker{
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
 }
+/* ====== 仕上げのタイポ＆余白 ====== */
+:root{
+  --font-heading: ui-sans-serif, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+  --font-body: var(--font-heading);
+}
+
+body{ font-family: var(--font-body) }
+
+section > h2{
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.25;
+  margin: 0 0 .8rem;
+}
+
+.accordion summary{
+  font-size: 16px;                 /* 見出しをほんの少しだけ大きく */
+  padding: 14px 52px 14px 16px;    /* 右側の＋/−に余裕を足す */
+}
+
+.accordion .content{
+  font-size: 15px;
+}
+
+.accordion .content ul{ list-style: disc; padding-left: 1.2rem } /* “■”削除後の自然な箇条書き */
