@@ -158,3 +158,81 @@ a:hover{color:var(--c-primary-d)}
 @media (min-width:768px){
   .sticky-cta{ justify-content:flex-end; padding:12px 24px; gap:10px }
 }
+/* --- details/summary の共通スタイル --- */
+.accordion details{
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(0,0,0,.04);
+  overflow:hidden;
+}
+.accordion details + details{ margin-top:10px }
+
+/* summary 行 */
+.accordion summary{
+  list-style:none; /* Safari対策 */
+  cursor:pointer;
+  padding:14px 48px 14px 14px;
+  font-weight:800;
+  font-size:15px;
+  display:flex; align-items:center; gap:.6rem;
+  position:relative;
+}
+.accordion summary::-webkit-details-marker{display:none} /* Chrome/Safari */
+.accordion summary:focus-visible{
+  outline:3px solid rgba(23,128,255,.35);
+  outline-offset:2px;
+  border-radius:8px;
+}
+
+/* 開閉アイコン（+ / −） */
+.accordion summary::after{
+  content:"+";
+  position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  font-weight:900; color:#64748b;
+  transition:transform .2s, color .2s;
+}
+.accordion details[open] > summary::after{
+  content:"−"; color:#0b1220; transform:translateY(-50%) rotate(0.001deg);
+}
+
+/* 中身 */
+.accordion .content{
+  padding:0 14px 14px 14px;
+  color:#374151;
+}
+.accordion .content > :first-child{ margin-top:0 }
+.accordion .content > :last-child{ margin-bottom:0 }
+
+/* 小要素の統一（箇条書き、見出し、表） */
+.accordion .content h4{ margin:16px 0 6px; font-size:16px }
+.accordion .content ul{ padding-left:1.1rem; margin:.3rem 0 .6rem }
+.accordion .content li{ margin:.25rem 0 }
+.accordion .content p.text-sm{ color:#64748b }
+
+.accordion .content table{
+  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
+  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden;
+}
+.accordion .content thead th{
+  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
+}
+.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
+.accordion .content tr:last-child td{ border-bottom:none }
+
+/* 価格ボックス（既存 .price-promo を微強化） */
+.price-promo{ border:1px solid #e5e7eb; background:#f9fafb; border-radius:12px; padding:14px 16px }
+.price-promo .row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px }
+.price-promo .label{ color:#475569; font-weight:700 }
+.price-promo .old{ color:#94a3b8; text-decoration:line-through }
+.price-promo .now{ font-weight:800; font-size:clamp(18px,2.2vw,22px); color:#d32f2f }
+.price-promo .badge{
+  display:inline-block; background:#ef4444; color:#fff; padding:.18rem .55rem; border-radius:999px;
+  font-size:.8em; font-weight:800
+}
+.price-promo .meta{ font-size:.86em; color:#475569; margin-top:6px; line-height:1.6 }
+.price-promo .proof{ display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+.price-promo .proof span{ background:#fff; border:1px solid #e5e7eb; border-radius:999px; padding:.22rem .6rem; font-weight:700 }
+
+/* 見出し（h2/h3）を全体で少し力強く */
+section > h2{ letter-spacing:.01em }
