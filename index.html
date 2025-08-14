@@ -1,3 +1,25 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ジョージア法人設立LP</title>
+
+  <!-- ここより上に既存の <meta> / 既存CSS があるならそのままでOK -->
+
+  <!-- 1) デバッグ用ピンクバー（HTML差し替え確認用） -->
+  <style id="debug-probe">
+    html { border-top: 8px solid #ff0077 !important; }
+  </style>
+
+  <!-- 2) メインCSS（キャッシュ回避のためバージョン付） -->
+  <link rel="stylesheet" href="./style.css?v=20250816-02" id="main-css">
+</head>
+<body>
+
+<!-- =========================
+  法人設立セクション
+========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
 
@@ -119,7 +141,7 @@
         <ul>
           <li>登記維持：¥198,000（税込／年） 登記住所代＋更新手続き</li>
           <li>LP保守：¥298,000（税込／年） LP修正＋年1相談</li>
-          <li>会計連携：¥22,000〜／月 現地士業連携対応あり</li>
+          <li>会計連携：¥22,000〜／月 現地士業連携あり</li>
         </ul>
       </div>
     </details>
@@ -161,7 +183,7 @@
       </div>
     </details>
 
-    <!-- 12：LP本文の見出し群を一括格納 -->
+    <!-- 12 -->
     <details>
       <summary>LP本文セクション（見出し＋本文をまとめて確認）</summary>
       <div class="content">
@@ -349,59 +371,26 @@
         </ul>
       </div>
     </details>
-  <!-- ここまでが最後の <details> ... </details> -->
 
   </div><!-- /.accordion -->
 </section><!-- /#corp-setup -->
 
-<!-- 固定バーに TOP へ戻るボタンを追加（既に sticky-cta がある想定） -->
-<!-- 例：既存の .sticky-cta 内のリンクたちの横に 1行追加してください -->
+<!-- 固定バーに TOP へ戻るボタン（例） -->
 <!--
 <div class="sticky-cta" id="cta">
   <a href="#contact" class="cta-primary">今すぐ無料相談</a>
   <a href="#check" class="cta-secondary">適性診断を試す</a>
-  <button type="button" id="toTop" class="cta-secondary" aria-label="ページ上部に戻る">▲ TOPへ</button>  ← この1行を追加
+  <button type="button" id="toTop" class="cta-secondary" aria-label="ページ上部に戻る">▲ TOPへ</button>
 </div>
 -->
 
-<!-- スムーススクロール & “TOPへ” -->
-<script>
-  // “TOPへ”ボタン（存在するときだけ動作）
-  document.getElementById('toTop')?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // 画面内リンクはなめらかに移動 (#corp-setup など)
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href');
-    const target = document.querySelector(id);
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // 到達時、先頭の<details>を開く（任意）
-      const first = target.querySelector('details');
-      if (first && !first.open) first.open = true;
-      history.pushState(null, '', id);
-    }
-  });
-
-  // ハッシュ直リンクで来た場合もスムーズに
-  if (location.hash) {
-    const t = document.querySelector(location.hash);
-    t && setTimeout(() => t.scrollIntoView({ behavior: 'smooth' }), 200);
-  }
-</script>
-  </div>
-</section>
 <!-- =========================
-  個人事業主（IE + Small Business Status）
+  個人事業主（IE + SBS）
 ========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
 
-  <!-- 先にこのセクション専用の軽量スタイルを追加（重複時はどちらか1つでOK） -->
+  <!-- セクション専用の軽量スタイル（重複OK） -->
   <style>
     .price-promo{
       border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;
@@ -569,7 +558,7 @@
 </section>
 
 <!-- =========================
-  個人口座開設（銀行／11.5%想定の文言を含む）
+  個人口座開設（銀行）
 ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
@@ -683,5 +672,45 @@
         </ol>
         <p class="text-sm">※ 金利・条件・必要書類は銀行やタイミングで変わります。最新情報は都度ご案内します。</p>
       </div>
+    </details>
 
-  
+  </div><!-- /.accordion -->
+</section>
+
+<!-- スムーススクロール & “TOPへ” -->
+<script>
+  // “TOPへ”ボタン（存在するときだけ動作）
+  document.getElementById('toTop')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 画面内リンクはなめらかに移動 (#corp-setup など)
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href');
+    const target = document.querySelector(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const first = target.querySelector('details');
+      if (first && !first.open) first.open = true;
+      history.pushState(null, '', id);
+    }
+  });
+
+  // ハッシュ直リンクで来た場合もスムーズに
+  if (location.hash) {
+    const t = document.querySelector(location.hash);
+    t && setTimeout(() => t.scrollIntoView({ behavior: 'smooth' }), 200);
+  }
+
+  // 追加：style.css が読み込めているか検知（コンソール確認用）
+  document.addEventListener('DOMContentLoaded', () => {
+    const css = Array.from(document.styleSheets).find(s => s.href && s.href.includes('style.css'));
+    console.log(css ? '✅ CSS正常読み込み: ' + css.href : '⚠️ style.css が読み込まれていません');
+  });
+</script>
+
+</body>
+</html>
