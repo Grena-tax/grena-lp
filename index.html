@@ -11,9 +11,9 @@
   </style>
 
   <!-- 2) メインCSS（キャッシュ回避のためバージョン付） -->
-  <link rel="stylesheet" href="./style.css?v=20250816-03" id="main-css">
+  <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-  <!-- 3) 追加の軽量スタイル（このファイル内だけ有効） -->
+  <!-- 3) このページ専用の軽量スタイル -->
   <style>
     /* details を押しやすく（モバイル） */
     details summary{
@@ -40,6 +40,9 @@
     }
     .text-sm{ font-size:.86em; opacity:.9 }
     .muted{ color:#475569 }
+    .smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
+    .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+
     .price-promo{
       border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;
       padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)
@@ -57,16 +60,13 @@
     .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
     .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
 
-    /* 簡易のプログレスステップ（任意） */
     .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-    .progress-steps .step{
-      padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff
-    }
+    .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
     .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 
-    /* 小さめ見出し（「普通サイズ」指定のため H2は抑えめ） */
-    h2.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
-    .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+    table{width:100%;border-collapse:collapse;margin:.5rem 0}
+    th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
+    th:first-child, td:first-child{text-align:left}
   </style>
 </head>
 <body>
@@ -217,56 +217,64 @@
 </section><!-- /#corp-setup -->
 
 <!-- =========================
-  初年度料金プラン（“普通サイズ見出し”／番号撤去）
+  料金プラン（親アコーディオンの中に3プラン）
 ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
-  <h2 class="smallish">初年度料金プラン</h2>
+  <h2 class="smallish">料金プラン</h2>
 
   <div class="space-y-3 accordion">
 
-    <!-- 基本 -->
+    <!-- 親：料金プラン -->
     <details>
-      <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
+      <summary>初年度（3つのプランから選択）</summary>
       <div class="content">
-        <ul>
-          <li>法人登記（現地登記官とのやり取り含む）</li>
-          <li>法人口座開設（TBC／BOGなど）</li>
-          <li>登記住所（家賃1年分込み）</li>
-          <li>書類翻訳・郵送サポート</li>
-          <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
-        </ul>
+
+        <!-- 子：基本 -->
+        <details>
+          <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
+          <div class="content">
+            <ul>
+              <li>法人登記（現地登記官とのやり取り含む）</li>
+              <li>法人口座開設（TBC／BOGなど）</li>
+              <li>登記住所（家賃1年分込み）</li>
+              <li>書類翻訳・郵送サポート</li>
+              <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- 子：設立＋LP -->
+        <details>
+          <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
+          <div class="content">
+            <ul>
+              <li>基本プランの内容に加え：</li>
+              <li>.geドメイン取得代行</li>
+              <li>初期設計済みLP（お問い合わせフォーム＋運用ガイドPDF）</li>
+              <li>月1回のライト相談（LINEまたはチャット）</li>
+              <li>ライティング／構成アドバイス</li>
+            </ul>
+          </div>
+        </details>
+
+        <!-- 子：フル -->
+        <details>
+          <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
+          <div class="content">
+            <ul>
+              <li>設立＋LPパックの内容に加え：</li>
+              <li>節税マニュアル（CFC対策・経費管理）</li>
+              <li>帳簿テンプレート／経費リストPDF</li>
+              <li>職業別アドバイス（個別送付）</li>
+              <li>月1回の運用レビュー（文面型）</li>
+            </ul>
+          </div>
+        </details>
+
       </div>
     </details>
 
-    <!-- 設立＋LP -->
-    <details>
-      <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
-      <div class="content">
-        <ul>
-          <li>基本プランの内容に加え：</li>
-          <li>.geドメイン取得代行</li>
-          <li>初期設計済みLP（お問い合わせフォーム＋運用ガイドPDF）</li>
-          <li>月1回のライト相談（LINEまたはチャット）</li>
-          <li>ライティング／構成アドバイス</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- フル -->
-    <details>
-      <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
-      <div class="content">
-        <ul>
-          <li>設立＋LPパックの内容に加え：</li>
-          <li>節税マニュアル（CFC対策・経費管理）</li>
-          <li>帳簿テンプレート／経費リストPDF</li>
-          <li>職業別アドバイス（個別送付）</li>
-          <li>月1回の運用レビュー（文面型）</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- 2年目以降（同セクション内に統合） -->
+    <!-- 2年目以降（親の外に独立でOK） -->
     <details>
       <summary>2年目以降の維持・サポート</summary>
       <div class="content">
@@ -353,7 +361,7 @@
       </div>
     </details>
 
-    <!-- 3：料金（固定価格表示） -->
+    <!-- 3：料金 -->
     <details open>
       <summary>サポート内容と料金</summary>
       <div class="content">
@@ -405,7 +413,7 @@
       </div>
     </details>
 
-    <!-- 5：KYC/FMS & FAQ -->
+    <!-- 5：KYC/FMS -->
     <details>
       <summary>KYCとFMS（本人確認・資金源）／FAQ</summary>
       <div class="content">
@@ -425,7 +433,7 @@
       </div>
     </details>
 
-    <!-- 6：将来の法人化／割引告知 -->
+    <!-- 6：将来の法人化／割引 -->
     <details>
       <summary>個人 → 法人化の成長パス／IE登録者限定割引</summary>
       <div class="content">
@@ -448,19 +456,6 @@
             <small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small>
           </div>
         </div>
-      </div>
-    </details>
-
-    <!-- 7：申請フロー -->
-    <details>
-      <summary>登録申請の流れ（最短5営業日実績あり）</summary>
-      <div class="content">
-        <ol>
-          <li><a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener" aria-label="LINEで無料診断（新しいウィンドウで開きます）">LINEで無料診断（90秒）</a></li>
-          <li>書類提出（パスポート＋住所証明）</li>
-          <li>登録申請（進捗は随時共有）</li>
-          <li>登録完了（デジタル証明＋納税ID発行）</li>
-        </ol>
       </div>
     </details>
 
@@ -564,16 +559,55 @@
       </div>
     </details>
 
-    <!-- リスク・為替 -->
+    <!-- リスク・為替：数値シミュレーション -->
     <details>
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
+        <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+        <table>
+          <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
+          <tbody>
+            <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td>+¥398,860</td></tr>
+            <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,547, -</td><td>+約¥227,000</td></tr>
+            <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375, -</td><td>+約¥55,000</td></tr>
+            <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,290, -</td><td>約▲¥30,000</td></tr>
+            <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889, -</td><td>+約¥569,000</td></tr>
+          </tbody>
+        </table>
         <ul>
-          <li>預金保護：GEL 30,000（約165万円）まで自動補償。複数名義・複数行で分散も可。</li>
-          <li>為替：GEL/JPYの下落耐性を確保するには、利息（例：年11.5%税前＝手取り約9.2%）でクッション。</li>
-          <li>税制：利息は現地で課税・非課税の差異あり。居住国で申告が必要な場合あり。</li>
+          <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
+          <li>為替が20%以上下落しない限り、元本超えの可能性が高い設計。</li>
         </ul>
-        <p class="text-sm muted">※ シミュレーションは参考値。将来の成果は保証されません。</p>
+        <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
+      </div>
+    </details>
+
+    <!-- 複利表 -->
+    <details>
+      <summary>複利の力（年9.2%手取り・概算）</summary>
+      <div class="content">
+        <p class="muted">元本100万円を年9.2%で複利運用した場合の目安。</p>
+        <table>
+          <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
+          <tbody>
+            <tr><td>1年</td><td>1,092,000</td><td>1.09倍</td></tr>
+            <tr><td>2年</td><td>1,192,464</td><td>1.19倍</td></tr>
+            <tr><td>3年</td><td>1,300,187</td><td>1.30倍</td></tr>
+            <tr><td>4年</td><td>1,415,375</td><td>1.42倍</td></tr>
+            <tr><td>5年</td><td>1,538,358</td><td>1.54倍</td></tr>
+            <tr><td>6年</td><td>1,669,504</td><td>1.67倍</td></tr>
+            <tr><td>7年</td><td>1,809,230</td><td><strong>1.81倍</strong></td></tr>
+          </tbody>
+        </table>
+        <table>
+          <thead><tr><th>到達倍率</th><th>目安年数</th><th>残高（円・概算）</th></tr></thead>
+          <tbody>
+            <tr><td>3倍</td><td>約13年</td><td>3,000,000</td></tr>
+            <tr><td>5倍</td><td>約20年</td><td>5,000,000</td></tr>
+            <tr><td>10倍</td><td>約28〜30年</td><td>10,000,000</td></tr>
+          </tbody>
+        </table>
+        <p class="text-sm muted">※ 税・為替・商品条件により実績は異なります。将来の成果は保証されません。</p>
       </div>
     </details>
 
@@ -608,39 +642,30 @@
       </div>
     </details>
 
-    <!-- キャンセル/免責（要約） -->
-    <details>
-      <summary>キャンセルポリシー・免責（重要）</summary>
-      <div class="content">
-        <ul>
-          <li>入金確認後に現地が即時着手するため、キャンセル・返金は原則不可。</li>
-          <li>銀行の審査基準・変更・開設可否は当社の管理外。</li>
-          <li>AML/CFT対応：虚偽申告・反社等に該当する場合は支援不可。</li>
-          <li>個人情報は提携法律事務所および実務連携先のみと共有。第三者提供なし。</li>
-          <li>当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
-        </ul>
-        <p class="text-sm muted">※ 詳細は本ページ下部「免責事項」をご確認ください。</p>
-      </div>
-    </details>
-
   </div><!-- /.accordion -->
 </section>
 
 <!-- =========================
-  免責事項（全体）
+  免責事項（法人＋個人口座・キャンセル統合）
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
-  <h2 class="smallish">免責事項</h2>
-  <p>当サービスはジョージア現地法に基づく法人設立・口座開設の情報提供・実務サポートです。税務・法務の助言は行いません。</p>
+  <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
-    <li>税務効果は居住国・個別事情により異なります。必ず税理士・弁護士へご相談ください。</li>
-    <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、保証できません。</li>
-    <li>表記の利率・試算は参考値であり、将来の成果を保証するものではありません。</li>
-    <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用は行いません。</li>
+    <li>当サービスはジョージア現地法に基づく<strong>情報提供・実務サポート</strong>です。税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
+    <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
+    <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
+    <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
+  </ul>
+  <h3 class="smallish" style="font-size:1.05em;margin-top:1rem">キャンセルポリシー</h3>
+  <ul>
+    <li>ご入金確認後は現地が即時着手するため、<strong>キャンセル・返金は原則不可</strong>です。</li>
+    <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
+    <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
+    <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
   </ul>
 </section>
 
-<!-- スムーススクロール & “TOPへ”（任意のTOPボタンがあれば） -->
+<!-- スムーススクロール & “TOPへ”（任意ボタンがあれば） -->
 <script>
   // “TOPへ”ボタン（存在するときだけ動作）
   document.getElementById('toTop')?.addEventListener('click', () => {
