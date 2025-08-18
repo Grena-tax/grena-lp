@@ -185,3 +185,25 @@ th:first-child, td:first-child{ text-align:left }
 
 /* 6) 料金プラン見出しを削った構成でも左右ブレしないように保険 */
 #plans{ border-top:1px solid transparent; }  /* 折り畳み防止のダミー境界 */
+/* === v2.3.7 micro-squeeze — KYC → 料金プラン の最終微調整 === */
+
+/* 直結する2セクションの継ぎ目をさらに引き上げる */
+#corp-setup + #plans{ margin-top:-36px !important; }
+
+/* スマホ幅ではもう少しだけ詰める */
+@media (max-width: 480px){
+  #corp-setup + #plans{ margin-top:-40px !important; }
+}
+
+/* iOS/Safari は margin 折り畳みの影響が強いのでさらに強め */
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top:-42px !important; }
+}
+
+/* 念のため：連結部の上下に余白を持たせない＋折り畳み防止 */
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans{      padding-top:0 !important; border-top:1px solid transparent; }
+#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
+#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#plans      .accordion > details:first-child{  margin-top:0 !important; }
