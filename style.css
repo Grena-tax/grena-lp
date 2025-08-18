@@ -207,3 +207,18 @@ section + section { margin-top: 0 !important; }
 
 /* それでも空く環境向け（iOS対策）：透明ボーダーで折り畳み回避 */
 #plans{ border-top:1px solid transparent; }
+/* ==== v2.3.2 MICRO-GAP FIX (iOS/Safari対策) ==== */
+
+/* 1) セクション連結部の余白を完全に殺す */
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important;
+             border-bottom:1px solid transparent; } /* ← 折り畳み防止 */
+#plans{ padding-top:0 !important; margin-top:-6px !important; } /* ← まだ空く場合は -8〜-10 に調整 */
+
+/* 2) 連結直前/直後のアコーディオン余白もさらに詰める */
+#corp-setup .accordion{ padding-bottom:4px !important; display:flow-root; } /* 折り畳み防止 */
+#plans .accordion{ padding-top:4px !important; display:flow-root; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
+#plans   .accordion details:first-of-type{  margin-top:0 !important; }
+
+/* 3) 念のため、セクション直後の余白をゼロ化（保険） */
+#corp-setup + #plans{ margin-top:0 !important; }
