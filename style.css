@@ -1,9 +1,9 @@
 /* =========================================
-   COMPLETE REPLACE: style.css v2.2 (debug on)
+   style.css — v2.3 FINAL (complete replace)
    ========================================= */
 
-/* 0) デバッグバナー（右下） */
-:root{ --_ver:"CSS v2.2 LOADED"; }
+/* 0) Debug banner (bottom-right) */
+:root{ --_ver: "CSS v2.3 FINAL"; }
 .css-debug-banner{
   position: fixed; right: 10px; bottom: 10px; z-index: 99999;
   background: linear-gradient(180deg,#1a56ff,#0f43cf);
@@ -13,31 +13,32 @@
 }
 .css-debug-banner::after{ content: var(--_ver); }
 
-/* 1) ベース */
+/* 1) Base */
 :root{
   --c-primary:#1178ff;
   --c-primary-d:#0e63d3;
   --border:#e5e7eb;
 }
 *{ box-sizing:border-box }
+html,body{ height:auto; }
 body{
   margin:0; line-height:1.7; color:#222; background:#fff;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
-  padding-bottom:80px; /* 固定CTAのための余白 */
+  padding-bottom:80px; /* for sticky CTA */
 }
 img{ max-width:100%; height:auto; display:block }
 a{ color:var(--c-primary); text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:var(--c-primary-d) }
 .container{ width:min(1100px, 92%); margin:auto }
 
-/* 2) 見出し（プロ感の出る下線） */
+/* 2) Section headings */
 section > h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
   font-size: clamp(22px, 2.8vw, 30px);
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* 3) アコーディオン（<details>） */
+/* 3) Accordion (<details>) */
 .accordion{ padding:36px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
@@ -56,7 +57,7 @@ section > h2{
 .accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
 .accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
 .accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
-/* ＋／− */
+/* +/- button */
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
@@ -72,7 +73,7 @@ section > h2{
 .accordion .content ul{ list-style: disc; padding-left: 1.2rem; margin:.4em 0 .8em 0 }
 .accordion .content li+li{ margin-top:.25em }
 
-/* 表 */
+/* Tables in accordion */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
@@ -83,7 +84,7 @@ section > h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 4) 価格ボックス */
+/* 4) Price box */
 .price-promo{
   background: linear-gradient(180deg, #fbfcff, #f6f8ff);
   border:1px solid #e6ebf7; border-radius:12px;
@@ -103,7 +104,7 @@ section > h2{
   box-shadow: 0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700
 }
 
-/* 5) ボタン & 固定CTA */
+/* 5) Buttons & sticky CTA */
 .btn,
 .sticky-cta a{
   display:inline-block; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:800;
@@ -123,36 +124,7 @@ section > h2{
   backdrop-filter: saturate(140%) blur(8px);
 }
 
-/* 6) レスポンシブ */
-@media (max-width: 600px){
-  .price-promo{ padding:14px }
-  .accordion summary{ padding:12px 42px 12px 12px }
-  .accordion .content{ padding:12px 12px 14px }
-  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
-}
-/* =========================================
-   v2.3 patch – spacing + footnote notes
-   ========================================= */
-
-/* 0) デバッグ表記を更新（任意） */
-:root{ --_ver:"CSS v2.3 PATCH LOADED"; }
-
-/* 1) 「KYC」→「料金プラン」の間をタイトに */
-#corp-setup .accordion{ padding-bottom: 10px; }
-#corp-setup .accordion details:last-of-type{ margin-bottom: 0; }
-#plans{ margin-top: 8px !important; }        /* セクション間の山を低く */
-#plans > h2{ margin-top: 0; }
-#plans .accordion{ padding-top: 8px; }
-
-/* もしTailwindが有効で .py-16 等が効いている環境なら、念のため上書き */
-#corp-setup.py-16{ padding-bottom: 16px !important; }
-#plans.py-12{ padding-top: 12px !important; }
-
-/* 2) アコーディオン同士の縦間隔を微調整（やや詰め） */
-.accordion details+details{ margin-top: 10px; }   /* 既存は 12px → 10px */
-.accordion details{ margin-bottom: 0; }
-
-/* 3) 本文だけに「※」注釈（タイトルには出さない） */
+/* 6) Notes (※) — show only inside .content, not in titles */
 .accordion .content .note,
 .accordion .content .abbr-note{
   display:block;
@@ -167,6 +139,48 @@ section > h2{
   font-weight:700;
   color:#475569;
 }
-/* タイトル側は念のため抑止 */
 .accordion summary .note,
-.accordion summary .abbr-note{ display:none !important; }
+.accordion summary .abbr-note{ display:none !important; } /* safety */
+
+/* 7) Spacing patch — tighten gap between last KYC and Plans */
+#corp-setup{ padding-bottom: 0 !important; }              /* override Tailwind py-16 if present */
+#corp-setup .accordion{ padding-bottom: 6px; }
+#corp-setup .accordion details:last-of-type{ margin-bottom: 0; }
+#plans{ margin-top: 4px !important; padding-top: 8px !important; }  /* override Tailwind py-12 if present */
+#plans > h2{ margin-top: 0; }
+#plans .accordion{ padding-top: 8px; }
+
+/* If Tailwind utility classes exist, hard-override them too */
+#corp-setup.py-16{ padding-bottom: 8px !important; }
+#plans.py-12{ padding-top: 8px !important; }
+
+/* Slightly tighter vertical rhythm inside accordions */
+.accordion details+details{ margin-top: 10px; } /* was 12px */
+.accordion details{ margin-bottom: 0; }
+
+/* 8) Small utilities */
+.muted{ color:#475569 }
+.text-sm{ font-size:.86em; opacity:.9 }
+.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
+.security-note{
+  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
+}
+
+/* 9) Tables outside accordion (fallback) */
+table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
+th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
+th:first-child, td:first-child{ text-align:left }
+
+/* 10) Responsive */
+@media (max-width: 600px){
+  .price-promo{ padding:14px }
+  .accordion summary{ padding:12px 42px 12px 12px }
+  .accordion .content{ padding:12px 12px 14px }
+  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+}
+
+/* 11) Final squeeze (use only ifまだ間が空く場合) */
+/* Uncomment if you still see a large gap
+section + section { margin-top: 0 !important; }
+*/
