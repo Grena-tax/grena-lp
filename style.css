@@ -184,3 +184,21 @@ th:first-child,td:first-child{ text-align:left }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+/* === seam-gap fix: KYC ⇄ 料金プラン を他と同じ 10px に統一 === */
+/* 1) セクション境界の余白をリセット＋折り畳み対策 */
+#corp-setup, #plans { margin:0 !important; }
+#corp-setup { padding-bottom:0 !important; border-bottom:1px solid transparent; }
+#plans      { padding-top:0 !important;  border-top:1px solid transparent;  margin-top:0 !important; }
+
+/* 2) 境界直前直後のアコーディオンは margin 折り畳みを防止 */
+#corp-setup > .accordion,
+#plans      > .accordion { display: flow-root; padding-top:0 !important; padding-bottom:0 !important; }
+
+/* 3) 最後/最初の details による増減を抑止 */
+#corp-setup .accordion details:last-child { margin-bottom:0 !important; }
+#plans      .accordion details:first-child{ margin-top:0 !important;  }
+
+/* 4) “KYC → 料金プラン” のスキマを明示的に 10px に設定
+   （他のカード間 .accordion details+details と同じ幅にする） */
+#corp-setup + #plans { margin-top:10px !important; }
+/* ※ もし他の場所が 12px なら「10px」を 12px に変更してください */
