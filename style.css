@@ -161,3 +161,27 @@ th:first-child, td:first-child{ text-align:left }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
+/* === v2.3.6 FINAL – KYC → 料金プランの隙間を強制的に詰める === */
+
+/* 1) セクション境界の余白をゼロ化＋margin 折り畳みを無効化 */
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans{      padding-top:0    !important; margin-top:0    !important; }
+
+/* 2) 直前/直後のアコーディオンの上下パディングもゼロ化 */
+#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
+#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
+
+/* 3) 最後/最初の details の余白を消す（安全網） */
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#plans      .accordion > details:first-child{ margin-top:0 !important; }
+
+/* 4) まだ空く環境向け：区切り位置を少しだけ引き上げる（詰め具合の本体） */
+#corp-setup + #plans{ margin-top:-24px !important; } /* ←足りなければ -26〜-30 に調整 */
+
+/* 5) iOS/Safari はさらに強めに（デバイス依存の margin-collapsing 対策） */
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top:-28px !important; }
+}
+
+/* 6) 料金プラン見出しを削った構成でも左右ブレしないように保険 */
+#plans{ border-top:1px solid transparent; }  /* 折り畳み防止のダミー境界 */
