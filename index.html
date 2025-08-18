@@ -15,7 +15,7 @@
 
   <!-- 3) このページ専用の軽量スタイル -->
   <style>
-    /* details を押しやすく（モバイル） */
+    /* アコーディオンの見た目 */
     details summary{
       padding: 1rem 1.2rem;
       cursor: pointer;
@@ -38,9 +38,13 @@
       padding:1rem 1.2rem .9rem;
       background:#fff;
     }
+
+    /* 余白・文字 */
     .text-sm{ font-size:.86em; opacity:.9 }
     .muted{ color:#475569 }
     .smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
+    .note{ display:block; font-size:.82em; color:#475569; margin-top:.35rem }
+
     .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
 
     .price-promo{
@@ -67,6 +71,13 @@
     table{width:100%;border-collapse:collapse;margin:.5rem 0}
     th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
     th:first-child, td:first-child{text-align:left}
+
+    /* ===== 余白の“詰め”調整 ===== */
+    /* アコーディオン項目同士の間隔を統一して少し詰める */
+    .accordion>details{ margin: .55rem 0 !important; }
+    /* セクション跨ぎの大きすぎる余白を圧縮（KYC → 料金プランの間） */
+    #corp-setup{ padding-bottom: 2.25rem !important; }
+    #plans{ padding-top: 1.0rem !important; }   /* 見出しを外しているのでトップ余白を小さく */
   </style>
 </head>
 <body>
@@ -84,12 +95,14 @@
       <summary>ジョージア法人設立 OECD・PwC準拠｜MoU契約済｜完全オンライン対応</summary>
       <div class="content">
         <p>OECD／PwC準拠、現地法律事務所とMoU契約済み。ジョージアの再投資型課税モデルで、配当しない限り法人税0％。</p>
+        <span class="note">※ OECD＝経済協力開発機構／PwC＝PricewaterhouseCoopers（国際会計事務所）／MoU＝覚書（業務提携の合意文書）</span>
         <p><strong>ジョージアの税制特徴（現地法上の扱い）</strong></p>
         <ul>
           <li>ジョージア現地法上、再投資中の利益には法人税が課税されない制度です（配当時15％）。</li>
           <li>※ 居住国（日本を含む）の税法（CFCルール・移転価格税制等）が適用される可能性があります。必ず事前に税理士へご相談ください。</li>
           <li>※ 実際の税務効果は居住国・個別事情で異なります。</li>
         </ul>
+        <span class="note">※ CFC＝タックスヘイブン対策税制（Controlled Foreign Company）</span>
         <p>渡航・英語・Zoom不要。すべて日本語と文面で完結します。</p>
       </div>
     </details>
@@ -103,6 +116,7 @@
           <li>海外法人を作りたいが、英語・現地手続きが不安</li>
           <li>高税率やCFC制度に将来の限界を感じている</li>
         </ul>
+        <span class="note">※ 用語補足：CFC＝タックスヘイブン対策税制</span>
         <p>→ そんな方にこそ、ジョージア法人が最適です。</p>
       </div>
     </details>
@@ -120,6 +134,7 @@
           <li>移管自体が居住国で課税対象となるケースがあるため要確認。</li>
         </ul>
         <p>税務リスクが高い → OECD/PwC基準で帳簿・証憑を整備／個人名義が不安 → 法人名義ウォレット＋法人運用へ移行可能。</p>
+        <span class="note">※ 証憑＝取引を裏づける書類（請求書・契約書・送金記録など）</span>
       </div>
     </details>
 
@@ -133,6 +148,7 @@
           <li>現地法律事務所「TREX LEGAL」との連携体制</li>
           <li>書類・用途証憑も整備可能</li>
         </ul>
+        <span class="note">※ MoU＝覚書／PwC＝国際会計事務所／OECD＝国際機関</span>
       </div>
     </details>
 
@@ -159,6 +175,7 @@
           <li>提携内容：登記、税務、口座、帳簿、契約サポート</li>
           <li>法人ID：406365525</li>
         </ul>
+        <span class="note">※ MoU＝覚書（Memorandum of Understanding）</span>
       </div>
     </details>
 
@@ -173,6 +190,7 @@
           <li>IBAN法人口座開設支援</li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
+        <span class="note">※ IBAN＝国際銀行口座番号／eSIM＝組込型SIM／RS.ge＝ジョージア税務ポータル</span>
       </div>
     </details>
 
@@ -189,6 +207,7 @@
           <li><strong>実質支配者（UBO）は公証済み宣誓書等での開示が法的に求められます</strong></li>
           <li>国際的な情報交換制度（租税条約等）の対象となる可能性があります</li>
         </ul>
+        <span class="note">※ UBO＝Ultimate Beneficial Owner（最終的受益者・実質的支配者）</span>
       </div>
     </details>
 
@@ -204,6 +223,7 @@
         </ul>
         <p><strong>FMS（金融監督庁）</strong>：仮想通貨保有・送金が多い場合は報告義務やウォレット開示が必要なことあり。</p>
         <p><strong>わかりやすく</strong>：KYC＝本人確認（IDと住所）／FMS＝お金の流れの監査（必要に応じて）。</p>
+        <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service（ジョージア金融監督）</span>
         <p><strong>FAQ</strong></p>
         <ul>
           <li>Q. 普通の人でもFMS報告必要？ → A. 基本は不要、資産額次第。</li>
@@ -220,7 +240,7 @@
   料金プラン（親アコーディオンの中に3プラン）
 ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
-  <!-- 見出し「料金プラン」を削除（ご要望） -->
+  <!-- 見出し「料金プラン」は非表示（ご要望につき） -->
 
   <div class="space-y-3 accordion">
 
@@ -254,6 +274,7 @@
               <li>月1回のライト相談（LINEまたはチャット）</li>
               <li>ライティング／構成アドバイス</li>
             </ul>
+            <span class="note">※ LP＝ランディングページ</span>
           </div>
         </details>
 
@@ -268,6 +289,7 @@
               <li>職業別アドバイス（個別送付）</li>
               <li>月1回の運用レビュー（文面型）</li>
             </ul>
+            <span class="note">※ CFC＝タックスヘイブン対策税制</span>
           </div>
         </details>
 
@@ -345,6 +367,7 @@
           <li>申請はすべてオンライン、渡航不要</li>
           <li>MoU提携：TREX LEGAL（2025/5/28）</li>
         </ul>
+        <span class="note">※ IE＝Individual Entrepreneur（個人事業主）／SBS＝Small Business Status／MoU＝覚書</span>
       </div>
     </details>
 
@@ -393,6 +416,7 @@
           <li>公証／アポスティーユ：¥15,000〜／書類</li>
           <li>RS.ge税務ポータル開設サポート（任意）：¥33,000〜</li>
         </ul>
+        <span class="note">※ RS.ge＝税務ポータル／DHL＝国際宅配便</span>
       </div>
     </details>
 
@@ -430,6 +454,7 @@
           <li>Q. 個人口座開設は含まれますか？ → A. 含まれません（別サービス）。</li>
           <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
         </ul>
+        <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
       </div>
     </details>
 
@@ -456,6 +481,7 @@
             <small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small>
           </div>
         </div>
+        <span class="note">※ IE＝Individual Entrepreneur</span>
       </div>
     </details>
 
@@ -485,6 +511,7 @@
           <div class="step">制度整備</div>
         </div>
         <p class="text-sm muted">※ 指標は変動します。投資判断は各自でご確認ください。</p>
+        <span class="note">※ IMF＝国際通貨基金／ADB＝アジア開発銀行／EBRD＝欧州復興開発銀行／AIIB＝アジアインフラ投資銀行／EIB＝欧州投資銀行</span>
       </div>
     </details>
 
@@ -507,6 +534,7 @@
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。</div>
+        <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
 
@@ -521,6 +549,7 @@
           <li>書類原本の国際郵送（PDF不可）</li>
         </ul>
         <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
       </div>
     </details>
 
@@ -623,6 +652,7 @@
           <li>Q. 出金方法は？ → A. SWIFT送金／現地ATM 等。</li>
           <li>Q. 審査が落ちたら？ → A. 銀行判断のため保証不可。必要に応じて再申請の案内可。</li>
         </ul>
+        <span class="note">※ SWIFT＝国際送金網</span>
       </div>
     </details>
 
