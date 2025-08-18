@@ -130,3 +130,43 @@ section > h2{
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+/* =========================================
+   v2.3 patch – spacing + footnote notes
+   ========================================= */
+
+/* 0) デバッグ表記を更新（任意） */
+:root{ --_ver:"CSS v2.3 PATCH LOADED"; }
+
+/* 1) 「KYC」→「料金プラン」の間をタイトに */
+#corp-setup .accordion{ padding-bottom: 10px; }
+#corp-setup .accordion details:last-of-type{ margin-bottom: 0; }
+#plans{ margin-top: 8px !important; }        /* セクション間の山を低く */
+#plans > h2{ margin-top: 0; }
+#plans .accordion{ padding-top: 8px; }
+
+/* もしTailwindが有効で .py-16 等が効いている環境なら、念のため上書き */
+#corp-setup.py-16{ padding-bottom: 16px !important; }
+#plans.py-12{ padding-top: 12px !important; }
+
+/* 2) アコーディオン同士の縦間隔を微調整（やや詰め） */
+.accordion details+details{ margin-top: 10px; }   /* 既存は 12px → 10px */
+.accordion details{ margin-bottom: 0; }
+
+/* 3) 本文だけに「※」注釈（タイトルには出さない） */
+.accordion .content .note,
+.accordion .content .abbr-note{
+  display:block;
+  margin:.3rem 0 .15rem;
+  font-size:.85em;
+  color:#64748b;
+  line-height:1.5;
+}
+.accordion .content .note::before,
+.accordion .content .abbr-note::before{
+  content:"※ ";
+  font-weight:700;
+  color:#475569;
+}
+/* タイトル側は念のため抑止 */
+.accordion summary .note,
+.accordion summary .abbr-note{ display:none !important; }
