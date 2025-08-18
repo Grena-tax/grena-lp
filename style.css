@@ -184,3 +184,26 @@ th:first-child, td:first-child{ text-align:left }
 /* Uncomment if you still see a large gap
 section + section { margin-top: 0 !important; }
 */
+/* ==== v2.3.1 HOTFIX — kill gap between KYC and Plans ==== */
+
+/* セクション自体の上下をゼロに */
+#corp-setup{ margin-bottom:0 !important; padding-bottom:0 !important; }
+#plans{ margin-top:0 !important; padding-top:0 !important; }
+
+/* アコーディオンの上下パディングをさらに詰める＋margin折り畳み防止 */
+#corp-setup .accordion,
+#plans .accordion{
+  padding-top:4px !important;
+  padding-bottom:4px !important;
+  display: flow-root;            /* ← margin-collapsing防止 */
+}
+
+/* 最後/最初の details の不要な余白を潰す */
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
+#plans   .accordion details:first-of-type{  margin-top:0 !important; }
+
+/* セクション連結部をゼロに（保険） */
+#corp-setup + #plans{ margin-top:0 !important; }
+
+/* それでも空く環境向け（iOS対策）：透明ボーダーで折り畳み回避 */
+#plans{ border-top:1px solid transparent; }
