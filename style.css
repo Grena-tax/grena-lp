@@ -1,9 +1,9 @@
 /* =========================================
-   style.css — v2.4 (GAP KILLER | complete)
+   style.css — v2.5 (adjacent section GAP KILLER)
    ========================================= */
 
 /* 0) Debug banner (optional) */
-:root{ --_ver: "CSS v2.4"; }
+:root{ --_ver: "CSS v2.5"; }
 .css-debug-banner{
   position: fixed; right: 10px; bottom: 10px; z-index: 99999;
   background: linear-gradient(180deg,#1a56ff,#0f43cf); color:#fff;
@@ -13,11 +13,7 @@
 .css-debug-banner::after{ content: var(--_ver); }
 
 /* 1) Base */
-:root{
-  --c-primary:#1178ff;
-  --c-primary-d:#0e63d3;
-  --border:#e5e7eb;
-}
+:root{ --c-primary:#1178ff; --c-primary-d:#0e63d3; --border:#e5e7eb; }
 *{ box-sizing:border-box }
 html,body{ height:auto }
 body{
@@ -97,24 +93,20 @@ section > h2{
 .price-promo .now{ font-weight:900; font-size: clamp(20px, 2.6vw, 24px); color:#d32f2f; letter-spacing:.02em }
 .price-promo .meta{ font-size:.86em; color:#475569; margin-top:6px; line-height:1.6 }
 .price-promo .meta small{ display:block; opacity:.95 }
-.price-promo .proof{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; color:#0b1220 }
 .price-promo .proof span{
   border-radius: 999px; border:1px solid #e6ebf7; background:#fff;
   box-shadow: 0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700
 }
 
 /* 5) Buttons & sticky CTA */
-.btn,
-.sticky-cta a{
+.btn,.sticky-cta a{
   display:inline-block; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:800;
   transition: transform .06s ease, box-shadow .2s ease, background-color .2s
 }
-.btn--primary, .cta-primary{
-  background: linear-gradient(180deg, #1780ff, #0f6bf0); color:#fff;
-  box-shadow: 0 10px 24px rgba(23,128,255,.24);
-}
-.btn--primary:hover, .cta-primary:hover{ transform: translateY(-1px); box-shadow:0 12px 28px rgba(23,128,255,.28) }
-.btn--outline, .cta-secondary{ border:2px solid #cbd5e1; color:#0b1220; background:#fff }
+.btn--primary,.cta-primary{ background: linear-gradient(180deg, #1780ff, #0f6bf0); color:#fff;
+  box-shadow: 0 10px 24px rgba(23,128,255,.24); }
+.btn--primary:hover,.cta-primary:hover{ transform: translateY(-1px); box-shadow:0 12px 28px rgba(23,128,255,.28) }
+.btn--outline,.cta-secondary{ border:2px solid #cbd5e1; color:#0b1220; background:#fff }
 .sticky-cta{
   position: fixed; left:0; right:0; bottom:0; z-index:9999;
   display:flex; gap:12px; justify-content:center; align-items:center;
@@ -132,29 +124,36 @@ section > h2{
 .accordion .content .abbr-note::before{
   content:"※ "; font-weight:700; color:#475569;
 }
-.accordion summary .note,
-.accordion summary .abbr-note{ display:none !important; }
+.accordion summary .note,.accordion summary .abbr-note{ display:none !important; }
 
-/* 7) ===== HARD GAP KILLER (KYC → Plans) ===== */
-/* margin-collapsing を徹底的に防止＋Tailwindの py-* を無効化 */
-#corp-setup, #plans{
-  margin:0 !important; padding:0 !important;
-  display:flow-root;                 /* new BFC to stop collapsing */
-  border-top:1px solid transparent;  /* iOS/Safari 安全策 */
+/* 7) ===== UNIVERSAL ADJACENT-SECTION GAP KILLER ===== */
+/* すべてのセクション（id付き）に BFC を作り margin-collapsing を無効化 */
+section[id]{
+  display:flow-root;
+  border-top:1px solid transparent;
   border-bottom:1px solid transparent;
 }
-#corp-setup .accordion,
-#plans .accordion{
-  padding-top:4px !important;
-  padding-bottom:4px !important;
+/* 隣接セクションの上マージンをゼロに（保険） */
+section[id] + section[id]{ margin-top:0 !important; }
+
+/* 主要3ブロックはさらに強制的に詰める */
+#corp-setup,#plans,#sole-setup{
+  margin:0 !important; padding:0 !important;
 }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#plans   .accordion details:first-of-type{  margin-top:0 !important; }
+#corp-setup .accordion{ padding-bottom:6px !important; }
+#plans .accordion{ padding-top:6px !important; padding-bottom:6px !important; }
+#sole-setup .accordion{ padding-top:6px !important; }
 
-/* セクション直結の追加保険 */
+/* 直結部（corp→plans / plans→sole）を個別にゼロ化 */
 #corp-setup + #plans{ margin-top:0 !important; }
+#plans + #sole-setup{ margin-top:0 !important; }
 
-/* 8) Slightly tighter rhythm globally */
+/* まだ空く環境向けに、plans/sole の連結でわずかにマイナス */
+@supports (margin-top: -1px){
+  #plans + #sole-setup{ margin-top:-8px !important; } /* 必要なら -12 まで可 */
+}
+
+/* 8) Global rhythm a bit tighter */
 .accordion details+details{ margin-top:10px } /* was 12px */
 .accordion details{ margin-bottom:0 }
 
@@ -173,7 +172,7 @@ th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
 th:first-child, td:first-child{ text-align:left }
 
 /* 11) Responsive */
-@media (max-width: 600px){
+@media (max-width:600px){
   .price-promo{ padding:14px }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
