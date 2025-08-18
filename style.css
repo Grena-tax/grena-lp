@@ -1,80 +1,79 @@
 /* =========================================
-   style.css — v2.6 STABLE（完全版・置き換え用）
+   style.css — v2.4 CLEAN (complete replace)
    ========================================= */
 
-/* 0) デバッグバナー（任意。要らなければ削除OK） */
-:root{ --_ver:"CSS v2.6 STABLE"; }
+/* 0) Debug (任意表示用) */
+:root{ --_ver:"CSS v2.4"; --container-px: 16px; }
 .css-debug-banner{
-  position:fixed; right:10px; bottom:10px; z-index:99999;
-  background:linear-gradient(180deg,#1a56ff,#0f43cf);
-  color:#fff; font:700 12px/1.2 system-ui,"Noto Sans JP",sans-serif;
-  padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
-  letter-spacing:.02em;
+  position: fixed; right: 10px; bottom: 10px; z-index: 99999;
+  background: #0f43cf; color:#fff; font:700 12px/1 system-ui,"Noto Sans JP",sans-serif;
+  padding:.5rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
 }
-.css-debug-banner::after{ content:var(--_ver); }
+.css-debug-banner::after{ content: var(--_ver); }
 
-/* 1) ベース */
-:root{
-  --c-primary:#1178ff;
-  --c-primary-d:#0e63d3;
-  --border:#e5e7eb;
-}
+/* 1) Base */
 *{ box-sizing:border-box }
-html,body{ height:auto; }
 body{
   margin:0; line-height:1.7; color:#222; background:#fff;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
-  padding-bottom:80px; /* 固定CTAぶんの余白 */
+  padding-bottom:80px;  /* 固定CTA用 */
 }
 img{ max-width:100%; height:auto; display:block }
-a{ color:var(--c-primary); text-decoration:underline; text-underline-offset:2px }
-a:hover{ color:var(--c-primary-d) }
-.container{ width:min(1100px,92%); margin:auto }
+a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
+a:hover{ color:#0e63d3 }
 
-/* 2) セクション見出し */
-section>h2{
+/* 2) セクション／コンテナの左右余白を“必ず”確保（左寄り防止） */
+.container,
+#corp-setup, #plans, #sole-setup, #personal-account, #disclaimer{
+  width: min(1100px, 100%);
+  margin-inline: auto;
+  padding-inline: var(--container-px);
+}
+@media (min-width: 1200px){ :root{ --container-px: 24px; } }
+@media (max-width: 420px){  :root{ --container-px: 16px; } }
+
+/* 3) 見出し */
+section > h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size:clamp(22px,2.8vw,30px);
+  font-size: clamp(22px, 2.8vw, 30px);
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* 3) アコーディオン（<details>） */
-.accordion{ padding:36px 0 }
+/* 4) アコーディオン (<details>) */
+.accordion{ padding-block:24px; display:flow-root; } /* margin折り畳み防止 */
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow:0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition:box-shadow .25s ease, transform .2s ease;
+  box-shadow: 0 10px 30px rgba(20,35,70,.05);
+  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
-.accordion details+details{ margin-top:12px }
+.accordion details+details{ margin-top:12px; }   /* カード間の基準間隔 */
 .accordion summary{
   list-style:none; cursor:pointer;
   padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
   display:flex; align-items:center; gap:.6rem;
-  background:linear-gradient(180deg,#fff,#fbfcff);
+  background: linear-gradient(180deg, #fff, #fbfcff);
   border-bottom:1px solid #eef2f7;
 }
 .accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
-.accordion details[open] summary{ background:linear-gradient(180deg,#f9fbff,#f4f8ff) }
-/* ＋／−ボタン */
+.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
+.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff;
-  border:1px solid #dbe7ff; font-weight:900;
+  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
 }
-.accordion details[open]>summary::after{
+.accordion details[open] > summary::after{
   content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
 }
 .accordion .content{
   padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
 }
 .accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
+.accordion .content ul{ list-style: disc; padding-left: 1.2rem; margin:.4em 0 .8em 0 }
 .accordion .content li+li{ margin-top:.25em }
 
-/* 表（アコーディオン内） */
+/* 5) 表（アコーディオン内） */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
@@ -85,120 +84,60 @@ section>h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 4) 価格ボックス */
+/* 6) 価格ボックス */
 .price-promo{
-  background:linear-gradient(180deg,#fbfcff,#f6f8ff);
+  background: linear-gradient(180deg, #fbfcff, #f6f8ff);
   border:1px solid #e6ebf7; border-radius:12px;
-  box-shadow:0 10px 30px rgba(20,35,70,.06);
+  box-shadow: 0 10px 30px rgba(20,35,70,.06);
   padding:16px 16px 14px; margin:14px 0;
-  font-variant-numeric:tabular-nums;
+  font-variant-numeric: tabular-nums;
 }
 .price-promo .row{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px }
 .price-promo .label{ color:#475569; font-weight:700 }
 .price-promo .old{ color:#94a3b8; text-decoration:line-through }
-.price-promo .now{ font-weight:900; font-size:clamp(20px,2.6vw,24px); color:#d32f2f; letter-spacing:.02em }
+.price-promo .now{ font-weight:900; font-size: clamp(20px, 2.6vw, 24px); color:#d32f2f; letter-spacing:.02em }
 .price-promo .meta{ font-size:.86em; color:#475569; margin-top:6px; line-height:1.6 }
 .price-promo .meta small{ display:block; opacity:.95 }
 .price-promo .proof{ display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; color:#0b1220 }
 .price-promo .proof span{
-  border-radius:999px; border:1px solid #e6ebf7; background:#fff;
-  box-shadow:0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700;
+  border-radius: 999px; border:1px solid #e6ebf7; background:#fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04); padding:.22rem .6rem; font-weight:700
 }
 
-/* 5) ボタン & 固定CTA */
-.btn,.sticky-cta a{
-  display:inline-block; text-decoration:none; padding:12px 16px; border-radius:12px; font-weight:800;
-  transition:transform .06s ease, box-shadow .2s ease, background-color .2s;
-}
-.btn--primary,.cta-primary{
-  background:linear-gradient(180deg,#1780ff,#0f6bf0); color:#fff;
-  box-shadow:0 10px 24px rgba(23,128,255,.24);
-}
-.btn--primary:hover,.cta-primary:hover{ transform:translateY(-1px); box-shadow:0 12px 28px rgba(23,128,255,.28) }
-.btn--outline,.cta-secondary{ border:2px solid #cbd5e1; color:#0b1220; background:#fff }
-.sticky-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9999;
-  display:flex; gap:12px; justify-content:center; align-items:center;
-  padding:12px; background:rgba(255,255,255,.86);
-  border-top:1px solid #e6eaf2; box-shadow:0 -8px 26px rgba(20,35,70,.08);
-  backdrop-filter:saturate(140%) blur(8px);
-}
-
-/* 6) 本文注釈（※）— タイトルには出さない */
+/* 7) 注釈（※）— タイトルには出さない */
 .accordion .content .note,
 .accordion .content .abbr-note{
   display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
 }
 .accordion .content .note::before,
-.accordion .content .abbr-note::before{
-  content:"※ "; font-weight:700; color:#475569;
-}
+.accordion .content .abbr-note::before{ content:"※ "; font-weight:700; color:#475569; }
 .accordion summary .note,
 .accordion summary .abbr-note{ display:none !important; }
 
-/* 7) セクション間の“変な空き”対策（縦だけ詰める／左右は維持） */
-#corp-setup, #plans, #sole-setup{
-  /* margin 折り畳み対策 */
-  display:flow-root;
-  border-top:1px solid transparent;
-  border-bottom:1px solid transparent;
+/* 8) “KYC ⇄ 料金プラン” の間隔を他カードと同じに統一 */
+#corp-setup{ padding-bottom:0; }
+#corp-setup .accordion details:last-child{ margin-bottom:0; }
+#plans{ padding-top:0; }
+#corp-setup + #plans{ margin-top:12px; }  /* ← 他の details+details と同じ 12px */
 
-  /* 縦だけゼロ。左右は HTML 側の px-4 を尊重（＝触らない） */
-  padding-top:0 !important;
-  padding-bottom:0 !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-}
-/* 連結部さらに詰める */
-#corp-setup .accordion{ padding-bottom:6px }
-#plans .accordion{ padding-top:6px }
-/* 連結直前直後の余白を消す */
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 }
-#plans .accordion details:first-of-type{ margin-top:0 }
-/* 念のためセクション同士 */
-#corp-setup + #plans,
-#plans + #sole-setup{ margin-top:0 !important }
-
-/* アコーディオン自体の縦リズムを少しだけ詰める */
-.accordion details+details{ margin-top:10px } /* 既定12px → 10px */
-.accordion details{ margin-bottom:0 }
-
-/* 8) 小ユーティリティ */
+/* 9) 汎用 */
 .muted{ color:#475569 }
 .text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
+.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
 .security-note{
-  font-size:.9em; color:#334155; background:#f1f5f9; border:1px solid #e2e8f0;
-  border-radius:10px; padding:.8rem 1rem; margin-top:.6rem;
+  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
 }
 
-/* 9) テーブル（アコーディオン外フォールバック） */
+/* 10) 表（フォールバック） */
 table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
 th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
-th:first-child,td:first-child{ text-align:left }
+th:first-child, td:first-child{ text-align:left }
 
-/* 10) レスポンシブ */
-@media (max-width:600px){
+/* 11) Responsive */
+@media (max-width: 600px){
   .price-promo{ padding:14px }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
-/* === seam-gap fix: KYC ⇄ 料金プラン を他と同じ 10px に統一 === */
-/* 1) セクション境界の余白をリセット＋折り畳み対策 */
-#corp-setup, #plans { margin:0 !important; }
-#corp-setup { padding-bottom:0 !important; border-bottom:1px solid transparent; }
-#plans      { padding-top:0 !important;  border-top:1px solid transparent;  margin-top:0 !important; }
-
-/* 2) 境界直前直後のアコーディオンは margin 折り畳みを防止 */
-#corp-setup > .accordion,
-#plans      > .accordion { display: flow-root; padding-top:0 !important; padding-bottom:0 !important; }
-
-/* 3) 最後/最初の details による増減を抑止 */
-#corp-setup .accordion details:last-child { margin-bottom:0 !important; }
-#plans      .accordion details:first-child{ margin-top:0 !important;  }
-
-/* 4) “KYC → 料金プラン” のスキマを明示的に 10px に設定
-   （他のカード間 .accordion details+details と同じ幅にする） */
-#corp-setup + #plans { margin-top:10px !important; }
-/* ※ もし他の場所が 12px なら「10px」を 12px に変更してください */
