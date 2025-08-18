@@ -148,3 +148,16 @@ th:first-child, td:first-child{ text-align:left }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
+/* ==== KYC ⇄ 料金プラン の隙間をカード間(≒12px)に揃える強制パッチ ==== */
+
+/* まず通常ブラウザ用：両セクションの上下パディング/マージンをゼロ化 */
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
+#corp-setup + #plans{ margin-top:0 !important; }
+#plans{ padding-top:0 !important; margin-top:0 !important; }
+#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
+
+/* iOS/Safariでまだ空く場合の最終手段：わずかに引き上げる（数値は -8〜-12 で調整可） */
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top:-10px !important; }
+}
