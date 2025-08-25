@@ -3,54 +3,62 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ジョージア法人設立LP</title>
 
-  <title>ジョージア法人設立／個人事業主（IE+SBS）｜完全オンライン｜Grena Georgia</title>
-  <meta name="description" content="現地法律事務所とMoU締結。ジョージアの法人設立・個人事業主（IE+SBS）登録を、日本語だけでオンライン完結。料金・流れ・FAQを掲載。">
+  <!-- 1) デバッグ用ピンクバー（HTML差し替え確認用） -->
+  <style id="debug-probe">
+    html { border-top: 8px solid #ff0077 !important; }
+  </style>
 
-  <!-- ★差し替え1：あなたの公開URL -->
-  <link rel="canonical" href="https://your-domain.example/">
-
-  <!-- OGP / Twitter -->
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Grena Georgia">
-  <meta property="og:title" content="ジョージア法人設立／個人事業主（IE+SBS）｜完全オンライン">
-  <meta property="og:description" content="現地法律事務所とMoU締結。登記・口座・KYCをワンストップでサポート。">
-  <!-- ★差し替え2：og:image のURL -->
-  <meta property="og:image" content="https://your-domain.example/ogp.jpg">
-  <meta property="og:url" content="https://your-domain.example/">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <!-- Favicon（任意で差し替え） -->
-  <link rel="icon" href="/favicon.png">
-
-  <!-- デバッグ用ピンクバー（公開時は削除OK） -->
-  <style id="debug-probe">html{border-top:8px solid #ff0077!important}</style>
-
-  <!-- メインCSS（キャッシュ回避のためバージョン付） -->
+  <!-- 2) メインCSS（キャッシュ回避のためバージョン付） -->
   <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-  <!-- このページ専用の軽量スタイル（元のCSSを踏襲） -->
+  <!-- 3) このページ専用の軽量スタイル -->
   <style>
+    /* アコーディオンの見た目 */
     details summary{
-      padding: 1rem 1.2rem; cursor: pointer; list-style: none;
-      border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; font-weight: 700;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      list-style: none;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      background: #fff;
+      font-weight: 700;
     }
-    details[open] summary{ border-bottom-left-radius: 0; border-bottom-right-radius: 0; background:#f8fafc; }
+    details[open] summary{
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      background:#f8fafc;
+    }
     details .content{
-      border:1px solid #e5e7eb; border-top:0; border-bottom-left-radius:10px; border-bottom-right-radius:10px;
-      padding:1rem 1.2rem .9rem; background:#fff;
+      border:1px solid #e5e7eb;
+      border-top:0;
+      border-bottom-left-radius:10px;
+      border-bottom-right-radius:10px;
+      padding:1rem 1.2rem .9rem;
+      background:#fff;
     }
-    .text-sm{ font-size:.86em; opacity:.9 } .muted{ color:#475569 }
+
+    /* 余白・文字 */
+    .text-sm{ font-size:.86em; opacity:.9 }
+    .muted{ color:#475569 }
     .smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
     .note{ display:block; font-size:.82em; color:#475569; margin-top:.35rem }
+
     .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
 
-    .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+    .price-promo{
+      border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;
+      padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)
+    }
     .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
     .price-promo .label{color:#475569;font-weight:700}
     .price-promo .old{color:#64748b;text-decoration:line-through}
     .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
-    .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+    .price-promo .badge{
+      display:inline-block;background:#ef4444;color:#fff;border-radius:999px;
+      padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem
+    }
     .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
     .price-promo .meta small{display:block;opacity:.9}
     .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
@@ -64,18 +72,13 @@
     th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
     th:first-child, td:first-child{text-align:left}
 
+    /* ===== 余白の“詰め”調整 ===== */
+    /* アコーディオン項目同士の間隔を統一して少し詰める */
     .accordion>details{ margin: .55rem 0 !important; }
+    /* セクション跨ぎの大きすぎる余白を圧縮（KYC → 料金プランの間） */
     #corp-setup{ padding-bottom: 2.25rem !important; }
-    #plans{ padding-top: 1.0rem !important; }
-
-    /* 固定CTA用（スマホ優先） */
-    .cta-btn{display:inline-block;text-decoration:none;border-radius:10px;font-weight:800;padding:.55rem .9rem}
+    #plans{ padding-top: 1.0rem !important; }   /* 見出しを外しているのでトップ余白を小さく */
   </style>
-
-  <!-- 構造化データ（最低限） -->
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"Organization","name":"Grena Georgia","url":"https://your-domain.example/","logo":"https://your-domain.example/logo.png","sameAs":["https://line.me/R/ti/p/@georgia-tax"]}
-  </script>
 </head>
 <body>
 
@@ -83,21 +86,7 @@
   法人設立セクション
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
-  <!-- ★h2→h1（SEOの基本） -->
-  <h1 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h1>
-
-  <!-- 申込みボタン（法人／IE+SBS） -->
-  <div class="price-promo" role="region" aria-label="申込み">
-    <div class="row">
-      <span class="label">いますぐ申込み：</span>
-      <a class="cta-btn" style="background:#10b981;color:#0b1220"
-         href="https://forms.gle/法人用フォームID" target="_blank" rel="noopener">法人設立</a>
-      <span class="text-sm">／</span>
-      <a class="cta-btn" style="background:#60a5fa;color:#0b1220"
-         href="https://forms.gle/個人事業主用フォームID" target="_blank" rel="noopener">IE+SBS</a>
-    </div>
-    <div class="meta"><small>※ フォーム送信で自動受付・案件IDが発行されます。</small></div>
-  </div>
+  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
 
   <div class="space-y-3 accordion">
 
@@ -170,8 +159,8 @@
         <p>ジョージア現地法上、再投資中の利益には法人税が課税されません（配当時15％）。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
         <p>出典：</p>
         <ul>
-          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート">PwC税制レポート</a></li>
-          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener" aria-label="OECD評価レポート">OECD評価レポート</a></li>
+          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート（新しいウィンドウで開きます）">PwC税制レポート</a></li>
+          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener" aria-label="OECD評価レポート（新しいウィンドウで開きます）">OECD評価レポート</a></li>
         </ul>
       </div>
     </details>
@@ -186,7 +175,7 @@
           <li>提携内容：登記、税務、口座、帳簿、契約サポート</li>
           <li>法人ID：406365525</li>
         </ul>
-        <span class="note">※ MoU＝Memorandum of Understanding</span>
+        <span class="note">※ MoU＝覚書（Memorandum of Understanding）</span>
       </div>
     </details>
 
@@ -201,7 +190,7 @@
           <li>IBAN法人口座開設支援</li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
-        <span class="note">※ IBAN＝国際銀行口座番号／RS.ge＝税務ポータル</span>
+        <span class="note">※ IBAN＝国際銀行口座番号／eSIM＝組込型SIM／RS.ge＝ジョージア税務ポータル</span>
       </div>
     </details>
 
@@ -214,10 +203,11 @@
           <li>MoU＋委任状＋支配者証明で正規構成</li>
           <li>実務はすべて依頼者本人が実行</li>
           <li>年額：€2,500<span class="text-sm">（税込／2025年8月時点）</span></li>
+          <li>ジョージア商法第152条に基づく制度</li>
           <li><strong>実質支配者（UBO）は公証済み宣誓書等での開示が法的に求められます</strong></li>
           <li>国際的な情報交換制度（租税条約等）の対象となる可能性があります</li>
         </ul>
-        <span class="note">※ UBO＝Ultimate Beneficial Owner</span>
+        <span class="note">※ UBO＝Ultimate Beneficial Owner（最終的受益者・実質的支配者）</span>
       </div>
     </details>
 
@@ -233,13 +223,13 @@
         </ul>
         <p><strong>FMS（金融監督庁）</strong>：仮想通貨保有・送金が多い場合は報告義務やウォレット開示が必要なことあり。</p>
         <p><strong>わかりやすく</strong>：KYC＝本人確認（IDと住所）／FMS＝お金の流れの監査（必要に応じて）。</p>
-        <span class="note">※ FMS＝Financial Monitoring Service</span>
+        <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service（ジョージア金融監督）</span>
         <p><strong>FAQ</strong></p>
         <ul>
           <li>Q. 普通の人でもFMS報告必要？ → A. 基本は不要、資産額次第。</li>
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
-        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
+        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener" aria-label="LINE公式で相談（新しいウィンドウで開きます）">LINE相談</a>）。</p>
       </div>
     </details>
 
@@ -250,10 +240,16 @@
   料金プラン（親アコーディオンの中に3プラン）
 ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
+  <!-- 見出し「料金プラン」は非表示（ご要望につき） -->
+
   <div class="space-y-3 accordion">
+
+    <!-- 親：料金プラン（文言変更：初年度→料金プラン） -->
     <details>
       <summary>料金プラン（3つのプランから選択）</summary>
       <div class="content">
+
+        <!-- 子：基本 -->
         <details>
           <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
@@ -267,6 +263,7 @@
           </div>
         </details>
 
+        <!-- 子：設立＋LP -->
         <details>
           <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
@@ -277,9 +274,11 @@
               <li>月1回のライト相談（LINEまたはチャット）</li>
               <li>ライティング／構成アドバイス</li>
             </ul>
+            <span class="note">※ LP＝ランディングページ</span>
           </div>
         </details>
 
+        <!-- 子：フル -->
         <details>
           <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
@@ -290,12 +289,14 @@
               <li>職業別アドバイス（個別送付）</li>
               <li>月1回の運用レビュー（文面型）</li>
             </ul>
+            <span class="note">※ CFC＝タックスヘイブン対策税制</span>
           </div>
         </details>
 
       </div>
     </details>
 
+    <!-- 2年目以降（親の外に独立でOK） -->
     <details>
       <summary>2年目以降の維持・サポート</summary>
       <div class="content">
@@ -306,7 +307,7 @@
           <li>現地パートナー対応／Zoom不要・文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
         <ul>
           <li>Aの内容すべて</li>
           <li>問い合わせフォームの保守・小修正対応</li>
@@ -331,6 +332,7 @@
       </div>
     </details>
 
+    <!-- FAQ（2年目以降） -->
     <details>
       <summary>よくある質問（2年目以降）</summary>
       <div class="content">
@@ -341,7 +343,8 @@
         </ul>
       </div>
     </details>
-  </div>
+
+  </div><!-- /.accordion -->
 </section>
 
 <!-- =========================
@@ -352,6 +355,7 @@
 
   <div class="space-y-3 accordion">
 
+    <!-- 1 -->
     <details>
       <summary>ジョージアで、スモールに世界を始める（IE＋Small Business Status）</summary>
       <div class="content">
@@ -363,10 +367,11 @@
           <li>申請はすべてオンライン、渡航不要</li>
           <li>MoU提携：TREX LEGAL（2025/5/28）</li>
         </ul>
-        <span class="note">※ IE＝Individual Entrepreneur／SBS＝Small Business Status</span>
+        <span class="note">※ IE＝Individual Entrepreneur（個人事業主）／SBS＝Small Business Status／MoU＝覚書</span>
       </div>
     </details>
 
+    <!-- 2 -->
     <details>
       <summary>このサービスが向いている方</summary>
       <div class="content">
@@ -379,6 +384,7 @@
       </div>
     </details>
 
+    <!-- 3：料金 -->
     <details open>
       <summary>サポート内容と料金</summary>
       <div class="content">
@@ -414,6 +420,7 @@
       </div>
     </details>
 
+    <!-- 4：制度の枠組み -->
     <details>
       <summary>Small Business Statusの詳細</summary>
       <div class="content">
@@ -430,28 +437,28 @@
       </div>
     </details>
 
+    <!-- 5：KYC/FMS -->
     <details>
       <summary>KYCとFMS（本人確認・資金源）／FAQ</summary>
       <div class="content">
         <p><strong>KYC（本人確認）</strong></p>
         <ul>
-          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
-          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
-          <li>署名（パスポートと一致の筆跡／公証書にも記載）</li>
-          <li>書類原本の国際郵送（PDF不可）</li>
+          <li>パスポート（顔写真ページ）</li>
+          <li>住所証明（公共料金・銀行明細など）</li>
         </ul>
         <p><strong>FMS（金融監督庁）</strong>：高額送金・仮想通貨額が大きい場合にお金の流れを確認されることがあります。</p>
 
         <h5>FAQ</h5>
         <ul>
-          <li>Q. 日本からでも利用可？ → はい、オンライン完結です。</li>
-          <li>Q. 個人口座開設は含まれますか？ → 含まれません（別サービス）。</li>
-          <li>Q. 年収が2,500万円超えたら？ → 通常課税（3〜5%）へ切替。</li>
+          <li>Q. 日本からでも利用可？ → A. はい、オンライン完結です。</li>
+          <li>Q. 個人口座開設は含まれますか？ → A. 含まれません（別サービス）。</li>
+          <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
         </ul>
-        <span class="note">※ FMS＝Financial Monitoring Service</span>
+        <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
       </div>
     </details>
 
+    <!-- 6：将来の法人化／割引 -->
     <details>
       <summary>個人 → 法人化の成長パス／IE登録者限定割引</summary>
       <div class="content">
@@ -463,14 +470,18 @@
         <div class="price-promo" aria-label="IE登録者限定割引">
           <div class="row">
             <span class="label">通常価格：</span>
-            <span class="old">¥330,000</span>
+            <span class="old">¥330,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="row">
             <span class="label">IE登録者限定：</span>
             <span class="now">¥298,000</span><span class="text-sm">（税込）</span>
             <span class="badge">先着10社</span>
           </div>
+          <div class="meta">
+            <small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small>
+          </div>
         </div>
+        <span class="note">※ IE＝Individual Entrepreneur</span>
       </div>
     </details>
 
@@ -484,6 +495,8 @@
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
 
   <div class="space-y-3 accordion">
+
+    <!-- 国の状況 -->
     <details>
       <summary>ジョージアって今どんな国？（成長率・制度）</summary>
       <div class="content">
@@ -498,17 +511,20 @@
           <div class="step">制度整備</div>
         </div>
         <p class="text-sm muted">※ 指標は変動します。投資判断は各自でご確認ください。</p>
+        <span class="note">※ IMF＝国際通貨基金／ADB＝アジア開発銀行／EBRD＝欧州復興開発銀行／AIIB＝アジアインフラ投資銀行／EIB＝欧州投資銀行</span>
       </div>
     </details>
 
+    <!-- なぜ高金利 -->
     <details>
       <summary>なぜ二桁利息が成立？（成長型金融モデル）</summary>
       <div class="content">
-        <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。</p>
+        <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。<br>「預金11.5% → 融資13〜15%」のような構造が成立します。</p>
         <p class="text-sm muted">※ 金利は商品・銀行・時期で変動。将来の利回りは保証されません。</p>
       </div>
     </details>
 
+    <!-- 信頼性 -->
     <details>
       <summary>銀行と制度の信頼性／預金保護</summary>
       <div class="content">
@@ -518,9 +534,11 @@
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。</div>
+        <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
 
+    <!-- 必要書類 -->
     <details>
       <summary>必要書類（日本在住・非居住者向け）</summary>
       <div class="content">
@@ -531,9 +549,11 @@
           <li>書類原本の国際郵送（PDF不可）</li>
         </ul>
         <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
       </div>
     </details>
 
+    <!-- サポート内容と料金 -->
     <details open>
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
@@ -547,38 +567,114 @@
         <div class="price-promo" aria-label="先着特別価格（個人口座開設）">
           <div class="row">
             <span class="label">通常価格：</span>
-            <span class="old">¥258,000</span>
+            <span class="old">¥258,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="row">
             <span class="label">特別価格：</span>
-            <span class="now">¥198,000</span>
+            <span class="now">¥198,000</span><span class="text-sm">（税込）</span>
             <span class="badge">先着15名限定</span>
           </div>
           <div class="meta">
+            <small>※ 特別価格は予告なく終了する場合があります（定員到達時は即時終了）。</small>
             <small>※ 表示価格はサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。</small>
+            <small>※ 条件・価格は今後変更となる場合があります。</small>
+          </div>
+          <div class="proof">
+            <span>MoU：TREX LEGAL</span>
+            <span>非居住者OK</span>
+            <span>SWIFT対応</span>
           </div>
         </div>
       </div>
     </details>
 
+    <!-- リスク・為替：数値シミュレーション -->
     <details>
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
-        <p class="muted">為替や金利は変動します。分散と上限設定が有効です。</p>
+        <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+        <table>
+          <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
+          <tbody>
+            <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td>+¥398,860</td></tr>
+            <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,547, -</td><td>+約¥227,000</td></tr>
+            <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375, -</td><td>+約¥55,000</td></tr>
+            <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,290, -</td><td>約▲¥30,000</td></tr>
+            <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889, -</td><td>+約¥569,000</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
+          <li>為替が20%以上下落しない限り、元本超えの可能性が高い設計。</li>
+        </ul>
+        <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
     </details>
 
+    <!-- 複利表（年10%に更新） -->
+    <details>
+      <summary>複利の力（年10%複利・概算）</summary>
+      <div class="content">
+        <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
+        <table>
+          <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
+          <tbody>
+            <tr><td>1年</td><td>1,100,000</td><td>1.10倍</td></tr>
+            <tr><td>2年</td><td>1,210,000</td><td>1.21倍</td></tr>
+            <tr><td>3年</td><td>1,331,000</td><td>1.33倍</td></tr>
+            <tr><td>4年</td><td>1,464,100</td><td>1.46倍</td></tr>
+            <tr><td>5年</td><td>1,610,510</td><td>1.61倍</td></tr>
+            <tr><td>6年</td><td>1,771,561</td><td>1.77倍</td></tr>
+            <tr><td>7年</td><td>1,948,717</td><td><strong>1.95倍（約2倍）</strong></td></tr>
+          </tbody>
+        </table>
+        <table>
+          <thead><tr><th>到達倍率</th><th>目安年数</th><th>残高（円・概算）</th></tr></thead>
+          <tbody>
+            <tr><td>5倍</td><td>約17年</td><td>5,000,000</td></tr>
+            <tr><td>10倍</td><td>約25年</td><td>10,000,000</td></tr>
+            <tr><td>30倍</td><td>約36年</td><td>30,000,000</td></tr>
+            <tr><td>50倍</td><td>約42年</td><td>50,000,000</td></tr>
+            <tr><td>100倍</td><td>約49年</td><td>100,000,000</td></tr>
+          </tbody>
+        </table>
+        <p class="text-sm muted">※ 上記は単純計算の目安です。税・為替・商品条件により実績は異なります。将来の成果は保証されません。</p>
+      </div>
+    </details>
+
+    <!-- よくある質問 -->
     <details>
       <summary>よくある質問（Q&A）</summary>
       <div class="content">
         <ul>
           <li>Q. 元本保証は？ → A. GEL 30,000 まで預金保護（自動）。</li>
+          <li>Q. 為替リスクは？ → A. 為替が大幅下落しない限り利息がクッションに。分散が有効。</li>
           <li>Q. 出金方法は？ → A. SWIFT送金／現地ATM 等。</li>
           <li>Q. 審査が落ちたら？ → A. 銀行判断のため保証不可。必要に応じて再申請の案内可。</li>
         </ul>
+        <span class="note">※ SWIFT＝国際送金網</span>
       </div>
     </details>
-  </div>
+
+    <!-- 進め方 -->
+    <details>
+      <summary>進め方（スケジュール目安）</summary>
+      <div class="content">
+        <ol>
+          <li>書類の公証＋アポスティーユ取得（約5〜7営業日）</li>
+          <li>原本郵送＆現地処理（約5〜7日）</li>
+          <li>口座開設・SMS設定（開設後にeSIM納品可）</li>
+        </ol>
+        <div class="progress-steps">
+          <div class="step completed">1. 書類準備</div>
+          <div class="step">2. 申請</div>
+          <div class="step">3. 開設・運用</div>
+        </div>
+        <p class="text-sm muted">※ 金利・条件・必要書類は銀行やタイミングで変わります。最新情報は都度ご案内します。</p>
+      </div>
+    </details>
+
+  </div><!-- /.accordion -->
 </section>
 
 <!-- =========================
@@ -591,32 +687,45 @@
     <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
     <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
     <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
-    <li><strong>入金後は現地が即時着手</strong>するため、キャンセル・返金は原則不可です。当社の明確な不履行がある場合は適切な措置を講じます。</li>
+  </ul>
+  <h3 class="smallish" style="font-size:1.05em;margin-top:1rem">キャンセルポリシー</h3>
+  <ul>
+    <li>ご入金確認後は現地が即時着手するため、<strong>キャンセル・返金は原則不可</strong>です。</li>
+    <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
+    <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
+    <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
   </ul>
 </section>
 
-<!-- 固定フッターCTA（効果高） -->
-<div id="sticky-cta" style="position:fixed;left:0;right:0;bottom:0;z-index:50;background:#0b1220;color:#fff;padding:.6rem .9rem;display:flex;gap:.6rem;justify-content:center;align-items:center;box-shadow:0 -6px 16px rgba(0,0,0,.18)">
-  <a href="https://forms.gle/法人用フォームID" target="_blank" rel="noopener"
-     class="cta-btn" style="background:#10b981;color:#0b1220">法人に申し込む</a>
-  <a href="https://forms.gle/個人事業主用フォームID" target="_blank" rel="noopener"
-     class="cta-btn" style="background:#60a5fa;color:#0b1220">IE+SBSに申し込む</a>
-</div>
-
-<!-- スムーススクロール & style.css 読み込みチェック -->
+<!-- スムーススクロール & “TOPへ”（任意ボタンがあれば） -->
 <script>
+  // “TOPへ”ボタン（存在するときだけ動作）
   document.getElementById('toTop')?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // 画面内リンクはなめらかに移動 (#corp-setup / #plans など)
   document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]'); if (!a) return;
-    const id = a.getAttribute('href'); const t = document.querySelector(id);
-    if (t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'});
-      const first = t.querySelector('details'); if (first && !first.open) first.open = true;
-      history.pushState(null,'',id); }
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href');
+    const target = document.querySelector(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const first = target.querySelector('details');
+      if (first && !first.open) first.open = true;
+      history.pushState(null, '', id);
+    }
   });
-  if (location.hash){ const t = document.querySelector(location.hash);
-    t && setTimeout(() => t.scrollIntoView({ behavior:'smooth' }), 200); }
+
+  // ハッシュ直リンクで来た場合もスムーズに
+  if (location.hash) {
+    const t = document.querySelector(location.hash);
+    t && setTimeout(() => t.scrollIntoView({ behavior: 'smooth' }), 200);
+  }
+
+  // 追加：style.css が読み込めているか検知（コンソール確認用）
   document.addEventListener('DOMContentLoaded', () => {
     const css = Array.from(document.styleSheets).find(s => s.href && s.href.includes('style.css'));
     console.log(css ? '✅ CSS正常読み込み: ' + css.href : '⚠️ style.css が読み込まれていません');
