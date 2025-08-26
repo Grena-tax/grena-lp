@@ -207,3 +207,37 @@ th:first-child, td:first-child{ text-align:left }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
 #plans      .accordion > details:first-child{  margin-top:0 !important; }
+
+/* === FINAL OVERRIDE v2.5.1 — KYC → 料金プランの隙間を確実に詰める最終層 === */
+/* 既存CSSが重複していても、ここが最優先で効くように !important で固定します */
+
+:root{
+  /* 端末差を吸収できるつまみ。数字だけ触れば詰め具合を全体調整できる */
+  --gap-lift: -40px;           /* PC/タブレットの標準 */
+  --gap-lift-ios: -42px;       /* iOS/Safari 用の少し強め */
+  --gap-lift-sp: -44px;        /* スマホ幅の推奨 */
+}
+
+/* セクション境界の余白をゼロ化＋margin 折り畳みを無効化（flow-root） */
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans{      padding-top:0 !important;     margin-top:0  !important;  }
+#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
+#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#plans      .accordion > details:first-child{  margin-top:0 !important; }
+
+/* 継ぎ目の実際の引き上げ量（ここが“詰め”の本体） */
+#corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
+
+/* スマホ幅ではもう少しだけ詰める */
+@media (max-width: 480px){
+  #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
+}
+
+/* iOS/Safari は margin 折り畳みの影響が強いのでさらに強め */
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important; }
+}
+
+/* 念のため：表のはみ出し保険（SP横スクロール許可） */
+.accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
