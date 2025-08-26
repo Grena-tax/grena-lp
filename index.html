@@ -1,6 +1,147 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ジョージア法人設立LP</title>
+
+  <!-- 置き換え確認用：ページ最上部にピンク帯が出ます -->
+  <style id="debug-probe">
+    html { border-top: 8px solid #ff0077 !important; }
+  </style>
+
+  <!-- ====== ALL-IN-ONE CSS (v2.6) ====== -->
+  <style>
+    :root{
+      --gap-lift: -36px;      /* PC/タブレットの KYC→料金プラン 詰め具合 */
+      --gap-lift-ios: -42px;  /* iOS は margin 折り畳みが強いので少し強め */
+      --gap-lift-sp: -40px;   /* スマホ幅での詰め具合 */
+    }
+
+    /* Base */
+    *{ box-sizing:border-box }
+    html{ -webkit-text-size-adjust:100% }
+    body{
+      margin:0; color:#222; line-height:1.7; background:#fff;
+      font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+                   "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+                   Roboto,Helvetica,Arial,sans-serif;
+      padding-bottom:80px; /* スティッキーCTA等の逃げ */
+    }
+    img{ max-width:100%; height:auto; display:block }
+    a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
+    a:hover{ color:#0e63d3 }
+    .container{ width:min(1100px,92%); margin-inline:auto }
+
+    /* Section heading */
+    section > h2{
+      font-weight:800; letter-spacing:.01em; line-height:1.25;
+      font-size: clamp(22px, 2.8vw, 30px);
+      margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
+    }
+
+    /* Accordion (details/summary) */
+    .accordion{ padding:24px 0 }
+    .accordion details{
+      border:1px solid #e7ebf2; border-radius:12px; background:#fff;
+      box-shadow: 0 10px 30px rgba(20,35,70,.05);
+      overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
+    }
+    .accordion details + details{ margin-top:12px }
+    .accordion summary{
+      list-style:none; cursor:pointer; position:relative;
+      padding:14px 52px 14px 16px; font-weight:800; font-size:16px;
+      display:flex; align-items:center; gap:.6rem;
+      background: linear-gradient(180deg,#fff,#fbfcff);
+      border-bottom:1px solid #eef2f7;
+    }
+    .accordion summary::-webkit-details-marker{ display:none }
+    .accordion summary:focus-visible{
+      outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px
+    }
+    .accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
+    .accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
+    .accordion summary::after{
+      content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
+      width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
+      line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
+    }
+    .accordion details[open] > summary::after{
+      content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
+    }
+    .accordion .content{
+      padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fff; color:#374151;
+    }
+
+    /* Text utils */
+    .text-sm{ font-size:.86em; opacity:.9 }
+    .muted{ color:#475569 }
+    .smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
+    .note{ display:block; font-size:.85em; color:#64748b; margin-top:.35rem }
+    .security-note{
+      font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
+      border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
+    }
+
+    /* Price/steps */
+    .price-promo{
+      border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;
+      padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)
+    }
+    .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+    .price-promo .label{color:#475569;font-weight:700}
+    .price-promo .old{color:#64748b;text-decoration:line-through}
+    .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+    .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+    .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+    .price-promo .meta small{display:block;opacity:.9}
+    .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+    .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+
+    .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
+    .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
+    .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;margin:.6rem 0}
+    th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
+    th:first-child, td:first-child{text-align:left}
+
+    /* セクション境界の“隙間”対策：KYC(#corp-setup) → 料金(#plans) */
+    #corp-setup, #plans{
+      padding-top:0 !important; padding-bottom:0 !important;
+      margin-top:0 !important;  margin-bottom:0 !important;
+      display:flow-root; /* margin-collapsing防止 */
+    }
+    #corp-setup .accordion{ padding-bottom:0 !important }
+    #plans .accordion{      padding-top:0  !important }
+    #corp-setup + #plans{ margin-top: var(--gap-lift) !important }
+    @media (max-width:480px){
+      #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important }
+    }
+    @supports (-webkit-touch-callout:none){
+      #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important }
+    }
+
+    /* Accordion項目の上下マージン微調整（詰め） */
+    .accordion > details{ margin:.55rem 0 !important }
+
+    /* SPの表は横スクロール許可 */
+    @media (max-width:600px){
+      .accordion{ padding:20px 0 }
+      .accordion summary{ padding:12px 46px 12px 12px }
+      .accordion .content{ padding:12px 12px 14px }
+      .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+    }
+  </style>
+</head>
+<body>
+
+<!-- =========================
+  法人設立（復元済み）
+========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
-
   <div class="space-y-3 accordion">
 
     <!-- 1 -->
@@ -72,8 +213,8 @@
         <p>ジョージア現地法上、再投資中の利益には法人税が課税されません（配当時15％）。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
         <p>出典：</p>
         <ul>
-          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート（新しいウィンドウで開きます）">PwC税制レポート</a></li>
-          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener" aria-label="OECD評価レポート（新しいウィンドウで開きます）">OECD評価レポート</a></li>
+          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener">PwC税制レポート</a></li>
+          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener">OECD評価レポート</a></li>
         </ul>
       </div>
     </details>
@@ -142,12 +283,16 @@
           <li>Q. 普通の人でもFMS報告必要？ → A. 基本は不要、資産額次第。</li>
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
-        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener" aria-label="LINE公式で相談（新しいウィンドウで開きます）">LINE相談</a>）。</p>
+        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
       </div>
     </details>
 
-  </div><!-- /.accordion -->
+  </div>
 </section>
+
+<!-- =========================
+  料金プラン（復元済み）
+========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
@@ -205,7 +350,7 @@
           <li>現地パートナー対応／Zoom不要・文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
         <ul>
           <li>Aの内容すべて</li>
           <li>問い合わせフォームの保守・小修正対応</li>
@@ -242,9 +387,12 @@
     </details>
   </div>
 </section>
+
+<!-- =========================
+  個人事業主（復元済み）
+========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
-
   <div class="space-y-3 accordion">
 
     <details>
@@ -367,11 +515,14 @@
       </div>
     </details>
 
-  </div><!-- /.accordion -->
+  </div>
 </section>
+
+<!-- =========================
+  個人口座（復元済み）
+========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
-
   <div class="space-y-3 accordion">
 
     <!-- 国の状況 -->
@@ -489,7 +640,7 @@
       </div>
     </details>
 
-    <!-- 複利表（年10%に更新） -->
+    <!-- 複利表（年10%） -->
     <details>
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
@@ -552,5 +703,62 @@
       </div>
     </details>
 
-  </div><!-- /.accordion -->
+  </div>
 </section>
+
+<!-- =========================
+  免責事項
+========================== -->
+<section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
+  <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
+  <ul>
+    <li>当サービスはジョージア現地法に基づく<strong>情報提供・実務サポート</strong>です。税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
+    <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
+    <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
+    <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
+  </ul>
+  <h3 class="smallish" style="font-size:1.05em;margin-top:1rem">キャンセルポリシー</h3>
+  <ul>
+    <li>ご入金確認後は現地が即時着手するため、<strong>キャンセル・返金は原則不可</strong>です。</li>
+    <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
+    <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
+    <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
+  </ul>
+</section>
+
+<!-- ====== JS（スムーススクロール等。存在しない要素を参照しても安全な書き方） ====== -->
+<script>
+  // “TOPへ”ボタン（存在するときだけ動作）
+  document.getElementById('toTop')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 画面内リンクはなめらかに移動
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const id = a.getAttribute('href');
+    const target = document.querySelector(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const first = target.querySelector('details');
+      if (first && !first.open) first.open = true;
+      history.pushState(null, '', id);
+    }
+  });
+
+  // ハッシュ直リンクで来た場合もスムーズに
+  if (location.hash) {
+    const t = document.querySelector(location.hash);
+    t && setTimeout(() => t.scrollIntoView({ behavior: 'smooth' }), 200);
+  }
+
+  // 置き換え確認（コンソール）
+  document.addEventListener('DOMContentLoaded', () => {
+    console.log('✅ ALL-IN-ONE版が読み込まれています');
+  });
+</script>
+
+</body>
+</html>
