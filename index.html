@@ -411,6 +411,123 @@
     });
   });
 </script>
+<!-- === HOTFIX: 申込み1本化 + 上部申込み非表示 + 目次ドロワー === -->
+<style id="hotfix-cta-nav">
+  /* 上部の“いますぐ申込み”ボックスを強制的に消す（旧HTML対策） */
+  .price-promo[aria-label="申込み"], #hero-cta { display:none !important; }
 
+  /* 下部の固定CTAを1つに統一（2個目を非表示） */
+  #sticky-cta a + a { display:none !important; }
+
+  /* ハンバーガー & ドロワー（目次） */
+  .hamburger{
+    position:fixed; right:14px; top:14px; z-index:10001;
+    width:42px; height:42px; border-radius:10px; border:1px solid #e5e7eb;
+    background:#fff; display:grid; place-items:center; box-shadow:0 6px 20px rgba(0,0,0,.06);
+    cursor:pointer;
+  }
+  .hamburger span{ width:20px; height:2px; background:#111; position:relative; display:block }
+  .hamburger span::before,.hamburger span::after{
+    content:""; position:absolute; left:0; right:0; height:2px; background:#111
+  }
+  .hamburger span::before{ top:-6px } .hamburger span::after{ bottom:-6px }
+
+  .drawer{
+    position:fixed; inset:0 0 0 auto; width:min(92vw,380px); background:#fff;
+    border-left:1px solid #e5e7eb; box-shadow:-12px 0 36px rgba(20,35,70,.12);
+    transform:translateX(100%); transition:transform .25s ease; z-index:10000;
+    display:flex; flex-direction:column;
+  }
+  .drawer.open{ transform:none }
+  .drawer header{
+    padding:14px 16px; border-bottom:1px solid #eef2f7; font-weight:900;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .drawer .close{ border:1px solid #e5e7eb; background:#fff; border-radius:8px; padding:.4rem .65rem; cursor:pointer }
+  .drawer nav{ padding:10px 12px 16px; overflow:auto }
+  .drawer nav a{ display:block; padding:.48rem .6rem; border-radius:8px; text-decoration:none }
+  .drawer nav a:hover{ background:#f1f5f9 }
+  .toc-sec{ font-weight:800; margin:.6rem .4rem .2rem }
+  .toc-sub{ padding-left:.8rem; font-size:.95em }
+</style>
+
+<script id="hotfix-logic">
+(function(){
+  /* --- 下部CTAを“申込み1本”に統一＆URLを書き換え --- */
+  const unifiedForm = 'https://forms.gle/共通申込みフォームID'; // ←共通申込みURLに置換
+  const sticky = document.querySelector('#sticky-cta');
+  if (sticky){
+    const links = sticky.querySelectorAll('a');
+    if (links[0]){ links[0].textContent = '申し込む'; links[0].href = unifiedForm; }
+    if (links[1]){ links[1].remove(); } // 2個目を削除
+  }
+
+  /* --- ハンバーガー（目次）を動的に追加（既にあればスキップ） --- */
+  if(!document.getElementById('btn-menu')){
+    const btn = document.createElement('button');
+    btn.id='btn-menu'; btn.className='hamburger'; btn.innerHTML='<span></span>';
+    btn.setAttribute('aria-label','目次を開く');
+    document.body.appendChild(btn);
+
+    const drawer = document.createElement('aside');
+    drawer.id='drawer'; drawer.className='drawer'; drawer.setAttribute('aria-hidden','true');
+    drawer.innerHTML = `
+      <header><div>目次</div><button class="close" id="btn-close" aria-label="閉じる">閉じる</button></header>
+      <nav id="toc"></nav>`;
+    document.body.appendChild(drawer);
+
+    const open = (v)=>{ drawer.classList.toggle('open', v);
+      drawer.setAttribute('aria-hidden', String(!v)); document.body.style.overflow = v ? 'hidden' : ''; };
+
+    btn.addEventListener('click', ()=>open(!drawer.classList.contains('open')));
+    drawer.querySelector('#btn-close').addEventListener('click', ()=>open(false));
+    drawer.addEventListener('click', (e)=>{ if(e.target===drawer) open(false); });
+
+    // 目次生成：主要セクション＆各アコーディオンのsummaryを抽出
+    const toc = drawer.querySelector('#toc');
+    const sections = [
+      '#corp-setup','#plans','#sole-setup','#personal-account','#disclaimer'
+    ].map(s=>document.querySelector(s)).filter(Boolean);
+
+    const slug = (s)=>'d-'+s.trim().toLowerCase().replace(/[^\w\u3000-\u9FFF\u3040-\u30FF\uFF10-\uFF19-]+/g,'-').slice(0,36);
+
+    sections.forEach((sec, idx)=>{
+      const h2 = sec.querySelector('h2'); if(!h2) return;
+      // セクション見出し
+      const secTitle = document.createElement('div');
+      secTitle.className = 'toc-sec';
+      secTitle.textContent = h2.textContent.trim();
+      toc.appendChild(secTitle);
+
+      // 直下の details を拾って小項目リンク化
+      const list = sec.querySelectorAll(':scope .accordion > details, :scope > details');
+      list.forEach((d,i)=>{
+        if(!d.id){
+          const sum = d.querySelector('summary');
+          const base = sum ? slug(sum.textContent) : ('item-'+i);
+          let id = `${sec.id || ('sec-'+(idx+1))}-${base}`; let n=1;
+          while(document.getElementById(id)) id = `${sec.id || ('sec-'+(idx+1))}-${base}-${++n}`;
+          d.id = id;
+        }
+        const a = document.createElement('a');
+        a.href = '#'+d.id; a.className='toc-sub';
+        a.textContent = (d.querySelector('summary')?.textContent || `項目${i+1}`).trim();
+        toc.appendChild(a);
+      });
+    });
+
+    // ドロワー内リンク → スムーススクロール＆対象detailsを開く
+    document.addEventListener('click', (e)=>{
+      const a = e.target.closest('.drawer nav a[href^="#"]'); if(!a) return;
+      const t = document.querySelector(a.getAttribute('href')); if(!t) return;
+      e.preventDefault(); open(false);
+      t.scrollIntoView({ behavior:'smooth', block:'start' });
+      const first = t.tagName==='DETAILS' ? t : t.querySelector('details');
+      if(first && !first.open) first.open = true;
+    });
+  }
+})();
+</script>
+<!-- === /HOTFIX === -->
 </body>
 </html>
