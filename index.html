@@ -5,21 +5,32 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>ジョージア法人設立LP</title>
 
-<!-- 差し替え確認（任意のピンクバー） -->
-<style>html{border-top:8px solid #ff0077!important}</style>
+<!-- 既存CSSがあればそのままでOK（なくても動きます） -->
+<link rel="stylesheet" href="./style.css?v=20250827-light" id="main-css" />
 
-<!-- 既存CSSがあればそのまま。なくても動きます -->
-<link rel="stylesheet" href="./style.css?v=20250827-02" id="main-css" />
-
-<!-- ページ用ミニCSS：幅・間隔・重なり・ボタン -->
 <style>
-  :root{--card:#fff;--line:#e5e7eb;--muted:#475569}
+  :root{--card:#fff;--line:#e5e7eb;--muted:#475569;--page:#f8fafc}
   *{box-sizing:border-box}
-  body{margin:0;background:#0b1220; color:#0b1220; padding-bottom:84px} /* ←フッター重なり防止 */
-  .container{max-width:64rem;margin-inline:auto;background:#0b1220}
-  section{background:#0b1220;padding:4rem 1rem}
-  h2{color:#fff;font-weight:800;margin:.5rem 0 1rem;font-size:clamp(22px,3.2vw,28px)}
-  /* カード(アコーディオン) */
+  html,body{margin:0;padding:0;background:var(--page);color:#0b1220}
+  .container{max-width:64rem;margin-inline:auto;padding-inline:1rem}
+  section{padding:4rem 0}
+  h2{font-weight:800;margin:.5rem 0 1rem;font-size:clamp(22px,3.2vw,28px);color:#0b1220}
+
+  /* ヘッダーCTA（通常配置＝重なり無し） */
+  .top-cta{background:#fff;border-bottom:1px solid rgba(0,0,0,.06)}
+  .top-cta .row{display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.7rem 1rem;max-width:64rem;margin-inline:auto}
+  .top-cta .title{margin-right:auto;font-weight:800;letter-spacing:.02em}
+
+  /* フッターCTA（通常配置＝重なり無し） */
+  .footer-cta{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:.8rem 0;margin-top:2rem}
+  .footer-cta .row{max-width:64rem;margin-inline:auto;display:flex;gap:.6rem;justify-content:flex-end;padding-inline:1rem}
+
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;cursor:pointer}
+  .btn.secondary{background:#1f2937;color:#fff}
+  .btn.success{background:#10b981;color:#fff}
+  .btn:hover{opacity:.92}
+
+  /* アコーディオン */
   .accordion>details{margin:.55rem 0}
   details summary{
     width:100%;padding:1rem 1.2rem;cursor:pointer;list-style:none;background:var(--card);
@@ -33,7 +44,7 @@
   .note{display:block;font-size:.85em;color:var(--muted);margin-top:.35rem}
   .muted{color:var(--muted)}
 
-  /* 料金カード */
+  /* 料金カード/表/ステップ */
   .price-promo{border:1px solid var(--line);background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
   .price-promo .row{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
   .price-promo .label{font-weight:700;color:var(--muted)}
@@ -44,40 +55,26 @@
   .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .price-promo .proof span{background:#fff;border:1px solid var(--line);border-radius:999px;padding:.25rem .6rem;font-weight:700}
 
-  /* ステップ */
   .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
   .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid var(--line);background:#fff}
   .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 
-  /* テーブル */
   table{width:100%;border-collapse:collapse;margin:.5rem 0;background:#fff}
   th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:right}
   th:first-child,td:first-child{text-align:left}
 
-  /* KYC → 料金プランの間隔（他と同じ） */
+  /* KYC → 料金プランの間隔（他と同じ幅に固定） */
   #corp-setup{padding-bottom:1.25rem}
   #corp-setup + #plans{margin-top:12px}
   #plans{padding-top:.75rem}
-
-  /* CTA */
-  .cta-bar{position:sticky;top:0;z-index:50;background:#0b1220;color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
-  .cta-inner{display:flex;gap:.6rem;justify-content:flex-end;align-items:center;padding:.6rem 1rem;max-width:64rem;margin-inline:auto}
-  .cta-title{margin-right:auto;font-weight:800;letter-spacing:.02em}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;background:#0ea5e9;color:#fff;text-decoration:none}
-  .btn.secondary{background:#1f2937}
-  .btn.success{background:#10b981}
-  .btn:hover{opacity:.92}
-  .footer-cta{position:sticky;bottom:0;background:#0b1220;padding:.7rem .8rem;z-index:60;border-top:1px solid rgba(255,255,255,.08)}
-  .footer-cta .row{max-width:64rem;margin-inline:auto;display:flex;gap:.6rem;justify-content:flex-end}
-  @media (max-width:640px){.cta-inner,.footer-cta .row{justify-content:space-between}}
 </style>
 </head>
 <body>
 
-<!-- ヘッダーCTA（診断／申込） -->
-<div class="cta-bar">
-  <div class="cta-inner">
-    <span class="cta-title">ジョージア設立／口座サポート</span>
+<!-- ヘッダーCTA（通常配置／白） -->
+<div class="top-cta">
+  <div class="row">
+    <span class="title">ジョージア設立／口座サポート</span>
     <a class="btn secondary" data-apply>まずは診断</a>
     <a class="btn success" data-apply>申し込む</a>
   </div>
@@ -96,7 +93,7 @@
         <p><strong>ジョージアの税制特徴（現地法上の扱い）</strong></p>
         <ul>
           <li>現地法上、再投資中の利益には法人税が課税されません（配当時15％）。</li>
-          <li>※ 居住国の税法（CFC・移転価格等）が適用される可能性。必ず税理士へご相談ください。</li>
+          <li>※ 居住国の税法（CFC・移転価格等）が適用される可能性。必ず税理士に相談。</li>
         </ul>
         <span class="note">※ CFC＝タックスヘイブン対策税制</span>
       </div>
@@ -185,10 +182,8 @@
       <summary>KYC・監査・FMSの要件（FAQつき）</summary>
       <div class="content">
         <p><strong>KYC（本人確認）</strong></p>
-        <ul>
-          <li>パスポート</li><li>住所証明</li><li>仮想通貨利用時：取引履歴（PDF）</li>
-        </ul>
-        <p><strong>FMS</strong>：高額送金・仮想通貨が多い場合に報告や開示が必要なことあり。</p>
+        <ul><li>パスポート</li><li>住所証明</li><li>仮想通貨利用時：取引履歴（PDF）</li></ul>
+        <p><strong>FMS</strong>：高額送金・仮想通貨が多い場合に報告/開示が必要なことあり。</p>
         <p class="note">KYC＝Know Your Customer／FMS＝Financial Monitoring Service</p>
       </div>
     </details>
@@ -315,7 +310,7 @@
           <li>海外クライアントと直接契約したいフリーランス</li>
           <li>副業を「国際事業」として正式登録したい個人</li>
           <li>渡航せずに海外ビジネス基盤を持ちたい人</li>
-          <li>節税よりも制度準拠の安心感を重視する人</li>
+          <li>制度準拠の安心感を重視する人</li>
         </ul>
       </div>
     </details>
@@ -351,11 +346,11 @@
       <div class="content">
         <table>
           <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>税率</th><th>条件</th></tr></thead>
-          <tbody>
-            <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者</td></tr>
-            <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得</td></tr>
-            <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
-          </tbody>
+        <tbody>
+          <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者</td></tr>
+          <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得</td></tr>
+          <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
+        </tbody>
         </table>
         <p class="muted" style="font-size:.9em">※ 日本居住者は国外所得の申告義務があります。</p>
       </div>
@@ -532,15 +527,15 @@
 </section>
 
 <!-- 免責（簡略） -->
-<section id="disclaimer" class="container" style="padding:2rem 1rem 5rem">
-  <h2 style="color:#fff;font-size:clamp(20px,3vw,24px);font-weight:800;margin-bottom:.75rem">免責事項・キャンセルポリシー（重要）</h2>
+<section id="disclaimer" class="container" style="padding:2rem 0 3rem">
+  <h2 style="font-size:clamp(20px,3vw,24px);font-weight:800;margin-bottom:.75rem">免責事項・キャンセルポリシー（重要）</h2>
   <ul style="background:#fff;border-radius:10px;padding:1rem 1.2rem;list-style:disc;margin:0">
     <li>本サービスは情報提供・実務支援であり、税務/法務の助言は行いません。</li>
     <li>銀行条件・審査は変更/不承認の可能性があり、保証できません。</li>
   </ul>
 </section>
 
-<!-- フッター固定CTA（診断／申込） -->
+<!-- フッターCTA（通常配置／白） -->
 <div class="footer-cta">
   <div class="row">
     <a class="btn secondary" data-apply>まずは診断</a>
@@ -548,51 +543,25 @@
   </div>
 </div>
 
-<!-- スクリプト：申込リンク統一 & スクロール -->
+<!-- 最小スクリプト：フォームURL 一括設定 & スムーススクロール -->
 <script>
-  /* ★ここを“あなたの本物のフォームURL”に置き換え★
-     例）https://forms.gle/xxxxxx  または  https://docs.google.com/forms/d/e/xxxx/viewform */
-  const unifiedForm = 'https://forms.gle/あなたのフォームID';
+  /* ★ここだけ差し替えれば全CTAが連動（https:// からの実URL） */
+  const FORM_URL = "https://forms.gle/XXXXXXXXXXXXXXX";
 
-  // 申込ボタンを全部フォームへ（強制フォールバック付き）
-  function wireApply(url){
-    if(!/^https?:\/\//.test(url)){
-      console.error('フォームURLが未設定 or 形式が不正です'); 
-      return;
-    }
-    document.querySelectorAll('[data-apply]').forEach(el=>{
-      el.setAttribute('href', url);
-      el.setAttribute('target','_blank');
-      el.setAttribute('rel','noopener');
-      // ブラウザや拡張でブロックされた場合の保険：明示遷移
-      el.addEventListener('click', (ev)=>{
-        // もし他のスクリプトが preventDefault しても遷移させる
-        setTimeout(()=>{ window.open(url, '_blank'); }, 0);
-      }, {once:true});
-    });
-  }
-  wireApply(unifiedForm);
-
-  // ページ内リンク(#)だけスムーズスクロール
-  document.addEventListener('click', (e)=>{
-    const a = e.target.closest('a[href^="#"]');
-    if(!a) return;
-    const id = a.getAttribute('href');
-    if(id === '#apply') return; // 申込は除外
-    const target = document.querySelector(id);
-    if(target){
-      e.preventDefault();
-      target.scrollIntoView({behavior:'smooth', block:'start'});
-      const first = target.querySelector('details'); if(first && !first.open) first.open = true;
-      history.pushState(null,'',id);
-    }
+  // 申込/診断 ボタンにURLを配布（target=_blank + フォールバック）
+  document.querySelectorAll('[data-apply]').forEach(a=>{
+    a.href = FORM_URL; a.target = "_blank"; a.rel = "noopener";
+    a.addEventListener('click', () => setTimeout(()=>window.open(FORM_URL,'_blank'),0), {once:true});
   });
 
-  // コンソール確認（任意）
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const css = [...document.styleSheets].find(s=>s.href && s.href.includes('style.css'));
-    console.log(css ? '✅ CSS OK: '+css.href : '⚠️ style.css 未読み込み');
-    console.log('申込URL:', unifiedForm);
+  // #アンカーはスムーズスクロール（申込リンクは除外）
+  document.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-apply]');
+    if(btn) return; // 申込はそのまま
+    const a = e.target.closest('a[href^="#"]');
+    if(!a) return;
+    const id = a.getAttribute('href'), t = document.querySelector(id);
+    if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
   });
 </script>
 
