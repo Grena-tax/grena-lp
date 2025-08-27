@@ -1,101 +1,139 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ジョージア法人設立LP</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ジョージア法人設立LP</title>
 
-  <!-- デバッグ用ピンクバー（差し替え確認） -->
-  <style>html{border-top:8px solid #ff0077!important}</style>
+<!-- デバッグ用ピンクバー（不要なら削除可） -->
+<style>html{border-top:8px solid #ff0077!important}</style>
 
-  <!-- 既存CSS（キャッシュ回避のためバージョン付のまま） -->
-  <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
+<!-- 既存CSS（そのまま利用） -->
+<link rel="stylesheet" href="./style.css?v=20250816-04">
 
-  <!-- このページ専用の軽量スタイル -->
-  <style>
-    :root{ --cta-h:72px }
+<style>
+  :root{--cta-h:76px}
+  html,body{margin:0;padding:0}
+  body{padding-bottom:var(--cta-h)} /* 下部固定バーぶんの余白確保 */
 
-    html,body{ margin:0; padding:0 }
-    /* 固定CTAの重なり回避のため常に下余白を確保 */
-    body{ padding-bottom: var(--cta-h) }
+  /* アコーディオン共通 */
+  details summary{
+    padding:1rem 1.2rem;cursor:pointer;list-style:none;
+    border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
+  }
+  details[open] summary{background:#f8fafc;border-bottom-left-radius:0;border-bottom-right-radius:0}
+  details .content{
+    border:1px solid #e5e7eb;border-top:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px;
+    padding:1rem 1.2rem .9rem;background:#fff
+  }
 
-    /* ===== アコーディオンの見た目 ===== */
-    details summary{
-      padding:1rem 1.2rem; cursor:pointer; list-style:none;
-      border:1px solid #e5e7eb; border-radius:10px; background:#fff; font-weight:700;
-    }
-    details[open] summary{
-      background:#f8fafc; border-bottom-left-radius:0; border-bottom-right-radius:0;
-    }
-    details .content{
-      border:1px solid #e5e7eb; border-top:0;
-      border-bottom-left-radius:10px; border-bottom-right-radius:10px;
-      padding:1rem 1.2rem .9rem; background:#fff;
-    }
+  /* 文字・装飾 */
+  .text-sm{font-size:.86em;opacity:.9}
+  .muted{color:#475569}
+  .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
+  .note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
+  .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
 
-    /* 文字/装飾 */
-    .text-sm{ font-size:.86em; opacity:.9 }
-    .muted{ color:#475569 }
-    .smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
-    .note{ display:block; font-size:.82em; color:#475569; margin-top:.35rem }
-    .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+  .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+  .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+  .price-promo .label{color:#475569;font-weight:700}
+  .price-promo .old{color:#64748b;text-decoration:line-through}
+  .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+  .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+  .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+  .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
 
-    .price-promo{
-      border:1px solid #e5e7eb; background:#f9fafb; border-radius:12px;
-      padding:16px 16px 14px; margin:14px 0; box-shadow:0 2px 10px rgba(0,0,0,.03);
-    }
-    .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-    .price-promo .label{color:#475569;font-weight:700}
-    .price-promo .old{color:#64748b;text-decoration:line-through}
-    .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
-    .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
-    .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-    .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-    .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+  .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
+  .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
+  .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 
-    .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-    .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-    .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+  table{width:100%;border-collapse:collapse;margin:.5rem 0}
+  th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
+  th:first-child,td:first-child{text-align:left}
 
-    table{width:100%;border-collapse:collapse;margin:.5rem 0}
-    th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
-    th:first-child,td:first-child{text-align:left}
+  /* 余白調整（KYC⇄料金も統一） */
+  .accordion>details{margin:.55rem 0!important}
+  #corp-setup{padding-bottom:2.0rem!important}
+  #plans{padding-top:.75rem!important}
 
-    /* ===== 余白の調整（KYC⇄料金も統一） ===== */
-    .accordion>details{ margin:.55rem 0 !important; }
-    #corp-setup{ padding-bottom:2.0rem !important; }
-    #plans{ padding-top:.75rem !important; }
+  /* 右下 固定CTAバー */
+  .fixed-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:9999;
+    background:#ffffffcc;backdrop-filter:saturate(140%) blur(8px);
+    border-top:1px solid rgba(0,0,0,.06)
+  }
+  .fixed-cta .row{
+    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
+    padding:.6rem 1rem;min-height:var(--cta-h)
+  }
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;
+       padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;cursor:pointer;white-space:nowrap}
+  .btn.secondary{background:#1f2937;color:#fff}
+  .btn.neutral{background:#0f172a;color:#fff}
+  .btn.success{background:#10b981;color:#fff}
+  .btn:hover{opacity:.92}
 
-    /* ===== 画面最下部 固定CTAバー ===== */
-    .fixed-cta{
-      position:fixed; left:0; right:0; bottom:0; z-index:9999;
-      background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
-      border-top:1px solid rgba(0,0,0,.06);
-    }
-    .fixed-cta .row{
-      max-width:64rem; margin:0 auto;
-      display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
-      padding:.6rem 1rem; min-height:var(--cta-h);
-    }
-    .btn{
-      display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
-      border-radius:10px; padding:.55rem .9rem; font-weight:700;
-      border:1px solid transparent; text-decoration:none; cursor:pointer; white-space:nowrap;
-    }
-    .btn:hover{ opacity:.92 }
-    .btn.light{ background:#f8fafc; border:1px solid #e5e7eb; color:#111827; }
-    .btn.secondary{ background:#1f2937; color:#fff }
-    .btn.success{ background:#10b981; color:#fff }
-  </style>
+  /* 右上ハンバーガー */
+  .menu-button{
+    position:fixed;top:12px;right:12px;z-index:10050;
+    width:44px;height:44px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer
+  }
+  .menu-button span{position:relative;display:block;width:20px;height:2px;background:#111;border-radius:2px}
+  .menu-button span::before,.menu-button span::after{
+    content:"";position:absolute;left:0;width:20px;height:2px;background:#111;border-radius:2px
+  }
+  .menu-button span::before{top:-6px}
+  .menu-button span::after{top:6px}
+
+  /* メニュードロワー */
+  .menu-wrap{position:fixed;inset:0;z-index:10040;pointer-events:none}
+  .menu-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.35);opacity:0;transition:.2s}
+  .menu-panel{
+    position:absolute;top:0;right:-400px;height:100%;width:min(88vw,360px);
+    background:#fff;border-left:1px solid #e5e7eb;box-shadow:-10px 0 30px rgba(0,0,0,.08);
+    transition:.25s;padding:14px 14px 18px;display:flex;flex-direction:column;gap:10px;
+  }
+  .menu-header{display:flex;align-items:center;justify-content:space-between}
+  .menu-title{font-weight:800}
+  .menu-close{border:1px solid #e5e7eb;border-radius:10px;background:#fff;padding:.4rem .6rem;cursor:pointer}
+
+  .menu-groups{overflow:auto;min-height:0;padding-right:2px}
+  .menu-group{margin:10px 0 6px}
+  .menu-group h4{font-size:.92rem;margin:.2rem 0 .35rem;color:#0f172a}
+  .menu-list{list-style:none;margin:0;padding:0}
+  .menu-list li a{display:block;padding:.42rem .5rem;border-radius:8px;text-decoration:none;color:#111;border:1px solid transparent}
+  .menu-list li a:hover{background:#f8fafc;border-color:#e5e7eb}
+
+  html.menu-open .menu-wrap{pointer-events:auto}
+  html.menu-open .menu-backdrop{opacity:1}
+  html.menu-open .menu-panel{right:0}
+  html.menu-open, html.menu-open body{overflow:hidden}
+</style>
 </head>
 <body>
 
+<!-- ============== 右上ハンバーガー（ボタン＋ドロワー） ============== -->
+<button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="目次メニューを開く">
+  <span aria-hidden="true"></span>
+</button>
+<nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
+  <div class="menu-backdrop" id="menuBackdrop"></div>
+  <div class="menu-panel" role="dialog" aria-modal="true" aria-label="目次メニュー">
+    <div class="menu-header">
+      <div class="menu-title">目次（各セクションへ移動）</div>
+      <button class="menu-close" id="menuClose" aria-label="メニューを閉じる">閉じる</button>
+    </div>
+    <div class="menu-groups" id="menuGroups"><!-- JSで自動生成 --></div>
+  </div>
+</nav>
+
 <!-- =========================
-  法人設立セクション
+  法人設立
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
-
   <div class="space-y-3 accordion">
 
     <!-- 1 -->
@@ -241,18 +279,17 @@
       </div>
     </details>
 
-  </div><!-- /.accordion -->
-</section><!-- /#corp-setup -->
+  </div>
+</section>
 
 <!-- =========================
-  料金プラン（親アコーディオンの中に3プラン）
+  料金プラン
 ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
       <summary>料金プラン（3つのプランから選択）</summary>
       <div class="content">
-
         <details>
           <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
@@ -307,7 +344,7 @@
           <li>現地パートナー対応／Zoom不要・文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong></h4>
         <ul>
           <li>Aの内容すべて</li>
           <li>問い合わせフォームの保守・小修正対応</li>
@@ -342,8 +379,7 @@
         </ul>
       </div>
     </details>
-
-  </div><!-- /.accordion -->
+  </div>
 </section>
 
 <!-- =========================
@@ -351,10 +387,8 @@
 ========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
-
   <div class="space-y-3 accordion">
 
-    <!-- 1 -->
     <details>
       <summary>ジョージアで、スモールに世界を始める（IE＋Small Business Status）</summary>
       <div class="content">
@@ -370,7 +404,6 @@
       </div>
     </details>
 
-    <!-- 2 -->
     <details>
       <summary>このサービスが向いている方</summary>
       <div class="content">
@@ -383,7 +416,6 @@
       </div>
     </details>
 
-    <!-- 3：料金 -->
     <details open>
       <summary>サポート内容と料金</summary>
       <div class="content">
@@ -419,7 +451,6 @@
       </div>
     </details>
 
-    <!-- 4：制度の枠組み -->
     <details>
       <summary>Small Business Statusの詳細</summary>
       <div class="content">
@@ -436,7 +467,6 @@
       </div>
     </details>
 
-    <!-- 5：KYC/FMS -->
     <details>
       <summary>KYCとFMS（本人確認・資金源）／FAQ</summary>
       <div class="content">
@@ -449,15 +479,14 @@
 
         <h5>FAQ</h5>
         <ul>
-          <li>Q. 日本からでも利用可？ → A. はい、オンライン完結です。</li>
-          <li>Q. 個人口座開設は含まれますか？ → A. 含まれません（別サービス）。</li>
-          <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
+          <li>Q. 日本からでも利用可？ → はい、オンライン完結です。</li>
+          <li>Q. 個人口座開設は含まれますか？ → 含まれません（別サービス）。</li>
+          <li>Q. 年収が2,500万円超えたら？ → 通常課税（3〜5%）へ切替。</li>
         </ul>
-        <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
+        <span class="note">※ FMS＝Financial Monitoring Service</span>
       </div>
     </details>
 
-    <!-- 6：将来の法人化／割引 -->
     <details>
       <summary>個人 → 法人化の成長パス／IE登録者限定割引</summary>
       <div class="content">
@@ -469,30 +498,32 @@
         <div class="price-promo" aria-label="IE登録者限定割引">
           <div class="row">
             <span class="label">通常価格：</span>
-            <span class="old">¥330,000</span>
+            <span class="old">¥330,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="row">
             <span class="label">IE登録者限定：</span>
             <span class="now">¥298,000</span><span class="text-sm">（税込）</span>
             <span class="badge">先着10社</span>
           </div>
+          <div class="meta">
+            <small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small>
+          </div>
         </div>
         <span class="note">※ IE＝Individual Entrepreneur</span>
       </div>
     </details>
 
-  </div><!-- /.accordion -->
+  </div>
 </section>
 
 <!-- =========================
-  個人口座開設（銀行）— 充実版
+  個人口座開設（銀行）
 ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
 
   <div class="space-y-3 accordion">
 
-    <!-- 国の状況 -->
     <details>
       <summary>ジョージアって今どんな国？（成長率・制度）</summary>
       <div class="content">
@@ -511,7 +542,6 @@
       </div>
     </details>
 
-    <!-- なぜ高金利 -->
     <details>
       <summary>なぜ二桁利息が成立？（成長型金融モデル）</summary>
       <div class="content">
@@ -520,7 +550,6 @@
       </div>
     </details>
 
-    <!-- 信頼性 -->
     <details>
       <summary>銀行と制度の信頼性／預金保護</summary>
       <div class="content">
@@ -534,7 +563,6 @@
       </div>
     </details>
 
-    <!-- 必要書類 -->
     <details>
       <summary>必要書類（日本在住・非居住者向け）</summary>
       <div class="content">
@@ -549,7 +577,6 @@
       </div>
     </details>
 
-    <!-- サポート内容と料金 -->
     <details open>
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
@@ -584,7 +611,6 @@
       </div>
     </details>
 
-    <!-- リスク・為替：数値シミュレーション -->
     <details>
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
@@ -607,7 +633,6 @@
       </div>
     </details>
 
-    <!-- 複利表（年10%に更新） -->
     <details>
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
@@ -638,7 +663,6 @@
       </div>
     </details>
 
-    <!-- よくある質問 -->
     <details>
       <summary>よくある質問（Q&A）</summary>
       <div class="content">
@@ -652,7 +676,6 @@
       </div>
     </details>
 
-    <!-- 進め方 -->
     <details>
       <summary>進め方（スケジュール目安）</summary>
       <div class="content">
@@ -670,11 +693,11 @@
       </div>
     </details>
 
-  </div><!-- /.accordion -->
+  </div>
 </section>
 
 <!-- =========================
-  免責事項（法人＋個人口座・キャンセル統合）
+  免責事項
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
@@ -693,25 +716,21 @@
   </ul>
 </section>
 
-<!-- =========================
-  画面下 固定CTA
-========================== -->
+<!-- ===== 右下 固定CTAバー ===== -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
-    <button class="btn light" id="toTopBtn" type="button" aria-label="ページの先頭へ戻る">TOPへ</button>
     <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
+    <a class="btn neutral" id="toTopBtn" href="#">TOPへ</a>
     <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
 
-<!-- =========================
-  JS
-========================== -->
+<!-- ===== JS ===== -->
 <script>
-  /* あなたのGoogleフォームURL（実際のURLをセット済み） */
+  /* 今すぐ申し込み：フォームURL（前回ご指定のURLを設定） */
   const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-  // 画面内リンクのみスムーズスクロール（外部リンクには干渉しない）
+  // 画面内アンカーへスムーズ移動（<details>対象なら自動で open）
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -719,13 +738,20 @@
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
+    if (target.tagName && target.tagName.toLowerCase() === 'details') target.open = true;
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const first = target.querySelector('details');
-    if (first && !first.open) first.open = true;
+    document.documentElement.classList.remove('menu-open'); // メニューからの遷移時は閉じる
+    document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'false');
     history.pushState(null, '', id);
   });
 
-  // 固定CTAの高さぶん下余白を自動調整（重なり防止）
+  // TOPへ
+  document.getElementById('toTopBtn')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // 固定CTA高さに応じて本文の下余白を自動調整
   const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar');
     if (!bar) return;
@@ -735,19 +761,76 @@
   window.addEventListener('load', adjustCtaPadding);
   window.addEventListener('resize', adjustCtaPadding);
 
-  // 「今すぐ申し込み」→ フォームを新規タブで開く
+  // 「今すぐ申し込み」：フォームへ
   document.getElementById('applyNow')?.addEventListener('click', (e) => {
     e.preventDefault();
-    if (!FORM_URL) return;
     window.open(FORM_URL, '_blank', 'noopener');
   });
 
-  // 「TOPへ」→ ページ一番上へ
-  document.getElementById('toTopBtn')?.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  /* 右上ハンバーガー開閉 */
+  const openMenu = () => {
+    document.documentElement.classList.add('menu-open');
+    document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'true');
+    document.getElementById('menuDrawer')?.setAttribute('aria-hidden', 'false');
+  };
+  const closeMenu = () => {
+    document.documentElement.classList.remove('menu-open');
+    document.getElementById('menuBtn')?.setAttribute('aria-expanded', 'false');
+    document.getElementById('menuDrawer')?.setAttribute('aria-hidden', 'true');
+  };
+  document.getElementById('menuBtn')?.addEventListener('click', openMenu);
+  document.getElementById('menuClose')?.addEventListener('click', closeMenu);
+  document.getElementById('menuBackdrop')?.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-  // CSS読込確認（コンソール用）
+  /* ハンバーガーの中身（目次）を自動生成：各セクションの .accordion 内 <details> の summary を列挙 */
+  const groupsRoot = document.getElementById('menuGroups');
+  const sections = [
+    { id: 'corp-setup',  title: document.querySelector('#corp-setup h2')?.textContent?.trim() },
+    { id: 'plans',       title: '料金プラン' },
+    { id: 'sole-setup',  title: document.querySelector('#sole-setup h2')?.textContent?.trim() },
+    { id: 'personal-account', title: document.querySelector('#personal-account h2')?.textContent?.trim() },
+  ];
+  const makeSafeId = (txt, idx) => {
+    return 'acc-' + idx + '-' + (txt||'item').toLowerCase()
+      .replace(/[^\u3040-\u30ff\u3400-\u9fff\w\-]+/g,'-').replace(/\-+/g,'-').replace(/^\-|\-$/g,'');
+  };
+  const groupsFrag = document.createDocumentFragment();
+  let globalIndex = 1;
+
+  sections.forEach(sec => {
+    const secEl = document.getElementById(sec.id);
+    if (!secEl) return;
+    const details = secEl.querySelectorAll('.accordion details');
+    if (!details.length) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'menu-group';
+
+    const h4 = document.createElement('h4');
+    h4.textContent = sec.title || sec.id;
+    wrap.appendChild(h4);
+
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    details.forEach((d) => {
+      const title = d.querySelector('summary')?.textContent?.trim() || '項目';
+      if (!d.id) d.id = makeSafeId(title, globalIndex++);
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = '#' + d.id;
+      a.textContent = title;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    wrap.appendChild(ul);
+    groupsFrag.appendChild(wrap);
+  });
+  groupsRoot.appendChild(groupsFrag);
+
+  // CSS読み込み確認（デバッグ用）
   document.addEventListener('DOMContentLoaded', () => {
     const css = Array.from(document.styleSheets).find(s => s.href && s.href.includes('style.css'));
     console.log(css ? '✅ CSS OK: ' + css.href : '⚠️ style.css 未読込');
