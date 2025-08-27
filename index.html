@@ -1,89 +1,99 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ジョージア法人設立LP</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ジョージア法人設立LP</title>
 
-<!-- デバッグ用ピンクバー（差し替え確認） -->
-<style>html{border-top:8px solid #ff0077!important}</style>
+  <!-- デバッグ用ピンクバー（差し替え確認） -->
+  <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存CSS（そのまま） -->
-<link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
+  <!-- 既存CSS（キャッシュ回避のためバージョン付のまま） -->
+  <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-<!-- 追加の軽量スタイル（本ファイルだけで動作するよう最小限の土台も付与） -->
-<style>
-  :root{--cta-h:72px}
-  html,body{margin:0;padding:0;background:#fff;color:#0b1220}
-  body{padding-bottom:var(--cta-h)} /* 固定CTAに隠れないための下余白 */
+  <!-- このページ専用の軽量スタイル -->
+  <style>
+    :root{ --cta-h:72px }
 
-  /* Fallback for container (Tailwindが無くても綺麗に見えるように) */
-  .container{max-width:64rem;margin-inline:auto;padding-inline:1rem}
+    html,body{ margin:0; padding:0 }
+    /* 固定CTAの重なり回避のため常に下余白を確保 */
+    body{ padding-bottom: var(--cta-h) }
 
-  /* アコーディオンの見た目 */
-  details summary{
-    padding:1rem 1.2rem;cursor:pointer;list-style:none;
-    border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
-  }
-  details[open] summary{background:#f8fafc;border-bottom-left-radius:0;border-bottom-right-radius:0}
-  details .content{
-    border:1px solid #e5e7eb;border-top:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px;
-    padding:1rem 1.2rem .9rem;background:#fff
-  }
+    /* ===== アコーディオンの見た目 ===== */
+    details summary{
+      padding:1rem 1.2rem; cursor:pointer; list-style:none;
+      border:1px solid #e5e7eb; border-radius:10px; background:#fff; font-weight:700;
+    }
+    details[open] summary{
+      background:#f8fafc; border-bottom-left-radius:0; border-bottom-right-radius:0;
+    }
+    details .content{
+      border:1px solid #e5e7eb; border-top:0;
+      border-bottom-left-radius:10px; border-bottom-right-radius:10px;
+      padding:1rem 1.2rem .9rem; background:#fff;
+    }
 
-  /* 余白・文字 */
-  .text-sm{font-size:.86em;opacity:.9}
-  .muted{color:#475569}
-  .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
-  .note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
-  .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+    /* 文字/装飾 */
+    .text-sm{ font-size:.86em; opacity:.9 }
+    .muted{ color:#475569 }
+    .smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
+    .note{ display:block; font-size:.82em; color:#475569; margin-top:.35rem }
+    .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
 
-  .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
-  .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-  .price-promo .label{color:#475569;font-weight:700}
-  .price-promo .old{color:#64748b;text-decoration:line-through}
-  .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
-  .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
-  .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-  .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+    .price-promo{
+      border:1px solid #e5e7eb; background:#f9fafb; border-radius:12px;
+      padding:16px 16px 14px; margin:14px 0; box-shadow:0 2px 10px rgba(0,0,0,.03);
+    }
+    .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+    .price-promo .label{color:#475569;font-weight:700}
+    .price-promo .old{color:#64748b;text-decoration:line-through}
+    .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+    .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+    .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+    .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+    .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
 
-  .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-  .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-  .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+    .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
+    .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
+    .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 
-  table{width:100%;border-collapse:collapse;margin:.5rem 0}
-  th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
-  th:first-child,td:first-child{text-align:left}
+    table{width:100%;border-collapse:collapse;margin:.5rem 0}
+    th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
+    th:first-child,td:first-child{text-align:left}
 
-  /* 余白調整（KYC⇄料金も統一） */
-  .accordion>details{margin:.55rem 0!important}
-  #corp-setup{padding-bottom:1.6rem!important}
-  #plans{padding-top:.75rem!important}
+    /* ===== 余白の調整（KYC⇄料金も統一） ===== */
+    .accordion>details{ margin:.55rem 0 !important; }
+    #corp-setup{ padding-bottom:2.0rem !important; }
+    #plans{ padding-top:.75rem !important; }
 
-  /* 画面最下部 固定CTA（常に表示） */
-  .fixed-cta{
-    position:fixed;inset:auto 0 0 0;z-index:9999;
-    background:#ffffffcc;backdrop-filter:saturate(140%) blur(8px);
-    border-top:1px solid rgba(0,0,0,.06)
-  }
-  .fixed-cta .row{
-    max-width:64rem;margin-inline:auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
-    padding:.6rem 1rem;min-height:var(--cta-h)
-  }
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;
-       padding:.58rem .95rem;font-weight:700;border:1px solid transparent;text-decoration:none;cursor:pointer;white-space:nowrap}
-  .btn.secondary{background:#1f2937;color:#fff}
-  .btn.success{background:#10b981;color:#fff}
-  .btn:hover{opacity:.92}
-</style>
+    /* ===== 画面最下部 固定CTAバー ===== */
+    .fixed-cta{
+      position:fixed; left:0; right:0; bottom:0; z-index:9999;
+      background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
+      border-top:1px solid rgba(0,0,0,.06);
+    }
+    .fixed-cta .row{
+      max-width:64rem; margin:0 auto;
+      display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
+      padding:.6rem 1rem; min-height:var(--cta-h);
+    }
+    .btn{
+      display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
+      border-radius:10px; padding:.55rem .9rem; font-weight:700;
+      border:1px solid transparent; text-decoration:none; cursor:pointer; white-space:nowrap;
+    }
+    .btn:hover{ opacity:.92 }
+    .btn.light{ background:#f8fafc; border:1px solid #e5e7eb; color:#111827; }
+    .btn.secondary{ background:#1f2937; color:#fff }
+    .btn.success{ background:#10b981; color:#fff }
+  </style>
 </head>
 <body>
 
 <!-- =========================
-  法人設立セクション（ここから下は、これまでの詳細コンテンツをそのまま残しています）
+  法人設立セクション
 ========================== -->
-<section id="corp-setup" class="container px-4 py-16">
+<section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
 
   <div class="space-y-3 accordion">
@@ -157,8 +167,8 @@
         <p>ジョージア現地法上、再投資中の利益には法人税が課税されません（配当時15％）。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
         <p>出典：</p>
         <ul>
-          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener">PwC税制レポート</a></li>
-          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener">OECD評価レポート</a></li>
+          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート（新しいウィンドウで開きます）">PwC税制レポート</a></li>
+          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener" aria-label="OECD評価レポート（新しいウィンドウで開きます）">OECD評価レポート</a></li>
         </ul>
       </div>
     </details>
@@ -227,7 +237,7 @@
           <li>Q. 普通の人でもFMS報告必要？ → A. 基本は不要、資産額次第。</li>
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
-        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
+        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener" aria-label="LINE公式で相談（新しいウィンドウで開きます）">LINE相談</a>）。</p>
       </div>
     </details>
 
@@ -237,7 +247,7 @@
 <!-- =========================
   料金プラン（親アコーディオンの中に3プラン）
 ========================== -->
-<section id="plans" class="container px-4 py-12">
+<section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
       <summary>料金プラン（3つのプランから選択）</summary>
@@ -332,17 +342,19 @@
         </ul>
       </div>
     </details>
-  </div>
+
+  </div><!-- /.accordion -->
 </section>
 
 <!-- =========================
   個人事業主（IE + SBS）
 ========================== -->
-<section id="sole-setup" class="container px-4 py-16">
+<section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
 
   <div class="space-y-3 accordion">
 
+    <!-- 1 -->
     <details>
       <summary>ジョージアで、スモールに世界を始める（IE＋Small Business Status）</summary>
       <div class="content">
@@ -358,6 +370,7 @@
       </div>
     </details>
 
+    <!-- 2 -->
     <details>
       <summary>このサービスが向いている方</summary>
       <div class="content">
@@ -370,6 +383,7 @@
       </div>
     </details>
 
+    <!-- 3：料金 -->
     <details open>
       <summary>サポート内容と料金</summary>
       <div class="content">
@@ -405,6 +419,7 @@
       </div>
     </details>
 
+    <!-- 4：制度の枠組み -->
     <details>
       <summary>Small Business Statusの詳細</summary>
       <div class="content">
@@ -421,6 +436,7 @@
       </div>
     </details>
 
+    <!-- 5：KYC/FMS -->
     <details>
       <summary>KYCとFMS（本人確認・資金源）／FAQ</summary>
       <div class="content">
@@ -441,6 +457,7 @@
       </div>
     </details>
 
+    <!-- 6：将来の法人化／割引 -->
     <details>
       <summary>個人 → 法人化の成長パス／IE登録者限定割引</summary>
       <div class="content">
@@ -452,7 +469,7 @@
         <div class="price-promo" aria-label="IE登録者限定割引">
           <div class="row">
             <span class="label">通常価格：</span>
-            <span class="old">¥330,000</span><span class="text-sm">（税込）</span>
+            <span class="old">¥330,000</span>
           </div>
           <div class="row">
             <span class="label">IE登録者限定：</span>
@@ -468,13 +485,14 @@
 </section>
 
 <!-- =========================
-  個人口座開設（銀行）
+  個人口座開設（銀行）— 充実版
 ========================== -->
-<section id="personal-account" class="container px-4 py-16">
+<section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
 
   <div class="space-y-3 accordion">
 
+    <!-- 国の状況 -->
     <details>
       <summary>ジョージアって今どんな国？（成長率・制度）</summary>
       <div class="content">
@@ -493,6 +511,7 @@
       </div>
     </details>
 
+    <!-- なぜ高金利 -->
     <details>
       <summary>なぜ二桁利息が成立？（成長型金融モデル）</summary>
       <div class="content">
@@ -501,6 +520,7 @@
       </div>
     </details>
 
+    <!-- 信頼性 -->
     <details>
       <summary>銀行と制度の信頼性／預金保護</summary>
       <div class="content">
@@ -514,6 +534,22 @@
       </div>
     </details>
 
+    <!-- 必要書類 -->
+    <details>
+      <summary>必要書類（日本在住・非居住者向け）</summary>
+      <div class="content">
+        <ul>
+          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
+          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
+          <li>署名（パスポートと一致の筆跡／公証書にも記載）</li>
+          <li>書類原本の国際郵送（PDF不可）</li>
+        </ul>
+        <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
+      </div>
+    </details>
+
+    <!-- サポート内容と料金 -->
     <details open>
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
@@ -548,6 +584,7 @@
       </div>
     </details>
 
+    <!-- リスク・為替：数値シミュレーション -->
     <details>
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
@@ -570,6 +607,7 @@
       </div>
     </details>
 
+    <!-- 複利表（年10%に更新） -->
     <details>
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
@@ -600,6 +638,7 @@
       </div>
     </details>
 
+    <!-- よくある質問 -->
     <details>
       <summary>よくある質問（Q&A）</summary>
       <div class="content">
@@ -613,6 +652,7 @@
       </div>
     </details>
 
+    <!-- 進め方 -->
     <details>
       <summary>進め方（スケジュール目安）</summary>
       <div class="content">
@@ -634,9 +674,9 @@
 </section>
 
 <!-- =========================
-  免責事項
+  免責事項（法人＋個人口座・キャンセル統合）
 ========================== -->
-<section id="disclaimer" class="container px-4 py-8 text-sm">
+<section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
     <li>当サービスはジョージア現地法に基づく<strong>情報提供・実務サポート</strong>です。税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
@@ -653,21 +693,25 @@
   </ul>
 </section>
 
-<!-- ===== 画面最下部 固定CTAバー（常時表示） ===== -->
+<!-- =========================
+  画面下 固定CTA
+========================== -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
+    <button class="btn light" id="toTopBtn" type="button" aria-label="ページの先頭へ戻る">TOPへ</button>
     <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
     <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
 
-<!-- ===== JS ===== -->
+<!-- =========================
+  JS
+========================== -->
 <script>
-  /* ▼▼ あなたのGoogleフォームURL（いただいたURL） ▼▼ */
+  /* あなたのGoogleフォームURL（実際のURLをセット済み） */
   const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
-  /* ▲▲ あなたのGoogleフォームURL ▲▲ */
 
-  // ページ内アンカーのスムーススクロール（外部リンクには干渉しない）
+  // 画面内リンクのみスムーズスクロール（外部リンクには干渉しない）
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -681,7 +725,7 @@
     history.pushState(null, '', id);
   });
 
-  // 固定CTAの高さで本文の下余白を自動調整（重なり防止）
+  // 固定CTAの高さぶん下余白を自動調整（重なり防止）
   const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar');
     if (!bar) return;
@@ -691,34 +735,19 @@
   window.addEventListener('load', adjustCtaPadding);
   window.addEventListener('resize', adjustCtaPadding);
 
-  // 申込み用リンクを一括で正しいURLへ差し替え（ヘッダー等に残った古いリンクも強制修正）
-  document.addEventListener('DOMContentLoaded', () => {
-    const anchors = Array.from(document.querySelectorAll('a'));
-    const targets = anchors.filter(a => {
-      const href = a.getAttribute('href') || '';
-      const text = (a.textContent || '').trim();
-      return (
-        a.id === 'applyNow' ||
-        a.hasAttribute('data-apply') ||
-        /申し込/.test(text) ||
-        /YOUR_GOOGLE_FORM_URL_HERE|forms\.gle\/FORM_ID_HERE/i.test(href)
-      );
-    });
-    targets.forEach(a => {
-      a.setAttribute('href', FORM_URL);
-      a.setAttribute('target', '_blank');
-      a.setAttribute('rel', 'noopener');
-    });
-    console.log('✅ 申込みリンク差し替え：', targets.length, '件');
-  });
-
-  // 念のため、「今すぐ申し込み」クリックで必ずフォームへ
+  // 「今すぐ申し込み」→ フォームを新規タブで開く
   document.getElementById('applyNow')?.addEventListener('click', (e) => {
     e.preventDefault();
+    if (!FORM_URL) return;
     window.open(FORM_URL, '_blank', 'noopener');
   });
 
-  // CSS読み込み確認（デバッグ用）
+  // 「TOPへ」→ ページ一番上へ
+  document.getElementById('toTopBtn')?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // CSS読込確認（コンソール用）
   document.addEventListener('DOMContentLoaded', () => {
     const css = Array.from(document.styleSheets).find(s => s.href && s.href.includes('style.css'));
     console.log(css ? '✅ CSS OK: ' + css.href : '⚠️ style.css 未読込');
