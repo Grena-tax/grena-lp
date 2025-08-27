@@ -5,19 +5,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ジョージア法人設立LP</title>
 
-<!-- デバッグ用ピンクバー（差し替え確認用。不要なら削除OK） -->
+<!-- デバッグ用ピンクバー（差し替え確認） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
 <!-- 既存CSS（そのまま） -->
-<link rel="stylesheet" href="./style.css?v=20250816-04">
+<link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
+<!-- 追加の軽量スタイル（本ファイルだけで動作するよう最小限の土台も付与） -->
 <style>
   :root{--cta-h:72px}
-  html,body{margin:0;padding:0}
-  /* 固定CTAバーの高さぶん、本文下に余白を確保（重なり防止） */
-  body{padding-bottom:var(--cta-h)}
+  html,body{margin:0;padding:0;background:#fff;color:#0b1220}
+  body{padding-bottom:var(--cta-h)} /* 固定CTAに隠れないための下余白 */
 
-  /* アコーディオン見た目 */
+  /* Fallback for container (Tailwindが無くても綺麗に見えるように) */
+  .container{max-width:64rem;margin-inline:auto;padding-inline:1rem}
+
+  /* アコーディオンの見た目 */
   details summary{
     padding:1rem 1.2rem;cursor:pointer;list-style:none;
     border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
@@ -28,7 +31,7 @@
     padding:1rem 1.2rem .9rem;background:#fff
   }
 
-  /* 文字・装飾 */
+  /* 余白・文字 */
   .text-sm{font-size:.86em;opacity:.9}
   .muted{color:#475569}
   .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
@@ -53,23 +56,23 @@
   th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
   th:first-child,td:first-child{text-align:left}
 
-  /* 余白調整（KYC⇄料金の間も他と同じ幅に統一） */
+  /* 余白調整（KYC⇄料金も統一） */
   .accordion>details{margin:.55rem 0!important}
-  #corp-setup{padding-bottom:2.0rem!important}
+  #corp-setup{padding-bottom:1.6rem!important}
   #plans{padding-top:.75rem!important}
 
-  /* 画面最下部 固定CTAバー */
+  /* 画面最下部 固定CTA（常に表示） */
   .fixed-cta{
-    position:fixed;left:0;right:0;bottom:0;z-index:9999;
+    position:fixed;inset:auto 0 0 0;z-index:9999;
     background:#ffffffcc;backdrop-filter:saturate(140%) blur(8px);
     border-top:1px solid rgba(0,0,0,.06)
   }
   .fixed-cta .row{
-    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
+    max-width:64rem;margin-inline:auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
     padding:.6rem 1rem;min-height:var(--cta-h)
   }
   .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;
-       padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;cursor:pointer;white-space:nowrap}
+       padding:.58rem .95rem;font-weight:700;border:1px solid transparent;text-decoration:none;cursor:pointer;white-space:nowrap}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
@@ -78,10 +81,11 @@
 <body>
 
 <!-- =========================
-  法人設立（復元済み）
+  法人設立セクション（ここから下は、これまでの詳細コンテンツをそのまま残しています）
 ========================== -->
-<section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
+<section id="corp-setup" class="container px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
+
   <div class="space-y-3 accordion">
 
     <!-- 1 -->
@@ -153,8 +157,8 @@
         <p>ジョージア現地法上、再投資中の利益には法人税が課税されません（配当時15％）。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
         <p>出典：</p>
         <ul>
-          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート（新しいウィンドウで開きます）">PwC税制レポート</a></li>
-          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener" aria-label="OECD評価レポート（新しいウィンドウで開きます）">OECD評価レポート</a></li>
+          <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener">PwC税制レポート</a></li>
+          <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener">OECD評価レポート</a></li>
         </ul>
       </div>
     </details>
@@ -223,17 +227,17 @@
           <li>Q. 普通の人でもFMS報告必要？ → A. 基本は不要、資産額次第。</li>
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
-        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener" aria-label="LINE公式で相談（新しいウィンドウで開きます）">LINE相談</a>）。</p>
+        <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
       </div>
     </details>
 
-  </div>
-</section>
+  </div><!-- /.accordion -->
+</section><!-- /#corp-setup -->
 
 <!-- =========================
   料金プラン（親アコーディオンの中に3プラン）
 ========================== -->
-<section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
+<section id="plans" class="container px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
       <summary>料金プラン（3つのプランから選択）</summary>
@@ -293,7 +297,7 @@
           <li>現地パートナー対応／Zoom不要・文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
         <ul>
           <li>Aの内容すべて</li>
           <li>問い合わせフォームの保守・小修正対応</li>
@@ -334,7 +338,7 @@
 <!-- =========================
   個人事業主（IE + SBS）
 ========================== -->
-<section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
+<section id="sole-setup" class="container px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
 
   <div class="space-y-3 accordion">
@@ -455,9 +459,6 @@
             <span class="now">¥298,000</span><span class="text-sm">（税込）</span>
             <span class="badge">先着10社</span>
           </div>
-          <div class="meta">
-            <small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small>
-          </div>
         </div>
         <span class="note">※ IE＝Individual Entrepreneur</span>
       </div>
@@ -467,9 +468,9 @@
 </section>
 
 <!-- =========================
-  個人口座開設（銀行）— 充実版
+  個人口座開設（銀行）
 ========================== -->
-<section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
+<section id="personal-account" class="container px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
 
   <div class="space-y-3 accordion">
@@ -510,20 +511,6 @@
         </ul>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。</div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
-      </div>
-    </details>
-
-    <details>
-      <summary>必要書類（日本在住・非居住者向け）</summary>
-      <div class="content">
-        <ul>
-          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
-          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
-          <li>署名（パスポートと一致の筆跡／公証書にも記載）</li>
-          <li>書類原本の国際郵送（PDF不可）</li>
-        </ul>
-        <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
-        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
       </div>
     </details>
 
@@ -647,9 +634,9 @@
 </section>
 
 <!-- =========================
-  免責事項（法人＋個人口座・キャンセル統合）
+  免責事項
 ========================== -->
-<section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
+<section id="disclaimer" class="container px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
     <li>当サービスはジョージア現地法に基づく<strong>情報提供・実務サポート</strong>です。税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
@@ -666,19 +653,21 @@
   </ul>
 </section>
 
-<!-- =========================
-  画面最下部 固定CTAバー（常に表示）
-========================== -->
+<!-- ===== 画面最下部 固定CTAバー（常時表示） ===== -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
-    <!-- ★「今すぐ申し込み」：ご指定のGoogleフォームへ確実に遷移 -->
-    <a class="btn success" href="https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header" target="_blank" rel="noopener">今すぐ申し込み</a>
+    <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
 
+<!-- ===== JS ===== -->
 <script>
-  // 画面内アンカーのみスムーススクロール（外部リンクには干渉しません）
+  /* ▼▼ あなたのGoogleフォームURL（いただいたURL） ▼▼ */
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
+  /* ▲▲ あなたのGoogleフォームURL ▲▲ */
+
+  // ページ内アンカーのスムーススクロール（外部リンクには干渉しない）
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -692,7 +681,7 @@
     history.pushState(null, '', id);
   });
 
-  // 固定CTAの実高さで本文の下余白を自動調整（端末による高さ差を吸収）
+  // 固定CTAの高さで本文の下余白を自動調整（重なり防止）
   const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar');
     if (!bar) return;
@@ -701,6 +690,33 @@
   };
   window.addEventListener('load', adjustCtaPadding);
   window.addEventListener('resize', adjustCtaPadding);
+
+  // 申込み用リンクを一括で正しいURLへ差し替え（ヘッダー等に残った古いリンクも強制修正）
+  document.addEventListener('DOMContentLoaded', () => {
+    const anchors = Array.from(document.querySelectorAll('a'));
+    const targets = anchors.filter(a => {
+      const href = a.getAttribute('href') || '';
+      const text = (a.textContent || '').trim();
+      return (
+        a.id === 'applyNow' ||
+        a.hasAttribute('data-apply') ||
+        /申し込/.test(text) ||
+        /YOUR_GOOGLE_FORM_URL_HERE|forms\.gle\/FORM_ID_HERE/i.test(href)
+      );
+    });
+    targets.forEach(a => {
+      a.setAttribute('href', FORM_URL);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener');
+    });
+    console.log('✅ 申込みリンク差し替え：', targets.length, '件');
+  });
+
+  // 念のため、「今すぐ申し込み」クリックで必ずフォームへ
+  document.getElementById('applyNow')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.open(FORM_URL, '_blank', 'noopener');
+  });
 
   // CSS読み込み確認（デバッグ用）
   document.addEventListener('DOMContentLoaded', () => {
