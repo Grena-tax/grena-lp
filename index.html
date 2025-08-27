@@ -60,31 +60,37 @@
   .menu-button{
     position:fixed;top:10px;right:12px;z-index:10060;
     display:inline-flex;align-items:center;justify-content:center;
-    width:42px;height:42px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
+    width:44px;height:44px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer;
+    font-size:24px; /* 三本線を“気持ち大きく” */
+    line-height:1
   }
   .menu-button:hover{background:#f8fafc}
   .menu-wrap{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:88vw;z-index:10055;
     transform:translateX(100%);transition:transform .24s ease}
   .menu-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.28);opacity:0;pointer-events:none;z-index:10050;transition:opacity .2s}
-  .menu-panel{background:#fff;height:100%;overflow:auto;padding:10px 12px 14px;border-left:1px solid #e5e7eb}
+  /* グレイ基調に変更 */
+  .menu-panel{background:#f3f4f6;height:100%;overflow:auto;padding:10px 12px 14px;border-left:1px solid #e5e7eb}
   html.menu-open .menu-wrap{transform:translateX(0)}
   html.menu-open .menu-backdrop{opacity:1;pointer-events:auto}
   .menu-header{display:flex;align-items:center;justify-content:space-between;padding:.4rem .6rem .6rem}
-  .menu-title{font-weight:800}
-  .menu-close{border:1px solid #e5e7eb;border-radius:8px;background:#fff;padding:.4rem .6rem;cursor:pointer}
+  .menu-title{font-weight:800;color:#374151}
+  .menu-close{border:1px solid #e5e7eb;border-radius:8px;background:#fff;padding:.35rem .55rem;cursor:pointer}
 
   .menu-groups{overflow:auto;min-height:0;padding-right:2px}
   .menu-group{margin:10px 0 6px}
-  .menu-group h4{font-size:.84rem;margin:.2rem 0 .35rem;color:#0f172a}
+  .menu-group h4{font-size:.84rem;margin:.2rem 0 .35rem;color:#4b5563}
   .menu-list{list-style:none;margin:0;padding:0}
-  .menu-list li{display:block;margin:.42rem .5rem;border-radius:8px}
-  .menu-list li a{display:block;text-decoration:none;color:#111827}
-  .menu-list li a:hover{background:#f8fafc;border-color:#e5e7eb}
-  /* 小さめ＆詰め気味 */
-  .menu-list li a{font-size:.90rem;line-height:1.25;padding:.28rem .44rem}
+  .menu-list li{display:block;margin:.36rem .4rem;border-radius:8px}
+  .menu-list li a{
+    display:block;text-decoration:none;color:#374151;
+    padding:.28rem .44rem;border-radius:8px
+  }
+  .menu-list li a:hover{background:#ffffff;border-color:#e5e7eb}
+  /* 小さめ＆詰め気味（前回より少しだけ） */
+  .menu-list li a{font-size:.90rem;line-height:1.25}
 
   @media (max-width:480px){
-    .menu-button{width:40px;height:40px}
+    .menu-button{width:42px;height:42px;font-size:22px}
   }
 
   /* ========== 画面最下部 固定CTA ========== */
@@ -724,7 +730,7 @@
   window.addEventListener('load', adjustCtaPadding);
   window.addEventListener('resize', adjustCtaPadding);
 
-  // ===== ハンバーガー制御 =====
+  // ===== ハンバーガー制御（トグル対応） =====
   const htmlEl = document.documentElement;
   const btn = document.getElementById('menuBtn');
   const closeBtn = document.getElementById('menuClose');
@@ -734,8 +740,9 @@
 
   const openMenu  = () => { htmlEl.classList.add('menu-open');  btn.setAttribute('aria-expanded','true');  drawer.setAttribute('aria-hidden','false'); }
   const closeMenu = () => { htmlEl.classList.remove('menu-open');btn.setAttribute('aria-expanded','false'); drawer.setAttribute('aria-hidden','true'); }
+  const toggleMenu = () => { htmlEl.classList.contains('menu-open') ? closeMenu() : openMenu(); };
 
-  btn.addEventListener('click', openMenu);
+  btn.addEventListener('click', toggleMenu);      // ★再押下で閉じる
   closeBtn.addEventListener('click', closeMenu);
   backdrop.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
