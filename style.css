@@ -241,3 +241,8 @@ th:first-child, td:first-child{ text-align:left }
 
 /* 念のため：表のはみ出し保険（SP横スクロール許可） */
 .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+
+/* 常にCTAの高さぶん下余白を空ける（本文が隠れないようにする） */
+body {
+  padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important;
+}
