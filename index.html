@@ -99,12 +99,20 @@
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
-  .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
+  .fixed-cta .row{
+    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
+    padding:.6rem 1rem;min-height:var(--cta-h);
+    /* 折返し許可（高さ自動追随用） */
+    flex-wrap:wrap;
+  }
   .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
+
+  /* アンカー移動時にCTAに隠れないよう余白を確保 */
+  section[id], details[id]{ scroll-margin-bottom: var(--cta-h); }
 </style>
 </head>
 <body>
@@ -726,27 +734,14 @@
   </ul>
 </section>
 
-<!-- =========================
-  会社情報 / 海外向けコンタクト（追記）
-========================== -->
-<section id="provider" class="container mx-auto max-w-4xl px-4 py-6 text-sm">
-  <h2 class="smallish">Provider & Contact</h2>
-  <p>Provider: <strong>Grena Group LLC (Georgia)</strong><br>
-  Reg. No: <strong>406365525</strong><br>
-  Address: Tbilisi, Georgia</p>
-  <p>Contact (Email): 
-    <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> ／ 
-    <a href="mailto:grena.tax.ge@gmail.com">grena.tax.ge@gmail.com</a>
-  </p>
-</section>
-
 <!-- 画面最下部 固定CTA（本文には重ならない） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <a class="btn secondary" href="mailto:info@grena-tax.ge">Email（法人）</a>
+    <!-- ご指定の2メールボタン -->
+    <a class="btn secondary" href="mailto:info@grena-tax.ge">Email（会社）</a>
     <a class="btn secondary" href="mailto:grena.tax.ge@gmail.com">Email（Gmail）</a>
-    <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
+    <a class="btn neutral" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
     <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
@@ -774,14 +769,41 @@
     if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
   });
 
-  // CTAの高さを本文余白に反映（重なり防止）
+  // CTAの高さを本文余白に反映（重なり防止）——関数は既存
   const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar'); if (!bar) return;
     const h = Math.ceil(bar.getBoundingClientRect().height);
     document.documentElement.style.setProperty('--cta-h', h + 'px');
   };
+
+  // ① 画面読み込み・リサイズ・向き変更
   window.addEventListener('load', adjustCtaPadding);
   window.addEventListener('resize', adjustCtaPadding);
+  window.addEventListener('orientationchange', adjustCtaPadding);
+
+  // ② iOS/SafariのUI出現で高さが変わるケースに対応（スクロール時も再計測）
+  let _ctaTick = null;
+  window.addEventListener('scroll', () => {
+    if (_ctaTick) return;
+    _ctaTick = setTimeout(() => { _ctaTick = null; adjustCtaPadding(); }, 120);
+  }, { passive: true });
+
+  // ③ CTA自体の高さ変化（ボタン折返し等）を監視して即時反映
+  const ctaBar = document.getElementById('ctaBar');
+  if (window.ResizeObserver && ctaBar) {
+    const ro = new ResizeObserver(() => adjustCtaPadding());
+    ro.observe(ctaBar);
+  }
+
+  // ④ フォント読み込み後にも最終再計測（文字幅で折返しが変わるケース）
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(adjustCtaPadding);
+  }
+
+  // ⑤ タブ復帰時にも再計測
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') adjustCtaPadding();
+  });
 
   // 申込：必ずフォームに飛ぶ（未設定なら警告）
   document.getElementById('applyNow')?.addEventListener('click', (e) => {
