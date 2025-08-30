@@ -20,6 +20,7 @@
     --cta-h: 72px;
   }
   html,body{margin:0;padding:0}
+  /* CTAに隠れない余白（基本分） */
   body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
 
   /* アコーディオン（既存と同等） */
@@ -99,12 +100,16 @@
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
-  .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
+  .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
   .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
+
+  /* 末尾で“隠れる/被る”の保険スペーサー（Safariのゴムスク対策） */
+  .cta-spacer{height:calc(var(--cta-h) + max(24px, var(--safe-bottom)));}
+
 </style>
 </head>
 <body>
@@ -224,7 +229,7 @@
           <li>法人登記（目安：実働2〜3営業日で完了）※ジョージア現地営業日に基づく</li>
           <li>バーチャルオフィス（12ヶ月）</li>
           <li>英文契約書＋アポスティーユ</li>
-          <li>IBAN法人口座<strong>開設支援</strong>（現地パートナー経由）</li>
+          <li>IBAN法人口座<span><!-- ★SAFE --></span><strong>開設支援</strong><!-- ★SAFE -->（現地パートナー経由）</li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
         <span class="note">※ IBAN＝国際銀行口座番号／eSIM＝組込型SIM／RS.ge＝ジョージア税務ポータル</span>
@@ -285,12 +290,12 @@
           <div class="content">
             <ul>
               <li>法人登記（現地登記官とのやり取り含む）</li>
-              <li>法人口座<strong>開設支援</strong>（TBC／BOG ほか）</li>
+              <li>法人口座<strong><!-- ★SAFE -->開設支援<!-- ★SAFE --></strong>（TBC／BOG ほか）</li>
               <li>登記住所（家賃1年分込み）</li>
               <li>書類翻訳・郵送サポート</li>
               <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
             </ul>
-            <span class="note">※ 表示価格は「紹介・サポート」等のサービス提供料金であり、銀行に支払う手数料・預入金等とは関係ありません。</span>
+            <span class="note"><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金であり、銀行に支払う手数料・預入金等とは関係ありません。<!-- ★SAFE --></span>
           </div>
         </details>
 
@@ -423,7 +428,7 @@
             <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="meta">
-            <small>※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。</small>
+            <small><!-- ★SAFE -->※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。<!-- ★SAFE --></small>
             <small>※ 税務助言は含まれません（登録手続き支援）。</small>
           </div>
           <div class="proof">
@@ -502,7 +507,7 @@
   個人口座開設（銀行）
 ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
+  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span><!-- ★SAFE --></span>サポート<!-- ★SAFE -->（非居住者OK）</h2>
   <div class="space-y-3 accordion">
 
     <details>
@@ -539,7 +544,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
-        <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
+        <div class="security-note"><!-- ★SAFE -->※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。<!-- ★SAFE --></div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
@@ -571,7 +576,7 @@
           <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（税込）</span></div>
           <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span><span class="badge">先着15名限定</span></div>
           <div class="meta">
-            <small>※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。</small>
+            <small><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。<!-- ★SAFE --></small>
             <small>※ 条件・価格は今後変更となる場合があります。</small>
           </div>
           <div class="proof"><span>MoU：TREX LEGAL</span><span>非居住者OK</span><span>SWIFT対応</span></div>
@@ -665,52 +670,14 @@
 </section>
 
 <!-- =========================
-  ✅ 日本法での位置づけとリスク回避まとめ（本文セクション化）
-========================== -->
-<section id="jp-legal" class="container mx-auto max-w-4xl px-4 py-12">
-  <h2 class="smallish">✅ 日本法での位置づけとリスク回避まとめ</h2>
-
-  <div class="price-promo">
-    <div class="content" style="line-height:1.75">
-      <h4 style="margin:.2rem 0 0.4rem">1. 日本法でのリスク</h4>
-      <ul>
-        <li>日本国内で「海外銀行口座を代理で開設します」と広告・募集すると、無登録の銀行代理業や資金移動業に抵触する可能性があります。</li>
-        <li>金融庁が注目するのは「実態」よりも<strong>日本でのサービス提供の宣伝・勧誘</strong>です。</li>
-      </ul>
-
-      <h4 style="margin:.8rem 0 .4rem">2. 安全なスタンス</h4>
-      <ul>
-        <li>当サービスの立場は<strong>「紹介のみ」</strong>に限定します。</li>
-        <li>明示ポイント：<br>・現地の法律事務所をご紹介します。<br>・実際の口座開設は<strong>現地の正規パートナーが委任状に基づき</strong>行います。</li>
-        <li>これにより、日本法上は<strong>紹介業</strong>であり、金融法規制の対象外に近づきます。</li>
-      </ul>
-
-      <h4 style="margin:.8rem 0 .4rem">3. リスク回避のための注意点</h4>
-      <ul>
-        <li>LPや契約書には必ず：<br><strong>「当社は銀行口座の代理開設は行いません。紹介・サポートのみを行います。」</strong>と明記。</li>
-        <li>「代理開設」「代行」という文言は避ける。</li>
-        <li>「現地の正規の法律事務所／専門家が、委任状に基づいて開設を行います」と記載。</li>
-        <li>日本の顧客から受け取るのは<strong>「紹介料・サポート料」</strong>と整理し、<strong>「銀行口座開設料」</strong>という名目は避ける。</li>
-      </ul>
-
-      <h4 style="margin:.8rem 0 .4rem">🎯 結論</h4>
-      <ul>
-        <li>代理開設を当社が請け負う形は<strong>NG（高リスク）</strong></li>
-        <li>紹介・サポートに徹する形なら、日本法上のリスクを<strong>大幅に回避</strong>できます</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- =========================
   免責事項（法人＋個人口座・キャンセル統合）
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
-    <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
-    <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
-    <li>当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。</li>
+    <li><!-- ★SAFE -->当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。<!-- ★SAFE --></li>
+    <li><!-- ★SAFE -->実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。<!-- ★SAFE --></li>
+    <li><!-- ★SAFE -->当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。<!-- ★SAFE --></li>
     <li>税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
     <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
     <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
@@ -726,6 +693,9 @@
   </ul>
 </section>
 
+<!-- 末尾の“被り防止”スペーサー（実DOMに置くことでSafariの末尾バウンスでも隠れない） -->
+<div class="cta-spacer" aria-hidden="true"></div>
+
 <!-- 画面最下部 固定CTA（本文には重ならない） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
@@ -737,39 +707,27 @@
   </div>
 </div>
 
-<!-- ===== JS（本文は一切変更なし：挙動のみ金融庁対策の修正） ===== -->
+<!-- ===== JS（本文は一切変更なし） ===== -->
 <script>
-  // 初期スクロールの復元を抑止（iOS Safariの自動ジャンプ対策）
-  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
-
-  /* フォームURL：実URLをセット済み */
+  /* フォームURL：いただいた実URLをセット済み */
   const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-  // アンカーリンク：ユーザー操作時のみスムーズスクロール
+  // ページ内リンクだけスムーススクロール（存在しないアンカーは素通し）
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
-
-    // 人のクリック以外（スクリプト／ブラウザの自動挙動）は無視
-    if (!e.isTrusted) return;
-
     const id = a.getAttribute('href');
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
-
-    // クリック時のみスムーズスクロール
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    // detailsを勝手に開かない（金融庁対策上の表現誤解回避）
-    // history更新のみ
+    const first = target.querySelector('details'); if (first && !first.open) first.open = true;
     history.pushState(null, '', id);
   });
 
   // 「トップへ」：アンカーが無くても確実に上へ
   document.getElementById('toTop')?.addEventListener('click', (e)=>{
-    const anchor = document.querySelector('#page-top');
-    if (!anchor) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
+    if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
   });
 
   // CTAの高さを本文余白に反映（重なり防止）
@@ -839,9 +797,9 @@
         a.addEventListener('click',(e)=>{
           e.preventDefault();
           closeMenu();
-          // ここではスクロールせず、上のグローバルハンドラ（人のクリックのみ）に任せる
-          document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth', block:'start'});
-          history.pushState(null,'',a.getAttribute('href'));
+          d.open = true;
+          d.scrollIntoView({behavior:'smooth', block:'start'});
+          history.pushState(null,'',`#${d.id}`);
         });
         li.appendChild(a); ul.appendChild(li);
       });
