@@ -20,6 +20,8 @@
     --cta-h: 72px;
   }
   html,body{margin:0;padding:0}
+  /* 初期の自動スムースを無効化（外部CSSの影響を打消し） */
+  html{scroll-behavior:auto !important}
   body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
 
   /* アコーディオン（既存と同等） */
@@ -44,7 +46,6 @@
   .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
   .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
   .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
   .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
   .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
   .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
@@ -100,9 +101,7 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{
-    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
-    padding:.6rem 1rem;min-height:var(--cta-h);
-    /* 折返し許可（高さ自動追随用） */
+    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h);
     flex-wrap:wrap;
   }
   .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
@@ -111,7 +110,7 @@
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
 
-  /* アンカー移動時にCTAに隠れないよう余白を確保 */
+  /* アンカーがCTAに隠れないように */
   section[id], details[id]{ scroll-margin-bottom: var(--cta-h); }
 </style>
 </head>
@@ -738,7 +737,7 @@
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <!-- ご指定の2メールボタン -->
+    <!-- 追加：ご指定のメール2種 -->
     <a class="btn secondary" href="mailto:info@grena-tax.ge">Email（会社）</a>
     <a class="btn secondary" href="mailto:grena.tax.ge@gmail.com">Email（Gmail）</a>
     <a class="btn neutral" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
@@ -769,41 +768,47 @@
     if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
   });
 
-  // CTAの高さを本文余白に反映（重なり防止）——関数は既存
-  const adjustCtaPadding = () => {
+  // ===== 位置補正つき 高さ再計測 =====
+  function adjustCtaPadding(keepPos = true){
     const bar = document.getElementById('ctaBar'); if (!bar) return;
+    const doc = document.scrollingElement || document.documentElement;
+
+    // スクロール位置維持のため、下端距離を記録
+    const prevBottomGap = (doc.scrollHeight - window.innerHeight) - window.scrollY;
+
     const h = Math.ceil(bar.getBoundingClientRect().height);
     document.documentElement.style.setProperty('--cta-h', h + 'px');
-  };
 
-  // ① 画面読み込み・リサイズ・向き変更
-  window.addEventListener('load', adjustCtaPadding);
-  window.addEventListener('resize', adjustCtaPadding);
-  window.addEventListener('orientationchange', adjustCtaPadding);
-
-  // ② iOS/SafariのUI出現で高さが変わるケースに対応（スクロール時も再計測）
-  let _ctaTick = null;
-  window.addEventListener('scroll', () => {
-    if (_ctaTick) return;
-    _ctaTick = setTimeout(() => { _ctaTick = null; adjustCtaPadding(); }, 120);
-  }, { passive: true });
-
-  // ③ CTA自体の高さ変化（ボタン折返し等）を監視して即時反映
-  const ctaBar = document.getElementById('ctaBar');
-  if (window.ResizeObserver && ctaBar) {
-    const ro = new ResizeObserver(() => adjustCtaPadding());
-    ro.observe(ctaBar);
+    if (keepPos){
+      const newBottomGap = (doc.scrollHeight - window.innerHeight) - window.scrollY;
+      const delta = newBottomGap - prevBottomGap;
+      if (delta !== 0) window.scrollBy(0, delta);
+    }
   }
 
-  // ④ フォント読み込み後にも最終再計測（文字幅で折返しが変わるケース）
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(adjustCtaPadding);
-  }
+  // 初回は一時的にスクロールを止め、レイアウト後に補正
+  (function initLayout(){
+    const html = document.documentElement;
+    const prev = html.style.overflow;
+    html.style.overflow = 'hidden';
+    requestAnimationFrame(()=>{
+      adjustCtaPadding(false);
+      setTimeout(()=>{
+        adjustCtaPadding(true);
+        html.style.overflow = prev || '';
+      }, 300);
+    });
+  })();
 
-  // ⑤ タブ復帰時にも再計測
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') adjustCtaPadding();
-  });
+  // 画面変化時の再計測（リクエストアニメフレームでデバウンス）
+  let _tick = null;
+  function queuedAdjust(){ if (_tick) return; _tick = requestAnimationFrame(()=>{ _tick = null; adjustCtaPadding(true); }); }
+  window.addEventListener('load', queuedAdjust);
+  window.addEventListener('resize', queuedAdjust);
+  window.addEventListener('orientationchange', queuedAdjust);
+  window.addEventListener('scroll', queuedAdjust, {passive:true});
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') adjustCtaPadding(true); });
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(()=>adjustCtaPadding(true)); }
 
   // 申込：必ずフォームに飛ぶ（未設定なら警告）
   document.getElementById('applyNow')?.addEventListener('click', (e) => {
