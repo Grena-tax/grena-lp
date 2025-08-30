@@ -20,8 +20,6 @@
     --cta-h: 72px;
   }
   html,body{margin:0;padding:0}
-  /* 初期の自動スムースを無効化（外部CSSの影響を打消し） */
-  html{scroll-behavior:auto !important}
   body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
 
   /* アコーディオン（既存と同等） */
@@ -46,6 +44,7 @@
   .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
   .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
   .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
   .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
   .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
   .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
@@ -100,18 +99,12 @@
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
-  .fixed-cta .row{
-    max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h);
-    flex-wrap:wrap;
-  }
+  .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
   .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
-
-  /* アンカーがCTAに隠れないように */
-  section[id], details[id]{ scroll-margin-bottom: var(--cta-h); }
 </style>
 </head>
 <body>
@@ -231,7 +224,7 @@
           <li>法人登記（目安：実働2〜3営業日で完了）※ジョージア現地営業日に基づく</li>
           <li>バーチャルオフィス（12ヶ月）</li>
           <li>英文契約書＋アポスティーユ</li>
-          <li>IBAN法人口座<span><!-- ★SAFE --></span><strong>開設支援</strong><!-- ★SAFE -->（現地パートナー経由）</li>
+          <li>IBAN法人口座<strong>開設支援</strong>（現地パートナー経由）</li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
         <span class="note">※ IBAN＝国際銀行口座番号／eSIM＝組込型SIM／RS.ge＝ジョージア税務ポータル</span>
@@ -292,12 +285,12 @@
           <div class="content">
             <ul>
               <li>法人登記（現地登記官とのやり取り含む）</li>
-              <li>法人口座<strong><!-- ★SAFE -->開設支援<!-- ★SAFE --></strong>（TBC／BOG ほか）</li>
+              <li>法人口座<strong>開設支援</strong>（TBC／BOG ほか）</li>
               <li>登記住所（家賃1年分込み）</li>
               <li>書類翻訳・郵送サポート</li>
               <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
             </ul>
-            <span class="note"><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金であり、銀行に支払う手数料・預入金等とは関係ありません。<!-- ★SAFE --></span>
+            <span class="note">※ 表示価格は「紹介・サポート」等のサービス提供料金であり、銀行に支払う手数料・預入金等とは関係ありません。</span>
           </div>
         </details>
 
@@ -430,7 +423,7 @@
             <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="meta">
-            <small><!-- ★SAFE -->※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。<!-- ★SAFE --></small>
+            <small>※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。</small>
             <small>※ 税務助言は含まれません（登録手続き支援）。</small>
           </div>
           <div class="proof">
@@ -509,7 +502,7 @@
   個人口座開設（銀行）
 ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span><!-- ★SAFE --></span>サポート<!-- ★SAFE -->（非居住者OK）</h2>
+  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
   <div class="space-y-3 accordion">
 
     <details>
@@ -546,7 +539,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
-        <div class="security-note"><!-- ★SAFE -->※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。<!-- ★SAFE --></div>
+        <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
@@ -578,7 +571,7 @@
           <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（税込）</span></div>
           <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span><span class="badge">先着15名限定</span></div>
           <div class="meta">
-            <small><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。<!-- ★SAFE --></small>
+            <small>※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。</small>
             <small>※ 条件・価格は今後変更となる場合があります。</small>
           </div>
           <div class="proof"><span>MoU：TREX LEGAL</span><span>非居住者OK</span><span>SWIFT対応</span></div>
@@ -715,9 +708,9 @@
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
-    <li><!-- ★SAFE -->当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。<!-- ★SAFE --></li>
-    <li><!-- ★SAFE -->実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。<!-- ★SAFE --></li>
-    <li><!-- ★SAFE -->当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。<!-- ★SAFE --></li>
+    <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
+    <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
+    <li>当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。</li>
     <li>税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
     <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
     <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
@@ -737,7 +730,6 @@
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <!-- 追加：ご指定のメール2種 -->
     <a class="btn secondary" href="mailto:info@grena-tax.ge">Email（会社）</a>
     <a class="btn secondary" href="mailto:grena.tax.ge@gmail.com">Email（Gmail）</a>
     <a class="btn neutral" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
@@ -745,70 +737,49 @@
   </div>
 </div>
 
-<!-- ===== JS（本文は一切変更なし） ===== -->
+<!-- ===== JS（本文は一切変更なし：挙動のみ金融庁対策の修正） ===== -->
 <script>
-  /* フォームURL：いただいた実URLをセット済み */
+  // 初期スクロールの復元を抑止（iOS Safariの自動ジャンプ対策）
+  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+
+  /* フォームURL：実URLをセット済み */
   const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-  // ページ内リンクだけスムーススクロール（存在しないアンカーは素通し）
+  // アンカーリンク：ユーザー操作時のみスムーズスクロール
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
+
+    // 人のクリック以外（スクリプト／ブラウザの自動挙動）は無視
+    if (!e.isTrusted) return;
+
     const id = a.getAttribute('href');
     const target = document.querySelector(id);
     if (!target) return;
     e.preventDefault();
+
+    // クリック時のみスムーズスクロール
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const first = target.querySelector('details'); if (first && !first.open) first.open = true;
+
+    // detailsを勝手に開かない（金融庁対策上の表現誤解回避）
+    // history更新のみ
     history.pushState(null, '', id);
   });
 
   // 「トップへ」：アンカーが無くても確実に上へ
   document.getElementById('toTop')?.addEventListener('click', (e)=>{
-    if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
+    const anchor = document.querySelector('#page-top');
+    if (!anchor) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
   });
 
-  // ===== 位置補正つき 高さ再計測 =====
-  function adjustCtaPadding(keepPos = true){
+  // CTAの高さを本文余白に反映（重なり防止）
+  const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar'); if (!bar) return;
-    const doc = document.scrollingElement || document.documentElement;
-
-    // スクロール位置維持のため、下端距離を記録
-    const prevBottomGap = (doc.scrollHeight - window.innerHeight) - window.scrollY;
-
     const h = Math.ceil(bar.getBoundingClientRect().height);
     document.documentElement.style.setProperty('--cta-h', h + 'px');
-
-    if (keepPos){
-      const newBottomGap = (doc.scrollHeight - window.innerHeight) - window.scrollY;
-      const delta = newBottomGap - prevBottomGap;
-      if (delta !== 0) window.scrollBy(0, delta);
-    }
-  }
-
-  // 初回は一時的にスクロールを止め、レイアウト後に補正
-  (function initLayout(){
-    const html = document.documentElement;
-    const prev = html.style.overflow;
-    html.style.overflow = 'hidden';
-    requestAnimationFrame(()=>{
-      adjustCtaPadding(false);
-      setTimeout(()=>{
-        adjustCtaPadding(true);
-        html.style.overflow = prev || '';
-      }, 300);
-    });
-  })();
-
-  // 画面変化時の再計測（リクエストアニメフレームでデバウンス）
-  let _tick = null;
-  function queuedAdjust(){ if (_tick) return; _tick = requestAnimationFrame(()=>{ _tick = null; adjustCtaPadding(true); }); }
-  window.addEventListener('load', queuedAdjust);
-  window.addEventListener('resize', queuedAdjust);
-  window.addEventListener('orientationchange', queuedAdjust);
-  window.addEventListener('scroll', queuedAdjust, {passive:true});
-  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') adjustCtaPadding(true); });
-  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(()=>adjustCtaPadding(true)); }
+  };
+  window.addEventListener('load', adjustCtaPadding);
+  window.addEventListener('resize', adjustCtaPadding);
 
   // 申込：必ずフォームに飛ぶ（未設定なら警告）
   document.getElementById('applyNow')?.addEventListener('click', (e) => {
@@ -868,9 +839,9 @@
         a.addEventListener('click',(e)=>{
           e.preventDefault();
           closeMenu();
-          d.open = true;
-          d.scrollIntoView({behavior:'smooth', block:'start'});
-          history.pushState(null,'',`#${d.id}`);
+          // ここではスクロールせず、上のグローバルハンドラ（人のクリックのみ）に任せる
+          document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth', block:'start'});
+          history.pushState(null,'',a.getAttribute('href'));
         });
         li.appendChild(a); ul.appendChild(li);
       });
