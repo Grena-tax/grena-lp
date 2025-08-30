@@ -52,14 +52,12 @@
   th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
   th:first-child,td:first-child{text-align:left}
 
-  /* 見出しが大きすぎる端末の軽い調整 */
   @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-  /* セクション境界の微調整（KYC⇄料金の間も統一） */
   #corp-setup{padding-bottom:2rem!important}
   #plans{padding-top:.75rem!important}
 
-  /* 右上ハンバーガー（ビジネスグレー／14px） */
+  /* 右上ハンバーガー */
   .menu-button{
     position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
     display:inline-flex;align-items:center;justify-content:center;
@@ -91,7 +89,6 @@
   .menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
   .menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
 
-  /* ハンバーガー open */
   html.menu-open .menu-wrap{pointer-events:auto}
   html.menu-open .menu-backdrop{opacity:1}
   html.menu-open .menu-panel{transform:none}
@@ -227,7 +224,7 @@
           <li>法人登記（目安：実働2〜3営業日で完了）※ジョージア現地営業日に基づく</li>
           <li>バーチャルオフィス（12ヶ月）</li>
           <li>英文契約書＋アポスティーユ</li>
-          <li>IBAN法人口座開設支援</li>
+          <li>IBAN法人口座<span><!-- ★SAFE --></span><strong>開設支援</strong><!-- ★SAFE -->（現地パートナー経由）</li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
         <span class="note">※ IBAN＝国際銀行口座番号／eSIM＝組込型SIM／RS.ge＝ジョージア税務ポータル</span>
@@ -288,11 +285,12 @@
           <div class="content">
             <ul>
               <li>法人登記（現地登記官とのやり取り含む）</li>
-              <li>法人口座開設（TBC／BOGなど）</li>
+              <li>法人口座<strong><!-- ★SAFE -->開設支援<!-- ★SAFE --></strong>（TBC／BOG ほか）</li>
               <li>登記住所（家賃1年分込み）</li>
               <li>書類翻訳・郵送サポート</li>
               <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
             </ul>
+            <span class="note"><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金であり、銀行に支払う手数料・預入金等とは関係ありません。<!-- ★SAFE --></span>
           </div>
         </details>
 
@@ -301,7 +299,7 @@
           <div class="content">
             <ul>
               <li>基本プランの内容に加え：</li>
-              <li>.geドメイン取得代行</li>
+              <li>.geドメイン取得手続き（※金融関連ではありません）</li>
               <li>初期設計済みLP（お問い合わせフォーム＋運用ガイドPDF）</li>
               <li>月1回のライト相談（LINEまたはチャット）</li>
               <li>ライティング／構成アドバイス</li>
@@ -425,8 +423,8 @@
             <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="meta">
-            <small>※ 本料金は登録代行のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。</small>
-            <small>※ 税務助言は含まれません（登録代行のみ）。</small>
+            <small><!-- ★SAFE -->※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。<!-- ★SAFE --></small>
+            <small>※ 税務助言は含まれません（登録手続き支援）。</small>
           </div>
           <div class="proof">
             <span>MoU：TREX LEGAL</span>
@@ -504,7 +502,7 @@
   個人口座開設（銀行）
 ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
+  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span><!-- ★SAFE --></span>サポート<!-- ★SAFE -->（非居住者OK）</h2>
   <div class="space-y-3 accordion">
 
     <details>
@@ -541,7 +539,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
-        <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。</div>
+        <div class="security-note"><!-- ★SAFE -->※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。<!-- ★SAFE --></div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
@@ -573,8 +571,7 @@
           <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（税込）</span></div>
           <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span><span class="badge">先着15名限定</span></div>
           <div class="meta">
-            <small>※ 特別価格は予告なく終了する場合があります（定員到達時は即時終了）。</small>
-            <small>※ 表示価格はサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。</small>
+            <small><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。<!-- ★SAFE --></small>
             <small>※ 条件・価格は今後変更となる場合があります。</small>
           </div>
           <div class="proof"><span>MoU：TREX LEGAL</span><span>非居住者OK</span><span>SWIFT対応</span></div>
@@ -668,16 +665,58 @@
 </section>
 
 <!-- =========================
+  ✅ 日本法での位置づけとリスク回避まとめ（本文セクション化）
+========================== -->
+<section id="jp-legal" class="container mx-auto max-w-4xl px-4 py-12">
+  <h2 class="smallish">✅ 日本法での位置づけとリスク回避まとめ</h2>
+
+  <div class="price-promo">
+    <div class="content" style="line-height:1.75">
+      <h4 style="margin:.2rem 0 0.4rem">1. 日本法でのリスク</h4>
+      <ul>
+        <li>日本国内で「海外銀行口座を代理で開設します」と広告・募集すると、無登録の銀行代理業や資金移動業に抵触する可能性があります。</li>
+        <li>金融庁が注目するのは「実態」よりも<strong>日本でのサービス提供の宣伝・勧誘</strong>です。</li>
+      </ul>
+
+      <h4 style="margin:.8rem 0 .4rem">2. 安全なスタンス</h4>
+      <ul>
+        <li>当サービスの立場は<strong>「紹介のみ」</strong>に限定します。</li>
+        <li>明示ポイント：<br>・現地の法律事務所をご紹介します。<br>・実際の口座開設は<strong>現地の正規パートナーが委任状に基づき</strong>行います。</li>
+        <li>これにより、日本法上は<strong>紹介業</strong>であり、金融法規制の対象外に近づきます。</li>
+      </ul>
+
+      <h4 style="margin:.8rem 0 .4rem">3. リスク回避のための注意点</h4>
+      <ul>
+        <li>LPや契約書には必ず：<br><strong>「当社は銀行口座の代理開設は行いません。紹介・サポートのみを行います。」</strong>と明記。</li>
+        <li>「代理開設」「代行」という文言は避ける。</li>
+        <li>「現地の正規の法律事務所／専門家が、委任状に基づいて開設を行います」と記載。</li>
+        <li>日本の顧客から受け取るのは<strong>「紹介料・サポート料」</strong>と整理し、<strong>「銀行口座開設料」</strong>という名目は避ける。</li>
+      </ul>
+
+      <h4 style="margin:.8rem 0 .4rem">🎯 結論</h4>
+      <ul>
+        <li>代理開設を当社が請け負う形は<strong>NG（高リスク）</strong></li>
+        <li>紹介・サポートに徹する形なら、日本法上のリスクを<strong>大幅に回避</strong>できます</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
   免責事項（法人＋個人口座・キャンセル統合）
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
   <ul>
-    <li>当サービスはジョージア現地法に基づく<strong>情報提供・実務サポート</strong>です。税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
+    <li><!-- ★SAFE -->当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。<!-- ★SAFE --></li>
+    <li><!-- ★SAFE -->実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。<!-- ★SAFE --></li>
+    <li><!-- ★SAFE -->当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。<!-- ★SAFE --></li>
+    <li>税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
     <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
     <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
     <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
   </ul>
+
   <h3 class="smallish" style="font-size:1.05em;margin-top:1rem">キャンセルポリシー</h3>
   <ul>
     <li>ご入金確認後は現地が即時着手するため、<strong>キャンセル・返金は原則不可</strong>です。</li>
