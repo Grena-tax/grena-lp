@@ -101,7 +101,7 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
@@ -110,6 +110,8 @@
   /* 末尾で“隠れる/被る”の保険スペーサー（Safariのゴムスク対策） */
   .cta-spacer{height:calc(var(--cta-h) + max(24px, var(--safe-bottom)));}
 
+  /* 重要注意の赤字（視認性UP） */
+  .important-note{color:#dc2626;font-weight:700}
 </style>
 </head>
 <body>
@@ -179,7 +181,7 @@
           <li>居住国での課税タイミングは各国税制により異なります。</li>
           <li>移管自体が居住国で課税対象となるケースがあるため要確認。</li>
         </ul>
-        <p>税務リスクが高い → OECD/PwC基準で帳簿・証憑を整備／個人名義が不安 → 法人名義ウォレット＋法人運用へ移行可能。</p>
+        <p>税務リスクが高い → OECD/PwC基準で帳簿・証憑を整備<strong>（当社は記入サポートのみ。税務アドバイスは行いません）</strong>／個人名義が不安 → 法人名義ウォレット＋法人運用へ移行可能。</p>
         <span class="note">※ 証憑＝取引を裏づける書類（請求書・契約書・送金記録など）</span>
       </div>
     </details>
@@ -286,7 +288,7 @@
       <div class="content">
 
         <details>
-          <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
+          <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（総額表示）</span></summary>
           <div class="content">
             <ul>
               <li>法人登記（現地登記官とのやり取り含む）</li>
@@ -300,7 +302,7 @@
         </details>
 
         <details>
-          <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
+          <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（総額表示）</span></summary>
           <div class="content">
             <ul>
               <li>基本プランの内容に加え：</li>
@@ -314,11 +316,11 @@
         </details>
 
         <details>
-          <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
+          <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（総額表示）</span></summary>
           <div class="content">
             <ul>
               <li>設立＋LPパックの内容に加え：</li>
-              <li>節税マニュアル（CFC対策・経費管理）</li>
+              <li><strong>【情報提供】CFC制度や経費管理に関する参考資料</strong>（税務アドバイスを含みません）</li>
               <li>帳簿テンプレート／経費リストPDF</li>
               <li>職業別アドバイス（個別送付）</li>
               <li>月1回の運用レビュー（文面型）</li>
@@ -333,14 +335,14 @@
     <details>
       <summary>2年目以降の維持・サポート</summary>
       <div class="content">
-        <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong> <span class="text-sm">（税込）</span></h4>
+        <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong> <span class="text-sm">（総額表示）</span></h4>
         <ul>
           <li>登記住所更新（家賃1年分込み）</li>
           <li>書類更新サポート（登記官とのやり取り等）</li>
           <li>現地パートナー対応／Zoom不要・文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（総額表示）</span></h4>
         <ul>
           <li>Aの内容すべて</li>
           <li>問い合わせフォームの保守・小修正対応</li>
@@ -350,7 +352,7 @@
         <div class="price-promo" aria-label="LP/ドメイン追加（基本プラン利用者向け）">
           <div class="row">
             <span class="label">LP＋.geドメイン追加（2年目以降）</span>
-            <span class="now">¥250,000</span><span class="text-sm">（税込）</span>
+            <span class="now">¥250,000</span><span class="text-sm">（総額表示）</span>
           </div>
           <div class="meta">
             <small>※ 初年度「基本プラン」ご利用でLPやドメイン未整備の方向け追加メニューです。</small>
@@ -425,7 +427,7 @@
         <div class="price-promo" aria-label="IE/SBS 登録料金">
           <div class="row">
             <span class="label">料金：</span>
-            <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
+            <span class="now">¥248,000</span><span class="text-sm">（総額表示）</span>
           </div>
           <div class="meta">
             <small><!-- ★SAFE -->※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。<!-- ★SAFE --></small>
@@ -492,8 +494,8 @@
           <li>IE登録者限定で、法人設立の基本プランを割引提供します。</li>
         </ul>
         <div class="price-promo" aria-label="IE登録者限定割引">
-          <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着10社</span></div>
+          <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（総額表示）</span></div>
+          <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（総額表示）</span><span class="badge">先着10社</span></div>
           <div class="meta"><small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small></div>
         </div>
         <span class="note">※ IE＝Individual Entrepreneur</span>
@@ -573,8 +575,8 @@
           <li>必要書類・マニュアル一式＋最終チェック（日本語）</li>
         </ul>
         <div class="price-promo" aria-label="先着特別価格（個人口座開設）">
-          <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span><span class="badge">先着15名限定</span></div>
+          <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（総額表示）</span></div>
+          <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（総額表示）</span><span class="badge">先着15名限定</span></div>
           <div class="meta">
             <small><!-- ★SAFE -->※ 表示価格は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの<strong>公的費用・実費</strong>が発生する場合があります。<!-- ★SAFE --></small>
             <small>※ 条件・価格は今後変更となる場合があります。</small>
@@ -588,6 +590,7 @@
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
         <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+        <p class="text-sm important-note"><strong>※重要</strong> 下表は特定の条件（金利・為替など）に基づいた仮定の計算例であり、将来の運用成果を約束・保証するものではありません。金利・為替・税制は変動します。</p>
         <table>
           <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
           <tbody>
@@ -600,7 +603,7 @@
         </table>
         <ul>
           <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
-          <li>為替が20%以上下落しない限り、元本超えの可能性が高い設計。</li>
+          <li><span>為替が20%以上下落しない限り、元本超えの可能性が見込まれる設計</span><strong>（※特定条件に基づく試算であり結果を保証しません）</strong>。</li>
         </ul>
         <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
@@ -609,6 +612,7 @@
     <details>
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
+        <p class="text-sm important-note"><strong>※重要</strong> 以下は一定の前提条件に基づく参考計算例であり、将来の成果を約束・保証するものではありません。</p>
         <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
         <table>
           <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
@@ -682,11 +686,18 @@
     <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
     <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
     <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
+    <li><strong>価格表示は総額表示です。</strong>なお、料金はジョージアのVAT（付加価値税）を含みません。日本における消費税の課税対象外取引に該当します。</li>
+    <li>当サービスはジョージア法人による提供であり、契約の準拠法は<strong>ジョージア法</strong>とし、紛争は<strong>ジョージアの裁判所</strong>を専属的合意管轄とします（詳細は別途利用規約をご確認ください）。</li>
   </ul>
 
   <h3 class="smallish" style="font-size:1.05em;margin-top:1rem">キャンセルポリシー</h3>
   <ul>
-    <li>ご入金確認後は現地が即時着手するため、<strong>キャンセル・返金は原則不可</strong>です。</li>
+    <li>お客様のご都合によるキャンセルは、次の区分によりキャンセル料を申し受けます。
+      <ul>
+        <li>当社が現地パートナーへの業務依頼を<strong>開始前</strong>：返金手数料（<strong>¥10,000</strong>）を差し引いた額を返金</li>
+        <li>当社が現地パートナーへの業務依頼を<strong>開始後</strong>：<strong>お支払金額の100%</strong></li>
+      </ul>
+    </li>
     <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
     <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
     <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
