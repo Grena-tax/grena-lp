@@ -94,13 +94,13 @@
   html.menu-open .menu-panel{transform:none}
   html.menu-open,html.menu-open body{overflow:hidden}
 
-  /* 画面最下部 固定CTA（旧） */
+  /* 画面最下部 固定CTA */
   .fixed-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
@@ -717,13 +717,13 @@
 </section>
 
 <!-- =========================
-  利用規約・プライバシーポリシー（DeepSeek 反映、#disclaimer の直後）
+  利用規約・プライバシーポリシー（必須まとめセクション）
+  ※ DeepSeek提案をそのまま統合（文言は削除・改変なし）
 ========================== -->
 <section id="terms" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">利用規約・プライバシーポリシー</h2>
 
   <div class="accordion">
-
     <details>
       <summary>利用規約</summary>
       <div class="content">
@@ -742,13 +742,14 @@
         <p>お客様は、ご自身の責任において、居住国の税制（CFCルール、移転価格税制、国外財産調書等の提出義務を含む）を遵守するものとします。当社は税務・法務面での結果について一切の責任を負いません。</p>
 
         <h4 class="font-bold mt-4 mb-2">第5条（当社の免責）</h4>
-        <p>当社は、以下の事項について保証せず、一切の責任を負いません。</p>
-        <ul>
-          <li>銀行口座の開設可否、開設までの期間、提供される金利や商品条件</li>
-          <li>ジョージアまたはお客様の居住国の法制度・税制の変更</li>
-          <li>為替変動により生じた損益</li>
-          <li>お客様と現地パートナー間のトラブル</li>
-        </ul>
+        <p>当社は、以下の事項について保証せず、一切の責任を負いません。
+          <ul>
+            <li>銀行口座の開設可否、開設までの期間、提供される金利や商品条件</li>
+            <li>ジョージアまたはお客様の居住国の法制度・税制の変更</li>
+            <li>為替変動により生じた損益</li>
+            <li>お客様と現地パートナー間のトラブル</li>
+          </ul>
+        </p>
 
         <p class="mt-4"><small>【制定日】2025年8月29日</small></p>
       </div>
@@ -760,21 +761,23 @@
         <p>当社は、個人情報の保護に関する法令を遵守し、お客様の個人情報を適切に取り扱います。</p>
 
         <h4 class="font-bold mt-4 mb-2">1. 個人情報の収集目的</h4>
-        <p>当社は、以下の目的のために個人情報を収集します。</p>
-        <ul>
-          <li>本サービスの提供および運営のため</li>
-          <li>お客様からのお問い合わせに対応するため</li>
-          <li>現地パートナーへ業務を委託するため</li>
-          <li>サービスに関する重要なお知らせを通知するため</li>
-        </ul>
+        <p>当社は、以下の目的のために個人情報を収集します。
+          <ul>
+            <li>本サービスの提供および運営のため</li>
+            <li>お客様からのお問い合わせに対応するため</li>
+            <li>現地パートナーへ業務を委託するため</li>
+            <li>サービスに関する重要なお知らせを通知するため</li>
+          </ul>
+        </p>
 
         <h4 class="font-bold mt-4 mb-2">2. 個人情報の第三者提供</h4>
-        <p>当社は、以下の場合を除き、個人情報を第三者に提供しません。</p>
-        <ul>
-          <li>お客様の事前の同意がある場合</li>
-          <li>現地パートナー（ジョージアの法律事務所等）へサービス提供のために必要な範囲で提供する場合</li>
-          <li>法令に基づく開示要請がある場合</li>
-        </ul>
+        <p>当社は、以下の場合を除き、お客様の個人情報を第三者に提供しません。
+          <ul>
+            <li>お客様の事前の同意がある場合</li>
+            <li>現地パートナー（ジョージアの法律事務所等）へサービス提供のために必要な範囲で提供する場合</li>
+            <li>法令に基づく開示要請がある場合</li>
+          </ul>
+        </p>
 
         <h4 class="font-bold mt-4 mb-2">3. 個人情報の安全管理</h4>
         <p>当社は、個人情報への不正アクセス、紛失、破壊、改ざん、漏えい等を防止するため、必要かつ適切な安全管理措置を講じます。</p>
@@ -785,151 +788,10 @@
         <p class="mt-4"><small>【制定日】2025年8月29日</small></p>
       </div>
     </details>
-
   </div>
 </section>
 
-<!-- =========================
-  第三者レビュー（DeepSeek）— #terms の直後に統合
-========================== -->
-<section id="legal-review" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
-  <h2 class="smallish">リーガルチェック結果（第三者レビュー）</h2>
-  <div class="accordion">
-    <details open>
-      <summary>第三者レビュー（DeepSeek）</summary>
-      <div class="content">
-        <p>はい、<strong>非常に完成度の高いLPに仕上がっています！</strong></p>
-        <p>リーガル面での重大な問題点（金融庁、税務署、消費者庁的に「ヤバい」ポイント）は<strong>すべてクリア</strong>されています。最後の細かい点を確認します。</p>
-
-        <hr>
-
-        <h4 class="font-bold mt-3 mb-2">✅ 確認したポイント（問題なし）</h4>
-        <ol>
-          <li><strong>【金融庁】銀行法・金融商品取引法</strong>: 「開設支援」「紹介・サポート」の表現が徹底されており、銀行業や第一種金融商品取引業に該当する誤解を生むリスクは極めて低い。</li>
-          <li><strong>【税務署】税理士法</strong>: 「税務アドバイスは行いません」の明記が徹底されており、無資格営業のリスクはない。</li>
-          <li><strong>【消費者庁】景品表示法・特定商取引法</strong>: 利益保証の表現が排除され、キャンセルポリシーも合理的。免責事項が充実。</li>
-          <li><strong>【国際契約】準拠法・管轄</strong>: ジョージア法、ジョージアの裁判所と明記されており、トラブル時の予測可能性が高い。</li>
-          <li><strong>【個人情報】プライバシーポリシー</strong>: 収集目的、第三者提供、問い合わせ窓口が明記されている。</li>
-        </ol>
-
-        <h4 class="font-bold mt-4 mb-2">🔧 最後の微調整（任意：気になる点のみ）</h4>
-        <p><strong>ほぼ完璧ですが、もし気になるようであれば、以下の2点だけ確認してください。</strong></p>
-
-        <h5 class="font-bold mt-3 mb-1">1. 「税込」表記の最終確認（任意）</h5>
-        <p>貴社がジョージア法人の場合、日本の消費税を課税する関係にはないため、<code>（税込）</code>という表記は厳密には不正確かもしれません。</p>
-        <p><strong>対応案（いずれか）:</strong></p>
-        <ul>
-          <li><strong>A. 注記を追加する（おすすめ）:</strong> 料金表の近くに <code>※表示価格はお客様へのご請求総額です。日本における消費税の課税対象外取引となります。</code> などの注記を追加する。</li>
-          <li><strong>B. 表記を変更する:</strong> <code>（税込）</code> → <code>（総額表示）</code> や <code>（報酬額）</code> に変更する。</li>
-        </ul>
-
-        <h5 class="font-bold mt-3 mb-1">2. 重複する免責事項の整理（任意）</h5>
-        <p>現在、<code>#disclaimer</code>セクションと<code>#site-disclaimer</code>（ピンクのアコーディオン）の内容が少し重複しています。ユーザー体験的には問題ありませんが、管理面で気になる場合は<code>#site-disclaimer</code>の方を削除しても良いかもしれません。</p>
-        <p><em>（※ 現状のままで全く問題ありません）</em></p>
-
-        <h4 class="font-bold mt-4 mb-2">✅ まとめ</h4>
-        <p><strong>このLPは公開して全く問題ない水準です。</strong></p>
-
-        <p><strong>やるべき最終ステップは2つだけです:</strong></p>
-        <ol>
-          <li><strong>実際の申込みフォームに「利用規約とプライバシーポリシーに同意する」チェックボックスを設置する。</strong></li>
-          <li><strong>自動返信メールなど、顧客との実際の契約プロセスでも、この規約への同意を改めて得るようにする。</strong></li>
-        </ol>
-
-        <p>LP自体のリーガル面は<strong>完璧</strong>です。お疲れ様でした！</p>
-      </div>
-    </details>
-  </div>
-</section>
-
-<!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
-<!-- 免責（details）※既存の免責セクションがあってもOK。IDは site-disclaimer にしています -->
-<details id="site-disclaimer" class="disclaimer">
-  <summary class="disclaimer__summary">免責事項（必ずお読みください）</summary>
-  <div class="disclaimer__content">
-    <button type="button" class="disclaimer__close" aria-label="免責を閉じる">× 閉じる</button>
-    <ul>
-      <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
-      <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
-      <li>当社が頂く料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金ではありません。</li>
-    </ul>
-  </div>
-</details>
-
-<!-- 画面下の固定CTA（新：.cta-bar） -->
-<nav class="cta-bar" aria-label="固定CTA">
-  <a href="#page-top" class="cta-btn cta-btn--ghost">トップへ</a>
-  <a href="https://line.me/R/ti/p/@georgia-tax" class="cta-btn" target="_blank" rel="noopener">相談はこちら</a>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header" class="cta-btn cta-btn--primary" target="_blank" rel="noopener">今すぐ申し込み</a>
-</nav>
-
-<style>
-  :root { --cta-h: 72px; --cta-gap: 10px; }
-  /* 免責（details） */
-  .disclaimer{ margin:16px 0; border:1px solid #e5e7eb; border-radius:10px; background:#fff; overflow:hidden }
-  .disclaimer__summary{ display:block; padding:14px 16px; cursor:pointer; font-weight:700 }
-  .disclaimer[open] .disclaimer__summary{ border-bottom:1px solid #e5e7eb; background:#fafafa }
-  .disclaimer__content{ padding:14px 16px; line-height:1.7 }
-  .disclaimer__content ul{ margin:0; padding-left:1.2em }
-  .disclaimer__content li{ margin:0.4em 0 }
-  .disclaimer__close{ display:inline-block; margin:0 0 8px auto; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; font-size:14px; cursor:pointer }
-
-  /* 下部固定CTA（新） */
-  .cta-bar{
-    position:fixed; left:0; right:0; bottom:0; z-index:60;
-    display:flex; gap:8px; padding:10px;
-    background:rgba(255,255,255,.92); backdrop-filter:saturate(160%) blur(10px);
-    border-top:1px solid #e5e7eb;
-  }
-  .cta-btn{
-    flex:1 1 0; text-align:center; padding:12px 14px; border-radius:10px;
-    font-weight:700; text-decoration:none; border:1px solid #e5e7eb; background:#fff; color:#0b1220;
-  }
-  .cta-btn--primary{ background:#16a34a; border-color:#16a34a; color:#fff }
-  .cta-btn--ghost{ background:#fff }
-  .cta-btn:active{ transform:translateY(1px) }
-
-  /* CTAの被り対策：本文下に余白を自動付与 */
-  body.has-cta{ padding-bottom:calc(var(--cta-h) + var(--cta-gap)) }
-</style>
-
-<script>
-  (function () {
-    // CTA高さ → 余白を自動追加（コンテンツ被り防止）
-    const cta = document.querySelector('.cta-bar');
-    const setPad = () => {
-      if (!cta) return;
-      const h = Math.round(cta.getBoundingClientRect().height);
-      document.documentElement.style.setProperty('--cta-h', h + 'px');
-      document.body.classList.add('has-cta');
-    };
-    setPad();
-    addEventListener('resize', setPad);
-
-    // 免責：初期は閉じる。 #site-disclaimer に飛んだら開く。×で閉じる。
-    const d = document.getElementById('site-disclaimer');
-    if (d) {
-      d.open = false; // 読み込み時は閉じる
-      const hashOpen = () => {
-        if (location.hash.replace('#','') === 'site-disclaimer') {
-          d.open = true;
-          setTimeout(() => d.scrollIntoView({behavior:'smooth', block:'start'}), 50);
-        }
-      };
-      hashOpen();
-      addEventListener('hashchange', hashOpen);
-      const closeBtn = d.querySelector('.disclaimer__close');
-      closeBtn && closeBtn.addEventListener('click', () => {
-        d.open = false;
-        // URLの #site-disclaimer を消しておく（戻るで開きっぱなし防止）
-        history.replaceState(null, '', location.pathname + location.search);
-      });
-    }
-  })();
-</script>
-<!-- ▲▲▲ 一括貼り付けここまで ▲▲▲ -->
-
-<!-- 画面最下部 固定CTA（旧UI：表示を完全オフにしておく） -->
+<!-- 画面最下部 固定CTA（既存そのまま） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -961,7 +823,7 @@
     if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
   });
 
-  // CTAの高さを本文余白に反映（重なり防止：旧UI側の余白調整）
+  // CTAの高さを本文余白に反映（重なり防止）
   const adjustCtaPadding = () => {
     const bar = document.getElementById('ctaBar'); if (!bar) return;
     const h = Math.ceil(bar.getBoundingClientRect().height);
@@ -1042,9 +904,97 @@
   }
   document.addEventListener('DOMContentLoaded', buildMenu);
 </script>
+  <!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
+<!-- 免責（details）※既存の免責セクションがあってもOK。IDは site-disclaimer にしています -->
+<details id="site-disclaimer" class="disclaimer">
+  <summary class="disclaimer__summary">免責事項（必ずお読みください）</summary>
+  <div class="disclaimer__content">
+    <button type="button" class="disclaimer__close" aria-label="免責を閉じる">× 閉じる</button>
+    <ul>
+      <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
+      <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
+      <li>当社が頂く料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金ではありません。</li>
+    </ul>
+  </div>
+</details>
 
-<!-- 旧固定CTAを丸ごと隠す（新.cta-bar使用のため） -->
-<style>.fixed-cta{display:none!important}</style>
+<!-- 画面下の固定CTA -->
+<nav class="cta-bar" aria-label="固定CTA">
+  <a href="#page-top" class="cta-btn cta-btn--ghost">トップへ</a>
+  <a href="https://line.me/R/ti/p/@georgia-tax" class="cta-btn" target="_blank" rel="noopener">相談はこちら</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header" class="cta-btn cta-btn--primary" target="_blank" rel="noopener">今すぐ申し込み</a>
+</nav>
+
+<style>
+  :root { --cta-h: 72px; --cta-gap: 10px; }
+
+  /* 免責（details） */
+  .disclaimer{ margin:16px 0; border:1px solid #e5e7eb; border-radius:10px; background:#fff; overflow:hidden }
+  .disclaimer__summary{ display:block; padding:14px 16px; cursor:pointer; font-weight:700 }
+  .disclaimer[open] .disclaimer__summary{ border-bottom:1px solid #e5e7eb; background:#fafafa }
+  .disclaimer__content{ padding:14px 16px; line-height:1.7 }
+  .disclaimer__content ul{ margin:0; padding-left:1.2em }
+  .disclaimer__content li{ margin:0.4em 0 }
+  .disclaimer__close{ display:inline-block; margin:0 0 8px auto; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; font-size:14px; cursor:pointer }
+
+  /* 下部固定CTA */
+  .cta-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; gap:8px; padding:10px;
+    background:rgba(255,255,255,.92); backdrop-filter:saturate(160%) blur(10px);
+    border-top:1px solid #e5e7eb;
+  }
+  .cta-btn{
+    flex:1 1 0; text-align:center; padding:12px 14px; border-radius:10px;
+    font-weight:700; text-decoration:none; border:1px solid #e5e7eb; background:#fff; color:#0b1220;
+  }
+  .cta-btn--primary{ background:#16a34a; border-color:#16a34a; color:#fff }
+  .cta-btn--ghost{ background:#fff }
+  .cta-btn:active{ transform:translateY(1px) }
+
+  /* CTAの被り対策：本文下に余白を自動付与 */
+  body.has-cta{ padding-bottom:calc(var(--cta-h) + var(--cta-gap)) }
+</style>
+
+<script>
+  (function () {
+    // CTA高さ → 余白を自動追加（コンテンツに被らないようにする）
+    const cta = document.querySelector('.cta-bar');
+    const setPad = () => {
+      if (!cta) return;
+      const h = Math.round(cta.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--cta-h', h + 'px');
+      document.body.classList.add('has-cta');
+    };
+    setPad();
+    addEventListener('resize', setPad);
+
+    // 免責：初期は閉じる。 #site-disclaimer に飛んだら開く。×で閉じる。
+    const d = document.getElementById('site-disclaimer');
+    if (d) {
+      d.open = false; // 読み込み時は閉じる
+      const hashOpen = () => {
+        if (location.hash.replace('#','') === 'site-disclaimer') {
+          d.open = true;
+          setTimeout(() => d.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+        }
+      };
+      hashOpen();
+      addEventListener('hashchange', hashOpen);
+      const closeBtn = d.querySelector('.disclaimer__close');
+      closeBtn && closeBtn.addEventListener('click', () => {
+        d.open = false;
+        // URLの #site-disclaimer を消しておく（戻るで開きっぱなし防止）
+        history.replaceState(null, '', location.pathname + location.search);
+      });
+    }
+  })();
+</script>
+<!-- ▲▲▲ 一括貼り付けここまで ▲▲▲ -->
+  <style>
+  /* 古い固定CTA（.fixed-cta）を丸ごと隠す */
+  .fixed-cta{display:none!important}
+</style>
 
 <script>
   // 既存の免責が「開いた状態で始まる」対策（#disclaimer配下の<details open>を閉じる）
