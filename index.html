@@ -916,5 +916,16 @@
   })();
 </script>
 <!-- ▲▲▲ 一括貼り付けここまで ▲▲▲ -->
+  <style>
+  /* 古い固定CTA（.fixed-cta）を丸ごと隠す */
+  .fixed-cta{display:none!important}
+</style>
+
+<script>
+  // 既存の免責が「開いた状態で始まる」対策（#disclaimer配下の<details open>を閉じる）
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#disclaimer details[open]')?.removeAttribute('open');
+  });
+</script>
 </body>
 </html>
