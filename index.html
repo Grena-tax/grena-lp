@@ -829,5 +829,92 @@
   }
   document.addEventListener('DOMContentLoaded', buildMenu);
 </script>
+  <!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
+<!-- 免責（details）※既存の免責セクションがあってもOK。IDは site-disclaimer にしています -->
+<details id="site-disclaimer" class="disclaimer">
+  <summary class="disclaimer__summary">免責事項（必ずお読みください）</summary>
+  <div class="disclaimer__content">
+    <button type="button" class="disclaimer__close" aria-label="免責を閉じる">× 閉じる</button>
+    <ul>
+      <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
+      <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
+      <li>当社が頂く料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金ではありません。</li>
+    </ul>
+  </div>
+</details>
+
+<!-- 画面下の固定CTA -->
+<nav class="cta-bar" aria-label="固定CTA">
+  <a href="#page-top" class="cta-btn cta-btn--ghost">トップへ</a>
+  <a href="https://line.me/R/ti/p/@georgia-tax" class="cta-btn" target="_blank" rel="noopener">相談はこちら</a>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header" class="cta-btn cta-btn--primary" target="_blank" rel="noopener">今すぐ申し込み</a>
+</nav>
+
+<style>
+  :root { --cta-h: 72px; --cta-gap: 10px; }
+
+  /* 免責（details） */
+  .disclaimer{ margin:16px 0; border:1px solid #e5e7eb; border-radius:10px; background:#fff; overflow:hidden }
+  .disclaimer__summary{ display:block; padding:14px 16px; cursor:pointer; font-weight:700 }
+  .disclaimer[open] .disclaimer__summary{ border-bottom:1px solid #e5e7eb; background:#fafafa }
+  .disclaimer__content{ padding:14px 16px; line-height:1.7 }
+  .disclaimer__content ul{ margin:0; padding-left:1.2em }
+  .disclaimer__content li{ margin:0.4em 0 }
+  .disclaimer__close{ display:inline-block; margin:0 0 8px auto; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; font-size:14px; cursor:pointer }
+
+  /* 下部固定CTA */
+  .cta-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:60;
+    display:flex; gap:8px; padding:10px;
+    background:rgba(255,255,255,.92); backdrop-filter:saturate(160%) blur(10px);
+    border-top:1px solid #e5e7eb;
+  }
+  .cta-btn{
+    flex:1 1 0; text-align:center; padding:12px 14px; border-radius:10px;
+    font-weight:700; text-decoration:none; border:1px solid #e5e7eb; background:#fff; color:#0b1220;
+  }
+  .cta-btn--primary{ background:#16a34a; border-color:#16a34a; color:#fff }
+  .cta-btn--ghost{ background:#fff }
+  .cta-btn:active{ transform:translateY(1px) }
+
+  /* CTAの被り対策：本文下に余白を自動付与 */
+  body.has-cta{ padding-bottom:calc(var(--cta-h) + var(--cta-gap)) }
+</style>
+
+<script>
+  (function () {
+    // CTA高さ → 余白を自動追加（コンテンツに被らないようにする）
+    const cta = document.querySelector('.cta-bar');
+    const setPad = () => {
+      if (!cta) return;
+      const h = Math.round(cta.getBoundingClientRect().height);
+      document.documentElement.style.setProperty('--cta-h', h + 'px');
+      document.body.classList.add('has-cta');
+    };
+    setPad();
+    addEventListener('resize', setPad);
+
+    // 免責：初期は閉じる。 #site-disclaimer に飛んだら開く。×で閉じる。
+    const d = document.getElementById('site-disclaimer');
+    if (d) {
+      d.open = false; // 読み込み時は閉じる
+      const hashOpen = () => {
+        if (location.hash.replace('#','') === 'site-disclaimer') {
+          d.open = true;
+          setTimeout(() => d.scrollIntoView({behavior:'smooth', block:'start'}), 50);
+        }
+      };
+      hashOpen();
+      addEventListener('hashchange', hashOpen);
+      const closeBtn = d.querySelector('.disclaimer__close');
+      closeBtn && closeBtn.addEventListener('click', () => {
+        d.open = false;
+        // URLの #site-disclaimer を消しておく（戻るで開きっぱなし防止）
+        history.replaceState(null, '', location.pathname + location.search);
+      });
+    }
+  })();
+</script>
+<!-- ▲▲▲ 一括貼り付けここまで ▲▲▲ -->
 </body>
 </html>
