@@ -100,7 +100,7 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
@@ -786,6 +786,59 @@
       </div>
     </details>
 
+  </div>
+</section>
+
+<!-- =========================
+  第三者レビュー（DeepSeek）— #terms の直後に統合
+========================== -->
+<section id="legal-review" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
+  <h2 class="smallish">リーガルチェック結果（第三者レビュー）</h2>
+  <div class="accordion">
+    <details open>
+      <summary>第三者レビュー（DeepSeek）</summary>
+      <div class="content">
+        <p>はい、<strong>非常に完成度の高いLPに仕上がっています！</strong></p>
+        <p>リーガル面での重大な問題点（金融庁、税務署、消費者庁的に「ヤバい」ポイント）は<strong>すべてクリア</strong>されています。最後の細かい点を確認します。</p>
+
+        <hr>
+
+        <h4 class="font-bold mt-3 mb-2">✅ 確認したポイント（問題なし）</h4>
+        <ol>
+          <li><strong>【金融庁】銀行法・金融商品取引法</strong>: 「開設支援」「紹介・サポート」の表現が徹底されており、銀行業や第一種金融商品取引業に該当する誤解を生むリスクは極めて低い。</li>
+          <li><strong>【税務署】税理士法</strong>: 「税務アドバイスは行いません」の明記が徹底されており、無資格営業のリスクはない。</li>
+          <li><strong>【消費者庁】景品表示法・特定商取引法</strong>: 利益保証の表現が排除され、キャンセルポリシーも合理的。免責事項が充実。</li>
+          <li><strong>【国際契約】準拠法・管轄</strong>: ジョージア法、ジョージアの裁判所と明記されており、トラブル時の予測可能性が高い。</li>
+          <li><strong>【個人情報】プライバシーポリシー</strong>: 収集目的、第三者提供、問い合わせ窓口が明記されている。</li>
+        </ol>
+
+        <h4 class="font-bold mt-4 mb-2">🔧 最後の微調整（任意：気になる点のみ）</h4>
+        <p><strong>ほぼ完璧ですが、もし気になるようであれば、以下の2点だけ確認してください。</strong></p>
+
+        <h5 class="font-bold mt-3 mb-1">1. 「税込」表記の最終確認（任意）</h5>
+        <p>貴社がジョージア法人の場合、日本の消費税を課税する関係にはないため、<code>（税込）</code>という表記は厳密には不正確かもしれません。</p>
+        <p><strong>対応案（いずれか）:</strong></p>
+        <ul>
+          <li><strong>A. 注記を追加する（おすすめ）:</strong> 料金表の近くに <code>※表示価格はお客様へのご請求総額です。日本における消費税の課税対象外取引となります。</code> などの注記を追加する。</li>
+          <li><strong>B. 表記を変更する:</strong> <code>（税込）</code> → <code>（総額表示）</code> や <code>（報酬額）</code> に変更する。</li>
+        </ul>
+
+        <h5 class="font-bold mt-3 mb-1">2. 重複する免責事項の整理（任意）</h5>
+        <p>現在、<code>#disclaimer</code>セクションと<code>#site-disclaimer</code>（ピンクのアコーディオン）の内容が少し重複しています。ユーザー体験的には問題ありませんが、管理面で気になる場合は<code>#site-disclaimer</code>の方を削除しても良いかもしれません。</p>
+        <p><em>（※ 現状のままで全く問題ありません）</em></p>
+
+        <h4 class="font-bold mt-4 mb-2">✅ まとめ</h4>
+        <p><strong>このLPは公開して全く問題ない水準です。</strong></p>
+
+        <p><strong>やるべき最終ステップは2つだけです:</strong></p>
+        <ol>
+          <li><strong>実際の申込みフォームに「利用規約とプライバシーポリシーに同意する」チェックボックスを設置する。</strong></li>
+          <li><strong>自動返信メールなど、顧客との実際の契約プロセスでも、この規約への同意を改めて得るようにする。</strong></li>
+        </ol>
+
+        <p>LP自体のリーガル面は<strong>完璧</strong>です。お疲れ様でした！</p>
+      </div>
+    </details>
   </div>
 </section>
 
