@@ -805,8 +805,9 @@
       if (!details.length) return;
 
       const wrap = document.createElement('div'); wrap.className = 'menu-group';
-      const h2 = sec.querySelector('h2'); const title = h2?.textContent?.trim() || sec.id;
-      const h4 = document.createElement('h4'); h4.textContent = title; wrap.appendChild(h4);
+      const h2 = sec.querySelector('h2');
+const title = (h2?.textContent || '').trim(); // 見出しが無い場合は空＝何も表示しない
+if (title) { const h4 = document.createElement('h4'); h4.textContent = title; wrap.appendChild(h4); }
 
       const ul = document.createElement('ul'); ul.className = 'menu-list';
 
