@@ -2,9 +2,8 @@
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
 /* =========================
-   基本ナビ（ページ内リンク）
+   ページ内リンク（スムーススクロール）
 ========================= */
-// ページ内リンクだけスムーススクロール（存在しないアンカーは素通し）
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -14,7 +13,6 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // #disclaimer だけは自動で開かない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -22,7 +20,7 @@ document.addEventListener('click', (e) => {
   history.pushState(null, '', id);
 });
 
-// 「トップへ」：アンカーが無くても確実に上へ
+// 「トップへ」
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
@@ -33,7 +31,6 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
 /* =========================
    固定CTA（重なり防止）
 ========================= */
-// CTAの高さを本文余白に反映（重なり防止）
 const adjustCtaPadding = () => {
   const bar = document.getElementById('ctaBar'); if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
@@ -42,7 +39,6 @@ const adjustCtaPadding = () => {
 window.addEventListener('load', adjustCtaPadding);
 window.addEventListener('resize', adjustCtaPadding);
 
-// 申込：必ずフォームに飛ぶ（未設定なら警告）
 document.getElementById('applyNow')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
@@ -76,16 +72,12 @@ closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-// メニューには出さない titles（本文は残す）
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
-
-// slug化
 const slug = (t) => t.toLowerCase()
   .replace(/[（）()［\[\]【】]/g,' ')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
   .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
-// sectionごとに、直下の details をメニュー化（本文は無改変）
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
@@ -98,11 +90,10 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // plans は見出し（h4）をメニューに出さない（間隔用クラスは付与）
     const h2 = sec.querySelector('h2');
     const title = (h2?.textContent || '').trim();
     if (sec.id === 'plans') {
-      wrap.classList.add('compact'); // CSSで余白を整える用
+      wrap.classList.add('compact'); // 見出しなし用の余白調整
     } else if (title) {
       const h4 = document.createElement('h4');
       h4.textContent = title;
@@ -137,34 +128,42 @@ function buildMenu(){
 document.addEventListener('DOMContentLoaded', buildMenu);
 
 /* =========================
-   iPhoneの「末端バウンド」を抑止して
-   CTAが“上にせり上がらない”よう固定
+   iPhoneの“ラバーバンド（バウンド）”を完全抑止
+   ─ CTAが上へせり上がらないようにする
 ========================= */
-/* ポイント：
-   - スクロール先頭/末尾でのラバーバンド（ゴムスク）を止める
-   - これにより fixed のCTAが上に浮かず、常に画面下端にピタッと固定される
-*/
-(function(){
-  let startY = 0;
+(function stopRubberBand(){
+  const el = document.scrollingElement || document.documentElement;
+  let startY = 0, startX = 0;
 
-  // タッチ開始位置だけ取る（パッシブでOK）
-  window.addEventListener('touchstart', (e) => {
-    if (e.touches && e.touches.length) startY = e.touches[0].clientY;
-  }, { passive: true });
+  const onStart = (e)=>{
+    if (e.touches && e.touches.length) {
+      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX;
+    }
+  };
 
-  // 末尾でさらに下へ、先頭でさらに上へ…の“行き過ぎ”だけ止める
-  window.addEventListener('touchmove', (e) => {
+  const onMove = (e)=>{
     if (!e.touches || !e.touches.length) return;
     const y = e.touches[0].clientY;
-    const deltaY = startY - y; // >0: 下方向へスクロールしようとしている
+    const x = e.touches[0].clientX;
+    const dy = startY - y;
+    const dx = startX - x;
 
-    const doc = document.documentElement;
-    const atTop    = window.scrollY <= 0;
-    const atBottom = window.innerHeight + window.scrollY >= (doc.scrollHeight - 1);
+    // 水平スクロールの誤判定は素通し
+    if (Math.abs(dx) > Math.abs(dy)) return;
 
-    // 先頭で上スクロール（deltaY<0）、末尾で下スクロール（deltaY>0）を阻止
-    if ((atTop && deltaY < 0) || (atBottom && deltaY > 0)) {
-      e.preventDefault(); // ← iOSのラバーバンドを無効化
+    const atTop    = el.scrollTop <= 0;
+    const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+
+    // 先頭で上スクロール、末尾で下スクロールの「行き過ぎ」を抑止
+    if ((atTop && dy < 0) || (atBottom && dy > 0)) {
+      e.preventDefault();
     }
-  }, { passive: false });
-})()
+  };
+
+  // window & document 両方に非パッシブで登録（iOS対策）
+  window.addEventListener('touchstart', onStart, {passive:false});
+  window.addEventListener('touchmove',  onMove,  {passive:false});
+  document.addEventListener('touchstart', onStart, {passive:false});
+  document.addEventListener('touchmove',  onMove,  {passive:false});
+})();
