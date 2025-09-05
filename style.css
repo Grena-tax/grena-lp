@@ -248,3 +248,5 @@ body {
 }
 /* 見出し非表示のグループ（plans）は上の余白を詰める */
 .menu-group.compact { padding-top: 2px; }
+/* plans セクション見出しを非表示にした時の余白をそろえる */
+.menu-group.compact .menu-list{ margin-top: 0; }
