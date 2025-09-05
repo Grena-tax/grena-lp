@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
-<style>html{border-top:8px solid #ff0077!important}</style>
-
-<!-- 既存のメインCSS（あるなら残してOK／無ければ消しても可） -->
+<!-- 既存のメインCSS（そのまま使います。FINALブロックは残す） -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー -->
+<!-- 追加スタイル：ハンバーガー＆固定CTA（見た目だけ。アコーディオン等は style.css を使用） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -20,49 +17,11 @@
     --cta-h: 72px;
   }
   html,body{margin:0;padding:0}
-  body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom)); font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;}
-
-  /* アコーディオン */
-  details summary{
-    padding:1rem 1.2rem;cursor:pointer;list-style:none;
-    border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
-  }
-  details[open] summary{background:#f8fafc;border-bottom-left-radius:0;border-bottom-right-radius:0}
-  details .content{
-    border:1px solid #e5e7eb;border-top:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px;
-    padding:1rem 1.2rem .9rem;background:#fff
-  }
-  .accordion>details{margin:.55rem 0!important}
-  .text-sm{font-size:.86em;opacity:.9}.muted{color:#475569}.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
-  .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
-  .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
-  .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
-  .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-  .price-promo .label{color:#475569;font-weight:700}
-  .price-promo .old{color:#64748b;text-decoration:line-through}
-  .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
-  .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
-  .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-  .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
-  .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-  .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-  .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
-  table{width:100%;border-collapse:collapse;margin:.5rem 0}
-  th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
-  th:first-child,td:first-child{text-align:left}
-
-  @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
-
-  #corp-setup{padding-bottom:2rem!important}
-  #plans{padding-top:.75rem!important}
-
   /* 右上ハンバーガー */
   .menu-button{
     position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-    display:inline-flex;align-items:center;justify-content:center;
-    width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-    box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
+    display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;
+    background:#111827;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
   }
   .menu-button .bars{display:block;width:28px;height:20px;position:relative}
   .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
@@ -94,7 +53,7 @@
   html.menu-open .menu-panel{transform:none}
   html.menu-open,html.menu-open body{overflow:hidden}
 
-  /* 画面最下部 固定CTA */
+  /* 画面最下部 固定CTA（見た目のみ。本文下余白は style.css の body padding-bottom でも確保） */
   .fixed-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
@@ -130,9 +89,9 @@
 <!-- =========================
   法人設立セクション
 ========================== -->
-<section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
-  <div class="space-y-3 accordion">
+<section id="corp-setup" class="container">
+  <h2>ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
+  <div class="accordion">
 
     <details>
       <summary>ジョージア法人設立 OECD・PwC準拠｜MoU契約済｜完全オンライン対応</summary>
@@ -237,8 +196,6 @@
         <ul>
           <li>名義はジョージア国籍の代表者／株主で設定</li>
           <li>MoU＋委任状＋支配者証明で正規構成</li>
-        </ul>
-        <ul>
           <li>実務はすべて依頼者本人が実行</li>
           <li>年額：€2,500<span class="text-sm">（税込／2025年8月時点）</span></li>
           <li>ジョージア商法第152条に基づく制度</li>
@@ -276,9 +233,9 @@
 <!-- =========================
   料金プラン（親アコーディオンの中に3プラン＋追加オプション）
 ========================== -->
-<section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
-  <h2 class="sr-only">料金プラン</h2>
-  <div class="space-y-3 accordion">
+<section id="plans" class="container">
+  <!-- ※ 見出し（h2）は意図的に置かない：メニューに「plans」を出さないため -->
+  <div class="accordion">
     <details>
       <summary>料金プラン（3つのプランから選択）</summary>
       <div class="content">
@@ -325,19 +282,18 @@
           </div>
         </details>
 
-        <!-- ★ 追加：トッピング（フルサポートの直後） -->
+        <!-- 追加：トッピング（新規） -->
         <details>
-          <summary><strong>追加オプション（トッピング）</strong></summary>
+          <summary>追加オプション（トッピング）</summary>
           <div class="content">
             <ul>
-              <li>Nominee（名義役員／株主）年額：<strong>€2,500</strong><span class="text-sm">（税込／2025年8月時点）</span></li>
-              <li>.geドメイン追加取得：<strong>¥35,000</strong><span class="text-sm">（税込）</span></li>
-              <li>RS.ge 税務ポータル初期セット：<strong>¥33,000</strong><span class="text-sm">（税込）</span></li>
-              <li>アポスティーユ／公証 1書類：<strong>¥15,000〜</strong><span class="text-sm">（税込・実費別）</span></li>
-              <li>書類国際郵送（DHL）：<strong>¥5,000〜</strong></li>
-              <li>LP軽微改修（スポット）：<strong>¥22,000／回</strong></li>
+              <li><strong>Nominee構成</strong>（年額）：€2,500 <span class="text-sm">（税込／2025年8月時点）</span></li>
+              <li><strong>公証／アポスティーユ</strong>（必要時・実費）：¥15,000〜／書類</li>
+              <li><strong>国際郵送（DHL）</strong>（必要時・実費）：¥5,000〜</li>
+              <li><strong>RS.ge税務ポータル開設サポート</strong>（任意）：¥33,000〜</li>
+              <li><strong>LP＋.geドメイン追加</strong>（基本プランご利用で未整備の場合）：¥250,000</li>
             </ul>
-            <span class="note">※ 表示金額は「紹介・サポート」等のサービス提供料金です。銀行等に支払う公的費用・デポジットは別途です。</span>
+            <span class="note">※ 価格は状況により変動する場合があります。記載の「実費」は公的手数料・配送料等で、当社の報酬とは別です。</span>
           </div>
         </details>
 
@@ -396,9 +352,9 @@
 <!-- =========================
   個人事業主（IE + SBS）
 ========================== -->
-<section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
-  <div class="space-y-3 accordion">
+<section id="sole-setup" class="container">
+  <h2>ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
+  <div class="accordion">
 
     <details>
       <summary>ジョージアで、スモールに世界を始める（IE＋Small Business Status）</summary>
@@ -520,9 +476,9 @@
 <!-- =========================
   個人口座開設（銀行）
 ========================== -->
-<section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-  <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
-  <div class="space-y-3 accordion">
+<section id="personal-account" class="container">
+  <h2>ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
+  <div class="accordion">
 
     <details>
       <summary>ジョージアって今どんな国？（成長率・制度）</summary>
@@ -694,10 +650,10 @@
 </section>
 
 <!-- =========================
-  免責事項・キャンセル
+  免責事項・キャンセル（アコーディオン）
 ========================== -->
-<section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
-  <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
+<section id="disclaimer" class="container">
+  <h2>免責事項・キャンセルポリシー（重要）</h2>
 
   <div class="accordion">
     <details>
@@ -735,78 +691,7 @@
   </div>
 </section>
 
-<!-- =========================
-  利用規約・プライバシーポリシー（DeepSeek案を統合）
-========================== -->
-<section id="terms" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
-  <h2 class="smallish">利用規約・プライバシーポリシー</h2>
-
-  <div class="accordion">
-    <details>
-      <summary>利用規約</summary>
-      <div class="content">
-        <p>本規約は、お客様と当社（ジョージア法人）との間のサービス利用に関する条件を定めるものです。</p>
-
-        <h4 class="font-bold mt-4 mb-2">第1条（適用）</h4>
-        <p>本規約は、当社が提供する全てのサービス（ジョージア法人設立支援、口座開設支援、個人事業主登録支援など）に適用されます。</p>
-
-        <h4 class="font-bold mt-4 mb-2">第2条（サービスの内容と性質）</h4>
-        <p>当社のサービスは、情報提供、現地パートナーへの紹介、手続きのサポートを目的とします。当社は銀行口座の代理開設や金融商品の勧誘、税務・法務アドバイスを行いません。</p>
-
-        <h4 class="font-bold mt-4 mb-2">第3条（準拠法及び管轄裁判所）</h4>
-        <p>本規約の解釈及び適用については、ジョージア法を準拠法とします。本サービスに関して紛争が生じた場合には、<strong>ジョージア・トビリシの裁判所を第一審の専属的合意管轄裁判所</strong>とします。</p>
-
-        <h4 class="font-bold mt-4 mb-2">第4条（お客様の責任）</h4>
-        <p>お客様は、ご自身の責任において、居住国の税制（CFCルール、移転価格税制、国外財産調書等の提出義務を含む）を遵守するものとします。当社は税務・法務面での結果について一切の責任を負いません。</p>
-
-        <h4 class="font-bold mt-4 mb-2">第5条（当社の免責）</h4>
-        <p>当社は、以下の事項について保証せず、一切の責任を負いません。</p>
-        <ul>
-          <li>銀行口座の開設可否、開設までの期間、提供される金利や商品条件</li>
-          <li>ジョージアまたはお客様の居住国の法制度・税制の変更</li>
-          <li>為替変動により生じた損益</li>
-          <li>お客様と現地パートナー間のトラブル</li>
-        </ul>
-
-        <p class="mt-4"><small>【制定日】2025年8月29日</small></p>
-      </div>
-    </details>
-
-    <details>
-      <summary>プライバシーポリシー</summary>
-      <div class="content">
-        <p>当社は、個人情報の保護に関する法令を遵守し、お客様の個人情報を適切に取り扱います。</p>
-
-        <h4 class="font-bold mt-4 mb-2">1. 個人情報の収集目的</h4>
-        <p>当社は、以下の目的のために個人情報を収集します。</p>
-        <ul>
-          <li>本サービスの提供および運営のため</li>
-          <li>お客様からのお問い合わせに対応するため</li>
-          <li>現地パートナーへ業務を委託するため</li>
-          <li>サービスに関する重要なお知らせを通知するため</li>
-        </ul>
-
-        <h4 class="font-bold mt-4 mb-2">2. 個人情報の第三者提供</h4>
-        <p>当社は、以下の場合を除き、お客様の個人情報を第三者に提供しません。</p>
-        <ul>
-          <li>お客様の事前の同意がある場合</li>
-          <li>現地パートナー（ジョージアの法律事務所等）へサービス提供のために必要な範囲で提供する場合</li>
-          <li>法令に基づく開示要請がある場合</li>
-        </ul>
-
-        <h4 class="font-bold mt-4 mb-2">3. 個人情報の安全管理</h4>
-        <p>当社は、個人情報への不正アクセス、紛失、破壊、改ざん、漏えい等を防止するため、必要かつ適切な安全管理措置を講じます。</p>
-
-        <h4 class="font-bold mt-4 mb-2">4. お問い合わせ窓口</h4>
-        <p>個人情報の開示、訂正、削除、利用停止等のご請求は、LINE公式アカウント（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">@georgia-tax</a>）までご連絡ください。</p>
-
-        <p class="mt-4"><small>【制定日】2025年8月29日</small></p>
-      </div>
-    </details>
-  </div>
-</section>
-
-<!-- 固定CTA -->
+<!-- 画面最下部 固定CTA -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -815,7 +700,7 @@
   </div>
 </div>
 
-<!-- ===== JS（1か所に集約） ===== -->
+<!-- ===== JS（丸ごとこのまま） ===== -->
 <script>
   /* 申込フォームURL（実URLをセット済み） */
   const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
@@ -830,11 +715,12 @@
     e.preventDefault();
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // #disclaimer だけは自動で開かない
+    // #disclaimer だけは自動で開かない（免責・キャンセルは開きっぱなしにしない）
     if (target.id !== 'disclaimer') {
       const first = target.querySelector('details');
       if (first && !first.open) first.open = true;
     }
+
     history.pushState(null, '', id);
   });
 
@@ -859,11 +745,12 @@
     window.open(FORM_URL, '_blank', 'noopener');
   });
 
-  /* ===== ハンバーガー：開閉 ===== */
+  /* ===== ハンバーガー：開閉＆メニュー自動生成 ===== */
   const btn     = document.getElementById('menuBtn');
   const drawer  = document.getElementById('menuDrawer');
   const closeBt = document.getElementById('menuClose');
   const overlay = document.getElementById('menuBackdrop');
+  const groupsRoot = document.getElementById('menuGroups');
 
   const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn.setAttribute('aria-expanded','true'); };
   const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn.setAttribute('aria-expanded','false'); };
@@ -873,16 +760,17 @@
   overlay.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-  /* ===== 目次メニュー自動生成 ===== */
-  const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック']; // メニューには出さない
+  // メニューには出さない titles（本文は残す）
+  const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
+  // slug化
   const slug = (t) => t.toLowerCase()
     .replace(/[（）()［\[\]【】]/g,' ')
     .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
     .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
+  // sectionごとに、直下の details をメニュー化
   function buildMenu(){
-    const groupsRoot = document.getElementById('menuGroups');
     const sections = Array.from(document.querySelectorAll('section[id]'));
     const frag = document.createDocumentFragment();
     let i = 1;
@@ -893,13 +781,13 @@
 
       const wrap = document.createElement('div'); wrap.className = 'menu-group';
 
-      // ★ plans セクションは見出し（h4）を出さない
+      // 見出し（h2）があるセクションだけグループ見出しを表示。ただし plans は非表示。
       const h2 = sec.querySelector('h2');
       const title = (h2?.textContent || '').trim();
       if (title && sec.id !== 'plans') {
-        const h4 = document.createElement('h4');
-        h4.textContent = title;
-        wrap.appendChild(h4);
+        const h4 = document.createElement('h4'); h4.textContent = title; wrap.appendChild(h4);
+      } else if (sec.id === 'plans') {
+        wrap.classList.add('compact'); // 見出し非表示分の余白を詰める（style.css FINALと連携）
       }
 
       const ul = document.createElement('ul'); ul.className = 'menu-list';
@@ -926,19 +814,13 @@
     });
 
     groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
+
+    // Safety: 旧版で作られた「plans」見出しが残っていたら強制削除
+    groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+      if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+    });
   }
   document.addEventListener('DOMContentLoaded', buildMenu);
-
-  // 念のためのガード（他スクリプトが plans を出しても消す）
-  const killPlansHeading = () => {
-    document.querySelectorAll('#menuGroups .menu-group h4').forEach(h=>{
-      if (h.textContent?.trim().toLowerCase() === 'plans') h.remove();
-    });
-  };
-  document.addEventListener('DOMContentLoaded', killPlansHeading);
-  window.addEventListener('load', killPlansHeading);
-  new MutationObserver(killPlansHeading)
-    .observe(document.getElementById('menuGroups'), { childList:true, subtree:true });
 </script>
 </body>
 </html>
