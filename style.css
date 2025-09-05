@@ -175,3 +175,11 @@ th:first-child, td:first-child{ text-align:left }
 .menu-group.compact .menu-list{ margin-top: 0; }
 /* 余計なバウンドを止めて、最下端でCTAがせり上がらないようにする */
 html, body { overscroll-behavior-y: none; }
+/* ===== iPhoneでCTAが上がらないように、スクロールを専用ラッパーへ隔離 ===== */
+html, body { height: 100dvh; overflow: hidden; }          /* 本体はスクロールさせない */
+#scrollArea{
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;                         /* ラバーバンド抑止 */
+}
