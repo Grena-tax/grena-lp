@@ -167,3 +167,9 @@ th:first-child, td:first-child{ text-align:left }
 /* 9) ハンバーガーのメニュー見出しを出さない「plans」グループの余白調整 */
 .menu-group.compact { padding-top: 2px; }
 .menu-group.compact .menu-list{ margin-top: 0; }
+/* === Menu gap final fix (plans 見出しを消したぶんの上間隔を揃える) === */
+.menu-group.compact{
+  padding-top: 0;     /* 余白をゼロに */
+  margin-top: -6px;   /* 直前の <a> の margin-bottom(6px) を相殺して詰める */
+}
+.menu-group.compact .menu-list{ margin-top: 0; }
