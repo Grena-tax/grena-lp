@@ -1,5 +1,5 @@
 /* =========================================================
-   style.css  —  sticky CTA 安定版（iPhone Chrome 対策込み）
+   style.css  — sticky CTA 安定版 + フォント復元
    ========================================================= */
 
 /* ---- 基本変数 ---- */
@@ -11,29 +11,47 @@
   --cta-buffer: 28px;          /* CTAと本文の被り防止バッファ */
 }
 
-/* ---- 全体（viewportはスクロールさせない） ---- */
-html, body { height: 100%; overflow: hidden; margin: 0; }
+/* ---- フォント（以前のスタックを復元） ---- */
+html, body{
+  margin:0;
+  height:100%;
+  overflow:hidden;                               /* viewportはスクロールさせない */
+  -webkit-text-size-adjust:100%;
+  font-family:
+    "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+    "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+    Roboto,Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
 
 /* ---- 実際にスクロールさせる領域 ---- */
 #scrollRoot{
-  height: 100dvh;                   /* iOSのツールバー変動に強い */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: none;        /* ラバーバンド抑止 */
-  scroll-behavior: smooth;
-  background: #fff;
-  padding-bottom: calc(var(--cta-h) + var(--cta-buffer) + var(--safe-bottom));
+  height:100dvh;                   /* iOSのツールバー変動に強い */
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:none;        /* ラバーバンド抑止 */
+  scroll-behavior:smooth;
+  background:#fff;
+  padding-bottom:calc(var(--cta-h) + var(--cta-buffer) + var(--safe-bottom));
 }
 
-/* 末尾の余白を確保するためのスペーサ（JSで生成・高さ可変） */
-#ctaSpacer{ height: calc(var(--cta-h) + var(--cta-buffer)); }
+/* 末尾スペーサ（JSで高さ可変） */
+#ctaSpacer{ height:calc(var(--cta-h) + var(--cta-buffer)); }
 
 /* ---- レイアウト便利系 ---- */
-.container{ max-width: 64rem; margin: 0 auto; padding: 0 1rem; }
-.section{ padding: 2.5rem 0; }
+.container{ max-width:64rem; margin:0 auto; padding:0 1rem; }
+.section{ padding:2.5rem 0; }
 .text-sm{ font-size:.86em; opacity:.9 }
 
-/* ---- アコーディオン（簡易版） ---- */
+/* ---- 見出し（任意） ---- */
+section > h2{
+  font-weight:800; letter-spacing:.01em; line-height:1.25;
+  font-size:clamp(22px,2.8vw,30px);
+  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
+}
+
+/* ---- アコーディオン ---- */
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
   box-shadow:0 8px 24px rgba(16,24,40,.06); overflow:hidden;
@@ -52,7 +70,7 @@ html, body { height: 100%; overflow: hidden; margin: 0; }
 .accordion details[open] > summary::after{ content:"−"; }
 .accordion .content{ padding:12px 16px 16px; border-top:1px solid #eef2f7; }
 
-/* ---- “KYC → 料金プラン” の継ぎ目を揃えるパッチ ---- */
+/* ---- “KYC → 料金プラン” 継ぎ目の調整 ---- */
 #corp-setup .accordion{ padding-bottom:0 !important; }
 #plans .accordion{ padding-top:0 !important; }
 #corp-setup + #plans{ margin-top:12px !important; }
@@ -99,14 +117,14 @@ html.menu-open, html.menu-open body{ overflow:hidden }
 /* ---- 画面下 固定CTA ---- */
 .fixed-cta{
   position:fixed; left:0; right:0; bottom:0; z-index:9998; background:#ffffffcc;
-  -webkit-backdrop-filter: saturate(140%) blur(8px);
-  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter:saturate(140%) blur(8px);
+  backdrop-filter:saturate(140%) blur(8px);
   border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom: var(--safe-bottom);
+  padding-bottom:var(--safe-bottom);
 }
 .fixed-cta .row{
   max-width:64rem; margin:0 auto; display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
-  padding:.6rem 1rem; min-height: var(--cta-h);
+  padding:.6rem 1rem; min-height:var(--cta-h);
 }
 .btn{ display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
   border-radius:10px; padding:.55rem .9rem; font-weight:700; border:1px solid transparent;
@@ -117,6 +135,6 @@ html.menu-open, html.menu-open body{ overflow:hidden }
 .btn:hover{ opacity:.92 }
 
 /* ---- 小さめ画面 ---- */
-@media (max-width: 480px){
-  .section{ padding: 2rem 0; }
+@media (max-width:480px){
+  .section{ padding:2rem 0; }
 }
