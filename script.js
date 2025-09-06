@@ -1,11 +1,9 @@
-/* =========================================
-   script.js — v2.7.1 (iOS VisualViewport 対応・確定版)
-   ========================================= */
-
-/* 申込フォームURL（実URLをセット） */
+/* 申込フォームURL（実URLをセット済み） */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-/* ページ内アンカーだけスムーススクロール（存在しないIDは素通し） */
+/* =========================
+   A. ページ内リンクのスムーススクロール
+========================= */
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -15,73 +13,87 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 免責 (#disclaimer) 以外は最初の details を自動オープン
+  // #disclaimer だけは自動で開かない（開きっぱなし防止）
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
   }
+
   history.pushState(null, '', id);
 });
 
-/* 「トップへ」：アンカーが無くても上へ */
+// 「トップへ」：アンカーが無くても確実に上へ
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
-  if (!document.querySelector('#page-top')) {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
 });
 
-/* CTAの実高を CSS 変数へ反映（本文の下余白確保） */
-const adjustCtaPadding = () => {
+/* =========================
+   B. 固定CTAの高さ → 本文余白＆スペーサに反映
+========================= */
+function adjustCtaLayout(){
   const bar = document.getElementById('ctaBar');
-  if (!bar) return;
-  const h = Math.ceil(bar.getBoundingClientRect().height);
-  document.documentElement.style.setProperty('--cta-h', h + 'px');
-};
-window.addEventListener('load', adjustCtaPadding);
-window.addEventListener('resize', adjustCtaPadding);
+  const spacer = document.getElementById('ctaSpacer');
+  if (!bar || !spacer) return;
 
-/* 申込みボタン */
+  const h = Math.ceil(bar.getBoundingClientRect().height);
+  // グローバルCSS変数に反映
+  document.documentElement.style.setProperty('--cta-h', h + 'px');
+
+  // せり上がり抑止のバッファ（必要なら数値を増やしてください）
+  const buffer = 28; // ←気になるなら 36 などに変更
+  document.documentElement.style.setProperty('--cta-buffer', buffer + 'px');
+
+  // スペーサ高さはCSSのcalcに任せるが、念のため再描画
+  spacer.style.minHeight = `calc(var(--cta-h) + var(--safe-bottom) + ${buffer}px)`;
+}
+window.addEventListener('load', adjustCtaLayout);
+window.addEventListener('resize', adjustCtaLayout);
+window.addEventListener('orientationchange', adjustCtaLayout);
+
+/* 申込：必ずフォームに飛ぶ（未設定なら警告） */
 document.getElementById('applyNow')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* ===== ハンバーガー開閉 ===== */
+/* =========================
+   C. ハンバーガー：開閉＆メニュー自動生成
+========================= */
 const btn     = document.getElementById('menuBtn');
 const drawer  = document.getElementById('menuDrawer');
 const closeBt = document.getElementById('menuClose');
 const overlay = document.getElementById('menuBackdrop');
+const groupsRoot = document.getElementById('menuGroups');
 
-const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false');  btn?.setAttribute('aria-expanded','true'); };
-const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');   btn?.setAttribute('aria-expanded','false'); };
+const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn.setAttribute('aria-expanded','true'); };
+const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn.setAttribute('aria-expanded','false'); };
 
 btn?.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
-document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* ===== メニュー自動生成 ===== */
-const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック']; // メニューからのみ除外（本文は残す）
+// 目次から除外したい小項目（本文は残す）
+const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
+// slug化（IDに使う）
 const slug = (t) => t.toLowerCase()
   .replace(/[（）()［\[\]【】]/g,' ')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
   .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
+// sectionごとに、直下の details をメニュー化（本文は無改変）
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
-  const groupsRoot = document.getElementById('menuGroups');
-  if (!groupsRoot) return;
-
   let i = 1;
 
   sections.forEach(sec=>{
     const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
     if (!details.length) return;
 
-    const wrap = document.createElement('div');
+    const wrap = document.createElement('div'); 
     wrap.className = 'menu-group';
 
     // plans は見出し（h4）をメニューに出さない
@@ -91,17 +103,16 @@ function buildMenu(){
       const h4 = document.createElement('h4');
       h4.textContent = title;
       wrap.appendChild(h4);
-    } else if (sec.id === 'plans') {
+    }else if(sec.id === 'plans'){
+      // 見出しを出さない分、余白を詰める
       wrap.classList.add('compact');
     }
 
-    const ul = document.createElement('ul');
-    ul.className = 'menu-list';
+    const ul = document.createElement('ul'); ul.className = 'menu-list';
 
     details.forEach(d=>{
-      const s = d.querySelector('summary');
-      const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return; // メニューからのみ除外
+      const s = d.querySelector('summary'); const t = s?.textContent?.trim() || '項目';
+      if (excludeTitles.some(x => t.includes(x))) return; // 小項目はメニューから除外（本文は残す）
       if (!d.id) d.id = `acc-${i++}-${slug(t)||'item'}`;
 
       const li = document.createElement('li');
@@ -117,43 +128,14 @@ function buildMenu(){
       li.appendChild(a); ul.appendChild(li);
     });
 
-    wrap.appendChild(ul);
-    frag.appendChild(wrap);
+    wrap.appendChild(ul); frag.appendChild(wrap);
   });
 
-  groupsRoot.textContent = '';
-  groupsRoot.appendChild(frag);
+  groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
 
-  // 旧版で作られた h4="plans" を念のため排除
+  // Safety: 旧版で作られた h4="plans" を強制排除（保険）
   groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
-
-/* ===== iPhone/Safari下バー対策：CTAを下へ押し下げる =====
-   ツールバーやキーボードが出た時は、その高さぶん CTA を画面外へ下げ、
-   コンテンツを隠さないようにします（＝上に浮いて来ません）。
-*/
-function bindVisualViewport(){
-  if (!('visualViewport' in window)) return;  // 非対応は何もしない
-
-  const update = () => {
-    const vv = window.visualViewport;
-    // 画面下の“隠れる量”（ツールバー/キーボード等）
-    const diff = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-    // CSS で transform:translateY(var(--vv-push)) に適用
-    document.documentElement.style.setProperty('--vv-push', diff + 'px');
-  };
-
-  window.visualViewport.addEventListener('resize', update);
-  window.visualViewport.addEventListener('scroll', update);
-  window.addEventListener('orientationchange', update);
-  update();
-}
-
-/* 起動 */
-document.addEventListener('DOMContentLoaded', () => {
-  buildMenu();
-  bindVisualViewport();
-  adjustCtaPadding();
-});
+document.addEventListener('DOMContentLoaded', buildMenu);
