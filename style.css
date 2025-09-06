@@ -1,5 +1,5 @@
 /* =========================================
-   style.css — v2.6.2（最終統合）
+   style.css — v2.7.0 (iOS VisualViewport 対応版)
    ========================================= */
 
 /* 0) ベース（フォント/レイアウト） */
@@ -9,7 +9,8 @@ html{ -webkit-text-size-adjust:100% }
   --safe-top:    env(safe-area-inset-top, 0px);
   --safe-right:  env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px;               /* JSが実高を上書きします */
+  --cta-h: 72px;                 /* JSで実高に更新 */
+  --vv-bottom: 0px;              /* VisualViewport の下端補正（JSで更新） */
 }
 html,body{
   height:auto;
@@ -83,7 +84,7 @@ section > h2{
 .note{ display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5 }
 .note::before{ content:"※ "; font-weight:700; color:#475569 }
 
-/* 3) 情報ボックス / プライス表示 */
+/* 情報ボックス / プライス */
 .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
 .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
 .price-promo .label{color:#475569;font-weight:700}
@@ -99,7 +100,7 @@ section > h2{
 .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
 .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 
-/* 4) ハンバーガー/メニュー */
+/* 3) ハンバーガー/メニュー */
 .menu-button{
   position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
   display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
@@ -108,7 +109,6 @@ section > h2{
 .menu-button .bars{display:block;width:28px;height:20px;position:relative}
 .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px}
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
-
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
@@ -131,14 +131,18 @@ html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 html.menu-open,html.menu-open body{overflow:hidden}
-.menu-group.compact{ padding-top:2px }          /* plans の見出し非表示時の間隔調整 */
+.menu-group.compact{ padding-top:2px }
 .menu-group.compact .menu-list{ margin-top:0 }
 
-/* 5) 画面最下部 固定CTA */
+/* 4) 画面最下部 固定CTA（iOSのツールバーに完全追従） */
 .fixed-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom:var(--safe-bottom)
+  position:fixed; left:0; right:0;
+  bottom: var(--vv-bottom, 0px);               /* ← ここがポイント */
+  z-index:9998; background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px);
+  border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:var(--safe-bottom);
+  transform: translateZ(0); will-change: transform;
 }
 .fixed-cta .row{
   max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
@@ -150,7 +154,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* 6) KYC → 料金プランの隙間（iOSのmargin折り畳み対策込み） */
+/* 5) KYC → 料金プランの隙間（iOS margin 折り畳み対策） */
 #corp-setup, #plans{ padding-top:0 !important; padding-bottom:0 !important; margin:0 !important; display:flow-root }
 #corp-setup .accordion{ padding-bottom:0 !important }
 #plans .accordion{      padding-top:0 !important }
@@ -158,7 +162,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
 @media (max-width:480px){ #corp-setup + #plans{ margin-top:-44px !important } }
 @supports (-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-42px !important } }
 
-/* 7) レスポンシブ微調整 */
+/* 6) レスポンシブ微調整 */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
