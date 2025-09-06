@@ -5,16 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 外部CSS（このstyle.cssを下で貼る完全版に置き換えてください） -->
-<link rel="stylesheet" href="./style.css">
-
+<!-- メインCSS -->
+<link rel="stylesheet" href="./style.css" id="main-css">
 </head>
 <body>
 
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上ハンバーガー -->
+<!-- ===== 右上ハンバーガー ===== -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -29,8 +28,13 @@
   </aside>
 </nav>
 
+<!-- =========================================================
+     本文は #scrollRoot の中だけをスクロール（ビューポートは固定）
+========================================================= -->
+<main id="scrollRoot">
+
 <!-- =========================
-  法人設立セクション（本文は元のまま＋リーガル追記のみ）
+  法人設立セクション（本文は元のまま）
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
@@ -373,9 +377,9 @@
 
         <h5>FAQ</h5>
         <ul>
-          <li>Q. 日本からでも利用可？ → A. はい、オンライン完結です。</li>
-          <li>Q. 個人口座開設は含まれますか？ → A. 含まれません（別サービス）。</li>
-          <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
+          <li>Q. 日本からでも利用可？ → はい、オンライン完結です。</li>
+          <li>Q. 個人口座開設は含まれますか？ → 含まれません（別サービス）。</li>
+          <li>Q. 年収が2,500万円超えたら？ → 通常課税（3〜5%）へ切替。</li>
         </ul>
         <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
       </div>
@@ -618,7 +622,12 @@
   </div>
 </section>
 
-<!-- 固定CTA（常に最前面に固定） -->
+<!-- CTA高さいただき用のスペーサ（JSで高さ自動調整） -->
+<div id="ctaSpacer" aria-hidden="true"></div>
+
+</main><!-- /#scrollRoot ここまで（重要：CTAは外側に置く） -->
+
+<!-- 画面最下部 固定CTA（ビューポート固定） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -627,10 +636,7 @@
   </div>
 </div>
 
-<!-- CTAぶんのスペーサ（本文末尾で被り防止） -->
-<div id="ctaSpacer" class="cta-spacer" aria-hidden="true"></div>
-
-<!-- 外部JS（このscript.jsを下で貼る完全版に置き換えてください） -->
-<script src="./script.js" defer></script>
+<!-- ===== メインJS ===== -->
+<script src="./script.js"></script>
 </body>
 </html>
