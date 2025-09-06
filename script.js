@@ -1,79 +1,131 @@
-/* ===== script.js — drop-in full ===== */
+/* =========================
+   app.js — 完全版
+   ========================= */
 
-/* 0) 申込フォームURL */
+/* 申込フォームURL（実URLをセット） */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-/* 1) スムーススクロール（ページ内リンクのみ） */
-document.addEventListener('click', (e) => {
+/* DOM取得（必要要素は都度参照も可） */
+const scrollRoot = document.getElementById('scrollRoot');
+const ctaBar     = document.getElementById('ctaBar');
+const bottomSpacer = document.getElementById('bottomSpacer');
+
+/* =========================
+   1) CTA高さに応じて余白を自動調整
+   ========================= */
+function adjustCtaLayout(){
+  if(!ctaBar || !scrollRoot) return;
+  // 実測高さ
+  const h = Math.ceil(ctaBar.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--cta-h', h + 'px');
+
+  // バッファ（ラバーバンド対策・視覚的被り防止）
+  const buffer = 28; // 必要なら 36, 44 などへ
+  if (bottomSpacer) {
+    bottomSpacer.style.height = (h + buffer) + 'px';
+  }
+}
+
+// 初期＆リサイズで反映
+window.addEventListener('load', adjustCtaLayout);
+window.addEventListener('resize', adjustCtaLayout);
+window.addEventListener('orientationchange', adjustCtaLayout);
+
+/* =========================
+   2) 「トップへ」：#scrollRoot の先頭へ
+   ========================= */
+document.getElementById('toTop')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  if (!scrollRoot) { window.scrollTo({top:0, behavior:'smooth'}); return; }
+  scrollRoot.scrollTo({ top: 0, behavior: 'smooth' });
+  history.pushState(null, '', '#page-top');
+});
+
+/* =========================
+   3) アンカー（#〜）は #scrollRoot 内をスムーススクロール
+   ========================= */
+document.addEventListener('click', (e)=>{
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
+
   const id = a.getAttribute('href');
+  // # or #page-top はトップ扱い
+  if (id === '#' || id === '#page-top') {
+    e.preventDefault();
+    scrollRoot?.scrollTo({ top: 0, behavior:'smooth' });
+    history.pushState(null,'','#page-top');
+    return;
+  }
+
   const target = document.querySelector(id);
-  if (!target) return;
-
+  if (!target) return; // 存在しないアンカーは素通し
   e.preventDefault();
-  // 本文は window ではなく main#scrollRoot をスクロール（固定CTAと相性◎）
-  const sc = document.getElementById('scrollRoot');
-  if (sc) sc.scrollTo({ top: target.getBoundingClientRect().top + sc.scrollTop - 8, behavior: 'smooth' });
-  else target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // #disclaimer 以外は最初のdetailsを自動で開く
+  // #scrollRoot 内へスムース
+  target.scrollIntoView({ behavior:'smooth', block:'start' });
+
+  // 目的地に details がある場合は開いておく（#disclaimer は自動開かない）
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
   }
-  history.pushState(null, '', id);
+
+  history.pushState(null,'',id);
 });
 
-/* 2) 「トップへ」 */
-document.getElementById('toTop')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  const sc = document.getElementById('scrollRoot');
-  (sc ? sc : window).scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-/* 3) CTAの高さを本文側に反映（隠れ防止） */
-function adjustCtaLayout(){
-  const bar = document.getElementById('ctaBar'); if (!bar) return;
-  const h = Math.ceil(bar.getBoundingClientRect().height);
-  document.documentElement.style.setProperty('--cta-h', h + 'px');
-}
-window.addEventListener('load', adjustCtaLayout);
-window.addEventListener('resize', adjustCtaLayout);
-
-/* 4) 申込ボタンは必ずフォームへ */
-document.getElementById('applyNow')?.addEventListener('click', (e) => {
+/* =========================
+   4) 申込ボタン：必ずフォームを新規タブで開く
+   ========================= */
+document.getElementById('applyNow')?.addEventListener('click',(e)=>{
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* 5) ハンバーガー（開閉）＋メニュー自動生成 */
+/* =========================
+   5) ハンバーガー（開閉）
+   ========================= */
 const btn     = document.getElementById('menuBtn');
 const drawer  = document.getElementById('menuDrawer');
 const closeBt = document.getElementById('menuClose');
 const overlay = document.getElementById('menuBackdrop');
-const groupsRoot = document.getElementById('menuGroups');
 
-const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false'); btn?.setAttribute('aria-expanded','true'); };
-const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');  btn?.setAttribute('aria-expanded','false'); };
+const openMenu  = () => {
+  document.documentElement.classList.add('menu-open');
+  drawer?.setAttribute('aria-hidden','false');
+  btn?.setAttribute('aria-expanded','true');
+};
+const closeMenu = () => {
+  document.documentElement.classList.remove('menu-open');
+  drawer?.setAttribute('aria-hidden','true');
+  btn?.setAttribute('aria-expanded','false');
+};
 
-btn?.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
+btn?.addEventListener('click', ()=>{
+  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
+});
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* メニューから除外する小項目（本文には残す） */
+/* =========================
+   6) 目次メニュー自動生成
+   - section直下の details を拾う
+   - plans セクションは h4 見出しを出さない（＝上の余白詰め）
+   - 一部タイトルはメニューから除外（本文は残す）
+   ========================= */
+const groupsRoot = document.getElementById('menuGroups');
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
-/* slug */
-const slug = (t) => t.toLowerCase()
+const slug = (t) => (t || '')
+  .toLowerCase()
   .replace(/[（）()［\[\]【】]/g,' ')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
   .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
-/* 5-1) 目次ビルド（① plans 直前の空きを消す＝compactクラス付与） */
 function buildMenu(){
+  if (!groupsRoot) return;
+
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
   let i = 1;
@@ -82,82 +134,84 @@ function buildMenu(){
     const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
     if (!details.length) return;
 
-    const wrap = document.createElement('div'); 
+    const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // セクション見出し（plans は非表示）
     const h2 = sec.querySelector('h2');
     const title = (h2?.textContent || '').trim();
-
-    if (sec.id === 'plans') wrap.classList.add('compact');  // ← ①
-
-    if (title && sec.id !== 'plans') {          // plans は見出し非表示
+    if (sec.id === 'plans') {
+      wrap.classList.add('headerless');
+    } else if (title) {
       const h4 = document.createElement('h4');
       h4.textContent = title;
       wrap.appendChild(h4);
     }
 
-    const ul = document.createElement('ul'); ul.className = 'menu-list';
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
 
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return; // 小項目はメニューからのみ除外
+      // メニューからのみ除外（本文はそのまま）
+      if (excludeTitles.some(x => t.includes(x))) return;
+
+      // details にIDが無ければ付与
       if (!d.id) d.id = `acc-${i++}-${slug(t)||'item'}`;
 
       const li = document.createElement('li');
       const a  = document.createElement('a');
-      a.href = `#${d.id}`; a.textContent = t;
+      a.href = `#${d.id}`;
+      a.textContent = t;
+
       a.addEventListener('click',(e)=>{
         e.preventDefault();
-        closeMenu();
-        d.open = true;
-        d.scrollIntoView({behavior:'smooth', block:'start'});
+        closeMenu();               // 先に閉じる
+        d.open = true;             // 自動で開く
+        // scrollRoot 内でスムーススクロール
+        document.getElementById(d.id)?.scrollIntoView({behavior:'smooth', block:'start'});
         history.pushState(null,'',`#${d.id}`);
       });
-      li.appendChild(a); ul.appendChild(li);
+
+      li.appendChild(a);
+      ul.appendChild(li);
     });
 
-    wrap.appendChild(ul); frag.appendChild(wrap);
+    wrap.appendChild(ul);
+    frag.appendChild(wrap);
   });
 
-  groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
+  groupsRoot.textContent = '';
+  groupsRoot.appendChild(frag);
 }
+
 document.addEventListener('DOMContentLoaded', buildMenu);
 
-/* 6) 「追加オプション（トッピング）」を“料金プラン”の4つ目に強制移動（④） */
-document.addEventListener('DOMContentLoaded', () => {
-  const plansSec = document.getElementById('plans');
-  const plansAcc = plansSec?.querySelector(':scope > .accordion');
-  if (!plansAcc) return;
+/* =========================
+   7) 初回レイアウト調整（フォント読み後にも）
+   ========================= */
+if ('fonts' in document) {
+  document.fonts.addEventListener?.('loadingdone', adjustCtaLayout);
+  document.fonts.ready?.then(adjustCtaLayout).catch(()=>{});
+}
 
-  // 「追加オプション」を見つける（現在どこにあってもOK）
-  const addons = Array.from(document.querySelectorAll('details')).find(d => {
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    return /追加.?オプション|トッピング/i.test(t);
-  });
-
-  if (addons && !plansAcc.contains(addons)) {
-    plansAcc.appendChild(addons);  // 4つ目として移動
-  }
-});
-
-/* 7) 料金プランの summary テキストを軽く構造化（②の改行/③の体裁ずれ対策） */
-document.addEventListener('DOMContentLoaded', () => {
-  const planRows = document.querySelectorAll('#plans .accordion > details > summary');
-  planRows.forEach(s => {
-    if (s.dataset.enhanced) return;
-    const t = (s.textContent || '').replace(/\s+/g,' ').trim();
-    // 「ラベル ： 価格 （税込）」に近い見た目へ（元テキストを崩さずspan化）
-    const m = t.match(/^(.*?)([：:])\s*([¥￥]?\s*[\d,]+)(.*)$/);
-    if (m) {
-      const label = document.createElement('span'); label.className='label'; label.textContent=m[1].trim();
-      const price = document.createElement('span'); price.className='price'; price.textContent=(m[3]||'').replace(/\s+/g,'');
-      const tail  = document.createElement('span'); tail.className='tax'; tail.textContent=(m[4]||'').trim();
-      s.replaceChildren(label, document.createTextNode(' ： '), price, document.createTextNode(' '), tail);
-      s.dataset.enhanced = '1';
-    } else {
-      // 少なくとも途中改行は抑止
-      s.style.wordBreak = 'keep-all';
+/* =========================
+   8) スクロール末端でのラバーバンド対策（追いバッファ）
+   ========================= */
+/* 追加の安全策：最下部近くで常に若干の余白を確保（視覚的な“せり上がり”回避） */
+let ticking = false;
+scrollRoot?.addEventListener('scroll', ()=>{
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(()=>{
+    const max = scrollRoot.scrollHeight - scrollRoot.clientHeight;
+    const nearBottom = (scrollRoot.scrollTop > max - 24);
+    if (nearBottom && bottomSpacer){
+      const h = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cta-h')) || 72;
+      const buffer = 28;
+      bottomSpacer.style.height = (h + buffer + 12) + 'px'; // 末端だけ少し増やす
     }
+    ticking = false;
   });
 });
