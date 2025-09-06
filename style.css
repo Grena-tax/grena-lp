@@ -192,3 +192,23 @@ html.menu-open,html.menu-open body{overflow:hidden}
 /* 12) 目次：plansグループの余白を他と揃える用（見出しを出さない分の微調整） */
 .menu-group.compact { padding-top: 2px; }
 .menu-group.compact .menu-list{ margin-top: 0; }
+/* ==== iOS Chrome 対策：CTAをビジュアルビューポートに固定 ==== */
+
+/* ラバーバンドの影響を最小化（対応ブラウザでは有効） */
+html, body { overscroll-behavior-y: none; }
+
+/* 100dvh が使える環境では、bottom固定をやめて視覚ビューポートでピン止め */
+@supports (height: 100dvh) {
+  .fixed-cta{
+    bottom: auto;                                  /* 従来のbottom固定を無効化 */
+    top: calc(100dvh - var(--cta-h));              /* 画面下端 = 100dvh */
+  }
+}
+
+/* 100dvh が無い環境用のフォールバック（VisualViewport連動） */
+@supports not (height: 100dvh) {
+  .fixed-cta{
+    bottom: auto;
+    top: calc(var(--vvh, 100vh) - var(--cta-h));   /* JSで --vvh を更新 */
+  }
+}
