@@ -1,182 +1,145 @@
-/* =========================================
-   style.css — 完成版
-   ========================================= */
+/* ===== 固定設定 ===== */
+const FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-/* 1) Base / Font */
-*{ box-sizing:border-box }
-html{ -webkit-text-size-adjust:100%; }
-html,body{
-  height:100%;
-  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-               "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-               Roboto,Helvetica,Arial,sans-serif !important;
-}
-body{
-  margin:0; line-height:1.7; color:#0b1220; background:#fff;
-  /* 重要：viewportはスクロールさせない */
-  overflow:hidden;
-}
+const scrollRoot = document.getElementById('scrollRoot');
 
-/* 2) Scroll container */
-#scrollRoot{
-  position:relative;
-  height:100dvh;             /* iOSの動的vhも考慮 */
-  overflow:auto;
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: calc(var(--cta-h, 72px) + env(safe-area-inset-bottom, 0px));
-}
-.container{ width:min(1100px,92%); margin-inline:auto; }
+/* ===== 1) ページ内リンクは scrollRoot をスムーススクロール ===== */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
 
-/* 3) Section heading */
-section > h2{
-  font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size: clamp(22px, 2.8vw, 30px);
-  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
-}
-.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
+  const id = a.getAttribute('href');
+  const target = document.querySelector(id);
+  if (!target) return;
 
-/* 4) Accordion */
-.accordion{ padding:24px 0 }
-.accordion details{
-  border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow: 0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
-}
-.accordion details+details{ margin-top:12px }
-.accordion summary{
-  list-style:none; cursor:pointer;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
-  display:flex; align-items:center; gap:.6rem;
-  background: linear-gradient(180deg,#fff,#fbfcff);
-  border-bottom:1px solid #eef2f7;
-}
-.accordion summary::-webkit-details-marker{ display:none }
-.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
-.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
-.accordion summary::after{
-  content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
-}
-.accordion details[open] > summary::after{
-  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
-}
-.accordion .content{
-  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
-}
-.accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
-.accordion .content li+li{ margin-top:.25em }
+  e.preventDefault();
 
-/* Tables inside accordion */
-.accordion .content table{
-  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
-  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
-}
-.accordion .content thead th{
-  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
-}
-.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
-.accordion .content tr:last-child td{ border-bottom:none }
+  // details は自動で開いてから移動
+  if (target.id !== 'disclaimer') {
+    const first = target.querySelector('details');
+    if (first && !first.open) first.open = true;
+  }
 
-/* Notes */
-.muted{ color:#475569 }
-.text-sm{ font-size:.86em; opacity:.9 }
-.note{
-  display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
-}
-.note::before{ content:"※ "; font-weight:700; color:#475569; }
+  // 近いスクロールコンテナへ
+  const root = scrollRoot || document.scrollingElement;
+  const top = target.getBoundingClientRect().top + root.scrollTop - 12;
+  root.scrollTo({ top, behavior: 'smooth' });
 
-/* 5) 価格カード（旧デザイン再現 + ❌） */
-.price-promo{
-  border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;
-  padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)
-}
-.price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-.price-promo .label{color:#475569;font-weight:800}
-.price-promo .old{color:#64748b;font-weight:700}
-.price-promo .old::before{content:"❌ "; margin-right:2px}
-.price-promo .old s{ text-decoration-thickness: 2px }
-.price-promo .now{font-weight:900;font-size:clamp(18px,2.4vw,22px);color:#d32f2f}
-.price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:800;margin-left:.25rem}
-.price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-.price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-.price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+  history.pushState(null, '', id);
+});
 
-/* 6) ステップ */
-.progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-.progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-.progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+/* 「トップへ」 */
+document.getElementById('toTop')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const root = scrollRoot || document.scrollingElement;
+  root.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-/* 7) 固定CTA */
-.fixed-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+/* ===== 2) CTAの高さを本文余白に反映（重なり防止） ===== */
+function adjustCtaPadding() {
+  const bar = document.getElementById('ctaBar');
+  if (!bar) return;
+  const h = Math.ceil(bar.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--cta-h', h + 'px');
 }
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h,72px)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:800;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
+window.addEventListener('load', adjustCtaPadding);
+window.addEventListener('resize', adjustCtaPadding);
 
-/* 8) ハンバーガー */
-.menu-button{
-  position:fixed;top:calc(10px + env(safe-area-inset-top, 0px));right:calc(10px + env(safe-area-inset-right, 0px));z-index:10000;
-  display:inline-flex;align-items:center;justify-content:center;
-  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
-}
-.menu-button .bars{display:block;width:28px;height:20px;position:relative}
-.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
-}
-.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
+/* 申込：必ずフォームに飛ぶ（未設定なら警告） */
+document.getElementById('applyNow')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
+  window.open(FORM_URL, '_blank', 'noopener');
+});
 
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
-.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
-  background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38
-}
-.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-.menu-title{font-weight:800;color:#111827}
-.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-.menu-close:hover{background:#f3f4f6}
-.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
-.menu-group{padding:8px 10px 6px}
-.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
-.menu-list{list-style:none;margin:0;padding:0}
-.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+/* ===== 3) ハンバーガー：開閉＆メニュー自動生成 ===== */
+const btn     = document.getElementById('menuBtn');
+const drawer  = document.getElementById('menuDrawer');
+const closeBt = document.getElementById('menuClose');
+const overlay = document.getElementById('menuBackdrop');
+const groupsRoot = document.getElementById('menuGroups');
 
-html.menu-open .menu-wrap{pointer-events:auto}
-html.menu-open .menu-backdrop{opacity:1}
-html.menu-open .menu-panel{transform:none}
-html.menu-open,html.menu-open body{overflow:hidden}
+const openMenu  = () => {
+  document.documentElement.classList.add('menu-open');
+  drawer.setAttribute('aria-hidden','false');
+  btn.setAttribute('aria-expanded','true');
+};
+const closeMenu = () => {
+  document.documentElement.classList.remove('menu-open');
+  drawer.setAttribute('aria-hidden','true');
+  btn.setAttribute('aria-expanded','false');
+};
 
-/* 9) セクション間ギャップ（KYC → 料金プラン） */
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important;     margin-top:0  !important;  }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{  margin-top:0 !important; }
-/* 微調整（必要に応じて値変更） */
-#corp-setup + #plans{ margin-top:-32px !important; }
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-36px !important; }
-}
+btn?.addEventListener('click', () => {
+  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
+});
+closeBt?.addEventListener('click', closeMenu);
+overlay?.addEventListener('click', closeMenu);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* 10) Responsive */
-@media (max-width:600px){
-  .accordion{ padding:20px 0 }
-  .accordion summary{ padding:12px 42px 12px 12px }
-  .accordion .content{ padding:12px 12px 14px }
-  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+/* メニューに出さない titles（本文は残す） */
+const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
+/* slug化 */
+const slug = (t) => t.toLowerCase()
+  .replace(/[（）()［\[\]【】]/g,' ')
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
+  .replace(/-+/g,'-').replace(/^-|-$/g,'');
+
+/* section直下のdetailsをメニュー化（plansのh2は非表示） */
+function buildMenu(){
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const frag = document.createDocumentFragment();
+  let i = 1;
+
+  sections.forEach(sec=>{
+    const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
+    if (!details.length) return;
+
+    const wrap = document.createElement('div'); wrap.className = 'menu-group';
+
+    const h2 = sec.querySelector('h2');
+    const title = (h2?.textContent || '').trim();
+    if (title && sec.id !== 'plans') {           // ★ plansは見出しを出さない
+      const h4 = document.createElement('h4');
+      h4.textContent = title;
+      wrap.appendChild(h4);
+    }
+
+    const ul = document.createElement('ul'); ul.className = 'menu-list';
+
+    details.forEach(d=>{
+      const s = d.querySelector('summary'); const t = s?.textContent?.trim() || '項目';
+      if (excludeTitles.some(x => t.includes(x))) return; // 小項目は除外
+      if (!d.id) d.id = `acc-${i++}-${slug(t)||'item'}`;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = `#${d.id}`; a.textContent = t;
+      a.addEventListener('click',(e)=>{
+        e.preventDefault();
+        closeMenu();
+        d.open = true;
+        const root = scrollRoot || document.scrollingElement;
+        const top = d.getBoundingClientRect().top + root.scrollTop - 12;
+        root.scrollTo({ top, behavior:'smooth' });
+        history.pushState(null,'',`#${d.id}`);
+      });
+      li.appendChild(a); ul.appendChild(li);
+    });
+
+    wrap.appendChild(ul); frag.appendChild(wrap);
+  });
+
+  groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
+
+  // 旧版で出てしまった「plans」見出しを念のため除去
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+  });
 }
+document.addEventListener('DOMContentLoaded', buildMenu);
+
+/* ===== 4) iOS系での“せり上がり”抑止を最後にもう一押し ===== */
+document.addEventListener('touchmove', ()=>{}, {passive:true}); // 一部WebViewの挙動安定化
