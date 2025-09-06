@@ -170,3 +170,37 @@ html.menu-open, html.menu-open body{ overflow:hidden }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+/* ===== CTA固定＆バウンス抑止：最小パッチ（既存デザインは上書きしない） ===== */
+
+/* ページ本体は #scrollRoot の中だけをスクロールさせる */
+html, body {
+  height: 100%;
+  overflow: hidden;                 /* viewportはスクロールさせない */
+}
+
+/* 本文スクロール用のルート（HTMLにある#scrollRoot） */
+#scrollRoot {
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;   /* iOS Chromeのラバーバンド抑止 */
+}
+
+/* 固定CTA（既存の見た目は保持） */
+.fixed-cta {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 9998;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: saturate(140%) blur(8px);
+  border-top: 1px solid rgba(0,0,0,.06);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* CTAが本文に被らないよう、下余白はJSから渡す --cta-h を使う */
+:root { --cta-h: 72px; }
+body { padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
+
+/* 目次の「plans」見出しを非表示にした時のグループ余白を微調整（任意） */
+.menu-group.compact { padding-top: 2px; }
+.menu-group.compact .menu-list { margin-top: 0; }
