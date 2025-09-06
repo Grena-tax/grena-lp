@@ -1,5 +1,5 @@
 /* =========================================
-   script.js — v2.6.2（最終統合）
+   script.js — v2.7.0 (iOS VisualViewport 対応版)
    ========================================= */
 
 /* 申込フォームURL（実URLをセット済み） */
@@ -54,8 +54,8 @@ const drawer  = document.getElementById('menuDrawer');
 const closeBt = document.getElementById('menuClose');
 const overlay = document.getElementById('menuBackdrop');
 
-const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn.setAttribute('aria-expanded','true'); };
-const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn.setAttribute('aria-expanded','false'); };
+const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false');  btn?.setAttribute('aria-expanded','true'); };
+const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');   btn?.setAttribute('aria-expanded','false'); };
 
 btn?.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
 closeBt?.addEventListener('click', closeMenu);
@@ -129,7 +129,25 @@ function buildMenu(){
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
+
+/* ===== iPhone/Safari の“浮き上がり”対策：VisualViewport を監視 ===== */
+function bindVisualViewport(){
+  if (!('visualViewport' in window)) return;  // 非対応ブラウザは何もしない
+
+  const update = () => {
+    const vv = window.visualViewport;
+    // 下端の“隠れる量”（ツールバー/キーボード）を算出
+    const bottomOffset = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    document.documentElement.style.setProperty('--vv-bottom', bottomOffset + 'px');
+  };
+
+  window.visualViewport.addEventListener('resize', update);
+  window.visualViewport.addEventListener('scroll', update);
+  update(); // 初回
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildMenu();
+  bindVisualViewport();
   adjustCtaPadding();
 });
