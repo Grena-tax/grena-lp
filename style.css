@@ -1,57 +1,54 @@
-/* ===== CTA・配色・フォント・バウンス対策 : PATCH v3 ===== */
-
-/* フォント（色が飛んだ環境向けに保険を再指定） */
-html, body {
-  font-family:
-    "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-    "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-    Roboto,Helvetica,Arial,sans-serif !important;
-  color: #0b1220;
+/* === Hamburger TOC — 必須スタイル一式（追加）=== */
+.menu-button{
+  position:fixed;top:calc(10px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));z-index:10000;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
 }
-
-/* iOS/WKWebView のラバーバンド軽減（完全には止められませんが抑制） */
-html, body { overscroll-behavior-y: none; }
-
-/* CTA バーのベース（色が消えたケースの復元） */
-.fixed-cta{
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9998;
-  background: #ffffffcc; backdrop-filter: saturate(140%) blur(8px);
-  border-top: 1px solid rgba(0,0,0,.06);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+.menu-button .bars{display:block;width:28px;height:20px;position:relative}
+.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
+  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
 }
+.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* ボタンの配色（復元） */
-.btn{
-  display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
-  border-radius:10px; padding:.55rem .9rem; font-weight:700;
-  border:1px solid transparent; text-decoration:none; white-space:nowrap; cursor:pointer;
+.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
+.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
+.menu-panel{
+  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
+  background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
+  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
+  font-size:14px;line-height:1.38
 }
-.btn.neutral   { background:#e5e7eb; color:#111827; }
-.btn.secondary { background:#1f2937; color:#fff; }
-.btn.success   { background:#10b981; color:#fff; }
-.btn:hover{ opacity:.95 }
-
-/* 画面下のスペーサ（JSが高さを入れる） */
-#ctaSpacer{ height: calc(var(--cta-h, 72px) + env(safe-area-inset-bottom, 0px) + 8px); }
-
-/* 目次：plans 見出しを強制的に詰める（表示は JS でも制御） */
-.menu-group.compact { padding-top: 2px; }
-.menu-group.compact .menu-list{ margin-top: 0; }
-
-/* KYC → 料金プランの継ぎ目（カード間と同じ見え方に揃える） */
-#corp-setup, #plans{
-  padding-top:0 !important; padding-bottom:0 !important;
-  margin-top:0 !important;  margin-bottom:0 !important; display: flow-root;
+.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+.menu-title{font-weight:800;color:#111827}
+.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+.menu-close:hover{background:#f3f4f6}
+.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
+.menu-group{padding:8px 10px 6px}
+.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
+.menu-list{list-style:none;margin:0;padding:0}
+.menu-list li a{
+  display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;
+  text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb
 }
-#corp-setup .accordion{ padding-bottom:0 !important; }
-#plans .accordion{      padding-top:0  !important; }
+.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
 
-/* 標準のカード間隔相当（12px）に見えるよう最終調整。環境差はここで微調整 */
-#corp-setup + #plans{ margin-top:-36px !important; }
-@media (max-width:480px){ #corp-setup + #plans{ margin-top:-40px !important; } }
-@supports(-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-42px !important; } }
+html.menu-open .menu-wrap{pointer-events:auto}
+html.menu-open .menu-backdrop{opacity:1}
+html.menu-open .menu-panel{transform:none}
+html.menu-open,html.menu-open body{overflow:hidden}
 
-/* メニュー UI の最低限の色（消えてしまった場合の保険） */
+/* --- 既存の色が飛んだ環境の保険（必要なら残す） --- */
 .menu-panel { background:#f5f7fa; color:#0b1220; }
 .menu-list li a{ color:#334155; }
-.menu-list li a:hover{ background:#eef2f7; border-color:#d4d8de; }
+
+/* CTA はそのまま固定・ボタン色の復元（念のため） */
+.fixed-cta{position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn.neutral{background:#e5e7eb;color:#111827}
+.btn.secondary{background:#1f2937;color:#fff}
+.btn.success{background:#10b981;color:#fff}
+.btn:hover{opacity:.95}
