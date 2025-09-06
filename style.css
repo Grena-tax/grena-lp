@@ -1,80 +1,80 @@
-/* =========================================================
-   style.css — 完全版（固定CTA/ハンバーガー/アコーディオン/字体）
-   ========================================================= */
+/* =========================================
+   style.css — Full version (CTA fix + menu + pricing)
+   ========================================= */
 
-/* ---- 基本変数（セーフエリア/CTA 高さ） ---- */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px; /* JSで実寸に自動更新されます */
+/* 0) Debug banner (見えるとCSSが読めてます) — 任意 */
+:root{ --_ver:"CSS full v3.0"; }
+.css-debug-banner{
+  position: fixed; right:10px; bottom:10px; z-index: 99999;
+  background: linear-gradient(180deg,#1a56ff,#0f43cf);
+  color:#fff; font:700 12px/1.2 system-ui, "Noto Sans JP", sans-serif;
+  padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
+  letter-spacing:.02em;
 }
+.css-debug-banner::after{ content: var(--_ver); }
 
-/* ---- フォント & リンク色（復元） ---- */
-html, body{
-  -webkit-text-size-adjust:100%;
-  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-             "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-             Roboto,Helvetica,Arial,sans-serif !important;
+/* 1) Base / Font（フォント固定） */
+*{ box-sizing:border-box }
+html{ -webkit-text-size-adjust:100%; }
+html,body{
+  height:auto;
+  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+               "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+               Roboto,Helvetica,Arial,sans-serif !important;
   color:#0b1220;
-  background:#fff;
-  margin:0;
 }
+body{
+  margin:0; line-height:1.7; background:#fff;
+  padding-bottom: calc(var(--cta-h, 72px) + env(safe-area-inset-bottom, 0px)) !important; /* for sticky CTA */
+}
+img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:#0e63d3 }
+.container{ width:min(1100px,92%); margin-inline:auto; }
 
-/* ---- レイアウト：本文は scrollRoot をスクロール ---- */
-html,body{ height:100% }
-body{ overflow:hidden }                  /* ビューポートにはスクロールさせない */
-#scrollRoot{
-  height:100svh;                         /* iOSアドレスバー変動に強い */
-  overflow:auto;
-  overscroll-behavior:contain;           /* 下端のラバーバンド抑止 */
-  -webkit-overflow-scrolling:touch;
-  padding-bottom:calc(var(--cta-h) + var(--safe-bottom)); /* CTAぶん空ける */
-}
-
-/* ---- コンテナ & 見出し ---- */
-.container{ width:min(1100px,92%); margin-inline:auto }
+/* 2) Section heading */
 section > h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size:clamp(22px,2.8vw,30px);
+  font-size: clamp(22px, 2.8vw, 30px);
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* ---- アコーディオン（details/summary） ---- */
-.accordion{ padding:24px 0 }
+/* 3) Accordion (<details>) */
+.accordion{ padding:24px 0 }                 /* ベース */
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow:0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition:box-shadow .25s ease, transform .2s ease;
+  box-shadow: 0 10px 30px rgba(20,35,70,.05);
+  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
 .accordion details+details{ margin-top:12px }
 .accordion summary{
-  list-style:none; cursor:pointer; position:relative;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px;
+  list-style:none; cursor:pointer;
+  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
   display:flex; align-items:center; gap:.6rem;
-  background:linear-gradient(180deg,#fff,#fbfcff);
+  background: linear-gradient(180deg,#fff,#fbfcff);
   border-bottom:1px solid #eef2f7;
 }
-.accordion summary::-webkit-details-marker{ display:none }   /* ▲マーカー消す */
-.accordion summary::marker{ content:"" }                     /* Firefox系 */
+.accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
-.accordion details[open] summary{ background:linear-gradient(180deg,#f9fbff,#f4f8ff) }
-/* +/- アイコン */
+.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
+.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
+/* +/- ボタン */
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
   line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
 }
-.accordion details[open] > summary::after{ content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff }
-.accordion .content{ padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151 }
+.accordion details[open] > summary::after{
+  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
+}
+.accordion .content{
+  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
+}
 .accordion .content p{ margin:12px 0 }
 .accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
 .accordion .content li+li{ margin-top:.25em }
 
-/* 表（LP内） */
+/* Tables inside accordion */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
@@ -85,122 +85,128 @@ section > h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 備考・注記 */
+/* 4) Notes（※は本文だけに表示） */
+.accordion .content .note,
+.accordion .content .abbr-note{
+  display:block; margin:.3rem 0 .15rem; font-size:.9em; color:#64748b; line-height:1.5;
+}
+.accordion summary .note,
+.accordion summary .abbr-note{ display:none !important; }
+
+/* 5) Gap FIX — KYC ↔ 料金プラン（ここが本命） */
+#corp-setup, #plans{
+  padding-top:0 !important;
+  padding-bottom:0 !important;
+  margin-top:0 !important;
+  margin-bottom:0 !important;
+  display: flow-root;  /* 新しいBFCで折り畳み防止 */
+}
+#corp-setup .accordion{ padding-bottom:0 !important; }
+#plans .accordion{ padding-top:0 !important; }
+
+/* セクションとセクションの間隔を “他のカード間と同じ見え方” に揃える */
+#corp-setup + #plans{ margin-top:12px !important; }
+
+/* iOS/WebKit での余白対策（必要に応じて微調整） */
+@supports (-webkit-touch-callout: none){
+  #corp-setup + #plans{ margin-top:-4px !important; }
+}
+
+/* 6) Utilities */
 .muted{ color:#475569 }
 .text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
+.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
 .security-note{
   font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
   border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
 }
 
-/* ---- ハンバーガー（右上ドロワー） ---- */
-.menu-button{
-  position:fixed; top:calc(10px + var(--safe-top)); right:calc(10px + var(--safe-right)); z-index:10000;
-  display:inline-flex; align-items:center; justify-content:center;
-  width:48px; height:48px; border-radius:12px; background:#111827; color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15); border:1px solid rgba(255,255,255,.08)
-}
-.menu-button .bars{ display:block; width:28px; height:20px; position:relative }
-.menu-button .bars::before, .menu-button .bars::after, .menu-button .bars span{
-  content:""; position:absolute; left:0; right:0; height:2px; background:#fff; border-radius:2px
-}
-.menu-button .bars::before{ top:0 } .menu-button .bars span{ top:9px } .menu-button .bars::after{ bottom:0 }
+/* 7) Pricing blocks — restore look（価格表示の見た目を戻す） */
+.accordion .content.pricing .dot-list { list-style: disc; padding-left: 1.2rem; }
+.accordion .content.pricing .dot-list li + li { margin-top: .35em; }
 
-.menu-wrap{ position:fixed; inset:0; z-index:9999; pointer-events:none }
-.menu-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .18s ease; backdrop-filter:blur(1px) }
-.menu-panel{
-  position:absolute; top:0; right:0; height:100%; width:min(420px,92vw);
-  background:#f5f7fa; color:#0b1220; border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12); transform:translateX(100%); transition:transform .22s ease;
-  font-size:14px; line-height:1.38
+.accordion .content.pricing .price,
+.accordion .content.pricing .price-row{
+  font-weight: 800;
+  font-size: clamp(18px, 1.9vw, 20px);
+  margin: 14px 0 4px;
+  line-height: 1.5;
 }
-.menu-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0; z-index:2 }
-.menu-title{ font-weight:800; color:#111827 }
-.menu-close{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #e5e7eb; background:#fff; color:#111827 }
-.menu-close:hover{ background:#f3f4f6 }
-.menu-groups{ overflow:auto; height:calc(100% - 60px); padding:10px 0 }
-.menu-group{ padding:8px 10px 6px }
-.menu-group h4{ margin:0 0 6px; padding:0 6px; font-size:.92rem; color:#111827; font-weight:700; opacity:.9 }
-.menu-group.compact{ padding-top:2px }            /* plans セクションの見出しを省く時の詰め */
-.menu-group.compact .menu-list{ margin-top:0 }
-.menu-list{ list-style:none; margin:0; padding:0 }
-.menu-list li a{ display:block; padding:7px 10px; margin:0 6px 6px; border-radius:8px; text-decoration:none; color:#334155; background:#fff; border:1px solid #e5e7eb }
-.menu-list li a:hover{ background:#eef2f7; border-color:#d4d8de }
-html.menu-open .menu-wrap{ pointer-events:auto }
-html.menu-open .menu-backdrop{ opacity:1 }
-html.menu-open .menu-panel{ transform:none }
-html.menu-open, html.menu-open body{ overflow:hidden }
+.accordion .content.pricing .price .yen,
+.accordion .content.pricing .price-row .yen{
+  font-feature-settings: "pnum" on,"lnum" on;
+  letter-spacing: .02em;
+}
+.accordion .content.pricing .price-row.special .yen{ color:#16a34a; font-weight:900; }
+.accordion .content.pricing .badge{
+  display:inline-block; margin-left:.45em; padding:.18em .5em;
+  border-radius:6px; background:#e6f4ea; color:#065f46; font-weight:700; font-size:.9em;
+}
+.accordion .content.pricing .label{ font-weight:800; }
+.accordion .content.pricing .tax{ margin-left:.15em; }
+.accordion .content.pricing .subcap{ margin:1rem 0 .35rem; font-weight:800; font-size:1rem; }
+.accordion .content.pricing .note{ color:#475569; font-size:.9em; margin:.4rem 0; }
+.accordion .content.pricing .abbr-note{ color:#64748b; font-size:.85em; margin:.3rem 0; }
 
-/* ---- 固定CTA（最下部） ---- */
+/* 8) 固定CTAバー */
 .fixed-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9000;
-  background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
-  border-top:1px solid rgba(0,0,0,.06); padding-bottom:var(--safe-bottom);
+  position:fixed; left:0; right:0; bottom:0; z-index:9998; background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px); border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 .fixed-cta .row{
   max-width:64rem; margin:0 auto; display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
-  padding:.6rem 1rem; min-height:var(--cta-h);
+  padding:.6rem 1rem; min-height:72px;
 }
-.btn{
-  display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
-  border-radius:10px; padding:.55rem .9rem; font-weight:700; border:1px solid transparent;
-  text-decoration:none; white-space:nowrap; cursor:pointer;
-}
+.btn{ display:inline-flex; gap:.5rem; align-items:center; justify-content:center; border-radius:10px;
+  padding:.55rem .9rem; font-weight:700; border:1px solid transparent; text-decoration:none; white-space:nowrap; cursor:pointer }
 .btn.neutral{ background:#e5e7eb; color:#111827 }
 .btn.secondary{ background:#1f2937; color:#fff }
 .btn.success{ background:#10b981; color:#fff }
 .btn:hover{ opacity:.92 }
 
-/* ---- KYC → 料金プランの隙間の最終調整（必要あれば値を微調整） ---- */
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important }
-#plans{      padding-top:0 !important;      margin-top:0 !important }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important }
-#plans .accordion{      padding-top:0 !important;      display:flow-root !important }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important }
-#plans      .accordion > details:first-child{ margin-top:0 !important }
-#corp-setup + #plans{ margin-top:-38px !important }
-@media (max-width:480px){ #corp-setup + #plans{ margin-top:-42px !important } }
-@supports (-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-44px !important } }
+/* 9) ハンバーガー（メニュー） */
+.menu-button{
+  position:fixed;top:calc(10px + env(safe-area-inset-top, 0px));right:calc(10px + env(safe-area-inset-right, 0px));z-index:10000;
+  display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
+}
+.menu-button .bars{display:block;width:28px;height:20px;position:relative}
+.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
+  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
+}
+.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* ---- レスポンシブ細部 ---- */
+.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
+.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
+.menu-panel{
+  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
+  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;font-size:14px;line-height:1.38
+}
+.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+.menu-title{font-weight:800;color:#111827}
+.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+.menu-close:hover{background:#f3f4f6}
+.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
+.menu-group{padding:8px 10px 6px}
+.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
+.menu-list{list-style:none;margin:0;padding:0}
+.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
+.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+
+html.menu-open .menu-wrap{pointer-events:auto}
+html.menu-open .menu-backdrop{opacity:1}
+html.menu-open .menu-panel{transform:none}
+html.menu-open,html.menu-open body{overflow:hidden}
+
+/* 見出し非表示のグループ（plans）は上の余白を詰める */
+.menu-group.compact { padding-top: 2px; }
+.menu-group.compact .menu-list{ margin-top: 0; }
+
+/* 10) Responsive */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
-/* ===== CTA固定＆バウンス抑止：最小パッチ（既存デザインは上書きしない） ===== */
-
-/* ページ本体は #scrollRoot の中だけをスクロールさせる */
-html, body {
-  height: 100%;
-  overflow: hidden;                 /* viewportはスクロールさせない */
-}
-
-/* 本文スクロール用のルート（HTMLにある#scrollRoot） */
-#scrollRoot {
-  height: 100%;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;   /* iOS Chromeのラバーバンド抑止 */
-}
-
-/* 固定CTA（既存の見た目は保持） */
-.fixed-cta {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  z-index: 9998;
-  background: rgba(255,255,255,.92);
-  backdrop-filter: saturate(140%) blur(8px);
-  border-top: 1px solid rgba(0,0,0,.06);
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-/* CTAが本文に被らないよう、下余白はJSから渡す --cta-h を使う */
-:root { --cta-h: 72px; }
-body { padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
-
-/* 目次の「plans」見出しを非表示にした時のグループ余白を微調整（任意） */
-.menu-group.compact { padding-top: 2px; }
-.menu-group.compact .menu-list { margin-top: 0; }
