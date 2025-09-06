@@ -5,12 +5,23 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4
 (function localSmoothScroll(){
   const root = document.getElementById('scrollRoot');
   if (!root) return;
+
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
+
     const id = a.getAttribute('href');
+    // ここがポイント：#page-top は専用処理に流す
+    if (id === '#page-top') {
+      e.preventDefault();
+      root.scrollTo({ top: 0, behavior: 'smooth' });
+      history.pushState(null, '', id);
+      return; // 以降の処理で上書きしない
+    }
+
     const target = document.querySelector(id);
     if (!target) return;
+
     e.preventDefault();
 
     // #disclaimer だけは自動で開かない（他は先頭detailsを開く）
@@ -19,19 +30,21 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4
       if (first && !first.open) first.open = true;
     }
 
-    // 画面上でのターゲット位置を #scrollRoot 基準で算出
-    const top = root.scrollTop + target.getBoundingClientRect().top - document.body.getBoundingClientRect().top;
+    // 位置計算を #scrollRoot 基準で厳密に
+    const top = root.scrollTop + (target.getBoundingClientRect().top - root.getBoundingClientRect().top);
     root.scrollTo({ top, behavior: 'smooth' });
     history.pushState(null, '', id);
   });
 })();
 
-/* ========= 「トップへ」は #scrollRoot の先頭に移動 ========= */
+/* ========= 「トップへ」は #scrollRoot の先頭に移動（上書き防止） ========= */
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   const root = document.getElementById('scrollRoot');
   if (!root) return;
   e.preventDefault();
-  root.scrollTo({top:0, behavior:'smooth'});
+  // 重要：グローバルのアンカー処理にバブルさせない
+  e.stopImmediatePropagation();
+  root.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 /* ========= 申込：必ずフォームに飛ぶ（未設定なら警告） ========= */
@@ -56,9 +69,7 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
     document.documentElement.style.setProperty('--cta-h', h + 'px');
   };
 
-  // 画面回転・アドレスバー出入り・キーボード開閉で再計測
   ['load','resize','orientationchange'].forEach(ev => window.addEventListener(ev, apply));
-  // iOS系は VisualViewport 変化も拾う
   if (window.visualViewport){
     ['resize','scroll'].forEach(ev => visualViewport.addEventListener(ev, apply));
   }
@@ -72,15 +83,15 @@ const closeBt = document.getElementById('menuClose');
 const overlay = document.getElementById('menuBackdrop');
 const groupsRoot = document.getElementById('menuGroups');
 
-const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn.setAttribute('aria-expanded','true'); };
-const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn.setAttribute('aria-expanded','false'); };
+const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn?.setAttribute('aria-expanded','true'); };
+const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn?.setAttribute('aria-expanded','false'); };
 
 btn?.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-// メニューには出さない titles（本文は残す）
+// メニューから除外する小見出し（本文は残す）
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 // slug化
@@ -118,9 +129,8 @@ function buildMenu(){
         e.preventDefault();
         closeMenu();
         d.open = true;
-        // #scrollRoot の中でスクロール
         const root = document.getElementById('scrollRoot');
-        const top = root.scrollTop + d.getBoundingClientRect().top - document.body.getBoundingClientRect().top;
+        const top = root.scrollTop + (d.getBoundingClientRect().top - root.getBoundingClientRect().top);
         root.scrollTo({behavior:'smooth', top});
         history.pushState(null,'',`#${d.id}`);
       });
