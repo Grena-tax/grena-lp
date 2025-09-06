@@ -139,3 +139,13 @@ function buildMenu(){
   });
 }
 document.addEventListener('DOMContentLoaded', buildMenu);
+/* ==== iOS Chrome 対策：VisualViewportでCTA位置を常時補正 ==== */
+(function pinCtaWithVisualViewport(){
+  if (!window.visualViewport) return;
+  const setVVH = () => {
+    const h = Math.round(window.visualViewport.height);
+    document.documentElement.style.setProperty('--vvh', h + 'px');
+  };
+  ['resize','scroll'].forEach(ev => window.visualViewport.addEventListener(ev, setVVH));
+  setVVH();
+})();
