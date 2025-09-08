@@ -1,141 +1,143 @@
-/* === app.js（丸ごと） ======================================= */
-(function(){
-  const scrollRoot   = document.getElementById('scrollRoot');
-  const ctaBar       = document.getElementById('ctaBar');
-  const bottomSpacer = document.getElementById('bottomSpacer');
-  const toTop        = document.getElementById('toTop');
-  const applyNow     = document.getElementById('applyNow');
+/* ===== 設定 ===== */
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-  /* ====== CTA高さに合わせて本文下を自動調整（せり上がり防止） ====== */
-  function adjustCtaLayout(bufferPx = 28){
-    if(!ctaBar) return;
-    const h = ctaBar.offsetHeight;
-    const pad = h + bufferPx;
-    scrollRoot.style.paddingBottom = pad + 'px';
-    if(bottomSpacer) bottomSpacer.style.height = pad + 'px';
-  }
-  const adj = () => adjustCtaLayout(28);
-  window.addEventListener('load', adj, {passive:true});
-  window.addEventListener('resize', adj, {passive:true});
-  window.addEventListener('orientationchange', adj, {passive:true});
+/* ===== ユーティリティ ===== */
+const slug = (t) => (t || '')
+  .toLowerCase()
+  .replace(/[（）()\[\]【】]/g, ' ')      // ← 角/丸カッコはスペースへ（[]はエスケープ必須）
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-') // 非単語・非和文はハイフン
+  .replace(/-+/g, '-')
+  .replace(/^-|-$/g, '');
 
-  /* details 開閉でも高さが変わるので随時補正 */
-  scrollRoot.addEventListener('toggle', e=>{
-    if(e.target.tagName === 'DETAILS') requestAnimationFrame(adj);
-  }, true);
+/* ===== ページ内リンクだけスムーススクロール ===== */
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const id = a.getAttribute('href');
+  const target = document.querySelector(id);
+  if (!target) return;
+  e.preventDefault();
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  /* ====== 「トップへ」：本文スクロールを制御 ====== */
-  if(toTop){
-    toTop.addEventListener('click', (ev)=>{
-      ev.preventDefault();
-      scrollRoot.scrollTo({top:0, behavior:'smooth'});
-    });
+  // #disclaimer だけは自動で開かない
+  if (target.id !== 'disclaimer') {
+    const first = target.querySelector('details');
+    if (first && !first.open) first.open = true;
   }
 
-  /* ====== 申込み先（必要ならURL差し替え） ====== */
-  // const FORM_URL = 'https://your-google-form-url';
-  // if(applyNow) { applyNow.href = FORM_URL; applyNow.target = '_blank'; }
+  history.pushState(null, '', id);
+});
 
-  /* ====== ハンバーガー（ドロワー目次） ====== */
-  const menuBtn   = document.getElementById('menuBtn');
-  const menuWrap  = document.getElementById('menuDrawer');
-  const menuPanel = menuWrap?.querySelector('.menu-panel');
-  const menuBackdrop = document.getElementById('menuBackdrop');
-  const menuClose = document.getElementById('menuClose');
-  const menuGroups = document.getElementById('menuGroups');
-
-  function openMenu(){
-    menuWrap.classList.add('open');
-    menuBtn.setAttribute('aria-expanded','true');
-    menuWrap.setAttribute('aria-hidden','false');
+/* ===== トップへ ===== */
+document.getElementById('toTop')?.addEventListener('click', (e)=>{
+  if (!document.querySelector('#page-top')) {
+    e.preventDefault();
+    window.scrollTo({top:0, behavior:'smooth'});
   }
-  function closeMenu(){
-    menuWrap.classList.remove('open');
-    menuBtn.setAttribute('aria-expanded','false');
-    menuWrap.setAttribute('aria-hidden','true');
-  }
-  menuBtn?.addEventListener('click', ()=> menuWrap.classList.contains('open') ? closeMenu() : openMenu());
-  menuClose?.addEventListener('click', closeMenu);
-  menuBackdrop?.addEventListener('click', closeMenu);
+});
 
-  /* ====== 目次を自動生成 ====== */
-  function slugify(s){
-    return 's_' + s.trim()
-      .replace(/[\s　]+/g,'-')
-      .replace(/[^\w\u3040-\u30ff\u3400-\u9fff\-]/g,'')
-      .toLowerCase();
-  }
-  function ensureId(el, base){
-    if(!el.id){ el.id = slugify(base); }
-    return el.id;
-  }
+/* ===== 固定CTAの高さを本文余白に反映 ===== */
+const adjustCtaPadding = () => {
+  const bar = document.getElementById('ctaBar');
+  if (!bar) return;
+  const h = Math.ceil(bar.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--cta-h', h + 'px');
+};
+window.addEventListener('load', adjustCtaPadding);
+window.addEventListener('resize', adjustCtaPadding);
 
-  function buildMenu(){
-    if(!menuGroups) return;
-    menuGroups.innerHTML = '';
+/* ===== 申込ボタン ===== */
+document.getElementById('applyNow')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
+  window.open(FORM_URL, '_blank', 'noopener');
+});
 
-    // ページ内の各 section を走査
-    document.querySelectorAll('main section').forEach(section=>{
-      const titleEl = section.querySelector('h2');
-      if(!titleEl) return;
-      const secId = ensureId(section, titleEl.textContent);
+/* ===== ハンバーガー開閉 ===== */
+const btn     = document.getElementById('menuBtn');
+const drawer  = document.getElementById('menuDrawer');
+const closeBt = document.getElementById('menuClose');
+const overlay = document.getElementById('menuBackdrop');
 
-      const group = document.createElement('div');
-      group.className = 'menu-group';
+const openMenu  = () => { 
+  document.documentElement.classList.add('menu-open');
+  drawer?.setAttribute('aria-hidden','false');
+  btn?.setAttribute('aria-expanded','true');
+};
+const closeMenu = () => { 
+  document.documentElement.classList.remove('menu-open');
+  drawer?.setAttribute('aria-hidden','true');
+  btn?.setAttribute('aria-expanded','false');
+};
+btn?.addEventListener('click', () => {
+  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
+});
+closeBt?.addEventListener('click', closeMenu);
+overlay?.addEventListener('click', closeMenu);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-      const gTitle = document.createElement('div');
-      gTitle.className = 'g-title';
-      const gLink = document.createElement('a');
-      gLink.href = '#'+secId;
-      gLink.textContent = titleEl.textContent;
-      gLink.addEventListener('click', (e)=>{ e.preventDefault(); jumpToId(secId); closeMenu(); });
-      gTitle.appendChild(gLink);
-      group.appendChild(gTitle);
+/* ===== 目次（ハンバーガー内）自動生成 ===== */
+// メニューから除外するサブ項目（本文の表示はそのまま）
+const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
-      const list = document.createElement('ul');
-      list.className = 'menu-list';
+function buildMenu(){
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const frag = document.createDocumentFragment();
+  let i = 1;
 
-      // セクション直下のアコーディオン（details）を目次に
-      section.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx)=>{
-        const txt = sum.textContent.trim();
-        const details = sum.parentElement;
-        const detId = ensureId(details, titleEl.textContent + '-' + txt + '-' + idx);
+  sections.forEach(sec=>{
+    const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
+    if (!details.length) return;
 
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = '#'+detId;
-        a.textContent = txt;
-        a.addEventListener('click', (e)=>{ e.preventDefault(); jumpToId(detId); closeMenu(); });
-        li.appendChild(a);
-        list.appendChild(li);
+    const wrap = document.createElement('div');
+    wrap.className = 'menu-group';
+
+    // ★ section見出し（h2）：#plans は非表示
+    const h2 = sec.querySelector('h2');
+    const title = (h2?.textContent || '').trim();
+    if (title && sec.id !== 'plans') {
+      const h4 = document.createElement('h4');
+      h4.textContent = title;
+      wrap.appendChild(h4);
+    }
+
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    details.forEach(d=>{
+      const s = d.querySelector('summary');
+      const t = s?.textContent?.trim() || '項目';
+      // 料金サブ項目はメニューから除外（本文は表示）
+      if (excludeTitles.some(x => t.includes(x))) return;
+
+      if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = `#${d.id}`;
+      a.textContent = t;
+      a.addEventListener('click',(e)=>{
+        e.preventDefault();
+        closeMenu();
+        d.open = true;
+        d.scrollIntoView({behavior:'smooth', block:'start'});
+        history.pushState(null,'',`#${d.id}`);
       });
-
-      if(list.children.length){ group.appendChild(list); menuGroups.appendChild(group); }
+      li.appendChild(a);
+      ul.appendChild(li);
     });
-  }
 
-  function jumpToId(id){
-    const target = document.getElementById(id);
-    if(!target) return;
+    wrap.appendChild(ul);
+    frag.appendChild(wrap);
+  });
 
-    // details の中なら親を開く
-    const d = target.closest('details');
-    if(d && !d.open){ d.open = true; }
+  const groupsRoot = document.getElementById('menuGroups');
+  groupsRoot.textContent = '';
+  groupsRoot.appendChild(frag);
 
-    // scrollRoot 基準で座標計算
-    const r = target.getBoundingClientRect();
-    const rootR = scrollRoot.getBoundingClientRect();
-    const y = r.top - rootR.top + scrollRoot.scrollTop - 8; // 少しだけ上に余白
-    scrollRoot.scrollTo({top:y, behavior:'smooth'});
-    requestAnimationFrame(adj);
-  }
-
-  buildMenu();
-
-  /* ====== 初期レイアウト確定後の補正 ====== */
-  window.addEventListener('load', ()=>{
-    // 料金プラン「だけ形が違う」→全 details に同じスタイルが付くように class を外部依存にしない
-    // （HTMLのままでOK。ここでは高さ補正だけ）
-    adj();
-  }, {passive:true});
-})();
+  // Safety: 旧版が h4="plans" を作っても強制除去
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+  });
+}
+document.addEventListener('DOMContentLoaded', buildMenu);
