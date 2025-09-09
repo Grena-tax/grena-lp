@@ -246,3 +246,5 @@ th:first-child, td:first-child{ text-align:left }
 body {
   padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important;
 }
+/* メニューグループに見出しが無い (#plans) ときは上の余白を詰める */
+.menu-group.no-title { padding-top: 2px; }
