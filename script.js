@@ -53,28 +53,19 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
 });
 
 /* ===== ハンバーガー開閉 ===== */
-const btn        = document.getElementById('menuBtn');
-const drawer     = document.getElementById('menuDrawer');
-const closeBt    = document.getElementById('menuClose');
-const overlay    = document.getElementById('menuBackdrop');
-const groupsRoot = document.getElementById('menuGroups');
+const btn       = document.getElementById('menuBtn');
+const drawer    = document.getElementById('menuDrawer');
+const closeBt   = document.getElementById('menuClose');
+const overlay   = document.getElementById('menuBackdrop');
+const groupsRoot= document.getElementById('menuGroups');
 
-const openMenu  = () => {
-  document.documentElement.classList.add('menu-open');
-  drawer?.setAttribute('aria-hidden', 'false');
-  btn?.setAttribute('aria-expanded', 'true');
-};
-const closeMenu = () => {
-  document.documentElement.classList.remove('menu-open');
-  drawer?.setAttribute('aria-hidden', 'true');
-  btn?.setAttribute('aria-expanded', 'false');
-};
-btn?.addEventListener('click', () => {
-  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
-});
+const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false'); btn?.setAttribute('aria-expanded','true'); };
+const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');  btn?.setAttribute('aria-expanded','false'); };
+
+btn?.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
-document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeMenu(); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
 /* サブ項目で除外（本文は表示のまま） */
@@ -92,14 +83,14 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない（= "plans" を見せない）
+    // ★ #plans は見出し(h4)を出さない（= 英字 "plans" を見せない）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
       h4.textContent = (h2.textContent || '').trim();
       wrap.appendChild(h4);
     } else {
-      // タイトル無しグループの軽い詰め（CSSで 2px）
+      // タイトル無しグループの軽い詰め（CSSで 2〜8px）
       wrap.classList.add('no-title');
     }
 
@@ -109,7 +100,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return; // 料金サブ項目は出さない
+      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -135,7 +126,7 @@ function buildMenu(){
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため：どこかの古いJSが h4 "plans" を作っても強制削除
+  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
 }
 
@@ -146,7 +137,6 @@ function killPlansHeading(){
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
-
 addEventListener('DOMContentLoaded', buildMenu);
 addEventListener('load', killPlansHeading);
 if (groupsRoot) {
