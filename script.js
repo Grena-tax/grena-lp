@@ -53,11 +53,11 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
 });
 
 /* ===== ハンバーガー開閉 ===== */
-const btn       = document.getElementById('menuBtn');
-const drawer    = document.getElementById('menuDrawer');
-const closeBt   = document.getElementById('menuClose');
-const overlay   = document.getElementById('menuBackdrop');
-const groupsRoot= document.getElementById('menuGroups');
+const btn        = document.getElementById('menuBtn');
+const drawer     = document.getElementById('menuDrawer');
+const closeBt    = document.getElementById('menuClose');
+const overlay    = document.getElementById('menuBackdrop');
+const groupsRoot = document.getElementById('menuGroups');
 
 const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false'); btn?.setAttribute('aria-expanded','true'); };
 const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');  btn?.setAttribute('aria-expanded','false'); };
@@ -141,13 +141,29 @@ if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
 
-/* ===== 追加：重複する免責（キャンセルポリシー下の方）を自動カット =====
-   #disclaimer セクションが存在する場合は、#site-disclaimer を削除。
-   片方しか無い場合は残す（既存の文言やレイアウトは一切変更しない）。 */
-document.addEventListener('DOMContentLoaded', () => {
-  const sectionDisclaimer = document.querySelector('#disclaimer');
-  const extraDisclaimer   = document.getElementById('site-disclaimer');
-  if (sectionDisclaimer && extraDisclaimer) {
-    extraDisclaimer.remove();
+/* ===== 重複ブロック除去（最下部の“キャンセルポリシー”だけカット） =====
+   - #disclaimer 内の正規ブロックは必ず残す
+   - それ以外の「免責事項」「キャンセルポリシー」は末尾側を削除 */
+function cutOnlyBottomDup() {
+  // 旧スニペット由来のものを丸ごと除去（存在すれば）
+  document.getElementById('site-disclaimer')?.remove();
+  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+  // 「免責事項」重複（#disclaimer 外）を除去
+  document.querySelectorAll('details').forEach(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
+  });
+
+  // 「キャンセルポリシー」を重複排除：#disclaimer 内の1つだけ残す
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    return /キャンセルポリシー/.test(t);
+  });
+  if (cancels.length > 1) {
+    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
+    cancels.forEach(d => { if (d !== keep) d.remove(); });
   }
-});
+}
+document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
+window.addEventListener('load', cutOnlyBottomDup);
