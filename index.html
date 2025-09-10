@@ -814,9 +814,20 @@
       const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
       if (!details.length) return;
 
-      const wrap = document.createElement('div'); wrap.className = 'menu-group';
-      const h2 = sec.querySelector('h2'); const title = h2?.textContent?.trim() || sec.id;
-      const h4 = document.createElement('h4'); h4.textContent = title; wrap.appendChild(h4);
+      const wrap = document.createElement('div'); 
+      wrap.className = 'menu-group';
+
+      // ★ #plans の見出し（h4）はメニューに出さない
+      const h2 = sec.querySelector('h2'); 
+      const title = (h2?.textContent || '').trim();
+      if (title && sec.id !== 'plans') {
+        const h4 = document.createElement('h4'); 
+        h4.textContent = title; 
+        wrap.appendChild(h4);
+      } else {
+        // タイトル無しグループはわずかに詰める（CSSで 2px）
+        wrap.classList.add('no-title');
+      }
 
       const ul = document.createElement('ul'); ul.className = 'menu-list';
 
@@ -842,10 +853,16 @@
     });
 
     groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
+
+    // 念のため：旧コードで h4="plans" が作られても強制削除
+    groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+      if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+    });
   }
   document.addEventListener('DOMContentLoaded', buildMenu);
 </script>
-  <!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
+
+<!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
 <!-- 免責（details）※既存の免責セクションがあってもOK。IDは site-disclaimer にしています -->
 <details id="site-disclaimer" class="disclaimer">
   <summary class="disclaimer__summary">免責事項（必ずお読みください）</summary>
@@ -941,8 +958,8 @@
     document.querySelector('#disclaimer details[open]')?.removeAttribute('open');
   });
 </script>
+
+<!-- 安全網：どこかの古いJSが "plans" 見出しを作っても抹消する外部JS -->
+<script src="./script.js?v=20250910-01"></script>
 </body>
 </html>
-<!-- 末尾に 1 行 追加（必須） -->
-<script src="./script.js?v=20250909-01"></script>
-<script src="./script.js?v=2025-09-09-02"></script>
