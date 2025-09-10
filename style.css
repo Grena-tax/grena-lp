@@ -205,3 +205,5 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 
 /* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
+/* plans 見出しを出さないグループを他と揃えて 2px だけ詰める */
+.menu-group.no-title { padding-top: 2px; }
