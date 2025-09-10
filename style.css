@@ -130,11 +130,12 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+
 /* ==== KYC ⇄ 料金プラン を詰めるパッチ（重複そのまま） ==== */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
-#plans{ paddingトップ:0 !important; margin-top:0 !important; }
+#plans{ padding-top:0 !important; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
@@ -152,7 +153,7 @@ th:first-child, td:first-child{ text-align:left }
 
 /* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      paddingトップ:0    !important; margin-top:0    !important; }
+#plans{      padding-top:0    !important; margin-top:0    !important; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
@@ -169,7 +170,7 @@ th:first-child, td:first-child{ text-align:left }
   #corp-setup + #plans{ margin-top:-40px !important; }
 }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ marginトップ:-42px !important; }
+  #corp-setup + #plans{ margin-top:-42px !important; }
 }
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0 !important; border-top:1px solid transparent; }
@@ -185,7 +186,7 @@ th:first-child, td:first-child{ text-align:left }
   --gap-lift-sp: -44px;
 }
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      paddingトップ:0 !important;     margin-top:0  !important;  }
+#plans{      padding-top:0 !important;     margin-top:0  !important;  }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
@@ -204,8 +205,27 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 
 /* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
-/* plans 見出しを出さないグループを他と揃えて 2px だけ詰める */
+/* plans 見出しを出さないグループを他と揃えて 2px だけ詰める（重複OK） */
 .menu-group.no-title { padding-top: 2px; }
+
 /* ── ハンバーガー内：#plans グループの余白だけ他と揃えて詰める ── */
 .menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
 @media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
+
+/* === Mobile 固定CTA 安定化（rubber-band防止＋safe-area対応） === */
+html, body{
+  overscroll-behavior-y: none;                 /* 余分なバウンスで浮かないように（対応ブラウザで有効） */
+}
+
+/* iOS のホームインジケータぶんだけ下側を確保して確実に固定 */
+.cta-bar{
+  bottom: max(0px, env(safe-area-inset-bottom));           /* 最下端に固定 */
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));/* 既存gap(10px)＋安全域 */
+  transform: translateZ(0);                                /* 固定位置の揺れ防止 */
+  will-change: transform;
+}
+
+/* 本文側の下余白も safe-area を加味して確保（コンテンツが隠れないように） */
+body.has-cta{
+  padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
+}
