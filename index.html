@@ -8,10 +8,10 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま） -->
+<!-- 既存のメインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー（本文は無改変） -->
+<!-- 追加スタイル（本文は無改変） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -22,7 +22,7 @@
   html,body{margin:0;padding:0}
   body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
 
-  /* アコーディオン（既存と同等） */
+  /* アコーディオン最低限（本文そのまま） */
   details summary{
     padding:1rem 1.2rem;cursor:pointer;list-style:none;
     border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
@@ -94,7 +94,7 @@
   html.menu-open .menu-panel{transform:none}
   html.menu-open,html.menu-open body{overflow:hidden}
 
-  /* 画面最下部 固定CTA */
+  /* 画面最下部 固定CTA（旧） */
   .fixed-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
@@ -128,7 +128,7 @@
 </nav>
 
 <!-- =========================
-  法人設立セクション（本文は元のまま＋リーガル追記のみ）
+  法人設立
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
@@ -272,7 +272,7 @@
 </section>
 
 <!-- =========================
-  料金プラン（親アコーディオンの中に3プラン）
+  料金プラン
 ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
@@ -732,138 +732,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
-<div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
-  <div class="row">
-    <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
-    <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
-  </div>
-</div>
-
-<!-- ===== JS（本文は一切変更せず／挙動のみ最適化） ===== -->
-<script>
-  /* 申込フォームURL（実URLをセット済み） */
-  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
-
-  // ページ内リンクだけスムーススクロール（存在しないアンカーは素通し）
-  document.addEventListener('click', (e) => {
-    const a = e.target.closest('a[href^="#"]');
-    if (!a) return;
-    const id = a.getAttribute('href');
-    const target = document.querySelector(id);
-    if (!target) return;
-    e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const first = target.querySelector('details'); if (first && !first.open) first.open = true;
-    history.pushState(null, '', id);
-  });
-
-  // 「トップへ」：アンカーが無くても確実に上へ
-  document.getElementById('toTop')?.addEventListener('click', (e)=>{
-    if (!document.querySelector('#page-top')) { e.preventDefault(); window.scrollTo({top:0, behavior:'smooth'}); }
-  });
-
-  // CTAの高さを本文余白に反映（重なり防止）
-  const adjustCtaPadding = () => {
-    const bar = document.getElementById('ctaBar'); if (!bar) return;
-    const h = Math.ceil(bar.getBoundingClientRect().height);
-    document.documentElement.style.setProperty('--cta-h', h + 'px');
-  };
-  window.addEventListener('load', adjustCtaPadding);
-  window.addEventListener('resize', adjustCtaPadding);
-
-  // 申込：必ずフォームに飛ぶ（未設定なら警告）
-  document.getElementById('applyNow')?.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
-    window.open(FORM_URL, '_blank', 'noopener');
-  });
-
-  /* ===== ハンバーガー：開閉＆メニュー自動生成 ===== */
-  const btn     = document.getElementById('menuBtn');
-  const drawer  = document.getElementById('menuDrawer');
-  const closeBt = document.getElementById('menuClose');
-  const overlay = document.getElementById('menuBackdrop');
-  const groupsRoot = document.getElementById('menuGroups');
-
-  const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer.setAttribute('aria-hidden','false');  btn.setAttribute('aria-expanded','true'); };
-  const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer.setAttribute('aria-hidden','true');   btn.setAttribute('aria-expanded','false'); };
-
-  btn.addEventListener('click', () => { document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu(); });
-  closeBt.addEventListener('click', closeMenu);
-  overlay.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
-
-  // メニューには出さない titles（本文は残す）
-  const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
-
-  // slug化
-  const slug = (t) => t.toLowerCase()
-    .replace(/[（）()［\[\]【】]/g,' ')
-    .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
-    .replace(/-+/g,'-').replace(/^-|-$/g,'');
-
-  // sectionごとに、直下の details をメニュー化（本文は無改変）
-  function buildMenu(){
-    const sections = Array.from(document.querySelectorAll('section[id]'));
-    const frag = document.createDocumentFragment();
-    let i = 1;
-
-    sections.forEach(sec=>{
-      const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
-      if (!details.length) return;
-
-      const wrap = document.createElement('div'); 
-      wrap.className = 'menu-group';
-
-      // ★ #plans の見出し（h4）はメニューに出さない
-      const h2 = sec.querySelector('h2'); 
-      const title = (h2?.textContent || '').trim();
-      if (title && sec.id !== 'plans') {
-        const h4 = document.createElement('h4'); 
-        h4.textContent = title; 
-        wrap.appendChild(h4);
-      } else {
-        // タイトル無しグループはわずかに詰める（CSSで 2px）
-        wrap.classList.add('no-title');
-      }
-
-      const ul = document.createElement('ul'); ul.className = 'menu-list';
-
-      details.forEach(d=>{
-        const s = d.querySelector('summary'); const t = s?.textContent?.trim() || '項目';
-        if (excludeTitles.some(x => t.includes(x))) return; // メニューからのみ除外
-        if (!d.id) d.id = `acc-${i++}-${slug(t)||'item'}`;
-
-        const li = document.createElement('li');
-        const a  = document.createElement('a');
-        a.href = `#${d.id}`; a.textContent = t;
-        a.addEventListener('click',(e)=>{
-          e.preventDefault();
-          closeMenu();
-          d.open = true;
-          d.scrollIntoView({behavior:'smooth', block:'start'});
-          history.pushState(null,'',`#${d.id}`);
-        });
-        li.appendChild(a); ul.appendChild(li);
-      });
-
-      wrap.appendChild(ul); frag.appendChild(wrap);
-    });
-
-    groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
-
-    // 念のため：旧コードで h4="plans" が作られても強制削除
-    groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-      if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-    });
-  }
-  document.addEventListener('DOMContentLoaded', buildMenu);
-</script>
-
-<!-- ▼▼▼ 一括貼り付け：免責（閉じて始まる）＋下部固定CTA＋被り対策 ▼▼▼ -->
-<!-- 免責（details）※既存の免責セクションがあってもOK。IDは site-disclaimer にしています -->
+<!-- 末尾貼付の“重複免責（site-disclaimer）”は残してOK → JSが自動でカット -->
 <details id="site-disclaimer" class="disclaimer">
   <summary class="disclaimer__summary">免責事項（必ずお読みください）</summary>
   <div class="disclaimer__content">
@@ -876,7 +745,7 @@
   </div>
 </details>
 
-<!-- 画面下の固定CTA -->
+<!-- 画面下の固定CTA（新） -->
 <nav class="cta-bar" aria-label="固定CTA">
   <a href="#page-top" class="cta-btn cta-btn--ghost">トップへ</a>
   <a href="https://line.me/R/ti/p/@georgia-tax" class="cta-btn" target="_blank" rel="noopener">相談はこちら</a>
@@ -885,8 +754,6 @@
 
 <style>
   :root { --cta-h: 72px; --cta-gap: 10px; }
-
-  /* 免責（details） */
   .disclaimer{ margin:16px 0; border:1px solid #e5e7eb; border-radius:10px; background:#fff; overflow:hidden }
   .disclaimer__summary{ display:block; padding:14px 16px; cursor:pointer; font-weight:700 }
   .disclaimer[open] .disclaimer__summary{ border-bottom:1px solid #e5e7eb; background:#fafafa }
@@ -894,8 +761,6 @@
   .disclaimer__content ul{ margin:0; padding-left:1.2em }
   .disclaimer__content li{ margin:0.4em 0 }
   .disclaimer__close{ display:inline-block; margin:0 0 8px auto; padding:6px 10px; border:1px solid #e5e7eb; border-radius:8px; background:#fff; font-size:14px; cursor:pointer }
-
-  /* 下部固定CTA */
   .cta-bar{
     position:fixed; left:0; right:0; bottom:0; z-index:60;
     display:flex; gap:8px; padding:10px;
@@ -905,21 +770,18 @@
   .cta-btn{
     flex:1 1 0; text-align:center; padding:12px 14px; border-radius:10px;
     font-weight:700; text-decoration:none; border:1px solid #e5e7eb; background:#fff; color:#0b1220;
+    white-space:nowrap; /* 1行固定 */
   }
   .cta-btn--primary{ background:#16a34a; border-color:#16a34a; color:#fff }
   .cta-btn--ghost{ background:#fff }
   .cta-btn:active{ transform:translateY(1px) }
-
-  /* CTAの被り対策：本文下に余白を自動付与 */
   body.has-cta{ padding-bottom:calc(var(--cta-h) + var(--cta-gap)) }
-
-  /* 古い固定CTA（.fixed-cta）を丸ごと隠す */
-  .fixed-cta{display:none!important}
+  .fixed-cta{display:none!important} /* 旧CTAを完全非表示 */
 </style>
 
 <script>
+  /* 新CTAの高さを本文余白に反映（1行固定のまま） */
   (function () {
-    // CTA高さ → 余白を自動追加（コンテンツに被らないようにする）
     const cta = document.querySelector('.cta-bar');
     const setPad = () => {
       if (!cta) return;
@@ -930,10 +792,10 @@
     setPad();
     addEventListener('resize', setPad);
 
-    // 免責：初期は閉じる。 #site-disclaimer に飛んだら開く。×で閉じる。
+    /* 末尾免責の開閉UI：#site-disclaimer は既定で閉じる */
     const d = document.getElementById('site-disclaimer');
     if (d) {
-      d.open = false; // 読み込み時は閉じる
+      d.open = false;
       const hashOpen = () => {
         if (location.hash.replace('#','') === 'site-disclaimer') {
           d.open = true;
@@ -945,22 +807,18 @@
       const closeBtn = d.querySelector('.disclaimer__close');
       closeBtn && closeBtn.addEventListener('click', () => {
         d.open = false;
-        // URLの #site-disclaimer を消しておく（戻るで開きっぱなし防止）
         history.replaceState(null, '', location.pathname + location.search);
       });
     }
   })();
-</script>
 
-<script>
-  // 既存の免責が「開いた状態で始まる」対策（#disclaimer配下の<details open>を閉じる）
+  /* #disclaimer 配下の <details open> を開始時に閉じる（既存仕様維持） */
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#disclaimer details[open]')?.removeAttribute('open');
   });
 </script>
 
-<!-- 安全網：どこかの古いJSが "plans" 見出しを作っても抹消する外部JS -->
-<script src="./script.js?v=20250910-01"></script>
+<!-- 外部JS（一本化版） -->
+<script src="./script.js?v=20250910-02"></script>
 </body>
 </html>
-<!-- ★HTMLを触れないルールでもOKにするため、JSから注入します -->
