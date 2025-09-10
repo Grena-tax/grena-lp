@@ -231,3 +231,42 @@ body.has-cta{
 
 /* ▼▼ 重複の“末尾免責（#site-disclaimer）”だけ確実に非表示 ▼▼ */
 #site-disclaimer{ display:none !important; }
+/* === Global i18n (Google Translate) — non intrusive === */
+.lang-button{
+  position:fixed;
+  right:calc(10px + env(safe-area-inset-right));
+  top:calc(62px + env(safe-area-inset-top)); /* ハンバーガーの少し下 */
+  z-index:10020;
+  width:40px;height:40px;border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#111827;color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
+}
+.lang-button:active{ transform:translateY(1px) }
+
+.lang-panel{
+  position:fixed; z-index:10020;
+  background:#fff; color:#0b1220; border:1px solid #e5e7eb; border-radius:12px;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);
+  padding:8px; min-width:220px;
+}
+.lang-panel .row{ display:flex; flex-wrap:wrap; gap:6px; }
+.lang-chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 10px; border-radius:8px; border:1px solid #e5e7eb; background:#fff;
+  font-weight:700; cursor:pointer; white-space:nowrap;
+}
+.lang-chip[data-current="true"]{ background:#eef2f7; border-color:#d4d8de }
+.lang-chip:hover{ background:#f3f4f6 }
+
+/* Googleバーやツールチップは非表示（レイアウト崩れ防止） */
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+#goog-gt-tt, .goog-te-balloon-frame{ display:none !important; }
+.goog-text-highlight { background:inherit !important; box-shadow:none !important; }
+#google_translate_element{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+
+/* 端末のバウンスでCTAが浮かないよう継承 */
+html, body{ overscroll-behavior-y: none; }
+
+/* 小画面でのパネル調整 */
+@media (max-width:480px){ .lang-panel{ min-width:200px } }
