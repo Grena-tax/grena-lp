@@ -1,24 +1,11 @@
-/* =========================================
-   LP用スクリプト（フル版）
-   - アンカーのスムーススクロール
-   - 「トップへ」
-   - 固定CTAの高さ → 本文余白に反映
-   - 申込ボタン（外部フォームへ）
-   - ハンバーガー開閉
-   - 目次（ハンバーガー内）自動生成
-     * セクション見出しのうち #plans はメニューに出さない
-     * 料金サブ項目（基本プラン / 設立＋LP / 設立+LP / フルサポート）はメニューに出さない
-   ========================================= */
-
 /* ===== 設定 ===== */
-const FORM_URL =
-  'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
+const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
 /* ===== ユーティリティ ===== */
 const slug = (t) => (t || '')
   .toLowerCase()
-  .replace(/[（）()\[\]【】]/g, ' ')                 // 丸/角カッコはスペース
-  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-') // 非単語・非和文はハイフン
+  .replace(/[（）()\[\]【】]/g, ' ')      // 角/丸カッコ→スペース
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-') // 非単語・非和文→ハイフン
   .replace(/-+/g, '-')
   .replace(/^-|-$/g, '');
 
@@ -26,15 +13,13 @@ const slug = (t) => (t || '')
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
-
   const id = a.getAttribute('href');
   const target = document.querySelector(id);
   if (!target) return;
-
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // #disclaimer だけは自動で開かない
+  // #disclaimer だけは自動で開かない（その他は最初の details を自動で開く）
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -43,11 +28,11 @@ document.addEventListener('click', (e) => {
   history.pushState(null, '', id);
 });
 
-/* ===== 「トップへ」 ===== */
-document.getElementById('toTop')?.addEventListener('click', (e) => {
+/* ===== トップへ ===== */
+document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top:0, behavior:'smooth'});
   }
 });
 
@@ -69,47 +54,46 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
 });
 
 /* ===== ハンバーガー開閉 ===== */
-const btn      = document.getElementById('menuBtn');
-const drawer   = document.getElementById('menuDrawer');
-const closeBt  = document.getElementById('menuClose');
-const overlay  = document.getElementById('menuBackdrop');
+const btn     = document.getElementById('menuBtn');
+const drawer  = document.getElementById('menuDrawer');
+const closeBt = document.getElementById('menuClose');
+const overlay = document.getElementById('menuBackdrop');
 const groupsRoot = document.getElementById('menuGroups');
 
-const openMenu  = () => {
+const openMenu  = () => { 
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
 };
-const closeMenu = () => {
+const closeMenu = () => { 
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
 };
-
 btn?.addEventListener('click', () => {
   document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
 });
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 /* ===== 目次（ハンバーガー内）自動生成 ===== */
-/** メニューから除外するサブ項目（本文は表示される） */
+// メニューから除外するサブ項目（本文の表示はそのまま）
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
-function buildMenu () {
+function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
   let i = 1;
 
-  sections.forEach((sec) => {
+  sections.forEach(sec=>{
     const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
     if (!details.length) return;
 
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ セクション見出し（h2）：#plans だけはメニューに出さない
+    // ★ section見出し（h2）：#plans はメニューに見出し（h4）を出さない
     const h2 = sec.querySelector('h2');
     const title = (h2?.textContent || '').trim();
     if (title && sec.id !== 'plans') {
@@ -117,17 +101,16 @@ function buildMenu () {
       h4.textContent = title;
       wrap.appendChild(h4);
     } else {
-      // #plans は見出しを出さないので、余白を詰める調整用クラスを付与
+      // 見出しなしグループの軽微な見た目調整用（CSS側で数px詰め）
       wrap.classList.add('no-title');
     }
 
     const ul = document.createElement('ul');
     ul.className = 'menu-list';
 
-    details.forEach((d) => {
+    details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-
       // 料金サブ項目はメニューから除外（本文は表示）
       if (excludeTitles.some(x => t.includes(x))) return;
 
@@ -137,15 +120,13 @@ function buildMenu () {
       const a  = document.createElement('a');
       a.href = `#${d.id}`;
       a.textContent = t;
-
-      a.addEventListener('click', (e) => {
+      a.addEventListener('click',(e)=>{
         e.preventDefault();
         closeMenu();
         d.open = true;
-        d.scrollIntoView({ behavior:'smooth', block:'start' });
-        history.pushState(null, '', `#${d.id}`);
+        d.scrollIntoView({behavior:'smooth', block:'start'});
+        history.pushState(null,'',`#${d.id}`);
       });
-
       li.appendChild(a);
       ul.appendChild(li);
     });
@@ -154,14 +135,22 @@ function buildMenu () {
     frag.appendChild(wrap);
   });
 
-  if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため：旧版で h4="plans" が作られてしまっても強制除去
-  groupsRoot.querySelectorAll('.menu-group h4').forEach(h => {
+  // Safety: 旧版などが h4="plans" を作っていても強制除去
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
-
 document.addEventListener('DOMContentLoaded', buildMenu);
+
+/* ===== 応急の二重対策（他のスクリプトが後から plans を差し込んでも消す） ===== */
+function _killPlansHeading(){
+  groupsRoot?.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+  });
+}
+window.addEventListener('load', _killPlansHeading);
+const _mo = new MutationObserver(_killPlansHeading);
+groupsRoot && _mo.observe(groupsRoot, { childList:true, subtree:true });
