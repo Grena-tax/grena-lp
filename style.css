@@ -1,179 +1,49 @@
-/* =========================================
-   style.css — v2.6 STABLE (gap + font + mobile CTA)
-   ========================================= */
+/* === Global i18n (Google Translate) — non intrusive === */
 
-/* 0) Debug banner (読めているか確認用) */
-:root{ --_ver:"CSS v2.6 STABLE"; }
-.css-debug-banner{
-  position: fixed; right:10px; bottom:10px; z-index: 99999;
-  background: linear-gradient(180deg,#1a56ff,#0f43cf);
-  color:#fff; font:700 12px/1.2 system-ui, "Noto Sans JP", sans-serif;
-  padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
-  letter-spacing:.02em;
+/* 右上の 🌐 言語ボタン */
+.lang-button{
+  position:fixed;
+  right:calc(10px + env(safe-area-inset-right));
+  top:calc(62px + env(safe-area-inset-top)); /* ハンバーガーの少し下 */
+  z-index:10020;
+  width:40px;height:40px;border-radius:12px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:#111827;color:#fff;border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
 }
-.css-debug-banner::after{ content: var(--_ver); }
+.lang-button:active{ transform:translateY(1px) }
 
-/* 1) Base / Font（フォント固定） */
-*{ box-sizing:border-box }
-html{ -webkit-text-size-adjust:100%; }
-html,body{
-  height:auto;
-  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-               "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-               Roboto,Helvetica,Arial,sans-serif !important;
+/* 言語パネル（カスタムUI） */
+.lang-panel{
+  position:fixed; z-index:10020;
+  background:#fff; color:#0b1220; border:1px solid #e5e7eb; border-radius:12px;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);
+  padding:8px; min-width:220px;
 }
-body{
-  margin:0; line-height:1.7; color:#222; background:#fff;
-  padding-bottom:80px; /* for sticky CTA (旧互換) */
+.lang-panel .row{
+  display:flex; flex-wrap:wrap; gap:6px;
 }
-img{ max-width:100%; height:auto; display:block }
-a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
-a:hover{ color:#0e63d3 }
-.container{ width:min(1100px,92%); margin-inline:auto; }
+.lang-chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 10px; border-radius:8px; border:1px solid #e5e7eb; background:#fff;
+  font-weight:700; cursor:pointer; white-space:nowrap;
+}
+.lang-chip[data-current="true"]{ background:#eef2f7; border-color:#d4d8de }
+.lang-chip:hover{ background:#f3f4f6 }
 
-/* 2) Section heading */
-section > h2{
-  font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size: clamp(22px, 2.8vw, 30px);
-  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
-}
+/* Googleのバーをページ最上部に出さない（固定ヘッダ崩れ防止） */
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+body{ top:0 !important; }
 
-/* 3) Accordion (<details>) */
-.accordion{ padding:24px 0 }
-.accordion details{
-  border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow: 0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
-}
-.accordion details+details{ margin-top:12px }
-.accordion summary{
-  list-style:none; cursor:pointer;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
-  display:flex; align-items:center; gap:.6rem;
-  background: linear-gradient(180deg,#fff,#fbfcff);
-  border-bottom:1px solid #eef2f7;
-}
-.accordion summary::-webkit-details-marker{ display:none }
-.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
-.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
-.accordion summary::after{
-  content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
-}
-.accordion details[open] > summary::after{
-  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
-}
-.accordion .content{
-  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
-}
-.accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
-.accordion .content li+li{ margin-top:.25em }
-.accordion .content table{
-  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
-  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
-}
-.accordion .content thead th{
-  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
-}
-.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
-.accordion .content tr:last-child td{ border-bottom:none }
+/* Googleの小ツールチップをオフ（UI衝突防止） */
+#goog-gt-tt, .goog-te-balloon-frame{ display:none !important; }
+.goog-text-highlight { background:inherit !important; box-shadow:none !important; }
 
-/* Notes */
-.accordion .content .note,
-.accordion .content .abbr-note{
-  display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
-}
-.accordion .content .note::before,
-.accordion .content .abbr-note::before{ content:"※ "; font-weight:700; color:#475569; }
-.accordion summary .note,
-.accordion summary .abbr-note{ display:none !important; }
+/* 翻訳セレクトの素のUIは隠す（中身は使う） */
+#google_translate_element{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 
-/* Gap FIX — KYC ↔ 料金プラン */
-#corp-setup, #plans{
-  padding-top:0 !important;
-  padding-bottom:0 !important;
-  margin-top:0 !important;
-  margin-bottom:0 !important;
-  display: flow-root;
-}
-#corp-setup .accordion{ padding-bottom:0 !important; }
-#plans .accordion{ padding-top:0 !important; }
-#corp-setup + #plans{ margin-top:12px !important; }
-@supports (-webkit-touch-callout: none){
-  #corp-setup + #plans{ margin-top:-4px !important; }
-}
-
-/* Utilities */
-.muted{ color:#475569 }
-.text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
-.security-note{
-  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
-  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
-}
-
-/* Tables fallback */
-table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
-th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
-th:first-child, td:first-child{ text-align:left }
-
-/* Responsive */
-@media (max-width:600px){
-  .accordion{ padding:20px 0 }
-  .accordion summary{ padding:12px 42px 12px 12px }
-  .accordion .content{ padding:12px 12px 14px }
-  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
-}
-
-/* 旧パッチ群（見た目は同じ）— 安全に詰める最終版 */
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important; border-top:1px solid transparent; }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{  margin-top:0 !important; }
-:root{
-  --gap-lift: -40px;
-  --gap-lift-ios: -42px;
-  --gap-lift-sp: -44px;
-}
-#corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
-@media (max-width: 480px){
-  #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
-}
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important; }
-}
-
-/* 表のはみ出し保険（SP横スクロール許可） */
-.accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
-
-/* CTA 高さぶんの下余白を常に確保（CSS側の保険） */
-body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
-
-/* ハンバーガー内：#plans グループの余白微調整 */
-.menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
-@media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
-
-/* === Mobile 固定CTA 安定化（rubber-band防止＋safe-area対応） === */
+/* 端末のバウンスでCTAが浮かないよう継承 */
 html, body{ overscroll-behavior-y: none; }
 
-/* iOS のホームインジケータぶんだけ下側を確保して確実に固定＋1行固定 */
-.cta-bar{
-  bottom: max(0px, env(safe-area-inset-bottom));
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  transform: translateZ(0);
-  will-change: transform;
-}
-.cta-bar .cta-btn{ white-space:nowrap; } /* 改行禁止 */
-
-/* 本文側の下余白も safe-area を加味して確保 */
-body.has-cta{
-  padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
-}
-
-/* 末尾に残っていた一括貼付の免責は常に隠す（JSの保険） */
-#site-disclaimer{ display:none !important; }
+/* パネルが小画面でも崩れないように */
+@media (max-width:480px){ .lang-panel{ min-width:200px } }
