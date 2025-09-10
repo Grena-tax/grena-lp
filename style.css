@@ -241,3 +241,6 @@ body.has-cta{
     font-size: clamp(12px, 3.5vw, 14px);
   }
 }
+/* CTA ボタンは必ず 1 行で表示 */
+.cta-btn,
+.cta-btn * { white-space: nowrap; }
