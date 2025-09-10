@@ -1,9 +1,9 @@
 /* =========================================
-   style.css — v2.5 FIX (gap + font)
+   style.css — v2.6 STABLE (gap + font + mobile CTA)
    ========================================= */
 
-/* 0) Debug banner (見えるとCSSが読めてます) */
-:root{ --_ver:"CSS v2.5 FIX"; }
+/* 0) Debug banner (読めているか確認用) */
+:root{ --_ver:"CSS v2.6 STABLE"; }
 .css-debug-banner{
   position: fixed; right:10px; bottom:10px; z-index: 99999;
   background: linear-gradient(180deg,#1a56ff,#0f43cf);
@@ -24,7 +24,7 @@ html,body{
 }
 body{
   margin:0; line-height:1.7; color:#222; background:#fff;
-  padding-bottom:80px; /* for sticky CTA (旧) */
+  padding-bottom:80px; /* for sticky CTA (旧互換) */
 }
 img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
@@ -128,66 +128,18 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* ==== KYC ⇄ 料金プラン を詰めるパッチ（重複そのまま） ==== */
-#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin-top:0 !important; }
-#plans{ padding-top:0 !important; margin-top:0 !important; }
-#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-10px !important; }
-}
-
-/* (重複ブロック) */
-#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin-top:0 !important; }
-#plans{ padding-top:0 !important; margin-top:0 !important; }
-#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-10px !important; }
-}
-
-/* === v2.3.6 FINAL – 強制詰め === */
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0    !important; margin-top:0    !important; }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{ margin-top:0 !important; }
-#corp-setup + #plans{ margin-top:-24px !important; }
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-28px !important; }
-}
-#plans{ border-top:1px solid transparent; }
-
-/* === v2.3.7 micro-squeeze === */
-#corp-setup + #plans{ margin-top:-36px !important; }
-@media (max-width: 480px){
-  #corp-setup + #plans{ margin-top:-40px !important; }
-}
-@supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-42px !important; }
-}
+/* 旧パッチ群（見た目は同じ）— 安全に詰める最終版 */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0 !important; border-top:1px solid transparent; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
 #plans      .accordion > details:first-child{  margin-top:0 !important; }
-
-/* === FINAL OVERRIDE v2.5.1 === */
 :root{
   --gap-lift: -40px;
   --gap-lift-ios: -42px;
   --gap-lift-sp: -44px;
 }
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important;     margin-top:0  !important;  }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{  margin-top:0 !important; }
 #corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
 @media (max-width: 480px){
   #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
@@ -203,28 +155,25 @@ th:first-child, td:first-child{ text-align:left }
 body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 
 /* ハンバーガー内：#plans グループの余白微調整 */
-.menu-group.no-title { padding-top: 2px; }
-.menu-group.no-title { padding-top: 2px; }
 .menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
 @media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
 
 /* === Mobile 固定CTA 安定化（rubber-band防止＋safe-area対応） === */
 html, body{ overscroll-behavior-y: none; }
 
-/* iOS のホームインジケータぶんだけ下側を確保して確実に固定 */
+/* iOS のホームインジケータぶんだけ下側を確保して確実に固定＋1行固定 */
 .cta-bar{
   bottom: max(0px, env(safe-area-inset-bottom));
   padding-bottom: calc(10px + env(safe-area-inset-bottom));
   transform: translateZ(0);
   will-change: transform;
 }
-/* 1行固定のまま表示（改行禁止） */
-.cta-bar .cta-btn{ white-space:nowrap; }
+.cta-bar .cta-btn{ white-space:nowrap; } /* 改行禁止 */
 
 /* 本文側の下余白も safe-area を加味して確保 */
 body.has-cta{
   padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
 }
 
-/* ▼▼ 重複の“末尾免責（#site-disclaimer）”だけ確実に非表示（JS保険） ▼▼ */
+/* 末尾に残っていた一括貼付の免責は常に隠す（JSの保険） */
 #site-disclaimer{ display:none !important; }
