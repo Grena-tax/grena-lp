@@ -20,9 +20,7 @@
   box-shadow:0 16px 40px rgba(0,0,0,.12);
   padding:8px; min-width:220px;
 }
-.lang-panel .row{
-  display:flex; flex-wrap:wrap; gap:6px;
-}
+.lang-panel .row{ display:flex; flex-wrap:wrap; gap:6px; }
 .lang-chip{
   display:inline-flex; align-items:center; justify-content:center;
   padding:8px 10px; border-radius:8px; border:1px solid #e5e7eb; background:#fff;
@@ -45,5 +43,5 @@ body{ top:0 !important; }
 /* 端末のバウンスでCTAが浮かないよう継承 */
 html, body{ overscroll-behavior-y: none; }
 
-/* パネルが小画面でも崩れないように */
+/* 小画面でも崩れないように */
 @media (max-width:480px){ .lang-panel{ min-width:200px } }
