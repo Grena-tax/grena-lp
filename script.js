@@ -68,7 +68,6 @@ overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
-/* サブ項目で除外（本文は表示のまま） */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function buildMenu(){
@@ -83,14 +82,13 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない（= 英字 "plans" を見せない）
+    // ★ #plans は見出し(h4)を出さない（英字 "plans" を隠す）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
       h4.textContent = (h2.textContent || '').trim();
       wrap.appendChild(h4);
     } else {
-      // タイトル無しグループの軽い詰め（CSSで 2〜8px）
       wrap.classList.add('no-title');
     }
 
@@ -100,7 +98,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない
+      if (excludeTitles.some(x => t.includes(x))) return; // 料金サブ項目は出さない
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -142,3 +140,14 @@ addEventListener('load', killPlansHeading);
 if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
+
+/* ===== 追加：重複する免責（キャンセルポリシー下の方）を自動カット =====
+   #disclaimer セクションが存在する場合は、#site-disclaimer を削除。
+   片方しか無い場合は残す（既存の文言やレイアウトは一切変更しない）。 */
+document.addEventListener('DOMContentLoaded', () => {
+  const sectionDisclaimer = document.querySelector('#disclaimer');
+  const extraDisclaimer   = document.getElementById('site-disclaimer');
+  if (sectionDisclaimer && extraDisclaimer) {
+    extraDisclaimer.remove();
+  }
+});
