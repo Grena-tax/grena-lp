@@ -39,7 +39,7 @@ section > h2{
 }
 
 /* 3) Accordion (<details>) */
-.accordion{ padding:24px 0 }                 /* ベース */
+.accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
   box-shadow: 0 10px 30px rgba(20,35,70,.05);
@@ -84,7 +84,7 @@ section > h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 4) Notes（※は本文だけに表示） */
+/* 4) Notes */
 .accordion .content .note,
 .accordion .content .abbr-note{
   display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
@@ -94,7 +94,7 @@ section > h2{
 .accordion summary .note,
 .accordion summary .abbr-note{ display:none !important; }
 
-/* 5) Gap FIX — KYC ↔ 料金プラン（ここが本命） */
+/* 5) Gap FIX — KYC ↔ 料金プラン */
 #corp-setup, #plans{
   padding-top:0 !important;
   padding-bottom:0 !important;
@@ -131,7 +131,7 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* ==== KYC ⇄ 料金プラン を詰めるパッチ（重複そのまま） ==== */
+/* ==== KYC ⇄ 料金プラン を詰めるパッチ ==== */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
@@ -208,24 +208,36 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 /* plans 見出しを出さないグループを他と揃えて 2px だけ詰める（重複OK） */
 .menu-group.no-title { padding-top: 2px; }
 
-/* ── ハンバーガー内：#plans グループの余白だけ他と揃えて詰める ── */
+/* ── ハンバーガー内：#plans グループの余白を微調整 ── */
 .menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
 @media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
 
 /* === Mobile 固定CTA 安定化（rubber-band防止＋safe-area対応） === */
 html, body{
-  overscroll-behavior-y: none;                 /* 余分なバウンスで浮かないように（対応ブラウザで有効） */
+  overscroll-behavior-y: none;
 }
 
 /* iOS のホームインジケータぶんだけ下側を確保して確実に固定 */
 .cta-bar{
-  bottom: max(0px, env(safe-area-inset-bottom));           /* 最下端に固定 */
-  padding-bottom: calc(10px + env(safe-area-inset-bottom));/* 既存gap(10px)＋安全域 */
-  transform: translateZ(0);                                /* 固定位置の揺れ防止 */
+  bottom: max(0px, env(safe-area-inset-bottom));
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  transform: translateZ(0);
   will-change: transform;
 }
 
-/* 本文側の下余白も safe-area を加味して確保（コンテンツが隠れないように） */
+/* 本文側の下余白も safe-area を加味して確保 */
 body.has-cta{
   padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
+}
+
+/* ▼▼ 追加：CTAの三つのボタンを必ず1行に収める ▼▼ */
+.cta-btn{
+  white-space: nowrap;            /* 2行化を禁止 */
+  word-break: keep-all;
+}
+@media (max-width: 420px){
+  .cta-btn{                       /* 狭い端末だけ少しだけ詰める */
+    padding:12px 10px;
+    font-size: clamp(12px, 3.5vw, 14px);
+  }
 }
