@@ -69,6 +69,7 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
@@ -81,6 +82,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // #plans は見出し(h4)を出さない（英字 "plans" を見せない）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -96,7 +98,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return;
+      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない（本文はそのまま）
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -139,7 +141,11 @@ if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
 
-/* ===== 重複している“最下部の免責(details)”だけを確実に除去（本文の#disclaimerは残す） ===== */
+/* ===== 重複している“最下部の免責(details)”だけを確実に除去 =====
+   - 本文セクション #disclaimer 内の免責は残す
+   - ページ末尾の #site-disclaimer は削除
+   - 同名summaryの stray な details があっても #disclaimer 外なら削除
+*/
 function removeDupDisclaimer(){
   const extra = document.getElementById('site-disclaimer');
   if (extra && !extra.closest('#disclaimer')) extra.remove();
@@ -156,7 +162,7 @@ document.addEventListener('DOMContentLoaded', removeDupDisclaimer);
 window.addEventListener('load', removeDupDisclaimer);
 new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {childList:true, subtree:true});
 
-/* ===== Global i18n via Google Translate（UIは自前／HTML改変なし） ===== */
+/* ===== Global i18n via Google Translate (drop-in, layout safe) ===== */
 (() => {
   const LANGS = [
     ['ja','日本語'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],
@@ -166,14 +172,15 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
   ];
   const DEFAULT = 'ja';
 
-  // UI注入（🌐ボタン＋パネル＋Google公式コンテナ）
   function injectUI(){
     if (document.getElementById('langBtn')) return;
 
+    // Google公式コンテナ（非表示だが内部の<select>を使う）
     const g = document.createElement('div');
     g.id = 'google_translate_element';
     document.body.appendChild(g);
 
+    // ボタン
     const btn = document.createElement('button');
     btn.id = 'langBtn';
     btn.className = 'lang-button';
@@ -182,6 +189,7 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
     btn.textContent = '🌐';
     document.body.appendChild(btn);
 
+    // カスタムパネル
     const panel = document.createElement('div');
     panel.id = 'langPanel';
     panel.className = 'lang-panel';
@@ -199,12 +207,12 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
     });
     panel.appendChild(row);
 
-    const small = document.createElement('small');
-    small.style.display = 'block';
-    small.style.marginTop = '6px';
-    small.style.color = '#64748b';
-    small.textContent = 'Powered by Google Translate';
-    panel.appendChild(small);
+    const credit = document.createElement('small');
+    credit.style.display = 'block';
+    credit.style.marginTop = '6px';
+    credit.style.color = '#64748b';
+    credit.textContent = 'Powered by Google Translate';
+    panel.appendChild(credit);
 
     document.body.appendChild(panel);
 
@@ -229,6 +237,7 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
         el.dataset.current = (el.dataset.lang === code) ? 'true' : 'false';
       });
     };
+
     panel.addEventListener('click', (e)=>{
       const chip = e.target.closest('.lang-chip');
       if (!chip) return;
@@ -238,14 +247,14 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
       panel.hidden = true;
     });
 
-    const saved = localStorage.getItem('i18n.lang') || DEFAULT;
-    setCurrent(saved);
+    setCurrent(localStorage.getItem('i18n.lang') || DEFAULT);
   }
 
-  // Google 翻訳本体の読込（コールバック名は固定）
   function loadGoogle(){
     if (window.google && window.google.translate) return;
-    window.googleTranslateElementInit = function(){
+    const initName = 'googleTranslateElementInit_' + Math.random().toString(36).slice(2);
+
+    window[initName] = function(){
       new google.translate.TranslateElement({
         pageLanguage: 'ja',
         includedLanguages: LANGS.map(x=>x[0]).join(','),
@@ -254,30 +263,36 @@ new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {chi
       }, 'google_translate_element');
 
       const saved = localStorage.getItem('i18n.lang');
-      if (saved && saved !== 'ja') setTimeout(()=>translateTo(saved), 150);
+      if (saved && saved !== 'ja') {
+        setTimeout(()=>translateTo(saved), 150);
+      }
     };
+
     const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=' + initName;
     s.async = true;
     document.head.appendChild(s);
   }
 
-  // 切替本体：隠し<select.goog-te-combo>を操作
   function translateTo(langCode){
     try{
       const combo = document.querySelector('select.goog-te-combo');
       if (!combo) return;
-      combo.value = (langCode === 'ja') ? '' : langCode;
+      combo.value = langCode === 'ja' ? '' : langCode;
       combo.dispatchEvent(new Event('change'));
+
       localStorage.setItem('i18n.lang', langCode);
 
       const rtl = ['ar','fa','he','ur'];
-      if (rtl.includes(langCode)) document.documentElement.setAttribute('dir','rtl');
-      else document.documentElement.removeAttribute('dir');
+      if (rtl.includes(langCode)) {
+        document.documentElement.setAttribute('dir','rtl');
+      } else {
+        document.documentElement.removeAttribute('dir');
+      }
 
-      try { buildMenu && buildMenu(); } catch(e){}
-      try { killPlansHeading && killPlansHeading(); } catch(e){}
-    }catch(err){}
+      try { buildMenu && buildMenu(); } catch(_){}
+      try { killPlansHeading && killPlansHeading(); } catch(_){}
+    }catch(_){}
   }
 
   document.addEventListener('DOMContentLoaded', () => {
