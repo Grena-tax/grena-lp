@@ -167,3 +167,29 @@ function cutOnlyBottomDup() {
 }
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
+/* ====== 下端に残る重複「免責事項／キャンセルポリシー」を確実に削除 ====== */
+(function killBottomDup(){
+  const removeDups = () => {
+    // 追加で貼られていた単体の免責(details#site-disclaimer 等)を削除
+    document.getElementById('site-disclaimer')?.remove();
+    document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+    // #disclaimer の外側に出てくる「免責事項」を削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('免責事項') && !d.closest('#disclaimer')) d.remove();
+    });
+
+    // #disclaimer 以外に出てくる「キャンセルポリシー」も保険で削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('キャンセルポリシー') && !d.closest('#disclaimer')) d.remove();
+    });
+  };
+
+  // 初期実行＋保険（読込完了／戻る遷移／動的追加）
+  document.addEventListener('DOMContentLoaded', removeDups);
+  window.addEventListener('load', removeDups);
+  window.addEventListener('pageshow', removeDups);
+  new MutationObserver(removeDups).observe(document.body, { childList:true, subtree:true });
+})();
