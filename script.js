@@ -37,11 +37,10 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
 
 /* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
-  const bar = document.getElementById('ctaBar') || document.querySelector('.cta-bar');
+  const bar = document.getElementById('ctaBar');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-  document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -70,7 +69,6 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
-
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
@@ -83,7 +81,6 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -99,7 +96,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない
+      if (excludeTitles.some(x => t.includes(x))) return;
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -142,17 +139,11 @@ if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
 
-/* ===== 重複している“最下部の免責(details)”だけを確実に除去 =====
-   - 本文セクション #disclaimer 内の免責は残す
-   - ページ末尾の #site-disclaimer（過去の一括貼付ブロック）は削除
-   - 同名summaryの stray な details があっても #disclaimer 外なら削除
-*/
+/* ===== 重複している“最下部の免責(details)”だけを確実に除去（本文の#disclaimerは残す） ===== */
 function removeDupDisclaimer(){
-  // 1) 直接ID指定のブロックを除去
   const extra = document.getElementById('site-disclaimer');
   if (extra && !extra.closest('#disclaimer')) extra.remove();
 
-  // 2) #disclaimer の外側にある「免責事項（必ずお読みください）」の details を保険で除去
   document.querySelectorAll('details').forEach(d=>{
     const s = d.querySelector('summary');
     const t = (s?.textContent || '').trim();
@@ -164,3 +155,133 @@ function removeDupDisclaimer(){
 document.addEventListener('DOMContentLoaded', removeDupDisclaimer);
 window.addEventListener('load', removeDupDisclaimer);
 new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {childList:true, subtree:true});
+
+/* ===== Global i18n via Google Translate（UIは自前／HTML改変なし） ===== */
+(() => {
+  const LANGS = [
+    ['ja','日本語'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],
+    ['ko','한국어'],['th','ไทย'],['es','Español'],['fr','Français'],
+    ['de','Deutsch'],['ru','Русский'],['ar','العربية'],['vi','Tiếng Việt'],
+    ['pt','Português'],['it','Italiano'],['id','Indonesia'],['hi','हिन्दी']
+  ];
+  const DEFAULT = 'ja';
+
+  // UI注入（🌐ボタン＋パネル＋Google公式コンテナ）
+  function injectUI(){
+    if (document.getElementById('langBtn')) return;
+
+    const g = document.createElement('div');
+    g.id = 'google_translate_element';
+    document.body.appendChild(g);
+
+    const btn = document.createElement('button');
+    btn.id = 'langBtn';
+    btn.className = 'lang-button';
+    btn.type = 'button';
+    btn.setAttribute('aria-label','Language');
+    btn.textContent = '🌐';
+    document.body.appendChild(btn);
+
+    const panel = document.createElement('div');
+    panel.id = 'langPanel';
+    panel.className = 'lang-panel';
+    panel.hidden = true;
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    LANGS.forEach(([code, name])=>{
+      const chip = document.createElement('button');
+      chip.className = 'lang-chip';
+      chip.type = 'button';
+      chip.dataset.lang = code;
+      chip.textContent = name;
+      row.appendChild(chip);
+    });
+    panel.appendChild(row);
+
+    const small = document.createElement('small');
+    small.style.display = 'block';
+    small.style.marginTop = '6px';
+    small.style.color = '#64748b';
+    small.textContent = 'Powered by Google Translate';
+    panel.appendChild(small);
+
+    document.body.appendChild(panel);
+
+    const positionPanel = () => {
+      const r = btn.getBoundingClientRect();
+      panel.style.top  = Math.round(r.bottom + 8 + window.scrollY) + 'px';
+      panel.style.left = Math.round(r.right - panel.offsetWidth + window.scrollX) + 'px';
+    };
+
+    btn.addEventListener('click', ()=>{
+      panel.hidden = !panel.hidden;
+      positionPanel();
+    });
+    document.addEventListener('click', (e)=>{
+      if (e.target.closest('#langBtn') || e.target.closest('#langPanel')) return;
+      panel.hidden = true;
+    });
+    addEventListener('resize', positionPanel);
+
+    const setCurrent = (code) => {
+      panel.querySelectorAll('.lang-chip').forEach(el=>{
+        el.dataset.current = (el.dataset.lang === code) ? 'true' : 'false';
+      });
+    };
+    panel.addEventListener('click', (e)=>{
+      const chip = e.target.closest('.lang-chip');
+      if (!chip) return;
+      const code = chip.dataset.lang;
+      translateTo(code);
+      setCurrent(code);
+      panel.hidden = true;
+    });
+
+    const saved = localStorage.getItem('i18n.lang') || DEFAULT;
+    setCurrent(saved);
+  }
+
+  // Google 翻訳本体の読込（コールバック名は固定）
+  function loadGoogle(){
+    if (window.google && window.google.translate) return;
+    window.googleTranslateElementInit = function(){
+      new google.translate.TranslateElement({
+        pageLanguage: 'ja',
+        includedLanguages: LANGS.map(x=>x[0]).join(','),
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+
+      const saved = localStorage.getItem('i18n.lang');
+      if (saved && saved !== 'ja') setTimeout(()=>translateTo(saved), 150);
+    };
+    const s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  // 切替本体：隠し<select.goog-te-combo>を操作
+  function translateTo(langCode){
+    try{
+      const combo = document.querySelector('select.goog-te-combo');
+      if (!combo) return;
+      combo.value = (langCode === 'ja') ? '' : langCode;
+      combo.dispatchEvent(new Event('change'));
+      localStorage.setItem('i18n.lang', langCode);
+
+      const rtl = ['ar','fa','he','ur'];
+      if (rtl.includes(langCode)) document.documentElement.setAttribute('dir','rtl');
+      else document.documentElement.removeAttribute('dir');
+
+      try { buildMenu && buildMenu(); } catch(e){}
+      try { killPlansHeading && killPlansHeading(); } catch(e){}
+    }catch(err){}
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    injectUI();
+    loadGoogle();
+  });
+})();
