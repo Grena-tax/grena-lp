@@ -130,12 +130,11 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
-
 /* ==== KYC ⇄ 料金プラン を詰めるパッチ（重複そのまま） ==== */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
-#plans{ padding-top:0 !important; margin-top:0 !important; }
+#plans{ paddingトップ:0 !important; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
@@ -153,7 +152,7 @@ th:first-child, td:first-child{ text-align:left }
 
 /* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0    !important; margin-top:0    !important; }
+#plans{      paddingトップ:0    !important; margin-top:0    !important; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
@@ -170,7 +169,7 @@ th:first-child, td:first-child{ text-align:left }
   #corp-setup + #plans{ margin-top:-40px !important; }
 }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-42px !important; }
+  #corp-setup + #plans{ marginトップ:-42px !important; }
 }
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0 !important; border-top:1px solid transparent; }
@@ -186,7 +185,7 @@ th:first-child, td:first-child{ text-align:left }
   --gap-lift-sp: -44px;
 }
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important;     margin-top:0  !important;  }
+#plans{      paddingトップ:0 !important;     margin-top:0  !important;  }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
