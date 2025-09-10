@@ -96,20 +96,15 @@ section > h2{
 
 /* 5) Gap FIX — KYC ↔ 料金プラン（ここが本命） */
 #corp-setup, #plans{
-  /* Tailwindの py-* を無効化 & iOSのmargin折り畳みを封じる */
   padding-top:0 !important;
   padding-bottom:0 !important;
   margin-top:0 !important;
   margin-bottom:0 !important;
-  display: flow-root;                 /* 新しいBFCで折り畳み防止 */
+  display: flow-root;
 }
 #corp-setup .accordion{ padding-bottom:0 !important; }
 #plans .accordion{ padding-top:0 !important; }
-
-/* セクションとセクションの間隔を “他のカード間と同じ見え方” に揃える */
 #corp-setup + #plans{ margin-top:12px !important; }
-
-/* まだiOSで空くケースだけ微調整（必要なら値を -8〜-12px に） */
 @supports (-webkit-touch-callout: none){
   #corp-setup + #plans{ margin-top:-4px !important; }
 }
@@ -135,72 +130,48 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content{ padding:12px 12px 14px }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
-/* ==== KYC ⇄ 料金プラン の隙間をカード間(≒12px)に揃える強制パッチ ==== */
 
-/* まず通常ブラウザ用：両セクションの上下パディング/マージンをゼロ化 */
+/* ==== KYC ⇄ 料金プラン を詰めるパッチ（重複そのまま） ==== */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
 #plans{ padding-top:0 !important; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
-
-/* iOS/Safariでまだ空く場合の最終手段：わずかに引き上げる（数値は -8〜-12 で調整可） */
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
-/* ==== KYC ⇄ 料金プラン の隙間をカード間(≒12px)に揃える強制パッチ ==== */
 
-/* まず通常ブラウザ用：両セクションの上下パディング/マージンをゼロ化 */
+/* (重複ブロック) */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
 #plans{ padding-top:0 !important; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
-
-/* iOS/Safariでまだ空く場合の最終手段：わずかに引き上げる（数値は -8〜-12 で調整可） */
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
-/* === v2.3.6 FINAL – KYC → 料金プランの隙間を強制的に詰める === */
 
-/* 1) セクション境界の余白をゼロ化＋margin 折り畳みを無効化 */
+/* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0    !important; margin-top:0    !important; }
-
-/* 2) 直前/直後のアコーディオンの上下パディングもゼロ化 */
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-
-/* 3) 最後/最初の details の余白を消す（安全網） */
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
 #plans      .accordion > details:first-child{ margin-top:0 !important; }
-
-/* 4) まだ空く環境向け：区切り位置を少しだけ引き上げる（詰め具合の本体） */
-#corp-setup + #plans{ margin-top:-24px !important; } /* ←足りなければ -26〜-30 に調整 */
-
-/* 5) iOS/Safari はさらに強めに（デバイス依存の margin-collapsing 対策） */
+#corp-setup + #plans{ margin-top:-24px !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-28px !important; }
 }
+#plans{ border-top:1px solid transparent; }
 
-/* 6) 料金プラン見出しを削った構成でも左右ブレしないように保険 */
-#plans{ border-top:1px solid transparent; }  /* 折り畳み防止のダミー境界 */
-/* === v2.3.7 micro-squeeze — KYC → 料金プラン の最終微調整 === */
-
-/* 直結する2セクションの継ぎ目をさらに引き上げる */
+/* === v2.3.7 micro-squeeze === */
 #corp-setup + #plans{ margin-top:-36px !important; }
-
-/* スマホ幅ではもう少しだけ詰める */
 @media (max-width: 480px){
   #corp-setup + #plans{ margin-top:-40px !important; }
 }
-
-/* iOS/Safari は margin 折り畳みの影響が強いのでさらに強め */
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-42px !important; }
 }
-
-/* 念のため：連結部の上下に余白を持たせない＋折り畳み防止 */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0 !important; border-top:1px solid transparent; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
@@ -208,43 +179,29 @@ th:first-child, td:first-child{ text-align:left }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
 #plans      .accordion > details:first-child{  margin-top:0 !important; }
 
-/* === FINAL OVERRIDE v2.5.1 — KYC → 料金プランの隙間を確実に詰める最終層 === */
-/* 既存CSSが重複していても、ここが最優先で効くように !important で固定します */
-
+/* === FINAL OVERRIDE v2.5.1 === */
 :root{
-  /* 端末差を吸収できるつまみ。数字だけ触れば詰め具合を全体調整できる */
-  --gap-lift: -40px;           /* PC/タブレットの標準 */
-  --gap-lift-ios: -42px;       /* iOS/Safari 用の少し強め */
-  --gap-lift-sp: -44px;        /* スマホ幅の推奨 */
+  --gap-lift: -40px;
+  --gap-lift-ios: -42px;
+  --gap-lift-sp: -44px;
 }
-
-/* セクション境界の余白をゼロ化＋margin 折り畳みを無効化（flow-root） */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0 !important;     margin-top:0  !important;  }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
 #plans .accordion{      padding-top:0  !important; display:flow-root !important; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
 #plans      .accordion > details:first-child{  margin-top:0 !important; }
-
-/* 継ぎ目の実際の引き上げ量（ここが“詰め”の本体） */
 #corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
-
-/* スマホ幅ではもう少しだけ詰める */
 @media (max-width: 480px){
   #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
 }
-
-/* iOS/Safari は margin 折り畳みの影響が強いのでさらに強め */
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important; }
 }
-
-/* 念のため：表のはみ出し保険（SP横スクロール許可） */
+/* 表のはみ出し保険（SP横スクロール許可） */
 .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
+/* CTA 高さぶんの下余白を常に確保 */
+body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 
-/* 常にCTAの高さぶん下余白を空ける（本文が隠れないようにする） */
-body {
-  padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important;
-}
-/* メニューグループに見出しが無い (#plans) ときは上の余白を詰める */
+/* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
