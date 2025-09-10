@@ -19,7 +19,7 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 免責(#disclaimer) だけは自動オープンしない
+  // 免責(#disclaimer) だけ自動オープンしない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -37,10 +37,11 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
 
 /* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
-  const bar = document.getElementById('ctaBar');
+  const bar = document.getElementById('ctaBar') || document.querySelector('.cta-bar');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
+  document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -82,7 +83,6 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // #plans は見出し(h4)を出さない（英字 "plans" を見せない）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -98,7 +98,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない（本文はそのまま）
+      if (excludeTitles.some(x => t.includes(x))) return;
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -124,28 +124,14 @@ function buildMenu(){
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
-  killPlansHeading();
-}
-
-/* ===== “plans の見出し” を常に抹消（安全網） ===== */
-function killPlansHeading(){
-  if (!groupsRoot) return;
+  // 念のため：旧コードで h4="plans" が作られても強制削除
   groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
-addEventListener('DOMContentLoaded', buildMenu);
-addEventListener('load', killPlansHeading);
-if (groupsRoot) {
-  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
-}
+document.addEventListener('DOMContentLoaded', buildMenu);
 
-/* ===== 重複している“最下部の免責(details)”だけを確実に除去 =====
-   - 本文セクション #disclaimer 内の免責は残す
-   - ページ末尾の #site-disclaimer は削除
-   - 同名summaryの stray な details があっても #disclaimer 外なら削除
-*/
+/* ===== 末尾の重複免責だけ除去（本文#disclaimerは残す） ===== */
 function removeDupDisclaimer(){
   const extra = document.getElementById('site-disclaimer');
   if (extra && !extra.closest('#disclaimer')) extra.remove();
@@ -161,142 +147,3 @@ function removeDupDisclaimer(){
 document.addEventListener('DOMContentLoaded', removeDupDisclaimer);
 window.addEventListener('load', removeDupDisclaimer);
 new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {childList:true, subtree:true});
-
-/* ===== Global i18n via Google Translate (drop-in, layout safe) ===== */
-(() => {
-  const LANGS = [
-    ['ja','日本語'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],
-    ['ko','한국어'],['th','ไทย'],['es','Español'],['fr','Français'],
-    ['de','Deutsch'],['ru','Русский'],['ar','العربية'],['vi','Tiếng Việt'],
-    ['pt','Português'],['it','Italiano'],['id','Indonesia'],['hi','हिन्दी']
-  ];
-  const DEFAULT = 'ja';
-
-  function injectUI(){
-    if (document.getElementById('langBtn')) return;
-
-    // Google公式コンテナ（非表示だが内部の<select>を使う）
-    const g = document.createElement('div');
-    g.id = 'google_translate_element';
-    document.body.appendChild(g);
-
-    // ボタン
-    const btn = document.createElement('button');
-    btn.id = 'langBtn';
-    btn.className = 'lang-button';
-    btn.type = 'button';
-    btn.setAttribute('aria-label','Language');
-    btn.textContent = '🌐';
-    document.body.appendChild(btn);
-
-    // カスタムパネル
-    const panel = document.createElement('div');
-    panel.id = 'langPanel';
-    panel.className = 'lang-panel';
-    panel.hidden = true;
-
-    const row = document.createElement('div');
-    row.className = 'row';
-    LANGS.forEach(([code, name])=>{
-      const chip = document.createElement('button');
-      chip.className = 'lang-chip';
-      chip.type = 'button';
-      chip.dataset.lang = code;
-      chip.textContent = name;
-      row.appendChild(chip);
-    });
-    panel.appendChild(row);
-
-    const credit = document.createElement('small');
-    credit.style.display = 'block';
-    credit.style.marginTop = '6px';
-    credit.style.color = '#64748b';
-    credit.textContent = 'Powered by Google Translate';
-    panel.appendChild(credit);
-
-    document.body.appendChild(panel);
-
-    const positionPanel = () => {
-      const r = btn.getBoundingClientRect();
-      panel.style.top  = Math.round(r.bottom + 8 + window.scrollY) + 'px';
-      panel.style.left = Math.round(r.right - panel.offsetWidth + window.scrollX) + 'px';
-    };
-
-    btn.addEventListener('click', ()=>{
-      panel.hidden = !panel.hidden;
-      positionPanel();
-    });
-    document.addEventListener('click', (e)=>{
-      if (e.target.closest('#langBtn') || e.target.closest('#langPanel')) return;
-      panel.hidden = true;
-    });
-    addEventListener('resize', positionPanel);
-
-    const setCurrent = (code) => {
-      panel.querySelectorAll('.lang-chip').forEach(el=>{
-        el.dataset.current = (el.dataset.lang === code) ? 'true' : 'false';
-      });
-    };
-
-    panel.addEventListener('click', (e)=>{
-      const chip = e.target.closest('.lang-chip');
-      if (!chip) return;
-      const code = chip.dataset.lang;
-      translateTo(code);
-      setCurrent(code);
-      panel.hidden = true;
-    });
-
-    setCurrent(localStorage.getItem('i18n.lang') || DEFAULT);
-  }
-
-  function loadGoogle(){
-    if (window.google && window.google.translate) return;
-    const initName = 'googleTranslateElementInit_' + Math.random().toString(36).slice(2);
-
-    window[initName] = function(){
-      new google.translate.TranslateElement({
-        pageLanguage: 'ja',
-        includedLanguages: LANGS.map(x=>x[0]).join(','),
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-
-      const saved = localStorage.getItem('i18n.lang');
-      if (saved && saved !== 'ja') {
-        setTimeout(()=>translateTo(saved), 150);
-      }
-    };
-
-    const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=' + initName;
-    s.async = true;
-    document.head.appendChild(s);
-  }
-
-  function translateTo(langCode){
-    try{
-      const combo = document.querySelector('select.goog-te-combo');
-      if (!combo) return;
-      combo.value = langCode === 'ja' ? '' : langCode;
-      combo.dispatchEvent(new Event('change'));
-
-      localStorage.setItem('i18n.lang', langCode);
-
-      const rtl = ['ar','fa','he','ur'];
-      if (rtl.includes(langCode)) {
-        document.documentElement.setAttribute('dir','rtl');
-      } else {
-        document.documentElement.removeAttribute('dir');
-      }
-
-      try { buildMenu && buildMenu(); } catch(_){}
-      try { killPlansHeading && killPlansHeading(); } catch(_){}
-    }catch(_){}
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    injectUI();
-    loadGoogle();
-  });
-})();
