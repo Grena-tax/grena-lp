@@ -1,92 +1,51 @@
-/* ========== 追加CSS（既存の最後に追記） ========== */
+/* ===== Google のページ上部バーを隠す（固定ヘッダ崩れ防止） ===== */
+.goog-te-banner-frame.skiptranslate { display: none !important; }
+body { top: 0 !important; }
 
-/* 端末のセーフエリアとCTA高さ */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px;
-}
-html,body{margin:0;padding:0}
-body.has-cta{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) }
+/* Googleミニツールチップ衝突防止 */
+#goog-gt-tt, .goog-te-balloon-frame { display: none !important; }
+.goog-text-highlight { background: inherit !important; box-shadow: none !important; }
 
-/* 固定CTA（既存の見た目は維持） */
-.fixed-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9998; background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px); border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom:var(--safe-bottom);
-}
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
+/* 翻訳用<select>コンテナは画面外（中身だけ使う） */
+#google_translate_element { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
 
-/* ハンバーガー（右上） */
-.menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-  display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
-}
-.menu-button .bars{display:block;width:28px;height:20px;position:relative}
-.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px}
-.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
-
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
-.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;font-size:14px;line-height:1.38
-}
-.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-.menu-title{font-weight:800;color:#111827}
-.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-.menu-close:hover{background:#f3f4f6}
-.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
-.menu-group{padding:8px 10px 6px}
-.menu-group.no-title{padding-top:4px} /* plans 見出しを表示しない時に少し詰める */
-.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
-.menu-list{list-style:none;margin:0;padding:0}
-.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
-html.menu-open .menu-wrap{pointer-events:auto}
-html.menu-open .menu-backdrop{opacity:1}
-html.menu-open .menu-panel{transform:none}
-html.menu-open,html.menu-open body{overflow:hidden}
-
-/* KYC→料金プランの“間が空く”問題：CSS側の確定対策 */
-#corp-setup{ padding-bottom: 1rem !important; }   /* デフォより詰める */
-#plans{       padding-top:    0.5rem !important; } /* デフォより詰める */
-#corp-setup .accordion > details:last-of-type{ margin-bottom: 0.35rem !important; }
-#plans .accordion > details:first-of-type{      margin-top:    0.35rem !important; }
-@media (min-width: 768px){
-  #corp-setup{ padding-bottom: 1.25rem !important; }
-  #plans{       padding-top:    0.75rem !important; }
-}
-
-/* ====== Google Translate（地球儀） ====== */
+/* ===== 言語ボタンとパネル（既存配色に馴染むダーク系） ===== */
 .lang-button{
-  position:fixed;z-index:10020;right:calc(12px + var(--safe-area-inset-right,0px));top:calc(62px + var(--safe-area-inset-top,0px));
-  width:40px;height:40px;border-radius:12px;background:#111827;color:#fff;display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 12px rgba(0,0,0,.15);cursor:pointer;border:1px solid rgba(255,255,255,.08)
+  position:fixed;
+  right:calc(10px + env(safe-area-inset-right));
+  top:calc(10px + env(safe-area-inset-top));
+  z-index:10020;
+  width:40px; height:40px; border-radius:12px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer;
 }
 .lang-button:active{ transform:translateY(1px) }
+
 .lang-panel{
-  position:fixed;z-index:10020;right:calc(12px + var(--safe-area-inset-right,0px));top:calc(110px + var(--safe-area-inset-top,0px));
-  background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;box-shadow:0 10px 24px rgba(0,0,0,.12);
-  width:min(280px,calc(100vw - 24px)); display:none
+  position:fixed; z-index:10020;
+  background:#fff; color:#0b1220; border:1px solid #e5e7eb; border-radius:12px;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);
+  padding:8px; min-width:220px;
 }
-.lang-panel.open{ display:block }
-.lang-head{font-weight:700;margin-bottom:6px;font-size:14px}
-.lang-foot{margin-top:6px;color:#475569;font-size:12px}
+.lang-panel .row{ display:flex; flex-wrap:wrap; gap:6px; }
+.lang-chip{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 10px; border-radius:8px; border:1px solid #e5e7eb; background:#fff;
+  font-weight:700; white-space:nowrap; cursor:pointer;
+}
+.lang-chip[data-current="true"]{ background:#eef2f7; border-color:#d4d8de; }
+.lang-chip:hover{ background:#f3f4f6; }
 
-/* Google翻訳ウィジェット微調整（見た目は既存に寄せる） */
-.goog-te-gadget{ font-size:0; }
-.goog-te-gadget .goog-te-combo{ font-size:14px; width:100%; padding:6px 8px; border:1px solid #e5e7eb; border-radius:8px; }
-.goog-te-banner-frame.skiptranslate{ display:none !important; }
-body{ top:0 !important; }
-.goog-text-highlight{ background:inherit !important; box-shadow:none !important; }
+/* ===== KYC→料金プランの“変な広がり”だけを締める（他は触らない） ===== */
+#corp-setup { padding-bottom: 1rem !important; }   /* もともと大きかった分だけ控えめに */
+#plans      { padding-top: 0.75rem !important; }
 
-/* 旧固定CTAを完全に隠したい時の保険（必要なら） */
-/* .cta-bar{display:none!important} */
+#corp-setup .accordion > details:last-of-type { margin-bottom: 0.35rem !important; }
+#corp-setup .content > *:last-child { margin-bottom: 0 !important; }
+
+/* 画面広めのときは少しゆとりを戻す */
+@media (min-width: 768px){
+  #corp-setup { padding-bottom: 1.25rem !important; }
+  #plans      { padding-top: 0.9rem !important; }
+}
