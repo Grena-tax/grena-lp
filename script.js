@@ -2,7 +2,7 @@
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
 /* ===== util ===== */
-const slug = (t='') => t
+const slug = (t) => (t || '')
   .toLowerCase()
   .replace(/[（）()\[\]【】]/g, ' ')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
@@ -35,13 +35,12 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
   }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映 ===== */
+/* ===== 固定CTAの高さ → 本文余白に反映（旧CTA用の互換） ===== */
 const adjustCtaPadding = () => {
-  const bar = document.querySelector('.cta-bar');
+  const bar = document.getElementById('ctaBar');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-  document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -84,7 +83,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない
+    // ★ #plans は見出し(h4)を出さない（= 英字 "plans" を見せない）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -127,21 +126,33 @@ function buildMenu(){
   groupsRoot.appendChild(frag);
 
   // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
+  killPlansHeading();
+}
+
+/* ===== “plans の見出し” を常に抹消（安全網） ===== */
+function killPlansHeading(){
+  if (!groupsRoot) return;
   groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
     if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
 }
 addEventListener('DOMContentLoaded', buildMenu);
+addEventListener('load', killPlansHeading);
+if (groupsRoot) {
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
 
 /* ===== 重複している“最下部の免責(details)”だけを確実に除去 =====
    - 本文セクション #disclaimer 内の免責は残す
-   - ページ末尾の #site-disclaimer は削除
-   - #disclaimer 外の「免責事項（必ずお読みください）」details も除去
+   - ページ末尾の #site-disclaimer（過去の一括貼付ブロック）は削除
+   - 同名summaryの stray な details があっても #disclaimer 外なら削除
 */
 function removeDupDisclaimer(){
+  // 1) 直接ID指定のブロックを除去
   const extra = document.getElementById('site-disclaimer');
   if (extra && !extra.closest('#disclaimer')) extra.remove();
 
+  // 2) #disclaimer の外側にある「免責事項（必ずお読みください）」の details を保険で除去
   document.querySelectorAll('details').forEach(d=>{
     const s = d.querySelector('summary');
     const t = (s?.textContent || '').trim();
