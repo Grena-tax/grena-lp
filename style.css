@@ -164,3 +164,18 @@ function removeDupDisclaimer(){
 document.addEventListener('DOMContentLoaded', removeDupDisclaimer);
 window.addEventListener('load', removeDupDisclaimer);
 new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {childList:true, subtree:true});
+/* --- KYC と 料金プラン の間だけ広い問題を調整 --- */
+/* セクション間のパディングを控えめに */
+#corp-setup { padding-bottom: 1rem !important; }   /* もともと2rem */
+#plans      { padding-top: 0.5rem !important; }    /* もともと0.75〜3rem */
+
+/* KYCセクション末尾の “余計な余白” を打ち消す（最後の要素の下マージンをゼロ） */
+#corp-setup .content > *:last-child { margin-bottom: 0 !important; }
+/* アコーディオン自体の末尾マージンを締める */
+#corp-setup .accordion > details:last-of-type { margin-bottom: 0.35rem !important; }
+
+/* 画面幅が広い時は少しだけゆとりを戻す（見栄え調整） */
+@media (min-width: 768px){
+  #corp-setup { padding-bottom: 1.25rem !important; }
+  #plans      { padding-top: 0.75rem !important; }
+}
