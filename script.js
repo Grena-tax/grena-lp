@@ -161,6 +161,22 @@ function removeDupDisclaimer(){
     if (isDisclaimerLike && !d.closest('#disclaimer')) d.remove();
   });
 }
-document.addEventListener('DOMContentLoaded', removeDupDisclaimer);
-window.addEventListener('load', removeDupDisclaimer);
+
+/* ===== 免責は必ず閉じて始まるように強制 ===== */
+function closeDisclaimerOnLoad(){
+  document.querySelectorAll('#disclaimer details[open], #site-disclaimer[open]')
+    .forEach(d => d.removeAttribute('open'));
+}
+
+/* 起動フック */
+document.addEventListener('DOMContentLoaded', () => {
+  removeDupDisclaimer();
+  closeDisclaimerOnLoad();
+});
+window.addEventListener('load', () => {
+  removeDupDisclaimer();
+  // レイアウト確定後にもう一度保険をかける
+  setTimeout(closeDisclaimerOnLoad, 50);
+});
+// 動的に差し込まれても保険
 new MutationObserver(removeDupDisclaimer).observe(document.documentElement, {childList:true, subtree:true});
