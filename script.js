@@ -53,11 +53,11 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
 });
 
 /* ===== ハンバーガー開閉 ===== */
-const btn       = document.getElementById('menuBtn');
-const drawer    = document.getElementById('menuDrawer');
-const closeBt   = document.getElementById('menuClose');
-const overlay   = document.getElementById('menuBackdrop');
-const groupsRoot= document.getElementById('menuGroups');
+const btn        = document.getElementById('menuBtn');
+const drawer     = document.getElementById('menuDrawer');
+const closeBt    = document.getElementById('menuClose');
+const overlay    = document.getElementById('menuBackdrop');
+const groupsRoot = document.getElementById('menuGroups');
 
 const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawer?.setAttribute('aria-hidden','false'); btn?.setAttribute('aria-expanded','true'); };
 const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawer?.setAttribute('aria-hidden','true');  btn?.setAttribute('aria-expanded','false'); };
@@ -68,7 +68,6 @@ overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
-/* サブ項目で除外（本文は表示のまま） */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function buildMenu(){
@@ -83,14 +82,13 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない（= 英字 "plans" を見せない）
+    // ★ #plans は見出し(h4)を出さない（英字 "plans" を隠す）
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
       h4.textContent = (h2.textContent || '').trim();
       wrap.appendChild(h4);
     } else {
-      // タイトル無しグループの軽い詰め（CSSで 2〜4px）
       wrap.classList.add('no-title');
     }
 
@@ -100,7 +98,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return;     // 料金サブ項目は出さない
+      if (excludeTitles.some(x => t.includes(x))) return; // 料金サブ項目は出さない
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -142,3 +140,56 @@ addEventListener('load', killPlansHeading);
 if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
+
+/* ===== 重複ブロック除去（最下部の“キャンセルポリシー”だけカット） =====
+   - #disclaimer 内の正規ブロックは必ず残す
+   - それ以外の「免責事項」「キャンセルポリシー」は末尾側を削除 */
+function cutOnlyBottomDup() {
+  // 旧スニペット由来のものを丸ごと除去（存在すれば）
+  document.getElementById('site-disclaimer')?.remove();
+  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+  // 「免責事項」重複（#disclaimer 外）を除去
+  document.querySelectorAll('details').forEach(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
+  });
+
+  // 「キャンセルポリシー」を重複排除：#disclaimer 内の1つだけ残す
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    return /キャンセルポリシー/.test(t);
+  });
+  if (cancels.length > 1) {
+    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
+    cancels.forEach(d => { if (d !== keep) d.remove(); });
+  }
+}
+document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
+window.addEventListener('load', cutOnlyBottomDup);
+/* ====== 下端に残る重複「免責事項／キャンセルポリシー」を確実に削除 ====== */
+(function killBottomDup(){
+  const removeDups = () => {
+    // 追加で貼られていた単体の免責(details#site-disclaimer 等)を削除
+    document.getElementById('site-disclaimer')?.remove();
+    document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+    // #disclaimer の外側に出てくる「免責事項」を削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('免責事項') && !d.closest('#disclaimer')) d.remove();
+    });
+
+    // #disclaimer 以外に出てくる「キャンセルポリシー」も保険で削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('キャンセルポリシー') && !d.closest('#disclaimer')) d.remove();
+    });
+  };
+
+  // 初期実行＋保険（読込完了／戻る遷移／動的追加）
+  document.addEventListener('DOMContentLoaded', removeDups);
+  window.addEventListener('load', removeDups);
+  window.addEventListener('pageshow', removeDups);
+  new MutationObserver(removeDups).observe(document.body, { childList:true, subtree:true });
+})();
