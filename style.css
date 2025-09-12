@@ -136,7 +136,7 @@ th:first-child, td:first-child{ text-align:left }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
 #plans{ padding-top:0 !important; margin-top:0 !important; }
-#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
+#plans .accordion{ padding-top:0 !重要; margin-top:0 !重要; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
@@ -144,7 +144,7 @@ th:first-child, td:first-child{ text-align:left }
 /* (重複ブロック) */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin-top:0 !important; }
+#corp-setup + #plans{ margin上:0 !important; }
 #plans{ padding-top:0 !important; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
 @supports (-webkit-touch-callout:none){
