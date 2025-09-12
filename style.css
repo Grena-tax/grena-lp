@@ -241,3 +241,18 @@ body.has-cta{
     font-size: clamp(12px, 3.5vw, 14px);
   }
 }
+/* === CTA を常に最下部に固定（iOS Chrome/Safari対応）=== */
+.cta-bar{
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0 !important;     /* 後勝ちにする */
+  z-index: 9999;
+}
+
+/* iPhoneのホームインジケータ分だけ内側に余白を足す */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .cta-bar{
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+}
