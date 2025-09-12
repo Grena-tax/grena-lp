@@ -139,3 +139,20 @@ addEventListener('DOMContentLoaded', buildMenu);
 addEventListener('load', killPlansHeading);
 
 /* ここから下は“削除のみ”の方針で、重複免責/CTAバー関連のJSはファイルから除去しました */
+// === iOSのアドレスバー上下で“浮く/離れる”のを防いで常に最下部へ ===
+(function () {
+  const bar = document.querySelector('.cta-bar');
+  if (!bar || !window.visualViewport) return;
+
+  const placeBottom = () => {
+    const vv = window.visualViewport;
+    // 画面下のブラウザUIぶんだけ下マージンを埋める
+    const extra = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    bar.style.bottom = extra + 'px';
+  };
+
+  visualViewport.addEventListener('resize', placeBottom);
+  visualViewport.addEventListener('scroll', placeBottom);
+  window.addEventListener('orientationchange', placeBottom);
+  placeBottom();
+})();
