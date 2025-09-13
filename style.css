@@ -256,3 +256,5 @@ body.has-cta{
     padding-bottom: calc(10px + env(safe-area-inset-bottom));
   }
 }
+/* ランタイムで bottom を動かすJSがあっても打ち消す最終ガード */
+.cta-bar{ bottom: max(0px, env(safe-area-inset-bottom)) !important; }
