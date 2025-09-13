@@ -352,3 +352,52 @@ section > h2{
 .translate-button:hover{
   filter: brightness(0.98);
 }
+/* === 濃いめ半透明グレー（ガラス効果なし）— ハンバーガー／言語ボタン === */
+:root{
+  --btn-dg:        rgba(17, 24, 39, .72);  /* 基本 */
+  --btn-dg-hover:  rgba(17, 24, 39, .80);  /* ホバー */
+  --btn-dg-active: rgba(17, 24, 39, .86);  /* クリック */
+  --btn-dg-border: rgba(0, 0, 0, .25);     /* 薄い縁取り */
+}
+
+/* 対象：右上ハンバーガーと言語トグル（名称違いも拾う） */
+.menu-button,
+#langBtn,
+#langToggle,
+#langFab,
+.lang-button,
+.lang-fab,
+.translate-button{
+  background: var(--btn-dg) !important;
+  color: #fff !important;
+  border: 1px solid var(--btn-dg-border) !important;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, .18) !important; /* 少しだけ立体感 */
+}
+
+/* Hover / Active */
+.menu-button:hover,
+#langBtn:hover,
+#langToggle:hover,
+#langFab:hover,
+.lang-button:hover,
+.lang-fab:hover,
+.translate-button:hover{
+  background: var(--btn-dg-hover) !important;
+}
+.menu-button:active,
+#langBtn:active,
+#langToggle:active,
+#langFab:active,
+.lang-button:active,
+.lang-fab:active,
+.translate-button:active{
+  background: var(--btn-dg-active) !important;
+}
+
+/* ハンバーガーの三本線は白でくっきり */
+.menu-button .bars::before,
+.menu-button .bars::after,
+.menu-button .bars span{
+  background: #fff !important;
+  opacity: .95;
+}
