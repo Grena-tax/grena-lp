@@ -215,10 +215,10 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   言語ボタン＆パネル（Google Website Translator）
+   言語ボタン＆パネル（Google Website Translator + フォールバック）
    ========================================================= */
 (function languageUI(){
-  /* スタイル（“濃いめで透けたグレー”、ハンバーガーの下） */
+  /* スタイル（濃いめ半透明グレー／ハンバーガーの下） + フォールバックUI */
   (function injectLangStyles(){
     if (document.getElementById('lang-ui-inline-style')) return;
     const css = `
@@ -244,7 +244,7 @@ window.addEventListener('load', cutOnlyBottomDup);
 
     #google_translate_element{ background:#fff; border-radius:8px; padding:10px; color:#111; }
 
-    /* ▼表示だけ消す（機能は残す）— Powered by / Google ロゴ / 余計なspan */
+    /* “Powered by / Google / 翻訳” は非表示（機能は残す） */
     #google_translate_element .goog-logo-link,
     #google_translate_element .goog-te-gadget > span { display:none !important; }
     #google_translate_element .goog-te-gadget { font-size:0 !important; line-height:0 !important; }
@@ -253,9 +253,16 @@ window.addEventListener('load', cutOnlyBottomDup);
       box-shadow:0 1px 2px rgba(0,0,0,.04);
     }
 
-    /* Googleの上部バナー等は非表示（体裁崩し防止） */
+    /* Googleの上部バナー等は非表示（体裁崩れ防止） */
     .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display:none !important; }
     body{ top:0 !important; }
+
+    /* ▼フォールバック（直でGoogle翻訳に飛ばす） */
+    #gt-alt{ margin-top:10px; }
+    #gt-alt[hidden]{ display:none; }
+    #gt-alt .row{ display:flex; gap:.5rem; align-items:center; }
+    #gt-alt select{ flex:1; padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; background:#fff; color:#111; }
+    #gt-alt .open-btn{ padding:7px 10px; border-radius:8px; border:1px solid rgba(255,255,255,.35); background:#1f2937; color:#fff; cursor:pointer; }
     `;
     const style = document.createElement('style');
     style.id = 'lang-ui-inline-style';
@@ -273,6 +280,7 @@ window.addEventListener('load', cutOnlyBottomDup);
     if (menuBtn && menuBtn.parentNode) menuBtn.insertAdjacentElement('afterend', b);
     else document.body.appendChild(b);
   }
+
   function ensureLangPanel(){
     if (document.getElementById('langPanel')) return;
     const m = document.createElement('div');
@@ -280,15 +288,59 @@ window.addEventListener('load', cutOnlyBottomDup);
     m.innerHTML = `
       <h3>🌐 言語 / Language <button class="close" data-close>Close</button></h3>
       <div id="google_translate_element" aria-label="Google Website Translator"></div>
-      <div id="gt-fallback" style="display:none;margin-top:10px;font-size:12px;color:#e5e7eb;">
-        Translation module didn’t load. Please allow <code>translate.google.com</code> and try again.
+      <div id="gt-alt" hidden>
+        <div class="row" style="margin-top:6px">
+          <select id="gt-lang">
+            <option value="en">English</option>
+            <option value="zh-CN">简体中文</option>
+            <option value="zh-TW">繁體中文</option>
+            <option value="ko">한국어</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="es">Español</option>
+            <option value="ru">Русский</option>
+            <option value="ar">العربية</option>
+            <option value="hi">हिन्दी</option>
+            <option value="th">ไทย</option>
+            <option value="vi">Tiếng Việt</option>
+            <option value="id">Bahasa Indonesia</option>
+            <option value="ms">Bahasa Melayu</option>
+            <option value="pt">Português</option>
+            <option value="fil">Filipino</option>
+            <option value="uk">Українська</option>
+            <option value="pl">Polski</option>
+            <option value="it">Italiano</option>
+            <option value="tr">Türkçe</option>
+          </select>
+          <button class="open-btn" id="gt-open">Open</button>
+        </div>
+        <div style="font-size:12px;opacity:.75;margin-top:6px">Opens Google Translate in a new tab.</div>
       </div>`;
     document.body.appendChild(m);
+
+    // フォールバック：選択→Open で Google 翻訳のプロキシに飛ばす
+    const openViaProxy = () => {
+      const tl = m.querySelector('#gt-lang')?.value || 'en';
+      const u  = location.href.replace(/#.*$/,'');
+      const url = `https://translate.google.com/translate?sl=auto&tl=${encodeURIComponent(tl)}&u=${encodeURIComponent(u)}`;
+      window.open(url, '_blank', 'noopener');
+    };
+    m.addEventListener('click', (e)=>{
+      if (e.target && e.target.id === 'gt-open'){ e.preventDefault(); openViaProxy(); }
+    });
   }
 
-  /* Google Translate を読み込み（必要時のみ） */
+  /* Google Translate を読み込み（必要時のみ）＋失敗時フォールバック */
   function loadGoogleTranslate(cb){
-    if (window.google && window.google.translate && window.google.translate.TranslateElement) { cb && cb(); return; }
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) { cb && cb(true); return; }
+
+    let decided = false;
+    const decide = (ok) => {
+      if (decided) return;
+      decided = true;
+      cb && cb(ok);
+    };
+
     window.googleTranslateElementInit = function(){
       try {
         new google.translate.TranslateElement({
@@ -296,34 +348,39 @@ window.addEventListener('load', cutOnlyBottomDup);
           autoDisplay: false,
           includedLanguages: 'en,zh-CN,zh-TW,ko,fr,de,es,ru,ar,hi,th,vi,id,ms,pt,fil,uk,pl,it,tr'
         }, 'google_translate_element');
-      } catch(_) {}
-      cb && cb();
+        decide(true);
+      } catch(_) { decide(false); }
     };
-    // 既に読み込み中なら重複させない
-    if (document.querySelector('script[data-gt]')) { return; }
+
+    // 既に読み込み中なら待つ
+    if (document.querySelector('script[data-gt]')) {
+      setTimeout(()=>decide(!!(window.google && window.google.translate)), 2500);
+      return;
+    }
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.async = true; s.defer = true; s.setAttribute('data-gt','1');
-    s.onerror = () => { document.getElementById('gt-fallback')?.setAttribute('style','display:block;margin-top:10px;font-size:12px;color:#e5e7eb;'); };
+    s.onerror = () => decide(false);
     document.head.appendChild(s);
+
+    // タイムアウト（ブロック時）
+    setTimeout(()=>decide(!!(window.google && window.google.translate)), 2500);
   }
 
-  function openPanel(){
+  function openPanel(ok){
     const p = document.getElementById('langPanel');
     if (!p) return;
     p.classList.add('open');
+    const alt = p.querySelector('#gt-alt');
+    const gadget = p.querySelector('#google_translate_element');
 
-    // ドロップダウンが現れないケースに備えて監視し、3秒出なければ注意を表示
-    let t = 0;
-    const timer = setInterval(()=>{
-      const combo = p.querySelector('select.goog-te-combo');
-      if (combo){ clearInterval(timer); return; }
-      if (++t > 30){ clearInterval(timer); document.getElementById('gt-fallback')?.setAttribute('style','display:block;margin-top:10px;font-size:12px;color:#e5e7eb;'); }
-    },100);
+    if (ok && gadget && gadget.querySelector('select.goog-te-combo')) {
+      alt?.setAttribute('hidden','');
+    } else {
+      alt?.removeAttribute('hidden'); // フォールバックを表示
+    }
   }
-  function closePanel(){
-    document.getElementById('langPanel')?.classList.remove('open');
-  }
+  function closePanel(){ document.getElementById('langPanel')?.classList.remove('open'); }
 
   function initLang(){
     ensureLangButton();
@@ -331,7 +388,7 @@ window.addEventListener('load', cutOnlyBottomDup);
 
     document.getElementById('siteTranslateBtn')?.addEventListener('click', (e)=>{
       e.preventDefault();
-      loadGoogleTranslate(openPanel);
+      loadGoogleTranslate((ok)=>openPanel(ok));
     });
     document.addEventListener('click', (e)=>{
       if (e.target.matches('#langPanel [data-close]')) { e.preventDefault(); closePanel(); }
