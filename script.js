@@ -270,3 +270,41 @@ window.addEventListener('load', cutOnlyBottomDup);
     document.head.appendChild(s);
   }
 })();
+/* === その一文だけを除去（他要素は残す） ======================== */
+(function removeOnlyThatNote(){
+  const JA = '※ 自分の国を調べてください。';
+  const EN1 = "Please check your country's rules and information.";
+  const EN2 = "Please check your country’s rules and information."; // 角/曲アポ両対応
+
+  // 3パターンのいずれかを含むテキストだけを対象にする
+  const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const PATTERN = new RegExp(`${escape(JA)}|${escape(EN1)}|${escape(EN2)}`);
+
+  const wipe = (root = document.body) => {
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    const targets = [];
+    while (tw.nextNode()) targets.push(tw.currentNode);
+
+    targets.forEach(node => {
+      const text = (node.nodeValue || '').replace(/\s+/g, ' ').trim();
+      if (!PATTERN.test(text)) return;
+
+      // 該当部分だけ消す
+      node.nodeValue = node.nodeValue.replace(PATTERN, '').trim();
+
+      // 文字が空になったら空タグを片付け（段落の隙間を残さない）
+      if (!node.nodeValue) {
+        const el = node.parentNode;
+        el && el.removeChild(node);
+        if (el && !el.textContent.trim() && /^(P|SMALL|SPAN|DIV)$/i.test(el.tagName)) {
+          el.remove();
+        }
+      }
+    });
+  };
+
+  // 既に表示中なら即実行
+  wipe();
+  // モーダルを開いた時も確実に実行
+  new MutationObserver(() => wipe()).observe(document.body, { childList: true, subtree: true });
+})();
