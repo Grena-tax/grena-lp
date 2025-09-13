@@ -191,7 +191,6 @@ document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
 
 /* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
@@ -227,60 +226,104 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* =======================================================================
-   ▼▼ 言語モーダル：不要の3行（Powered by / Google / 翻訳）だけ安全に削除 ▼▼
-   ======================================================================= */
-(function safeCleanLangModal(){
-  // モーダル候補をタイトルで拾う
-  const findDialog = () =>
-    Array.from(document.querySelectorAll('[role="dialog"], .lang-dialog, .modal'))
-      .find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
+/* ============================================================
+   ▼ 言語ボタンの“効かない”を確実に直す：堅牢な開閉バインド
+   ============================================================ */
+(function repairLangButtonAndModal(){
+  const BTN_SELECTORS = [
+    '#langBtn',               // 以前のID
+    '.lang-pill',             // 以前のクラス
+    '.translate-badge',       // バッジ系
+    '[data-lang-btn]'         // 将来用
+  ];
 
-  // 削除対象テキスト判定（ピンポイント）
-  const isJunkText = (s) => /^\s*(powered\s*by|google|翻訳|翻訳翻訳|\/)\s*$/i.test(s || '');
-
-  // 親が select 等の機能要素を含んでいる場合は絶対に消さない
-  const isFunctionalContainer = (el) =>
-    !!(el && (el.closest('select, [role="combobox"], [role="listbox"]')));
-
-  const clean = (root) => {
-    if (!root) return;
-
-    // テキストノードだけ除去
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    const victims = [];
-    while (walker.nextNode()) {
-      const n = walker.currentNode;
-      if (isJunkText(n.nodeValue)) victims.push(n);
+  const findButton = () => {
+    for (const sel of BTN_SELECTORS) {
+      const el = document.querySelector(sel);
+      if (el) return el;
     }
-    victims.forEach(n => {
-      const p = n.parentNode;
-      n.remove();
-      if (p && !isFunctionalContainer(p) && (p.textContent || '').trim() === '') p.remove();
-    });
-
-    // 余計な <br> を select の前後から間引く
-    const sel = root.querySelector('select');
-    if (sel) {
-      // 前
-      let prev = sel.previousSibling;
-      while (prev && prev.nodeType === 1 && prev.tagName === 'BR') {
-        const rm = prev; prev = prev.previousSibling; rm.remove();
-      }
-      // 後
-      let next = sel.nextSibling;
-      while (next && next.nodeType === 1 && next.tagName === 'BR') {
-        const rm = next; next = next.nextSibling; rm.remove();
-      }
-    }
+    return null;
   };
 
-  const run = () => {
-    const dlg = findDialog();
-    if (dlg) clean(dlg);
+  const findModal = () =>
+    document.getElementById('langModal') ||
+    document.querySelector('.lang-modal, [aria-label*="言語を選択"], [aria-label*="Translate Language"]');
+
+  const openModal = () => {
+    const m = findModal();
+    if (!m) return;
+    m.style.display = 'block';
+    m.removeAttribute('aria-hidden');
+    m.classList.add('open');
+    // 初回だけ不要ラベルを掃除
+    setTimeout(() => safeCleanInside(m), 0);
   };
 
-  // モーダルが開いた直後に走らせる（遅延で安全側）
-  document.addEventListener('click', () => setTimeout(run, 60), true);
-  new MutationObserver(() => setTimeout(run, 0)).observe(document.body, { childList: true, subtree: true });
+  const closeModal = () => {
+    const m = findModal();
+    if (!m) return;
+    m.setAttribute('aria-hidden', 'true');
+    m.classList.remove('open');
+    m.style.display = 'none';
+  };
+
+  // クリックで開く（デリゲーション）
+  document.addEventListener('click', (e) => {
+    const isOpenClick = BTN_SELECTORS.some(sel => e.target.closest(sel));
+    if (isOpenClick) { e.preventDefault(); openModal(); return; }
+
+    // モーダル内の閉じる
+    const m = findModal();
+    if (!m) return;
+    if (
+      e.target.closest('[data-close]') ||
+      e.target.closest('.menu-close') ||
+      e.target.closest('.lang-close') ||
+      e.target === m // 背景クリックで閉じるケース
+    ) {
+      e.preventDefault();
+      closeModal();
+    }
+  });
+
+  // モーダルが動的に差し替わる場合も監視して開閉を維持
+  new MutationObserver((_muts) => {
+    const btn = findButton();
+    if (btn && !btn.hasAttribute('data-js-bound')) {
+      btn.setAttribute('data-js-bound', '1');
+      // 個別の onClick があっても競合しないように noop
+      btn.addEventListener('click', () => {}, { passive: true });
+    }
+  }).observe(document.body, { childList: true, subtree: true });
 })();
+
+/* =======================================================================
+   ▼ 言語モーダル内の不要3行（Powered by / Google / 翻訳）だけを安全に削除
+   ======================================================================= */
+function safeCleanInside(root){
+  if (!root) return;
+
+  const isIgnorableText = (s) => /^\s*(powered\s*by|google|翻訳|翻訳翻訳|\/)\s*$/i.test(s || '');
+
+  // テキストノードのみ対象（select等は触らない）
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+  const trash = [];
+  while (walker.nextNode()) {
+    const n = walker.currentNode;
+    if (isIgnorableText(n.nodeValue)) trash.push(n);
+  }
+  trash.forEach(n => {
+    const p = n.parentNode;
+    n.remove();
+    if (p && (p.textContent || '').trim() === '' && !p.matches('select, option')) p.remove();
+  });
+
+  // 連続 <br> を select の前後から除去して余白を詰める
+  const sel = root.querySelector('select');
+  if (sel) {
+    let prev = sel.previousSibling;
+    while (prev && prev.nodeType === 1 && prev.tagName === 'BR') { const rm = prev; prev = prev.previousSibling; rm.remove(); }
+    let next = sel.nextSibling;
+    while (next && next.nodeType === 1 && next.tagName === 'BR') { const rm = next; next = next.nextSibling; rm.remove(); }
+  }
+}
