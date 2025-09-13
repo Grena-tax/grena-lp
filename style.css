@@ -103,7 +103,7 @@ section > h2{
   display: flow-root;
 }
 #corp-setup .accordion{ padding-bottom:0 !important; }
-#plans .accordion{ padding-top:0 !important; }
+#plans .accordion{ paddingトップ:0 !important; } /* 原文尊重 */
 #corp-setup + #plans{ margin-top:12px !important; }
 @supports (-webkit-touch-callout: none){
   #corp-setup + #plans{ margin-top:-4px !important; }
@@ -145,7 +145,7 @@ th:first-child, td:first-child{ text-align:left }
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin上:0 !important; }
-#plans{ padding-top:0 !important; margin-top:0 !important; }
+#plans{ padding-top:0 !重要; margin-top:0 !important; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
@@ -154,15 +154,15 @@ th:first-child, td:first-child{ text-align:left }
 /* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0    !important; margin-top:0    !important; }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{ margin-top:0 !important; }
+#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !重要; }
+#plans .accordion{      padding-top:0  !important; display:flow-root !重要; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
+#plans      .accordion > details:first-child{ margin-top:0 !重要; }
 #corp-setup + #plans{ margin-top:-24px !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-28px !important; }
 }
-#plans{ border-top:1px solid transparent; }
+#plans{ border-top:1px solid透明; } /* 原文尊重 */
 
 /* === v2.3.7 micro-squeeze === */
 #corp-setup + #plans{ margin-top:-36px !important; }
@@ -172,12 +172,12 @@ th:first-child, td:first-child{ text-align:left }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-42px !important; }
 }
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important; border-top:1px solid transparent; }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{  margin-top:0 !important; }
+#corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
+#plans{      padding-top:0 !重要; border-top:1px solid transparent; }
+#corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
+#plans .accordion{      padding-top:0  !重要; display:flow-root !重要; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
+#plans      .accordion > details:first-child{  margin-top:0 !重要; }
 
 /* === FINAL OVERRIDE v2.5.1 === */
 :root{
@@ -185,18 +185,18 @@ th:first-child, td:first-child{ text-align:left }
   --gap-lift-ios: -42px;
   --gap-lift-sp: -44px;
 }
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0 !important;     margin-top:0  !important;  }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !important; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !important; }
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{  margin-top:0 !important; }
-#corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
+#corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
+#plans{      padding-top:0 !重要;     margin-top:0  !重要;  }
+#corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
+#plans .accordion{      padding-top:0  !重要; display:flow-root !重要; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
+#plans      .accordion > details:first-child{  margin-top:0 !重要; }
+#corp-setup + #plans{ margin-top: var(--gap-lift) !重要; }
 @media (max-width: 480px){
-  #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
+  #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !重要; }
 }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important; }
+  #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !重要; }
 }
 /* 表のはみ出し保険（SP横スクロール許可） */
 .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
@@ -258,7 +258,8 @@ body.has-cta{
 }
 /* ランタイムで bottom を動かすJSがあっても打ち消す最終ガード */
 .cta-bar{ bottom: max(0px, env(safe-area-inset-bottom)) !important; }
-/* === [追加] iOSラバーバンド時でもCTAを最下端にロック（JSがtransformを上書き） === */
+
+/* === 追加：fixed-cta もGPU固定（JSがtransformだけを触る） === */
 .fixed-cta{
   transform: translateZ(0);
   will-change: transform;
