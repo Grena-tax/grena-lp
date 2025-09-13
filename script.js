@@ -228,10 +228,11 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   ▼ 追加：ランゲージ切替（Google翻訳ウィジェット）
+   ▼ ランゲージ切替（Google翻訳ウィジェット）
    ========================================================= */
 (function setupLanguageModal(){
-  const openBtn   = document.getElementById('langBtn');
+  // Drawerのボタンを優先。無ければ旧IDにも対応。
+  const openBtn   = document.getElementById('langBtnDrawer') || document.getElementById('langBtn');
   const modal     = document.getElementById('langModal');
   const backdrop  = document.getElementById('langBackdrop');
   const closeBtn  = document.getElementById('langClose');
