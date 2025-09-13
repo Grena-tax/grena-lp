@@ -264,3 +264,34 @@ body.has-cta{
   transform: translateZ(0);
   will-change: transform;
 }
+/* ==== iOSラバーバンド根絶：ビューポートはスクロールさせない ==== */
+html, body{
+  height: 100%;
+  overflow: hidden;                 /* ← ここで画面自体の弾みを止める */
+}
+
+/* 実際にスクロールさせる容器（JSが自動で作る） */
+#scroll-root{
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;   /* Android/一部ブラウザでも弾み抑制 */
+  background: inherit;
+}
+
+/* CTA 分の下余白はスクロール容器側に確保 */
+#scroll-root.has-cta{
+  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
+
+/* CTA はそのまま固定（既存の .cta-bar / .fixed-cta どちらでもOK） */
+.cta-bar,
+.fixed-cta{
+  position: fixed;
+  left: 0; right: 0;
+  bottom: 0 !important;
+  z-index: 9999;
+  transform: translateZ(0);
+  will-change: transform; /* JSがtransformだけ触る */
+}
