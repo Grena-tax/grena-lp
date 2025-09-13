@@ -308,3 +308,42 @@ window.addEventListener('load', cutOnlyBottomDup);
   // モーダルを開いた時も確実に実行
   new MutationObserver(() => wipe()).observe(document.body, { childList: true, subtree: true });
 })();
+/* === 言語モーダルの余白と不要な「/」だけを整える =================== */
+(function tightenLangModal(){
+  // 開いている言語モーダルを推定（テキストから判定）
+  const findDialog = () => {
+    const cands = Array.from(document.querySelectorAll('[role="dialog"], [class*="modal"]'));
+    return cands.find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
+  };
+
+  const compact = () => {
+    const dlg = findDialog();
+    if (!dlg) return;
+
+    // 1) 「/」など記号だけのテキストノードや空ノードを除去
+    const isJunk = s => !s || /^[\s\/|・—\-–]*$/.test(s);
+    const tw = document.createTreeWalker(dlg, NodeFilter.SHOW_TEXT, null, false);
+    const removeTexts = [];
+    while (tw.nextNode()) {
+      const n = tw.currentNode;
+      if (isJunk(n.nodeValue)) removeTexts.push(n);
+    }
+    removeTexts.forEach(n => {
+      const p = n.parentNode;
+      p && p.removeChild(n);
+      // 親要素も中身が空なら片付け（p/small/span/divのみ）
+      if (p && !p.textContent.trim() && /^(P|SMALL|SPAN|DIV)$/i.test(p.tagName)) p.remove();
+    });
+
+    // 2) 連続 <br> を1つに圧縮＆末尾の余分な <br> を削除
+    dlg.querySelectorAll('br+br, br:empty').forEach(br => br.remove());
+    const body = dlg.querySelector('.lang-body, .modal-body, .body, .content') || dlg;
+    // 3) 下余白を少しだけ（控えめに）詰める
+    body.style.paddingBottom = '12px';
+    body.style.marginBottom = '0';
+  };
+
+  // すでに開いていれば即整形、以降は開閉を監視して都度整形
+  compact();
+  new MutationObserver(compact).observe(document.body, { childList: true, subtree: true });
+})();
