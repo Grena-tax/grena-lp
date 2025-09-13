@@ -163,3 +163,30 @@ window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
 // 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
+/* === [追加] iOSラバーバンド中もCTAを画面最下端にロック（bottomは触らない） === */
+(function lockCtaToVisualViewport(){
+  const bar =
+    document.querySelector('.fixed-cta') ||
+    document.querySelector('.cta-bar')   ||
+    document.getElementById('ctaBar');
+
+  if (!bar || !window.visualViewport) return;
+
+  let last = -1;
+  const apply = () => {
+    const vv  = window.visualViewport;
+    // 端末UI（アドレスバー等）で可視領域が縮んだ分だけ下に追従させる
+    const gap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+
+    if (gap !== last) {
+      last = gap;
+      bar.style.transform = `translate3d(0, ${gap}px, 0)`; // bottomは常に0、ズレだけ相殺
+    }
+  };
+
+  apply();
+  visualViewport.addEventListener('resize', apply);
+  visualViewport.addEventListener('scroll', apply);
+  window.addEventListener('scroll', apply, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(apply, 50));
+})();
