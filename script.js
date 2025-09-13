@@ -25,7 +25,7 @@ const slug = (t) => (t || '')
   else body.appendChild(wrap);
 
   // CTA・メニューUI以外を全部 #scroll-root に移動
-  const keep = new Set([cta, menuBtn, menuDrawer, wrap, document.getElementById('langBtn'), document.getElementById('langWrap')]);
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
   Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
@@ -227,169 +227,84 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* === 追加③：言語モーダル（ハンバーガーの外、下に置くボタンから起動） === */
-(function languageModal(){
-  const $btn   = document.getElementById('langBtn');
-  const $wrap  = document.getElementById('langWrap');
-  const $close = document.getElementById('langClose');
-  const $back  = document.getElementById('langBackdrop');
-
-  if(!$btn || !$wrap) return;
-
-  const open = () => {
-    $wrap.setAttribute('aria-hidden','false');
-    $btn.setAttribute('aria-expanded','true');
-    loadGoogleTranslateOnce();
-  };
-  const close = () => {
-    $wrap.setAttribute('aria-hidden','true');
-    $btn.setAttribute('aria-expanded','false');
-  };
-
-  $btn.addEventListener('click', open);
-  $close?.addEventListener('click', close);
-  $back?.addEventListener('click', close);
-  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
-
-  // Google Translate ローダ（1回だけ）
-  function loadGoogleTranslateOnce(){
-    if (window.__gt_loaded) return;
-    window.__gt_loaded = true;
-
-    window.googleTranslateElementInit = function(){
-      /* includedLanguages未指定＝全世界（Google側の対応言語） */
-      new google.translate.TranslateElement(
-        {pageLanguage: 'ja', autoDisplay: false},
-        'google_translate_element'
-      );
-    };
-
-    const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.async = true;
-    document.head.appendChild(s);
-  }
-})();
-/* === その一文だけを除去（他要素は残す） ======================== */
-(function removeOnlyThatNote(){
-  const JA = '※ 自分の国を調べてください。';
-  const EN1 = "Please check your country's rules and information.";
-  const EN2 = "Please check your country’s rules and information."; // 角/曲アポ両対応
-
-  // 3パターンのいずれかを含むテキストだけを対象にする
-  const escape = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const PATTERN = new RegExp(`${escape(JA)}|${escape(EN1)}|${escape(EN2)}`);
-
-  const wipe = (root = document.body) => {
-    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    const targets = [];
-    while (tw.nextNode()) targets.push(tw.currentNode);
-
-    targets.forEach(node => {
-      const text = (node.nodeValue || '').replace(/\s+/g, ' ').trim();
-      if (!PATTERN.test(text)) return;
-
-      // 該当部分だけ消す
-      node.nodeValue = node.nodeValue.replace(PATTERN, '').trim();
-
-      // 文字が空になったら空タグを片付け（段落の隙間を残さない）
-      if (!node.nodeValue) {
-        const el = node.parentNode;
-        el && el.removeChild(node);
-        if (el && !el.textContent.trim() && /^(P|SMALL|SPAN|DIV)$/i.test(el.tagName)) {
-          el.remove();
-        }
-      }
-    });
-  };
-
-  // 既に表示中なら即実行
-  wipe();
-  // モーダルを開いた時も確実に実行
-  new MutationObserver(() => wipe()).observe(document.body, { childList: true, subtree: true });
-})();
-/* === 言語モーダルの余白と不要な「/」だけを整える =================== */
-(function tightenLangModal(){
-  // 開いている言語モーダルを推定（テキストから判定）
-  const findDialog = () => {
-    const cands = Array.from(document.querySelectorAll('[role="dialog"], [class*="modal"]'));
-    return cands.find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
-  };
-
-  const compact = () => {
-    const dlg = findDialog();
-    if (!dlg) return;
-
-    // 1) 「/」など記号だけのテキストノードや空ノードを除去
-    const isJunk = s => !s || /^[\s\/|・—\-–]*$/.test(s);
-    const tw = document.createTreeWalker(dlg, NodeFilter.SHOW_TEXT, null, false);
-    const removeTexts = [];
-    while (tw.nextNode()) {
-      const n = tw.currentNode;
-      if (isJunk(n.nodeValue)) removeTexts.push(n);
-    }
-    removeTexts.forEach(n => {
-      const p = n.parentNode;
-      p && p.removeChild(n);
-      // 親要素も中身が空なら片付け（p/small/span/divのみ）
-      if (p && !p.textContent.trim() && /^(P|SMALL|SPAN|DIV)$/i.test(p.tagName)) p.remove();
-    });
-
-    // 2) 連続 <br> を1つに圧縮＆末尾の余分な <br> を削除
-    dlg.querySelectorAll('br+br, br:empty').forEach(br => br.remove());
-    const body = dlg.querySelector('.lang-body, .modal-body, .body, .content') || dlg;
-    // 3) 下余白を少しだけ（控えめに）詰める
-    body.style.paddingBottom = '12px';
-    body.style.marginBottom = '0';
-  };
-
-  // すでに開いていれば即整形、以降は開閉を監視して都度整形
-  compact();
-  new MutationObserver(compact).observe(document.body, { childList: true, subtree: true });
-})();
-/* === 言語モーダルの「Powered by / Google / 翻訳(翻訳)」だけ消す === */
-(function removePoweredByBlock(){
-  // 対象モーダルを検出
+/* =======================================================================
+   ▼▼ 言語モーダル内の不要表示を強制削除（Powered by / Google / 翻訳）＋余白調整 ▼▼
+   ======================================================================= */
+(function stripLangModalMarks(){
+  // 対象ダイアログを推定（タイトル文言で拾う）
   const findDialog = () =>
     Array.from(document.querySelectorAll('[role="dialog"], .lang-dialog, .modal'))
       .find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
 
-  const PATTERNS = [
-    /powered\s*by/i,        // Powered by
-    /^\s*google\s*$/i,      // Google 単独行
-    /^\s*翻訳(?:翻訳)?\s*$/  // 翻訳 / 翻訳翻訳
-  ];
-
-  const isJunkText = (s) => PATTERNS.some(re => re.test(s));
-
-  const cleanup = (root) => {
-    if (!root) return;
-
-    // 1) 「Powered by / Google / 翻訳(翻訳)」の行を削除
-    root.querySelectorAll('p,div,small,span,a,li').forEach(el => {
-      const t = (el.textContent || '').trim();
-      if (isJunkText(t) && !el.querySelector('select,input,button')) el.remove();
-    });
-    // テキストノードでも残っている場合を念のため削除
-    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    const trash = [];
-    while (tw.nextNode()) {
-      const n = tw.currentNode;
-      if (isJunkText((n.nodeValue || '').trim())) trash.push(n);
-    }
-    trash.forEach(n => {
-      const p = n.parentNode;
-      if (!p) return;
-      (p.childNodes.length === 1) ? p.remove() : n.remove();
-    });
-
-    // 2) 連続 <br> と末尾の余計な <br> を整理（見た目を詰める）
-    root.querySelectorAll('br+br, br:last-child').forEach(br => br.remove());
+  // 不要テキスト判定
+  const isJunkText = (s) => {
+    const t = (s || '').replace(/\s+/g,' ').trim();
+    if (!t) return false;
+    return (
+      /powered\s*by/i.test(t) && t.length <= 20 || // Powered by
+      /^google$/i.test(t) ||                      // Google
+      /^翻訳(?:翻訳)?$/i.test(t)                 // 翻訳 / 翻訳翻訳
+    );
   };
 
-  const run = () => cleanup(findDialog());
+  // 指定した日英の注意書き（「自分の国を調べてください…」）も念のため消去
+  const NOTE_JA = '自分の国を調べてください';
+  const NOTE_EN = "please check your country's rules and information";
 
-  // すぐ実行＆開閉を監視
+  const compact = (root) => {
+    if (!root) return;
+
+    const toRemove = new Set();
+
+    // 1) Google系 class / リンクで明らかなウィジェット断片を除去
+    root.querySelectorAll('*').forEach(el => {
+      const cls = (el.className || '') + ' ' + (el.id || '');
+      const href = (el.getAttribute && el.getAttribute('href')) || '';
+      if (
+        /goog|google-translate|goog-te/i.test(cls) ||
+        /google\.com|translate/i.test(href)
+      ) {
+        toRemove.add(el);
+      }
+    });
+
+    // 2) テキストノード削除（Powered by / Google / 翻訳／注意文）
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    const texts = [];
+    while (walker.nextNode()) {
+      const n = walker.currentNode;
+      const val = (n.nodeValue || '').toLowerCase();
+      if (isJunkText(n.nodeValue) || val.includes(NOTE_JA) || val.includes(NOTE_EN)) {
+        texts.push(n);
+      }
+    }
+    texts.forEach(n => {
+      const p = n.parentNode;
+      if (!p) return;
+      // 包装だけの要素なら丸ごと消す
+      if (p.childNodes.length === 1 && /^(p|div|small|span|a|li|em|i|b)$/i.test(p.tagName)) {
+        toRemove.add(p);
+      } else {
+        n.remove();
+      }
+    });
+
+    // 3) 候補を削除
+    toRemove.forEach(el => el.remove());
+
+    // 4) 余白を詰める：連続 <br>・末尾 <br>・空要素の掃除
+    root.querySelectorAll('br+br, br:last-child').forEach(br => br.remove());
+    root.querySelectorAll('p:empty, div:empty, small:empty, span:empty').forEach(el => {
+      if ((el.textContent || '').trim() === '') el.remove();
+    });
+  };
+
+  const run = () => {
+    const dlg = findDialog();
+    if (dlg) compact(dlg);
+  };
+
+  // 初回 & 以後の変化監視
   run();
   new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
 })();
