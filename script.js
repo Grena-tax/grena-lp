@@ -1,6 +1,7 @@
-/* ===========================================================
-   script.js — full build (CTA固定 + メニュー生成 + 重複除去)
-   =========================================================== */
+/* =========================================
+   script.js — iOS Chrome/Safari 固定CTA 安定版
+   2025-09-13
+   ========================================= */
 
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
@@ -39,24 +40,26 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
   }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映（旧 #ctaBar を参照：存在すれば反映） ===== */
+/* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
-  const bar = document.getElementById('ctaBar'); // 旧固定CTA（CSSでは非表示）
+  // .cta-bar（新）優先、なければ .fixed-cta
+  const bar = document.querySelector('.cta-bar, .fixed-cta');
   if (!bar) return;
-  const h = Math.ceil(bar.getBoundingClientRect().height || 0);
+  const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
+  document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
 
-/* ===== 申込ボタン（旧固定CTA内の #applyNow に対応） ===== */
+/* ===== 申込ボタン ===== */
 document.getElementById('applyNow')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* ===== ハンバーガー開閉 ===== */
+/* ===== ハンバーガー開閉 ＋ メニュー自動生成 ===== */
 const btn        = document.getElementById('menuBtn');
 const drawer     = document.getElementById('menuDrawer');
 const closeBt    = document.getElementById('menuClose');
@@ -71,7 +74,6 @@ closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function buildMenu(){
@@ -86,7 +88,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // ★ #plans は見出し(h4)を出さない（英字 "plans" を隠す）
+    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -102,7 +104,7 @@ function buildMenu(){
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (excludeTitles.some(x => t.includes(x))) return; // 料金サブ項目は出さない
+      if (excludeTitles.some(x => t.includes(x))) return;
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
@@ -128,110 +130,74 @@ function buildMenu(){
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
-  killPlansHeading();
-}
-
-/* ===== “plans の見出し” を常に抹消（安全網） ===== */
-function killPlansHeading(){
-  if (!groupsRoot) return;
-  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-  });
-}
-addEventListener('DOMContentLoaded', buildMenu);
-addEventListener('load', killPlansHeading);
-if (groupsRoot) {
-  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
-}
-
-/* ===== 重複ブロック除去（最下部の“キャンセルポリシー”だけカット） =====
-   - #disclaimer 内の正規ブロックは必ず残す
-   - それ以外の「免責事項」「キャンセルポリシー」は末尾側を削除 */
-function cutOnlyBottomDup() {
-  // 旧スニペット由来のものを丸ごと除去（存在すれば）
-  document.getElementById('site-disclaimer')?.remove();
-  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
-
-  // 「免責事項」重複（#disclaimer 外）を除去
-  document.querySelectorAll('details').forEach(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
-  });
-
-  // 「キャンセルポリシー」を重複排除：#disclaimer 内の1つだけ残す
-  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    return /キャンセルポリシー/.test(t);
-  });
-  if (cancels.length > 1) {
-    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
-    cancels.forEach(d => { if (d !== keep) d.remove(); });
-  }
-}
-document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
-window.addEventListener('load', cutOnlyBottomDup);
-
-/* ====== 下端に残る重複「免責事項／キャンセルポリシー」を確実に削除 ====== */
-(function killBottomDup(){
-  const removeDups = () => {
-    // 追加で貼られていた単体の免責(details#site-disclaimer 等)を削除
-    document.getElementById('site-disclaimer')?.remove();
-    document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
-
-    // #disclaimer の外側に出てくる「免責事項」を削除
-    document.querySelectorAll('details').forEach(d=>{
-      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
-      if (t.includes('免責事項') && !d.closest('#disclaimer')) d.remove();
-    });
-
-    // #disclaimer 以外に出てくる「キャンセルポリシー」も保険で削除
-    document.querySelectorAll('details').forEach(d=>{
-      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
-      if (t.includes('キャンセルポリシー') && !d.closest('#disclaimer')) d.remove();
+  // 念のため "plans" 見出しが生成されても即削除
+  const killPlansHeading = () => {
+    groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+      if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
     });
   };
+  killPlansHeading();
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
+addEventListener('DOMContentLoaded', buildMenu);
 
-  // 初期実行＋保険（読込完了／戻る遷移／動的追加）
-  document.addEventListener('DOMContentLoaded', removeDups);
-  window.addEventListener('load', removeDups);
-  window.addEventListener('pageshow', removeDups);
-  new MutationObserver(removeDups).observe(document.body, { childList:true, subtree:true });
-})();
+/* ===== 免責/キャンセルの重複を保険で除去（#disclaimer 以外） ===== */
+function removeDupBlocks(){
+  document.getElementById('site-disclaimer')?.remove();
+  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+  document.querySelectorAll('details').forEach(d=>{
+    const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+    if ((t.includes('免責事項') || t.includes('キャンセルポリシー')) && !d.closest('#disclaimer')) d.remove();
+  });
+}
+document.addEventListener('DOMContentLoaded', removeDupBlocks);
+addEventListener('load', removeDupBlocks);
+addEventListener('pageshow', removeDupBlocks);
 
-/* ===== iOSラバーバンド対策：最下端での過スクロール時に CTA(.cta-bar) が浮かないよう固定 =====
-   - visualViewport を使い、UI表示で生じる下側ギャップ(uiGap)を計算
-   - 過スクロール検出中は直前の安定値を維持して bottom を凍結 */
+/* ===== iOS ラバーバンド対策：最下部で CTA が浮かないよう“上方向への移動だけ禁止” =====
+   ポイント：
+   - 画面下 UI（ホームインジケータ/ツールバー）の分だけ bottom を補正（uiGap）
+   - 末尾付近では「uiGap が増える方向」への更新を抑止（= CTA が上がらない）
+   - 末尾から離れたら通常更新に戻す
+============================================================================ */
 (function lockCtaToBottom(){
   const bar = document.querySelector('.cta-bar');
   if (!bar || !window.visualViewport) return;
 
-  let stable = 0; // 直近の安定した bottom 値
+  let stableGap = 0; // 末尾以外で観測した直近の安定ギャップ値
 
-  const calcBottom = () => {
+  const compute = () => {
     const vv  = window.visualViewport;
     const doc = document.documentElement;
 
-    // アドレスバー等のUIぶんの下側ギャップ
+    // アドレスバー等の UI による下側のギャップ
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 
-    // いまの最大スクロール位置（ツールバー状態を加味）
-    const maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop);
+    // 「ほぼ最下部」判定（端末差/丸め誤差のため ±2px のゆとり）
     const y = window.scrollY || doc.scrollTop || 0;
+    const maxY = Math.max(0, doc.scrollHeight - (vv.height + vv.offsetTop));
+    const nearBottom = y >= (maxY - 2);
 
-    // 下側ラバーバンド（過スクロール）中は更新しない
-    const isBouncingBottom = y > maxScroll + 1;
-
-    if (!isBouncingBottom) {
-      stable = uiGap; // 通常時だけ更新
+    // 末尾で“上がる（= uiGap が増える）”更新は抑止
+    if (!nearBottom) {
+      stableGap = uiGap;
+      bar.style.bottom = uiGap + 'px';
+    } else {
+      const frozen = Math.min(uiGap, stableGap);
+      bar.style.bottom = frozen + 'px';
     }
-    bar.style.bottom = (isBouncingBottom ? stable : uiGap) + 'px';
   };
 
-  // 初期/イベント
-  calcBottom();
-  visualViewport.addEventListener('resize',  calcBottom);
-  visualViewport.addEventListener('scroll',  calcBottom);
-  window.addEventListener('scroll',          calcBottom, { passive: true });
-  window.addEventListener('orientationchange', () => setTimeout(calcBottom, 50));
+  // 初期 & 各イベント
+  compute();
+  visualViewport.addEventListener('resize',  compute);
+  visualViewport.addEventListener('scroll',  compute);
+  window.addEventListener('scroll',          compute, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(compute, 60));
+  window.addEventListener('pageshow', compute);
 })();
+
+/* ===== 既存 #disclaimer が open で始まる場合のクローズ ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('#disclaimer details[open]')?.removeAttribute('open');
+});
