@@ -1,3 +1,7 @@
+/* ===========================================================
+   script.js — full build (CTA固定 + メニュー生成 + 重複除去)
+   =========================================================== */
+
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
@@ -35,17 +39,17 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
   }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映 ===== */
+/* ===== 固定CTAの高さ → 本文余白に反映（旧 #ctaBar を参照：存在すれば反映） ===== */
 const adjustCtaPadding = () => {
-  const bar = document.getElementById('ctaBar');
+  const bar = document.getElementById('ctaBar'); // 旧固定CTA（CSSでは非表示）
   if (!bar) return;
-  const h = Math.ceil(bar.getBoundingClientRect().height);
+  const h = Math.ceil(bar.getBoundingClientRect().height || 0);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
 
-/* ===== 申込ボタン ===== */
+/* ===== 申込ボタン（旧固定CTA内の #applyNow に対応） ===== */
 document.getElementById('applyNow')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
@@ -137,22 +141,97 @@ function killPlansHeading(){
 }
 addEventListener('DOMContentLoaded', buildMenu);
 addEventListener('load', killPlansHeading);
+if (groupsRoot) {
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
 
-/* ここから下は“削除のみ”の方針で、重複免責/CTAバー関連のJSはファイルから除去しました */
-// === iOSのアドレスバー上下で“浮く/離れる”のを防いで常に最下部へ ===
-(function () {
+/* ===== 重複ブロック除去（最下部の“キャンセルポリシー”だけカット） =====
+   - #disclaimer 内の正規ブロックは必ず残す
+   - それ以外の「免責事項」「キャンセルポリシー」は末尾側を削除 */
+function cutOnlyBottomDup() {
+  // 旧スニペット由来のものを丸ごと除去（存在すれば）
+  document.getElementById('site-disclaimer')?.remove();
+  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+  // 「免責事項」重複（#disclaimer 外）を除去
+  document.querySelectorAll('details').forEach(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
+  });
+
+  // 「キャンセルポリシー」を重複排除：#disclaimer 内の1つだけ残す
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    return /キャンセルポリシー/.test(t);
+  });
+  if (cancels.length > 1) {
+    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
+    cancels.forEach(d => { if (d !== keep) d.remove(); });
+  }
+}
+document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
+window.addEventListener('load', cutOnlyBottomDup);
+
+/* ====== 下端に残る重複「免責事項／キャンセルポリシー」を確実に削除 ====== */
+(function killBottomDup(){
+  const removeDups = () => {
+    // 追加で貼られていた単体の免責(details#site-disclaimer 等)を削除
+    document.getElementById('site-disclaimer')?.remove();
+    document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+
+    // #disclaimer の外側に出てくる「免責事項」を削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('免責事項') && !d.closest('#disclaimer')) d.remove();
+    });
+
+    // #disclaimer 以外に出てくる「キャンセルポリシー」も保険で削除
+    document.querySelectorAll('details').forEach(d=>{
+      const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
+      if (t.includes('キャンセルポリシー') && !d.closest('#disclaimer')) d.remove();
+    });
+  };
+
+  // 初期実行＋保険（読込完了／戻る遷移／動的追加）
+  document.addEventListener('DOMContentLoaded', removeDups);
+  window.addEventListener('load', removeDups);
+  window.addEventListener('pageshow', removeDups);
+  new MutationObserver(removeDups).observe(document.body, { childList:true, subtree:true });
+})();
+
+/* ===== iOSラバーバンド対策：最下端での過スクロール時に CTA(.cta-bar) が浮かないよう固定 =====
+   - visualViewport を使い、UI表示で生じる下側ギャップ(uiGap)を計算
+   - 過スクロール検出中は直前の安定値を維持して bottom を凍結 */
+(function lockCtaToBottom(){
   const bar = document.querySelector('.cta-bar');
   if (!bar || !window.visualViewport) return;
 
-  const placeBottom = () => {
-    const vv = window.visualViewport;
-    // 画面下のブラウザUIぶんだけ下マージンを埋める
-    const extra = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-    bar.style.bottom = extra + 'px';
+  let stable = 0; // 直近の安定した bottom 値
+
+  const calcBottom = () => {
+    const vv  = window.visualViewport;
+    const doc = document.documentElement;
+
+    // アドレスバー等のUIぶんの下側ギャップ
+    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+
+    // いまの最大スクロール位置（ツールバー状態を加味）
+    const maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop);
+    const y = window.scrollY || doc.scrollTop || 0;
+
+    // 下側ラバーバンド（過スクロール）中は更新しない
+    const isBouncingBottom = y > maxScroll + 1;
+
+    if (!isBouncingBottom) {
+      stable = uiGap; // 通常時だけ更新
+    }
+    bar.style.bottom = (isBouncingBottom ? stable : uiGap) + 'px';
   };
 
-  visualViewport.addEventListener('resize', placeBottom);
-  visualViewport.addEventListener('scroll', placeBottom);
-  window.addEventListener('orientationchange', placeBottom);
-  placeBottom();
+  // 初期/イベント
+  calcBottom();
+  visualViewport.addEventListener('resize',  calcBottom);
+  visualViewport.addEventListener('scroll',  calcBottom);
+  window.addEventListener('scroll',          calcBottom, { passive: true });
+  window.addEventListener('orientationchange', () => setTimeout(calcBottom, 50));
 })();
