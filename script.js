@@ -1,8 +1,3 @@
-/* =========================================
-   script.js — iOS Chrome/Safari 固定CTA 安定版
-   2025-09-13
-   ========================================= */
-
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
@@ -42,12 +37,10 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
 
 /* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
-  // .cta-bar（新）優先、なければ .fixed-cta
-  const bar = document.querySelector('.cta-bar, .fixed-cta');
+  const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-  document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -59,7 +52,7 @@ document.getElementById('applyNow')?.addEventListener('click', (e) => {
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* ===== ハンバーガー開閉 ＋ メニュー自動生成 ===== */
+/* ===== ハンバーガー開閉 ===== */
 const btn        = document.getElementById('menuBtn');
 const drawer     = document.getElementById('menuDrawer');
 const closeBt    = document.getElementById('menuClose');
@@ -74,6 +67,7 @@ closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
+/* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function buildMenu(){
@@ -130,74 +124,82 @@ function buildMenu(){
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため "plans" 見出しが生成されても即削除
-  const killPlansHeading = () => {
-    groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-      if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-    });
-  };
+  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
-  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
+
+function killPlansHeading(){
+  if (!groupsRoot) return;
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+  });
 }
 addEventListener('DOMContentLoaded', buildMenu);
+addEventListener('load', killPlansHeading);
+if (groupsRoot) {
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
 
-/* ===== 免責/キャンセルの重複を保険で除去（#disclaimer 以外） ===== */
-function removeDupBlocks(){
+/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer だけに揃える） ===== */
+function cutOnlyBottomDup() {
   document.getElementById('site-disclaimer')?.remove();
   document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
   document.querySelectorAll('details').forEach(d=>{
-    const t = (d.querySelector('summary')?.textContent || '').replace(/\s+/g,'');
-    if ((t.includes('免責事項') || t.includes('キャンセルポリシー')) && !d.closest('#disclaimer')) d.remove();
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
   });
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    return /キャンセルポリシー/.test(t);
+  });
+  if (cancels.length > 1) {
+    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
+    cancels.forEach(d => { if (d !== keep) d.remove(); });
+  }
 }
-document.addEventListener('DOMContentLoaded', removeDupBlocks);
-addEventListener('load', removeDupBlocks);
-addEventListener('pageshow', removeDupBlocks);
+document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
+window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== iOS ラバーバンド対策：最下部で CTA が浮かないよう“上方向への移動だけ禁止” =====
-   ポイント：
-   - 画面下 UI（ホームインジケータ/ツールバー）の分だけ bottom を補正（uiGap）
-   - 末尾付近では「uiGap が増える方向」への更新を抑止（= CTA が上がらない）
-   - 末尾から離れたら通常更新に戻す
-============================================================================ */
+/* ===== iOS ラバーバンド対策：ボトム固定を厳密に維持 =====
+   ・通常時   ：UIギャップ(uiGap)で追従（Safariのツールバー分）
+   ・過スクロール時：最後の安定値で固定（CTAが浮かない）
+   ・キーボード展開時：過スクロール判定を無効化して追従（入力を隠さない） */
 (function lockCtaToBottom(){
   const bar = document.querySelector('.cta-bar');
   if (!bar || !window.visualViewport) return;
 
-  let stableGap = 0; // 末尾以外で観測した直近の安定ギャップ値
+  let stableGap = 0;   // 直近の安定した bottom 値
+  let ticking = false;
 
-  const compute = () => {
-    const vv  = window.visualViewport;
-    const doc = document.documentElement;
+  const update = () => {
+    ticking = false;
+    const vv   = window.visualViewport;
+    const doc  = document.documentElement;
 
-    // アドレスバー等の UI による下側のギャップ
+    // Safari / Chrome(iOS) のUIぶんの下側ギャップ
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 
-    // 「ほぼ最下部」判定（端末差/丸め誤差のため ±2px のゆとり）
-    const y = window.scrollY || doc.scrollTop || 0;
-    const maxY = Math.max(0, doc.scrollHeight - (vv.height + vv.offsetTop));
-    const nearBottom = y >= (maxY - 2);
+    // キーボード判定（だいたいでOK）
+    const keyboardOpen = (window.innerHeight - vv.height) > 120;
 
-    // 末尾で“上がる（= uiGap が増える）”更新は抑止
-    if (!nearBottom) {
-      stableGap = uiGap;
-      bar.style.bottom = uiGap + 'px';
-    } else {
-      const frozen = Math.min(uiGap, stableGap);
-      bar.style.bottom = frozen + 'px';
+    // “ページ下端を超えているか” を VisualViewport の pageTop で厳密判定
+    const pageBottom = (vv.pageTop || (window.scrollY + vv.offsetTop)) + vv.height;
+    const docHeight  = Math.max(doc.scrollHeight, doc.clientHeight);
+    const bouncingBottom = pageBottom > (docHeight + 1) && !keyboardOpen;
+
+    if (!bouncingBottom) {
+      stableGap = uiGap;  // 通常時だけ更新
     }
+
+    bar.style.bottom = (bouncingBottom ? stableGap : uiGap) + 'px';
   };
 
-  // 初期 & 各イベント
-  compute();
-  visualViewport.addEventListener('resize',  compute);
-  visualViewport.addEventListener('scroll',  compute);
-  window.addEventListener('scroll',          compute, { passive:true });
-  window.addEventListener('orientationchange', () => setTimeout(compute, 60));
-  window.addEventListener('pageshow', compute);
-})();
+  const requestUpdate = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
 
-/* ===== 既存 #disclaimer が open で始まる場合のクローズ ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('#disclaimer details[open]')?.removeAttribute('open');
-});
+  update();
+  visualViewport.addEventListener('scroll', requestUpdate);
+  visualViewport.addEventListener('resize', requestUpdate);
+  window.addEventListener('scroll', requestUpdate, { passive:true });
+  window.addEventListener('orientationchange', () => setTimeout(update, 60));
+  window.addEventListener('pageshow', update);
+})();
