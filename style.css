@@ -303,3 +303,52 @@ html, body{
 section > h2{
   padding-left: clamp(6px, 1.2vw, 12px) !important; /* ほんの少し右へ */
 }
+/* === UIトーンを薄い網掛けグレーへ（ハンバーガー／言語ボタン） === */
+
+/* 共通の網掛けグレー（薄い斜めストライプ） */
+:root{
+  --mesh-gray: repeating-linear-gradient(
+    135deg,
+    #f7f9fc 0 8px,
+    #eef2f7 8px 16px
+  );
+}
+
+/* ハンバーガーの丸ボタン（右上） */
+.menu-button{
+  background: var(--mesh-gray) !important;
+  color:#111827 !important;
+  border:1px solid #d1d5db !important;
+  box-shadow: 0 6px 18px rgba(17,24,39,.08) !important;
+}
+
+/* ハンバーガーの3本線は濃いめのグレーに（背景が明るくなるため） */
+.menu-button .bars::before,
+.menu-button .bars::after,
+.menu-button .bars span{
+  background:#111827 !important;
+}
+
+/* 言語ボタン（トップ右側の「Translate / 言語」） */
+#langBtn,
+#langToggle,
+#langFab,
+.lang-button,
+.lang-fab,
+.translate-button{
+  background: var(--mesh-gray) !important;
+  color:#0b1220 !important;
+  border:1px solid #d1d5db !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08) !important;
+}
+
+/* 触感のためにごく控えめなホバー */
+.menu-button:hover,
+#langBtn:hover,
+#langToggle:hover,
+#langFab:hover,
+.lang-button:hover,
+.lang-fab:hover,
+.translate-button:hover{
+  filter: brightness(0.98);
+}
