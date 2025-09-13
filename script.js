@@ -36,7 +36,7 @@ const slug = (t) => (t || '')
 const getScroller = () => document.getElementById('scroll-root') || document.scrollingElement || document.documentElement;
 const getScrollY = () => {
   const s = getScroller();
-  return s === window || s === document.documentElement ? window.scrollY || document.documentElement.scrollTop || 0 : s.scrollTop || 0;
+  return s === window || s === document.documentElement ? (window.scrollY || document.documentElement.scrollTop || 0) : (s.scrollTop || 0);
 };
 const setScrollY = (y, behavior='auto') => {
   const s = getScroller();
@@ -51,7 +51,6 @@ const setScrollY = (y, behavior='auto') => {
 const smoothTo = (y) => {
   try { setScrollY(y, 'smooth'); }
   catch(_) {
-    // 古い環境フォールバック
     const start = getScrollY();
     const dist  = Math.max(0, y) - start;
     const dur = 300;
@@ -68,8 +67,7 @@ const smoothTo = (y) => {
 const scrollToEl = (el) => {
   if (!el) return;
   const s = getScroller();
-  // 要素の表示位置を scroller 基準で算出
-  const sr = (s.getBoundingClientRect && s.getBoundingClientRect()) || { top: 0, left: 0 };
+  const sr = (s.getBoundingClientRect && s.getBoundingClientRect()) || { top: 0 };
   const tr = el.getBoundingClientRect();
   const y = (s.scrollTop || 0) + (tr.top - sr.top);
   smoothTo(Math.max(0, y));
@@ -259,11 +257,9 @@ window.addEventListener('load', cutOnlyBottomDup);
   const apply = () => {
     const vv  = window.visualViewport;
 
-    // スクロール下限（scroll-root が実体）
     const maxScroll = (scroller.scrollHeight - scroller.clientHeight);
     const y = getScrollY();
 
-    // 端末UIで可視領域が縮んだ分
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 
     const isBouncingBottom = y > maxScroll + 1;
@@ -277,72 +273,119 @@ window.addEventListener('load', cutOnlyBottomDup);
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
-  // scroll-root のスクロールも監視
   (document.getElementById('scroll-root') || window).addEventListener('scroll', apply, { passive:true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
 /* ---------------------------------------------------------
-   9) 言語ボタンの開閉を“確実化”＋不要3行の除去
+   9) 言語ボタン＆モーダルを自動生成＋Google翻訳UIをロード
    --------------------------------------------------------- */
 (function languageUI(){
-  // 想定されるボタン／モーダルの候補（幅広く捕捉）
-  const BTN_SELECTORS = [
-    '#siteTranslateBtn','#langBtn','.lang-btn','.lang-pill','.translate-badge',
-    '[data-lang-btn]','[aria-label*="Translate"]','[aria-label*="言語"]'
-  ];
-  const MODAL_SELECTORS = [
-    '#langModal','#siteLangModal','.lang-modal','[data-lang-modal]',
-    '[role="dialog"][aria-label*="Translate"]','[role="dialog"][aria-label*="言語"]'
-  ];
-
-  const findBtn = () => {
-    for (const s of BTN_SELECTORS) { const el = document.querySelector(s); if (el) return el; }
-    const cands = Array.from(document.querySelectorAll('a,button,div[role="button"],.badge,.pill'))
-      .filter(el => /translate|言語|language/i.test(el.textContent || ''));
-    return cands[0] || null;
-  };
-  const findModal = () => {
-    for (const s of MODAL_SELECTORS) { const el = document.querySelector(s); if (el) return el; }
-    return null;
-  };
-
-  const openModal = () => {
-    const m = findModal();
-    if (!m) return; // モーダルが無ければ何もしない（HTML無改変前提）
-    m.style.display = 'block';
-    m.removeAttribute('aria-hidden');
-    m.classList.add('open');
-    // Google翻訳UIの不要行を後追いで除去
-    setTimeout(() => tidyTranslator(m), 0);
-  };
-  const closeModal = () => {
-    const m = findModal();
-    if (!m) return;
-    m.setAttribute('aria-hidden', 'true');
-    m.classList.remove('open');
-    m.style.display = 'none';
-  };
-
-  // クリックで開閉（デリゲーション）
-  document.addEventListener('click', (e) => {
-    if (e.target.closest(BTN_SELECTORS.join(','))) { e.preventDefault(); openModal(); return; }
-    const m = findModal(); if (!m) return;
-    if (e.target === m || e.target.closest('[data-close], .menu-close, .lang-close')) {
-      e.preventDefault(); closeModal();
+  // 9-1) スタイル（インラインで注入。CSSファイルは触らない）
+  (function injectLangStyles(){
+    if (document.getElementById('lang-ui-inline-style')) return;
+    const css = `
+    .lang-fab{
+      position:fixed; top:calc(64px + var(--safe-top,0px)); right:calc(10px + var(--safe-right,0px)); z-index:10000;
+      display:inline-flex; align-items:center; gap:.45rem; height:40px; padding:0 .85rem;
+      border-radius:10px; background:rgba(55,65,81,.82); color:#fff;
+      border:1px solid rgba(255,255,255,.10); backdrop-filter: blur(2px);
+      font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.15);
     }
-  });
+    .lang-fab:hover{ opacity:.95 }
+    .lang-fab .globe{ font-size:16px; line-height:1 }
+    #langModal{ position:fixed; inset:0; z-index:10001; display:none; }
+    #langModal.open{ display:block; }
+    #langModal .backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); }
+    #langModal .panel{
+      position:absolute; top:clamp(60px, 8vh, 100px); right:10px; width:min(420px,92vw);
+      background:rgba(17,24,39,.92); color:#fff; border:1px solid rgba(255,255,255,.12);
+      border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,.35); padding:12px; backdrop-filter: blur(8px);
+    }
+    #langModal .panel h3{ margin:0 0 8px; font-size:14px; font-weight:800; letter-spacing:.01em; display:flex; justify-content:space-between; align-items:center; }
+    #langModal .close{ background:transparent; border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:4px 10px; cursor:pointer; }
+    #google_translate_element{ background:#fff; border-radius:8px; padding:8px; color:#111; }
+    /* 余計なGoogle表示を隠す（テキストはJSでも掃除） */
+    .goog-logo-link, .goog-te-gadget span, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame { display:none !important; }
+    body { top: 0 !important; }
+    `;
+    const style = document.createElement('style');
+    style.id = 'lang-ui-inline-style';
+    style.textContent = css;
+    document.head.appendChild(style);
+  })();
 
-  // モーダル内が更新されても自動で掃除
-  const m0 = findModal();
-  if (m0) {
-    new MutationObserver(() => tidyTranslator(m0))
-      .observe(m0, { childList:true, subtree:true });
+  // 9-2) ボタンが無ければ作る（ハンバーガーの“下”に出る）
+  function ensureLangButton(){
+    if (document.getElementById('siteTranslateBtn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'siteTranslateBtn';
+    btn.className = 'lang-fab';
+    btn.innerHTML = `<span class="globe">🌐</span><span>言語 / Language</span>`;
+    const menuBtn = document.getElementById('menuBtn');
+    if (menuBtn && menuBtn.parentNode) {
+      menuBtn.insertAdjacentElement('afterend', btn);
+    } else {
+      document.body.appendChild(btn);
+    }
   }
 
+  // 9-3) モーダルが無ければ作る
+  function ensureLangModal(){
+    if (document.getElementById('langModal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'langModal';
+    modal.setAttribute('aria-hidden','true');
+    modal.innerHTML = `
+      <div class="backdrop" data-close></div>
+      <div class="panel" role="dialog" aria-modal="true" aria-label="Language">
+        <h3>🌐 言語 / Language <button class="close" data-close>Close</button></h3>
+        <div id="google_translate_element" aria-label="Google Website Translator"></div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  // 9-4) Google翻訳ウィジェットを読み込み
+  function loadGoogleTranslate(cb){
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+      if (typeof cb === 'function') cb();
+      return;
+    }
+    window.googleTranslateElementInit = function(){
+      try {
+        new google.translate.TranslateElement({
+          pageLanguage: 'ja',
+          autoDisplay: false
+          // includedLanguages を省略＝なるべく全言語
+        }, 'google_translate_element');
+      } catch(_) {}
+      if (typeof cb === 'function') cb();
+    };
+    const s = document.createElement('script');
+    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  // 9-5) モーダル開閉
+  function openModal(){
+    const m = document.getElementById('langModal');
+    if (!m) return;
+    m.classList.add('open');
+    m.removeAttribute('aria-hidden');
+    setTimeout(()=> tidyTranslator(m), 0);
+  }
+  function closeModal(){
+    const m = document.getElementById('langModal');
+    if (!m) return;
+    m.classList.remove('open');
+    m.setAttribute('aria-hidden','true');
+  }
+
+  // 9-6) 不要テキストを掃除
   function tidyTranslator(root){
     if (!root) return;
-    // 「Powered by / Google / 翻訳 / 翻訳翻訳 / /」だけ単体行で消す
     const isJunk = (t) => /^\s*(powered\s*by|google|翻訳|翻訳翻訳|\/)\s*$/i.test(t);
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
     const trash = [];
@@ -356,8 +399,7 @@ window.addEventListener('load', cutOnlyBottomDup);
       if (p && !/^(select|option|input|button)$/i.test(p.tagName || '') &&
           (p.textContent || '').trim() === '') p.remove();
     });
-
-    // select 周辺の余分な <br> を間引き
+    // select 周辺の余計な <br> を間引き
     const sel = root.querySelector('select');
     if (sel) {
       let prev = sel.previousSibling;
@@ -366,6 +408,37 @@ window.addEventListener('load', cutOnlyBottomDup);
       while (next && next.nodeType === 1 && next.tagName === 'BR') { const r=next; next=next.nextSibling; r.remove(); }
     }
   }
-})();
 
-/* === ここまで。既存デザインや本文は無改変。 === */
+  // 9-7) 初期化とイベント
+  function initLang(){
+    ensureLangButton();
+    ensureLangModal();
+
+    const btn = document.getElementById('siteTranslateBtn');
+    btn?.addEventListener('click', (e)=>{
+      e.preventDefault();
+      ensureLangModal();
+      loadGoogleTranslate(()=> {
+        openModal();
+      });
+    });
+
+    document.addEventListener('click', (e)=>{
+      if (e.target.matches('#langModal [data-close]') || e.target.id === 'langModal') {
+        e.preventDefault();
+        closeModal();
+      }
+    });
+
+    const m = document.getElementById('langModal');
+    if (m) {
+      new MutationObserver(()=> tidyTranslator(m)).observe(m, { childList:true, subtree:true });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLang);
+  } else {
+    initLang();
+  }
+})();
