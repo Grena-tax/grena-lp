@@ -105,6 +105,26 @@
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
+
+  /* ▼▼ 言語モーダル（追加） ▼▼ */
+  .lang-modal{position:fixed;inset:0;z-index:10001;pointer-events:none}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease}
+  .lang-panel{
+    position:absolute;top:50%;left:50%;transform:translate(-50%,-52%) scale(.98);
+    width:min(560px,92vw);max-height:min(80vh,640px);overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    box-shadow:0 16px 48px rgba(0,0,0,.2);opacity:0;transition:opacity .2s ease, transform .2s ease
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+  .lang-head strong{font-weight:800;color:#111827}
+  .lang-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-body{padding:14px}
+  .lang-note{margin-top:10px;color:#475569;font-size:.86em}
+
+  html.lang-open .lang-modal{pointer-events:auto}
+  html.lang-open .lang-backdrop{opacity:1}
+  html.lang-open .lang-panel{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  /* ▲▲ 言語モーダル（追加） ▲▲ */
 </style>
 </head>
 <body>
@@ -736,11 +756,30 @@
 <!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
+    <!-- ▼ 追加：言語ボタン（位置はCTA内。UIは既存の.btnを使用） -->
+    <button class="btn neutral" id="langBtn" type="button" aria-haspopup="dialog" aria-controls="langModal">言語</button>
+    <!-- ▲ 追加ここまで -->
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
     <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
     <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
+
+<!-- ▼ 追加：言語選択モーダル（Google翻訳ウィジェット） -->
+<div class="lang-modal" id="langModal" aria-hidden="true">
+  <div class="lang-backdrop" id="langBackdrop"></div>
+  <div class="lang-panel" role="dialog" aria-modal="true" aria-labelledby="langTitle">
+    <div class="lang-head">
+      <strong id="langTitle">言語を選択</strong>
+      <button class="lang-close" id="langClose" aria-label="閉じる">×</button>
+    </div>
+    <div class="lang-body">
+      <div id="google_translate_element"></div>
+      <p class="lang-note">※ 機械翻訳です。法務・税務の正確な判断は原文（日本語）を優先してください。</p>
+    </div>
+  </div>
+</div>
+<!-- ▲ 追加ここまで -->
 
 <!-- ===== JS（本文は変更せず／操作だけ） ===== -->
 <script src="./script.js?v=20250910-01"></script>
