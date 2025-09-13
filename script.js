@@ -37,7 +37,7 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
 
 /* ===== 固定CTAの高さ → 本文余白に反映（※bottomはJSで触らない） ===== */
 const adjustCtaPadding = () => {
-  const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar');
+  const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
@@ -163,8 +163,9 @@ window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
 // 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
-/* === [追加] iOSラバーバンド中もCTAを画面最下端にロック（bottomは触らない） === */
-(function lockCtaToVisualViewport(){
+
+/* === 追加：iOSラバーバンド中でもCTAが上に上がらない“安定値凍結” === */
+(function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
     document.querySelector('.cta-bar')   ||
@@ -172,21 +173,41 @@ window.addEventListener('load', cutOnlyBottomDup);
 
   if (!bar || !window.visualViewport) return;
 
-  let last = -1;
+  let stable = 0; // 直近の安定したギャップ値を保持
+
   const apply = () => {
     const vv  = window.visualViewport;
-    // 端末UI（アドレスバー等）で可視領域が縮んだ分だけ下に追従させる
-    const gap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    const doc = document.documentElement;
 
-    if (gap !== last) {
-      last = gap;
-      bar.style.transform = `translate3d(0, ${gap}px, 0)`; // bottomは常に0、ズレだけ相殺
+    // 端末UI（アドレスバー等）ぶんの下側ギャップ
+    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+
+    // いまの最大スクロール位置（ツールバー状態も加味）
+    let maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop);
+    if (maxScroll < 0) maxScroll = 0;
+
+    const y = window.scrollY || doc.scrollTop || 0;
+
+    // ボトム側ラバーバンド（過スクロール）時は更新しない
+    const isBouncingBottom = y > maxScroll + 1;
+
+    if (!isBouncingBottom) {
+      stable = uiGap; // 通常時だけ更新
+    }
+
+    const use = isBouncingBottom ? stable : uiGap;
+
+    // CSSの bottom:0（or safe-area）を維持し、ズレだけtransformで相殺
+    const tx = `translate3d(0, ${use}px, 0)`;
+    if (bar.style.transform !== tx) {
+      bar.style.transform = tx;
     }
   };
 
+  // 初期＆イベント
   apply();
-  visualViewport.addEventListener('resize', apply);
-  visualViewport.addEventListener('scroll', apply);
-  window.addEventListener('scroll', apply, { passive:true });
+  visualViewport.addEventListener('resize',  apply);
+  visualViewport.addEventListener('scroll',  apply);
+  window.addEventListener('scroll',          apply, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
