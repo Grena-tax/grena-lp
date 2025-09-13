@@ -228,83 +228,59 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =======================================================================
-   ▼▼ 言語モーダル内の不要表示を強制削除（Powered by / Google / 翻訳）＋余白調整 ▼▼
+   ▼▼ 言語モーダル：不要の3行（Powered by / Google / 翻訳）だけ安全に削除 ▼▼
    ======================================================================= */
-(function stripLangModalMarks(){
-  // 対象ダイアログを推定（タイトル文言で拾う）
+(function safeCleanLangModal(){
+  // モーダル候補をタイトルで拾う
   const findDialog = () =>
     Array.from(document.querySelectorAll('[role="dialog"], .lang-dialog, .modal'))
       .find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
 
-  // 不要テキスト判定
-  const isJunkText = (s) => {
-    const t = (s || '').replace(/\s+/g,' ').trim();
-    if (!t) return false;
-    return (
-      /powered\s*by/i.test(t) && t.length <= 20 || // Powered by
-      /^google$/i.test(t) ||                      // Google
-      /^翻訳(?:翻訳)?$/i.test(t)                 // 翻訳 / 翻訳翻訳
-    );
-  };
+  // 削除対象テキスト判定（ピンポイント）
+  const isJunkText = (s) => /^\s*(powered\s*by|google|翻訳|翻訳翻訳|\/)\s*$/i.test(s || '');
 
-  // 指定した日英の注意書き（「自分の国を調べてください…」）も念のため消去
-  const NOTE_JA = '自分の国を調べてください';
-  const NOTE_EN = "please check your country's rules and information";
+  // 親が select 等の機能要素を含んでいる場合は絶対に消さない
+  const isFunctionalContainer = (el) =>
+    !!(el && (el.closest('select, [role="combobox"], [role="listbox"]')));
 
-  const compact = (root) => {
+  const clean = (root) => {
     if (!root) return;
 
-    const toRemove = new Set();
-
-    // 1) Google系 class / リンクで明らかなウィジェット断片を除去
-    root.querySelectorAll('*').forEach(el => {
-      const cls = (el.className || '') + ' ' + (el.id || '');
-      const href = (el.getAttribute && el.getAttribute('href')) || '';
-      if (
-        /goog|google-translate|goog-te/i.test(cls) ||
-        /google\.com|translate/i.test(href)
-      ) {
-        toRemove.add(el);
-      }
-    });
-
-    // 2) テキストノード削除（Powered by / Google / 翻訳／注意文）
+    // テキストノードだけ除去
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-    const texts = [];
+    const victims = [];
     while (walker.nextNode()) {
       const n = walker.currentNode;
-      const val = (n.nodeValue || '').toLowerCase();
-      if (isJunkText(n.nodeValue) || val.includes(NOTE_JA) || val.includes(NOTE_EN)) {
-        texts.push(n);
+      if (isJunkText(n.nodeValue)) victims.push(n);
+    }
+    victims.forEach(n => {
+      const p = n.parentNode;
+      n.remove();
+      if (p && !isFunctionalContainer(p) && (p.textContent || '').trim() === '') p.remove();
+    });
+
+    // 余計な <br> を select の前後から間引く
+    const sel = root.querySelector('select');
+    if (sel) {
+      // 前
+      let prev = sel.previousSibling;
+      while (prev && prev.nodeType === 1 && prev.tagName === 'BR') {
+        const rm = prev; prev = prev.previousSibling; rm.remove();
+      }
+      // 後
+      let next = sel.nextSibling;
+      while (next && next.nodeType === 1 && next.tagName === 'BR') {
+        const rm = next; next = next.nextSibling; rm.remove();
       }
     }
-    texts.forEach(n => {
-      const p = n.parentNode;
-      if (!p) return;
-      // 包装だけの要素なら丸ごと消す
-      if (p.childNodes.length === 1 && /^(p|div|small|span|a|li|em|i|b)$/i.test(p.tagName)) {
-        toRemove.add(p);
-      } else {
-        n.remove();
-      }
-    });
-
-    // 3) 候補を削除
-    toRemove.forEach(el => el.remove());
-
-    // 4) 余白を詰める：連続 <br>・末尾 <br>・空要素の掃除
-    root.querySelectorAll('br+br, br:last-child').forEach(br => br.remove());
-    root.querySelectorAll('p:empty, div:empty, small:empty, span:empty').forEach(el => {
-      if ((el.textContent || '').trim() === '') el.remove();
-    });
   };
 
   const run = () => {
     const dlg = findDialog();
-    if (dlg) compact(dlg);
+    if (dlg) clean(dlg);
   };
 
-  // 初回 & 以後の変化監視
-  run();
-  new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
+  // モーダルが開いた直後に走らせる（遅延で安全側）
+  document.addEventListener('click', () => setTimeout(run, 60), true);
+  new MutationObserver(() => setTimeout(run, 0)).observe(document.body, { childList: true, subtree: true });
 })();
