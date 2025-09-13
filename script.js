@@ -25,7 +25,7 @@ const slug = (t) => (t || '')
   else body.appendChild(wrap);
 
   // CTA・メニューUI以外を全部 #scroll-root に移動
-  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap, document.getElementById('langBtn'), document.getElementById('langWrap')]);
   Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
@@ -227,50 +227,46 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* =========================================================
-   ▼ ランゲージ切替（Google翻訳ウィジェット）
-   ========================================================= */
-(function setupLanguageModal(){
-  // Drawerのボタンを優先。無ければ旧IDにも対応。
-  const openBtn   = document.getElementById('langBtnDrawer') || document.getElementById('langBtn');
-  const modal     = document.getElementById('langModal');
-  const backdrop  = document.getElementById('langBackdrop');
-  const closeBtn  = document.getElementById('langClose');
+/* === 追加③：言語モーダル（ハンバーガーの外、下に置くボタンから起動） === */
+(function languageModal(){
+  const $btn   = document.getElementById('langBtn');
+  const $wrap  = document.getElementById('langWrap');
+  const $close = document.getElementById('langClose');
+  const $back  = document.getElementById('langBackdrop');
 
-  if (!openBtn || !modal) return;
+  if(!$btn || !$wrap) return;
 
-  const openLang = () => {
-    document.documentElement.classList.add('lang-open');
-    modal.setAttribute('aria-hidden','false');
-    // ウィジェット読み込み（1回だけ）
+  const open = () => {
+    $wrap.setAttribute('aria-hidden','false');
+    $btn.setAttribute('aria-expanded','true');
     loadGoogleTranslateOnce();
   };
-  const closeLang = () => {
-    document.documentElement.classList.remove('lang-open');
-    modal.setAttribute('aria-hidden','true');
+  const close = () => {
+    $wrap.setAttribute('aria-hidden','true');
+    $btn.setAttribute('aria-expanded','false');
   };
 
-  openBtn.addEventListener('click', openLang);
-  closeBtn?.addEventListener('click', closeLang);
-  backdrop?.addEventListener('click', closeLang);
-  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
+  $btn.addEventListener('click', open);
+  $close?.addEventListener('click', close);
+  $back?.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') close(); });
 
-  // Google翻訳ウィジェット読み込み（重複防止）
+  // Google Translate ローダ（1回だけ）
   function loadGoogleTranslateOnce(){
     if (window.__gt_loaded) return;
     window.__gt_loaded = true;
 
     window.googleTranslateElementInit = function(){
-      new window.google.translate.TranslateElement({
-        pageLanguage: 'ja',
-        autoDisplay: false,     // 自動バナーを出さない
-        includedLanguages: ''   // 空 = 全言語
-      }, 'google_translate_element');
+      /* includedLanguages未指定＝全世界（Google側の対応言語） */
+      new google.translate.TranslateElement(
+        {pageLanguage: 'ja', autoDisplay: false},
+        'google_translate_element'
+      );
     };
 
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.defer = true;
+    s.async = true;
     document.head.appendChild(s);
   }
 })();
