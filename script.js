@@ -226,3 +226,50 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('scroll',          apply, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
+
+/* =========================================================
+   ▼ 追加：ランゲージ切替（Google翻訳ウィジェット）
+   ========================================================= */
+(function setupLanguageModal(){
+  const openBtn   = document.getElementById('langBtn');
+  const modal     = document.getElementById('langModal');
+  const backdrop  = document.getElementById('langBackdrop');
+  const closeBtn  = document.getElementById('langClose');
+
+  if (!openBtn || !modal) return;
+
+  const openLang = () => {
+    document.documentElement.classList.add('lang-open');
+    modal.setAttribute('aria-hidden','false');
+    // ウィジェット読み込み（1回だけ）
+    loadGoogleTranslateOnce();
+  };
+  const closeLang = () => {
+    document.documentElement.classList.remove('lang-open');
+    modal.setAttribute('aria-hidden','true');
+  };
+
+  openBtn.addEventListener('click', openLang);
+  closeBtn?.addEventListener('click', closeLang);
+  backdrop?.addEventListener('click', closeLang);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
+
+  // Google翻訳ウィジェット読み込み（重複防止）
+  function loadGoogleTranslateOnce(){
+    if (window.__gt_loaded) return;
+    window.__gt_loaded = true;
+
+    window.googleTranslateElementInit = function(){
+      new window.google.translate.TranslateElement({
+        pageLanguage: 'ja',
+        autoDisplay: false,     // 自動バナーを出さない
+        includedLanguages: ''   // 空 = 全言語
+      }, 'google_translate_element');
+    };
+
+    const s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+})();
