@@ -11,17 +11,13 @@ const slug = (t) => (t || '')
 /* === スクロール容器 (#scroll-root) を用意（HTML無改変） === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
-
   const body = document.body;
   const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
   const menuBtn = document.getElementById('menuBtn');
   const menuDrawer = document.getElementById('menuDrawer');
-
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
-
   if (cta) body.insertBefore(wrap, cta); else body.appendChild(wrap);
-
   const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
   Array.from(body.childNodes).forEach(n => { if (!keep.has(n)) wrap.appendChild(n); });
 })();
@@ -64,10 +60,8 @@ document.addEventListener('click', (e) => {
   const id = a.getAttribute('href');
   const target = document.querySelector(id);
   if (!target) return;
-
   e.preventDefault();
   scrollToEl(target);
-
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -121,14 +115,11 @@ function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
   let i = 1;
-
   sections.forEach(sec=>{
     const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
     if (!details.length) return;
-
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
-
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -137,16 +128,13 @@ function buildMenu(){
     } else {
       wrap.classList.add('no-title');
     }
-
     const ul = document.createElement('ul');
     ul.className = 'menu-list';
-
     details.forEach(d=>{
       const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
       if (excludeTitles.some(x => t.includes(x))) return;
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
-
       const li = document.createElement('li');
       const a  = document.createElement('a');
       a.href = `#${d.id}`;
@@ -161,11 +149,9 @@ function buildMenu(){
       li.appendChild(a);
       ul.appendChild(li);
     });
-
     wrap.appendChild(ul);
     frag.appendChild(wrap);
   });
-
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
@@ -207,9 +193,7 @@ window.addEventListener('load', cutOnlyBottomDup);
     document.querySelector('.fixed-cta') ||
     document.querySelector('.cta-bar')   ||
     document.getElementById('ctaBar');
-
   if (!bar || !window.visualViewport) return;
-
   const scroller = getScroller();
   let stable = 0;
   const apply = () => {
@@ -231,39 +215,39 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   言語ボタン＆モーダル（Google Website Translator）
+   言語ボタン＆パネル（Google Website Translator）
    ========================================================= */
 (function languageUI(){
-  /* スタイル（視覚だけで消す／機能は残す） */
+  /* スタイル（“濃いめで透けたグレー”、ハンバーガーの下） */
   (function injectLangStyles(){
     if (document.getElementById('lang-ui-inline-style')) return;
     const css = `
     .lang-fab{
       position:fixed; top:calc(64px + var(--safe-top,0px)); right:calc(10px + var(--safe-right,0px)); z-index:10000;
-      display:inline-flex; align-items:center; gap:.45rem; height:40px; padding:0 .85rem;
-      border-radius:10px; background:rgba(36,36,36,.88); color:#fff;
-      border:1px solid rgba(255,255,255,.10); backdrop-filter: blur(2px);
-      font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.15);
+      display:inline-flex; align-items:center; gap:.45rem; height:36px; padding:0 .8rem;
+      border-radius:10px; background:rgba(28,28,28,.88); color:#fff;
+      border:1px solid rgba(255,255,255,.12); backdrop-filter: blur(2px);
+      font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,.18);
     }
-    .lang-fab:hover{ opacity:.96 }
-    .lang-fab .globe{ font-size:16px; line-height:1 }
+    .lang-fab:hover{ opacity:.97 }
+    .lang-fab .globe{ font-size:15px; line-height:1 }
 
-    #langModal{ position:fixed; inset:0; z-index:10001; display:none; }
-    #langModal.open{ display:block; }
-    #langModal .backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); }
-    #langModal .panel{
-      position:absolute; top:clamp(60px, 8vh, 100px); right:10px; width:min(420px,92vw);
-      background:rgba(17,17,17,.94); color:#fff; border:1px solid rgba(255,255,255,.12);
-      border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,.35); padding:12px; backdrop-filter: blur(8px);
+    #langPanel{
+      position:fixed; top:calc(104px + var(--safe-top,0px)); right:10px; width:min(380px, 92vw);
+      background:rgba(20,20,20,.94); color:#fff; border:1px solid rgba(255,255,255,.14);
+      border-radius:12px; padding:12px; z-index:10001; display:none; box-shadow:0 10px 40px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
     }
-    #langModal .panel h3{ margin:0 0 8px; font-size:14px; font-weight:800; letter-spacing:.01em; display:flex; justify-content:space-between; align-items:center; }
-    #langModal .close{ background:transparent; border:1px solid rgba(255,255,255,.3); color:#fff; border-radius:8px; padding:4px 10px; cursor:pointer; }
-    #google_translate_element{ background:#fff; border-radius:8px; padding:8px; color:#111; }
+    #langPanel.open{ display:block; }
+    #langPanel h3{ margin:0 0 8px; font-size:14px; font-weight:800; letter-spacing:.01em; display:flex; justify-content:space-between; align-items:center; }
+    #langPanel .close{ background:transparent; border:1px solid rgba(255,255,255,.35); color:#fff; border-radius:8px; padding:4px 10px; cursor:pointer; }
 
-    /* ▼表示だけ消す（ドロップダウンは残す） */
+    #google_translate_element{ background:#fff; border-radius:8px; padding:10px; color:#111; }
+
+    /* ▼表示だけ消す（機能は残す）— Powered by / Google ロゴ / 余計なspan */
+    #google_translate_element .goog-logo-link,
+    #google_translate_element .goog-te-gadget > span { display:none !important; }
     #google_translate_element .goog-te-gadget { font-size:0 !important; line-height:0 !important; }
-    #google_translate_element .goog-te-gadget img,
-    #google_translate_element .goog-logo-link { display:none !important; }
     #google_translate_element select.goog-te-combo{
       font-size:14px !important; line-height:1.2 !important; padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb;
       box-shadow:0 1px 2px rgba(0,0,0,.04);
@@ -289,21 +273,20 @@ window.addEventListener('load', cutOnlyBottomDup);
     if (menuBtn && menuBtn.parentNode) menuBtn.insertAdjacentElement('afterend', b);
     else document.body.appendChild(b);
   }
-  function ensureLangModal(){
-    if (document.getElementById('langModal')) return;
+  function ensureLangPanel(){
+    if (document.getElementById('langPanel')) return;
     const m = document.createElement('div');
-    m.id = 'langModal';
-    m.setAttribute('aria-hidden','true');
+    m.id = 'langPanel';
     m.innerHTML = `
-      <div class="backdrop" data-close></div>
-      <div class="panel" role="dialog" aria-modal="true" aria-label="Language">
-        <h3>🌐 言語 / Language <button class="close" data-close>Close</button></h3>
-        <div id="google_translate_element" aria-label="Google Website Translator"></div>
+      <h3>🌐 言語 / Language <button class="close" data-close>Close</button></h3>
+      <div id="google_translate_element" aria-label="Google Website Translator"></div>
+      <div id="gt-fallback" style="display:none;margin-top:10px;font-size:12px;color:#e5e7eb;">
+        Translation module didn’t load. Please allow <code>translate.google.com</code> and try again.
       </div>`;
     document.body.appendChild(m);
   }
 
-  /* Google Translate を読み込み（言語を絞って軽くする） */
+  /* Google Translate を読み込み（必要時のみ） */
   function loadGoogleTranslate(cb){
     if (window.google && window.google.translate && window.google.translate.TranslateElement) { cb && cb(); return; }
     window.googleTranslateElementInit = function(){
@@ -316,42 +299,42 @@ window.addEventListener('load', cutOnlyBottomDup);
       } catch(_) {}
       cb && cb();
     };
+    // 既に読み込み中なら重複させない
+    if (document.querySelector('script[data-gt]')) { return; }
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.async = true;
+    s.async = true; s.defer = true; s.setAttribute('data-gt','1');
+    s.onerror = () => { document.getElementById('gt-fallback')?.setAttribute('style','display:block;margin-top:10px;font-size:12px;color:#e5e7eb;'); };
     document.head.appendChild(s);
   }
 
-  function openModal(){
-    const m = document.getElementById('langModal');
-    if (!m) return;
-    m.classList.add('open'); m.removeAttribute('aria-hidden');
+  function openPanel(){
+    const p = document.getElementById('langPanel');
+    if (!p) return;
+    p.classList.add('open');
 
-    // ドロップダウンが出るまで待ってから初回掃除（見た目だけ）
-    let tries = 0;
-    (function waitCombo(){
-      const combo = m.querySelector('select.goog-te-combo');
-      if (combo || tries++ > 40) return;
-      setTimeout(waitCombo, 100);
-    })();
+    // ドロップダウンが現れないケースに備えて監視し、3秒出なければ注意を表示
+    let t = 0;
+    const timer = setInterval(()=>{
+      const combo = p.querySelector('select.goog-te-combo');
+      if (combo){ clearInterval(timer); return; }
+      if (++t > 30){ clearInterval(timer); document.getElementById('gt-fallback')?.setAttribute('style','display:block;margin-top:10px;font-size:12px;color:#e5e7eb;'); }
+    },100);
   }
-  function closeModal(){
-    const m = document.getElementById('langModal');
-    if (!m) return;
-    m.classList.remove('open'); m.setAttribute('aria-hidden','true');
+  function closePanel(){
+    document.getElementById('langPanel')?.classList.remove('open');
   }
 
-  /* 初期化 */
   function initLang(){
     ensureLangButton();
-    ensureLangModal();
+    ensureLangPanel();
 
     document.getElementById('siteTranslateBtn')?.addEventListener('click', (e)=>{
       e.preventDefault();
-      loadGoogleTranslate(openModal);
+      loadGoogleTranslate(openPanel);
     });
     document.addEventListener('click', (e)=>{
-      if (e.target.matches('#langModal [data-close]') || e.target.id === 'langModal') { e.preventDefault(); closeModal(); }
+      if (e.target.matches('#langPanel [data-close]')) { e.preventDefault(); closePanel(); }
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLang);
