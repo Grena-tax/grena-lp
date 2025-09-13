@@ -82,11 +82,6 @@
   .menu-title{font-weight:800;color:#111827}
   .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
   .menu-close:hover{background:#f3f4f6}
-
-  /* ▼ 追加：メニュー直下のクイックアクション（言語） */
-  .menu-actions{padding:10px 12px 6px;border-bottom:1px solid #e5e7eb;background:#fff}
-  .menu-actions .btn{width:100%}
-
   .menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
   .menu-group{padding:8px 10px 6px}
   .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -111,25 +106,36 @@
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
 
-  /* ▼▼ 言語モーダル（追加） ▼▼ */
-  .lang-modal{position:fixed;inset:0;z-index:10001;pointer-events:none}
-  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease}
-  .lang-panel{
-    position:absolute;top:50%;left:50%;transform:translate(-50%,-52%) scale(.98);
-    width:min(560px,92vw);max-height:min(80vh,640px);overflow:auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-    box-shadow:0 16px 48px rgba(0,0,0,.2);opacity:0;transition:opacity .2s ease, transform .2s ease
+  /* ここから：言語ボタン（ハンバーガー“の下”）とモーダル */
+  .lang-trigger{
+    position:fixed;
+    top:calc(64px + var(--safe-top));
+    right:calc(10px + var(--safe-right));
+    z-index:10000;
+    display:inline-flex;align-items:center;gap:.5rem;
+    padding:.6rem .9rem;border-radius:12px;border:1px solid rgba(255,255,255,.08);
+    background:#111827;color:#fff;font-weight:800;text-decoration:none;
+    box-shadow:0 4px 14px rgba(0,0,0,.15);
   }
-  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-  .lang-head strong{font-weight:800;color:#111827}
-  .lang-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-  .lang-close:hover{background:#f3f4f6}
-  .lang-body{padding:14px}
-  .lang-note{margin-top:10px;color:#475569;font-size:.86em}
+  .lang-trigger:hover{opacity:.95}
 
-  html.lang-open .lang-modal{pointer-events:auto}
-  html.lang-open .lang-backdrop{opacity:1}
-  html.lang-open .lang-panel{opacity:1;transform:translate(-50%,-50%) scale(1)}
-  /* ▲▲ 言語モーダル（追加） ▲▲ */
+  .lang-wrap{position:fixed;inset:0;z-index:10050;display:none;pointer-events:none}
+  .lang-wrap[aria-hidden="false"]{display:block;pointer-events:auto}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+  .lang-panel{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:min(640px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.25)
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff}
+  .lang-title{font-weight:800}
+  .lang-close{width:36px;height:36px;display:inline-grid;place-items:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-content{padding:14px}
+  .lang-note{font-size:.86em;color:#475569;margin-top:10px}
+  /* Googleの上部バナーだけは非表示（レイアウト崩れ防止） */
+  .goog-te-banner-frame{display:none!important}
+  body{top:0!important}
 </style>
 </head>
 <body>
@@ -141,6 +147,12 @@
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
+
+<!-- ★ 追加：ハンバーガーの“下”に固定の言語ボタン（英日併記） -->
+<button class="lang-trigger" id="langBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="langWrap">
+  🌐 <span>Translate / 言語</span>
+</button>
+
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
@@ -148,18 +160,24 @@
       <strong class="menu-title">目次（各セクションへ移動）</strong>
       <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
     </div>
-
-    <!-- ▼ 追加：外国の方にも分かる言語ボタン（メニュー直下） -->
-    <div class="menu-actions">
-      <button class="btn secondary" id="langBtnDrawer" type="button" aria-haspopup="dialog" aria-controls="langModal">
-        🌐 Translate / Language
-      </button>
-    </div>
-    <!-- ▲ 追加ここまで -->
-
     <div class="menu-groups" id="menuGroups"><!-- JSが自動生成 --></div>
   </aside>
 </nav>
+
+<!-- ★ 追加：言語モーダル（Google翻訳のセレクタをここに差し込む） -->
+<div class="lang-wrap" id="langWrap" aria-hidden="true">
+  <div class="lang-backdrop" id="langBackdrop"></div>
+  <div class="lang-panel" role="dialog" aria-modal="true" aria-labelledby="langTitle">
+    <div class="lang-head">
+      <strong class="lang-title" id="langTitle">言語を選択 / Translate Language</strong>
+      <button class="lang-close" id="langClose" aria-label="閉じる / Close">×</button>
+    </div>
+    <div class="lang-content">
+      <div id="google_translate_element" aria-label="Google Translate Widget"></div>
+      <p class="lang-note">※ 自分の国を調べてください。 / Please check your country’s rules and information.</p>
+    </div>
+  </div>
+</div>
 
 <!-- =========================
   法人設立セクション
@@ -731,6 +749,7 @@
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
   <div class="accordion">
+    <!-- ★ open を削除（初期は閉じる） -->
     <details>
       <summary>免責事項（必ずお読みください）</summary>
       <div class="content">
@@ -766,7 +785,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA（言語ボタンは削除済み） -->
+<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -774,22 +793,6 @@
     <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
-
-<!-- ▼ 言語選択モーダル（注意文のみ変更） -->
-<div class="lang-modal" id="langModal" aria-hidden="true">
-  <div class="lang-backdrop" id="langBackdrop"></div>
-  <div class="lang-panel" role="dialog" aria-modal="true" aria-labelledby="langTitle">
-    <div class="lang-head">
-      <strong id="langTitle">言語を選択</strong>
-      <button class="lang-close" id="langClose" aria-label="閉じる">×</button>
-    </div>
-    <div class="lang-body">
-      <div id="google_translate_element"></div>
-      <p class="lang-note">※ 自分の国を調べてください。</p>
-    </div>
-  </div>
-</div>
-<!-- ▲ ここまで -->
 
 <!-- ===== JS（本文は変更せず／操作だけ） ===== -->
 <script src="./script.js?v=20250910-02"></script>
