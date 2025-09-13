@@ -8,6 +8,29 @@ const slug = (t) => (t || '')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
   .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
+/* === 追加①：ページ本体をスクロール容器に移す（HTMLは無改変） === */
+(function mountScrollRoot(){
+  if (document.getElementById('scroll-root')) return;
+
+  const body = document.body;
+  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn = document.getElementById('menuBtn');
+  const menuDrawer = document.getElementById('menuDrawer');
+
+  const wrap = document.createElement('div');
+  wrap.id = 'scroll-root';
+
+  // CTAより上にスクロール容器を挿入
+  if (cta) body.insertBefore(wrap, cta);
+  else body.appendChild(wrap);
+
+  // CTA・メニューUI以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
+  Array.from(body.childNodes).forEach(n => {
+    if (!keep.has(n)) wrap.appendChild(n);
+  });
+})();
+
 /* ===== ページ内リンク（スムーススクロール） ===== */
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
@@ -31,7 +54,9 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // スクロール対象は #scroll-root
+    const scroller = document.getElementById('scroll-root') || window;
+    if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
 });
 
@@ -41,7 +66,11 @@ const adjustCtaPadding = () => {
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-  document.body.classList.add('has-cta'); // 余白クラス
+
+  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
+  const scroller = document.getElementById('scroll-root');
+  if (scroller) scroller.classList.add('has-cta');
+  else document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -164,7 +193,7 @@ window.addEventListener('load', cutOnlyBottomDup);
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
 // 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
 
-/* === 追加：iOSラバーバンド中でもCTAが上に上がらない“安定値凍結” === */
+/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -173,38 +202,24 @@ window.addEventListener('load', cutOnlyBottomDup);
 
   if (!bar || !window.visualViewport) return;
 
-  let stable = 0; // 直近の安定したギャップ値を保持
-
+  let stable = 0; // 直近の安定値
   const apply = () => {
     const vv  = window.visualViewport;
     const doc = document.documentElement;
-
-    // 端末UI（アドレスバー等）ぶんの下側ギャップ
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
 
-    // いまの最大スクロール位置（ツールバー状態も加味）
     let maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop);
     if (maxScroll < 0) maxScroll = 0;
+    const y = (document.getElementById('scroll-root') || window).scrollY || window.scrollY || 0;
 
-    const y = window.scrollY || doc.scrollTop || 0;
-
-    // ボトム側ラバーバンド（過スクロール）時は更新しない
     const isBouncingBottom = y > maxScroll + 1;
-
-    if (!isBouncingBottom) {
-      stable = uiGap; // 通常時だけ更新
-    }
+    if (!isBouncingBottom) stable = uiGap;
 
     const use = isBouncingBottom ? stable : uiGap;
-
-    // CSSの bottom:0（or safe-area）を維持し、ズレだけtransformで相殺
     const tx = `translate3d(0, ${use}px, 0)`;
-    if (bar.style.transform !== tx) {
-      bar.style.transform = tx;
-    }
+    if (bar.style.transform !== tx) bar.style.transform = tx;
   };
 
-  // 初期＆イベント
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
