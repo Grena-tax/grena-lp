@@ -347,3 +347,49 @@ window.addEventListener('load', cutOnlyBottomDup);
   compact();
   new MutationObserver(compact).observe(document.body, { childList: true, subtree: true });
 })();
+/* === 言語モーダルの「Powered by / Google / 翻訳(翻訳)」だけ消す === */
+(function removePoweredByBlock(){
+  // 対象モーダルを検出
+  const findDialog = () =>
+    Array.from(document.querySelectorAll('[role="dialog"], .lang-dialog, .modal'))
+      .find(d => /言語|Translate\s+Language/i.test(d.textContent || ''));
+
+  const PATTERNS = [
+    /powered\s*by/i,        // Powered by
+    /^\s*google\s*$/i,      // Google 単独行
+    /^\s*翻訳(?:翻訳)?\s*$/  // 翻訳 / 翻訳翻訳
+  ];
+
+  const isJunkText = (s) => PATTERNS.some(re => re.test(s));
+
+  const cleanup = (root) => {
+    if (!root) return;
+
+    // 1) 「Powered by / Google / 翻訳(翻訳)」の行を削除
+    root.querySelectorAll('p,div,small,span,a,li').forEach(el => {
+      const t = (el.textContent || '').trim();
+      if (isJunkText(t) && !el.querySelector('select,input,button')) el.remove();
+    });
+    // テキストノードでも残っている場合を念のため削除
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+    const trash = [];
+    while (tw.nextNode()) {
+      const n = tw.currentNode;
+      if (isJunkText((n.nodeValue || '').trim())) trash.push(n);
+    }
+    trash.forEach(n => {
+      const p = n.parentNode;
+      if (!p) return;
+      (p.childNodes.length === 1) ? p.remove() : n.remove();
+    });
+
+    // 2) 連続 <br> と末尾の余計な <br> を整理（見た目を詰める）
+    root.querySelectorAll('br+br, br:last-child').forEach(br => br.remove());
+  };
+
+  const run = () => cleanup(findDialog());
+
+  // すぐ実行＆開閉を監視
+  run();
+  new MutationObserver(run).observe(document.body, { childList: true, subtree: true });
+})();
