@@ -268,3 +268,101 @@ window.addEventListener('load', cutOnlyBottomDup);
   backdrop.addEventListener('click', closePanel);
   root.querySelector('.close').addEventListener('click', closePanel);
 })();
+/* === 言語ボタン：重複除去→一個だけ再生成（ハンバーガー下に配置） === */
+(function fixLanguageFab() {
+  // 0) 既存の“言語”UIを全消し（重複・旧実装・Google残骸を一掃）
+  ['#langFab', '#langPanel', '.goog-te-gadget', '#google_translate_element',
+   '.skiptranslate', '[data-lang-fab]'].forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => el.remove());
+  });
+  // 「Translate / 言語」テキストを持つ紛らわしいボタンも重複なら削除
+  const maybeFabs = Array.from(document.querySelectorAll('button,a'))
+    .filter(el => /translate\s*\/\s*言語/i.test(el.textContent || ''));
+  if (maybeFabs.length > 1) maybeFabs.slice(1).forEach(el => el.remove());
+
+  // 1) 位置計算（ハンバーガーの真下あたり）
+  const TOP = 'calc(64px + env(safe-area-inset-top, 0px))';
+  const RIGHT = 'calc(10px + env(safe-area-inset-right, 0px))';
+
+  // 2) “言語”ボタン（FAB）を一つだけ作成
+  const fab = document.createElement('button');
+  fab.id = 'langFab';
+  fab.setAttribute('data-lang-fab', '');
+  fab.type = 'button';
+  fab.setAttribute('aria-label', 'Translate / 言語');
+  Object.assign(fab.style, {
+    position:'fixed', top:TOP, right:RIGHT, zIndex:10000,
+    padding:'8px 12px', borderRadius:'12px',
+    background:'rgba(17,24,39,.88)', color:'#fff',
+    border:'1px solid rgba(255,255,255,.22)',
+    font:'700 13px/1.2 system-ui, -apple-system, "Noto Sans JP", sans-serif',
+    boxShadow:'0 10px 24px rgba(0,0,0,.25)', cursor:'pointer'
+  });
+  fab.textContent = 'Translate / 言語';
+  document.body.appendChild(fab);
+
+  // 3) パネル（押すと出る言語チップ一覧）
+  const panel = document.createElement('div');
+  panel.id = 'langPanel';
+  Object.assign(panel.style, {
+    position:'fixed', right:RIGHT, top:'calc(104px + env(safe-area-inset-top, 0px))',
+    zIndex:10001, minWidth:'min(740px, 92vw)', maxWidth:'92vw',
+    background:'#fff', color:'#0b1220', border:'1px solid #e5e7eb',
+    borderRadius:'12px', boxShadow:'0 16px 40px rgba(0,0,0,.18)',
+    padding:'12px', display:'none'
+  });
+
+  const langs = [
+    ['en','English'],['zh-CN','中文(簡)'],['zh-TW','中文(繁)'],['ko','한국어'],
+    ['fr','Français'],['es','Español'],['de','Deutsch'],['ru','Русский'],
+    ['ar','العربية'],['hi','हिन्दी'],['th','ไทย'],['vi','Tiếng Việt'],
+    ['id','Bahasa Indonesia'],['ms','Bahasa Melayu'],['pt','Português'],
+    ['it','Italiano'],['uk','Українська'],['pl','Polski'],['fil','Filipino'],
+    ['tr','Türkçe']
+  ];
+
+  const head = document.createElement('div');
+  head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin:0 0 8px;font-weight:800';
+  head.innerHTML = '<span>言語 / Language</span>';
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.textContent = 'Close';
+  close.style.cssText = 'border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:6px 8px;cursor:pointer';
+  head.appendChild(close);
+  panel.appendChild(head);
+
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px';
+  langs.forEach(([code, label])=>{
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('data-lang', code);
+    b.textContent = label;
+    b.style.cssText = 'padding:10px 14px;border-radius:999px;border:1px solid #e5e7eb;background:#f8fafc;font-weight:700;cursor:pointer';
+    grid.appendChild(b);
+  });
+  panel.appendChild(grid);
+  document.body.appendChild(panel);
+
+  // 4) 動作：開閉＆遷移（現在ページを翻訳版で新規タブ表示＝元ページはリロードしない）
+  const toggle = () => { panel.style.display = (panel.style.display === 'none' ? 'block' : 'none'); };
+  fab.addEventListener('click', toggle);
+  close.addEventListener('click', () => panel.style.display = 'none');
+
+  grid.addEventListener('click', (e)=>{
+    const btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    const tl = btn.getAttribute('data-lang') || 'en';
+    const u  = location.href.replace(/#.*$/,''); // ハッシュ除去で安定
+    const url = `https://translate.google.com/translate?u=${encodeURIComponent(u)}&sl=auto&tl=${encodeURIComponent(tl)}`;
+    window.open(url, '_blank', 'noopener,noreferrer'); // 元ページを保持
+    panel.style.display = 'none';
+  });
+
+  // 5) 念のため：後から何かが増殖させても即座に間引く
+  const mo = new MutationObserver(()=>{
+    const list = document.querySelectorAll('#langFab, [data-lang-fab]');
+    if (list.length > 1) list.forEach((el,i)=>{ if (i>0) el.remove(); });
+  });
+  mo.observe(document.body, { childList:true, subtree:true });
+})();
