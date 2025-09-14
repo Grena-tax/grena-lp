@@ -1,7 +1,3 @@
-/* =========================================================
-   script.js  — 全置き換え版（言語ボタン＆モーダル内蔵）
-   ========================================================= */
-
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
@@ -56,18 +52,20 @@ document.addEventListener('click', (e) => {
 
 /* ===== 「トップへ」 ===== */
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
-  const scroller = document.getElementById('scroll-root') || window;
-  if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  if (!document.querySelector('#page-top')) {
+    e.preventDefault();
+    const scroller = document.getElementById('scroll-root') || window;
+    if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映（※bottomはJSで触らない） ===== */
+/* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
   const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
-  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -154,7 +152,6 @@ function buildMenu(){
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
 
-  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
 }
 
@@ -191,7 +188,6 @@ document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
 
 /* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
@@ -202,7 +198,7 @@ window.addEventListener('load', cutOnlyBottomDup);
 
   if (!bar || !window.visualViewport) return;
 
-  let stable = 0; // 直近の安定値
+  let stable = 0;
   const apply = () => {
     const vv  = window.visualViewport;
     const doc = document.documentElement;
@@ -228,169 +224,108 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   言語ボタン（ハンバーガーの下）＋モーダル＆Google翻訳
+   ▼▼ 言語ボタン（ハンバーガー直下）＋Google翻訳ドロップダウン
+   ——「あの時の見た目」に戻した版
    ========================================================= */
-(function languageUI(){
-  const menuBtn = document.getElementById('menuBtn');
+(function mountLanguageUI(){
+  // フローティングの小さなバー（ハンバーガー直下）
+  const bar = document.createElement('button');
+  bar.id = 'langFab';
+  bar.type = 'button';
+  bar.setAttribute('aria-label','Translate / 言語');
+  bar.textContent = 'Translate / 言語';
+  Object.assign(bar.style, {
+    position:'fixed',
+    top: `calc(60px + env(safe-area-inset-top, 0px))`,
+    right: `calc(10px + env(safe-area-inset-right, 0px))`,
+    zIndex:'10001',
+    padding:'8px 12px',
+    fontWeight:'700',
+    borderRadius:'12px',
+    border:'1px solid rgba(0,0,0,.15)',
+    background:'rgba(17,24,39,.84)',
+    color:'#fff',
+    boxShadow:'0 6px 22px rgba(0,0,0,.25)',
+    backdropFilter:'saturate(140%) blur(4px)',
+    cursor:'pointer'
+  });
+  document.body.appendChild(bar);
 
-  /* ▼ クイック切替で表示したい言語（増減はここだけ） */
-  const QUICK_LANGS = [
-    ['en','English'],
-    ['zh-CN','中文(简)'],
-    ['zh-TW','中文(繁)'],
-    ['ko','한국어'],
-    ['fr','Français'],
-    ['es','Español'],
-    ['de','Deutsch'],
-    ['ru','Русский'],
-    ['ar','العربية'],
-    ['hi','हिन्दी'],
-    ['th','ไทย'],
-    ['vi','Tiếng Việt'],
-    ['id','Bahasa Indonesia'],
-    ['ms','Bahasa Melayu'],
-    ['pt','Português'],
-    ['it','Italiano'],
-    ['tr','Türkçe'],
-    ['uk','Українська'],
-    ['pl','Polski'],
-    ['fil','Filipino'],
-  ];
-
-  /* ▼ 言語ボタン（ハンバーガーの真下に固定） */
-  let langBtn = document.getElementById('langBtn');
-  if (!langBtn) {
-    langBtn = document.createElement('button');
-    langBtn.id = 'langBtn';
-    langBtn.type = 'button';
-    langBtn.className = 'lang-fab'; // CSSは既存の追従（半透明の濃いグレー）
-    langBtn.setAttribute('aria-label','言語 / Language');
-    langBtn.innerHTML = '<span>Translate / 言語</span>';
-    document.body.appendChild(langBtn);
-  }
-  const place = () => {
-    const r = menuBtn?.getBoundingClientRect();
-    const top = r ? Math.max(10, r.bottom + 10) : 64;
-    langBtn.style.position = 'fixed';
-    langBtn.style.right = '10px';
-    langBtn.style.top = `${top}px`;
-    langBtn.style.zIndex = '10000';
-  };
-  place();
-  addEventListener('resize', place, { passive:true });
-  addEventListener('scroll', place, { passive:true });
-
-  /* ▼ モーダル生成（Powered by / Google / 翻訳 などはCSSで非表示） */
-  let panel;
-  function ensurePanel(){
-    if (panel) return panel;
-    panel = document.createElement('div');
-    panel.id = 'langPanel';
-    panel.setAttribute('role','dialog');
-    panel.setAttribute('aria-modal','true');
-    panel.style.cssText = `
-      position:fixed; right:10px; top:${(menuBtn?.getBoundingClientRect().bottom||64)+10}px;
-      width:min(560px,92vw); background:rgba(17,24,39,.88); color:#fff;
-      border:1px solid rgba(255,255,255,.08); border-radius:12px; box-shadow:0 14px 40px rgba(0,0,0,.35);
-      padding:12px; z-index:10001; backdrop-filter: blur(8px);
-    `;
-    panel.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
-        <strong style="font-weight:800">🌐 言語 / Language</strong>
-        <button type="button" id="langClose" style="background:transparent;border:1px solid rgba(255,255,255,.25);border-radius:8px;color:#fff;padding:.25rem .6rem">Close</button>
-      </div>
+  // モーダル本体（ドロップダウン＋Powered by Google）
+  const panel = document.createElement('div');
+  panel.id = 'langPanel';
+  panel.setAttribute('role','dialog');
+  panel.setAttribute('aria-modal','true');
+  panel.setAttribute('aria-label','言語を選択 / Translate Language');
+  Object.assign(panel.style, {
+    position:'fixed',
+    left:'50%',
+    top:'140px',
+    transform:'translateX(-50%)',
+    width:'min(820px, 92vw)',
+    background:'#fff',
+    color:'#0b1220',
+    border:'1px solid #e5e7eb',
+    borderRadius:'14px',
+    boxShadow:'0 20px 60px rgba(0,0,0,.25)',
+    zIndex:'10002',
+    display:'none'
+  });
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;border-top-left-radius:14px;border-top-right-radius:14px">
+      <strong style="font-weight:800">言語を選択 / Translate Language</strong>
+      <button id="langClose" type="button" aria-label="Close" style="width:34px;height:34px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer">×</button>
+    </div>
+    <div style="padding:14px 16px">
       <div id="google_translate_element"></div>
-      <div id="gt-quick" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
-      <div id="gt-fail" hidden style="margin-top:8px;opacity:.9;font-size:.9em">
-        Translation module didn’t load. <a href="#" id="gt-open" style="color:#a3d3ff">Open in Google Translate</a>
+      <div id="gt-fallback" style="display:none;margin-top:8px;font-size:13px;color:#64748b">
+        Translation module didn't load. Please allow translate.google.com and try again.
       </div>
-    `;
-    document.body.appendChild(panel);
+    </div>
+  `;
+  document.body.appendChild(panel);
 
-    // パネル内だけに効くスタイル（Powered by/Google/翻訳を消す）
-    if (!document.getElementById('langPanelStyle')) {
-      const style = document.createElement('style');
-      style.id = 'langPanelStyle';
-      style.textContent = `
-        #langPanel .goog-logo-link,
-        #langPanel .goog-te-gadget > span,
-        #langPanel img.goog-te-gadget-icon { display:none !important; }
-        #langPanel .goog-te-gadget { color:#fff !important; }
-        #langPanel select.goog-te-combo{
-          width:100%; padding:.55rem .6rem; border-radius:10px;
-          border:1px solid rgba(255,255,255,.25); background:rgba(0,0,0,.2); color:#fff;
-        }
-        #langPanel a.chip{
-          display:inline-block; padding:.28rem .6rem; border-radius:999px; text-decoration:none;
-          border:1px solid rgba(255,255,255,.28); color:#fff;
-        }
-        #langPanel a.chip:hover{ background:rgba(255,255,255,.08); }
-      `;
-      document.head.appendChild(style);
-    }
+  const open = () => { panel.style.display = 'block'; ensureTranslateLoaded(); };
+  const close = () => { panel.style.display = 'none'; };
+  bar.addEventListener('click', open);
+  panel.querySelector('#langClose')?.addEventListener('click', close);
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 
-    panel.querySelector('#langClose')?.addEventListener('click', ()=>{ panel.remove(); panel=null; });
-    return panel;
-  }
-
-  /* ▼ Google翻訳 初期化コールバック（必須のグローバル） */
-  window.googleTranslateElementInit = function googleTranslateElementInit(){
-    try{
-      new google.translate.TranslateElement({
-        pageLanguage: 'ja',
-        autoDisplay: false,
-        includedLanguages: QUICK_LANGS.map(x=>x[0]).join(','),
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-
-      // クイック言語（配列から描画）
-      const quick = document.getElementById('gt-quick');
-      if (quick) {
-        quick.innerHTML = QUICK_LANGS
-          .map(([code,label])=>`<a href="#" class="chip" data-tl="${code}">${label}</a>`)
-          .join('');
-        quick.querySelectorAll('a.chip').forEach(a=>{
-          a.addEventListener('click', (e)=>{
-            e.preventDefault();
-            const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-            if (!sel) return;
-            sel.value = a.getAttribute('data-tl');
-            sel.dispatchEvent(new Event('change'));
-          });
-        });
-      }
-    }catch{}
-  };
-
-  /* ▼ ライブラリ読込（失敗したらフォールバック案内を表示） */
-  function loadGoogle(){
-    if (window.google && window.google.translate) return;
-    if (document.getElementById('gt-lib')) return;
+  // Google Translate ローダ
+  let loaded = false, failed = false;
+  function ensureTranslateLoaded(){
+    if (loaded || failed) return;
+    if (window.google?.translate?.TranslateElement) { init(); return; }
 
     const s = document.createElement('script');
-    s.id = 'gt-lib';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=__initTranslate__';
     s.async = true;
-    s.onerror = ()=>{
-      const fail = document.getElementById('gt-fail');
-      if (fail) fail.hidden = false;
-      const a = document.getElementById('gt-open');
-      if (a) {
-        a.addEventListener('click',(e)=>{
-          e.preventDefault();
-          const tl = 'en';
-          const u  = location.href;
-          const url = `https://translate.google.com/translate?sl=auto&tl=${encodeURIComponent(tl)}&u=${encodeURIComponent(u)}`;
-          window.open(url,'_blank','noopener');
-        });
-      }
-    };
+    window.__initTranslate__ = init;
+    s.onerror = () => { failed = true; panel.querySelector('#gt-fallback').style.display='block'; };
     document.head.appendChild(s);
   }
 
-  /* ▼ クリックでモーダル表示＆ライブラリ読込 */
-  langBtn.addEventListener('click', ()=>{
-    ensurePanel();
-    loadGoogle();
-  });
+  function init(){
+    try{
+      loaded = true;
+      new google.translate.TranslateElement({
+        pageLanguage: 'ja',
+        autoDisplay: false,
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        // 必要に応じて追加してください（広めに設定）
+        includedLanguages: 'en,zh-CN,zh-TW,ko,fr,es,de,ru,ar,hi,th,vi,id,ms,pt,it,tr,uk,pl,fil'
+      }, 'google_translate_element');
+
+      // 既存の画像や余計な要素を軽く整理（見た目調整だけ）
+      setTimeout(()=>{
+        const gadget = panel.querySelector('#google_translate_element');
+        gadget?.querySelectorAll('a, img, span[style*="vertical-align:middle"]').forEach(el=>{
+          if (el.tagName==='IMG') el.remove();
+        });
+      }, 300);
+    }catch(err){
+      failed = true;
+      panel.querySelector('#gt-fallback').style.display='block';
+    }
+  }
 })();
