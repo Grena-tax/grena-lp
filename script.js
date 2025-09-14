@@ -476,3 +476,51 @@ addEventListener('load', cutOnlyBottomDup);
   addEventListener('resize', nudge);
   addEventListener('orientationchange', ()=>setTimeout(nudge,60));
 })();
+/* === 仕上げ：重複チップを完全除去（影・疑似要素・再挿入対策） ========= */
+(function hardHideLangDupes(){
+  // 影/疑似要素もまとめて殺すスタイル
+  const style = document.createElement('style');
+  style.textContent = `
+    [data-gt-hidden]{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+    [data-gt-hidden]::before,[data-gt-hidden]::after{display:none!important;content:none!important}
+  `;
+  document.head.appendChild(style);
+
+  const isDupe = (el) => {
+    if (!el || el.id==='langFab' || el.id==='langPanel' || el.closest('#langPanel')) return false;
+    const st = getComputedStyle(el);
+    if (!(st.position==='fixed' || st.position==='sticky')) return false;
+    const txt = (el.textContent||'').trim();
+    if (!/(Translate|言語)/i.test(txt)) return false;
+    const vw = document.documentElement.clientWidth;
+    const r  = el.getBoundingClientRect();
+    const nearTopRight = (r.top < 160) && (vw - r.right < 220);
+    const sizeOK = (r.width < 320 && r.height < 140);
+    return nearTopRight && sizeOK;
+  };
+
+  const nuke = (el)=>{
+    try{
+      // ラッパーが固定配置なら親も消す
+      let target = el;
+      const p = el.parentElement;
+      if (p){
+        const ps = getComputedStyle(p);
+        if ((ps.position==='fixed'||ps.position==='sticky') && p.getBoundingClientRect().width<=el.getBoundingClientRect().width+20){
+          target = p;
+        }
+      }
+      target.setAttribute('data-gt-hidden','1'); // CSSで強制非表示
+      // 余裕があれば DOM からも除去
+      requestAnimationFrame(()=>{ try{ target.remove(); }catch(_){ /* ignore */ }});
+    }catch(_){}
+  };
+
+  const scan = ()=>{
+    document.querySelectorAll('body *').forEach(el=>{ if (isDupe(el)) nuke(el); });
+  };
+
+  // 初回＆監視（再注入されても即除去）
+  scan();
+  new MutationObserver(scan).observe(document.body, {childList:true, subtree:true});
+})();
