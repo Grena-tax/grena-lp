@@ -1,4 +1,4 @@
-/* ===== v20250914-02 stable ===== */
+/* ===== v20250914-shadow1 — stable minimal ===== */
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
@@ -9,7 +9,7 @@ const slug = (t) => (t || '')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
   .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-/* === 本文用スクロール容器（HTML無改変） === */
+/* === 本文スクロール容器（HTML無改変） === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
   const body = document.body;
@@ -113,7 +113,8 @@ function buildMenu(){
     wrap.appendChild(ul); frag.appendChild(wrap);
   });
   if (!groupsRoot) return;
-  groupsRoot.textContent = ''; groupsRoot.appendChild(frag); killPlansHeading();
+  groupsRoot.textContent = ''; groupsRoot.appendChild(frag);
+  killPlansHeading();
 }
 function killPlansHeading(){ if (!groupsRoot) return; groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{ if (h.textContent.trim().toLowerCase() === 'plans') h.remove(); }); }
 addEventListener('DOMContentLoaded', buildMenu);
@@ -167,14 +168,11 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* ==========================================================
-   言語UI：コンパクトなドロップダウン（重複/はみ出し防止）
-   成功→その場切替 / 失敗→Google翻訳版ページを新規タブ
+   言語UI（Shadow DOM・外部タブ翻訳のみ／衝突しない・確実動作）
    ========================================================== */
-(function mountLanguageUI(){
-  if (window.__langUIInited) return; window.__langUIInited = true;
-
-  // 残骸掃除（重複ボタン/旧パネル）
-  document.querySelectorAll('#langPanel, .lang-panel, #langFab, .lang-fab,[data-role="lang-fab"]').forEach((el,i)=>{ if (i>0 || el.id !== 'menuBtn') el.remove?.(); });
+(function mountLanguageShadow(){
+  // 旧UI・残骸の掃除（重複ボタン/旧パネル）
+  document.querySelectorAll('#lang-host, #langPanel, .lang-panel, #langFab, .lang-fab, [data-role="lang-fab"]').forEach(el=>el.remove());
 
   const langs = [
     ['en','English'],['zh-CN','中文(简)'],['zh-TW','中文(繁)'],['ko','한국어'],['fr','Français'],
@@ -183,180 +181,90 @@ window.addEventListener('load', cutOnlyBottomDup);
     ['pt','Português'],['it','Italiano'],['uk','Українська'],['pl','Polski'],['fil','Filipino'],['tr','Türkçe']
   ];
 
-  // ===== FAB（ハンバーガーの下）=====
-  let fab = document.getElementById('langFab');
-  if (!fab) {
-    fab = document.createElement('button');
-    fab.id = 'langFab'; fab.dataset.role = 'lang-fab'; fab.type = 'button';
-    fab.textContent = 'Translate / 言語';
-    Object.assign(fab.style, {
-      position:'fixed', right:'12px', zIndex:'10001',
-      padding:'8px 12px', borderRadius:'12px',
-      border:'1px solid rgba(0,0,0,.08)', background:'rgba(33,37,45,.86)', color:'#fff',
-      fontWeight:'700', fontSize:'12px', boxShadow:'0 12px 28px rgba(0,0,0,.24)',
-      backdropFilter:'saturate(140%) blur(6px)', cursor:'pointer'
-    });
-    document.body.appendChild(fab);
-  }
+  const host = document.createElement('div');
+  host.id = 'lang-host';
+  host.style.position = 'fixed';
+  host.style.zIndex   = '10010'; // メニューより上
+  document.body.appendChild(host);
+
+  const root = host.attachShadow({ mode:'open' });
+  root.innerHTML = `
+    <style>
+      :host{ position:fixed; inset:auto auto auto auto; }
+      *,*::before,*::after{ box-sizing:border-box; }
+      .fab{
+        position:fixed; right:12px; top:78px;
+        padding:8px 12px; border-radius:12px;
+        border:1px solid rgba(0,0,0,.08); background:rgba(33,37,45,.86); color:#fff;
+        font:700 12px/1 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+        box-shadow:0 12px 28px rgba(0,0,0,.24); cursor:pointer; backdrop-filter:saturate(140%) blur(6px);
+      }
+      .backdrop{ position:fixed; inset:0; background:transparent; display:none; }
+      .panel{
+        position:fixed; right:12px; top:84px;
+        width:min(560px, 92vw); max-height:60vh; overflow:auto;
+        background:#fff; color:#0b1220; border:1px solid #e5e7eb; border-radius:14px;
+        box-shadow:0 24px 60px rgba(0,0,0,.22); display:none;
+        font: 400 14px/1.4 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+      }
+      .head{ display:flex; align-items:center; justify-content:space-between; gap:8px;
+             font-weight:800; padding:10px 12px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0; }
+      .close{ border:1px solid #e5e7eb; background:#fff; border-radius:10px; padding:6px 10px; cursor:pointer; }
+      .content{ padding:12px; }
+      .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
+      .chip{
+        padding:8px 10px; border-radius:10px; background:#f3f4f6; border:1px solid #e5e7eb; color:#334155;
+        font:700 13px/1.2 system-ui, -apple-system, "Segoe UI", "Noto Sans JP", sans-serif;
+        white-space:nowrap; cursor:pointer; text-align:center;
+      }
+      .show{ display:block !important; }
+    </style>
+    <button class="fab" type="button">Translate / 言語</button>
+    <div class="backdrop" part="backdrop"></div>
+    <div class="panel" part="panel" aria-label="言語 / Language">
+      <div class="head">
+        <div>言語 / Language</div>
+        <button class="close" type="button">Close</button>
+      </div>
+      <div class="content">
+        <div class="grid" id="grid"></div>
+      </div>
+    </div>
+  `;
+
+  const $ = (sel) => root.querySelector(sel);
+  const fab = $('.fab');
+  const panel = $('.panel');
+  const backdrop = $('.backdrop');
+  const grid = $('#grid');
+
   const anchorBtn = document.getElementById('menuBtn');
   const placeFab = () => {
-    const r = anchorBtn?.getBoundingClientRect();
-    fab.style.top = r ? `${Math.round(r.bottom + 8)}px` : '78px';
+    try{
+      const r = anchorBtn?.getBoundingClientRect();
+      if (r) { fab.style.top = Math.round(r.bottom + 8) + 'px'; }
+      else   { fab.style.top = '78px'; }
+    }catch(_){ fab.style.top = '78px'; }
   };
   placeFab(); addEventListener('resize', placeFab);
 
-  // ===== ドロップダウン本体 =====
-  let open = false, panel = null, backdrop = null, content = null, selectEl = null;
-
-  const layoutToFab = () => {
-    const rect = fab.getBoundingClientRect();
-    const right = Math.max(12, window.innerWidth - rect.right + 12);
-    if (panel) {
-      panel.style.right = right + 'px';
-      panel.style.top   = Math.round(rect.bottom + 8) + 'px';
-    }
+  // チップ（外部タブ翻訳）
+  const openTranslate = (code) => {
+    const u = location.href;
+    const url = `https://translate.google.com/translate?sl=ja&tl=${encodeURIComponent(code)}&u=${encodeURIComponent(u)}`;
+    window.open(url, '_blank', 'noopener');
   };
+  langs.forEach(([code,label])=>{
+    const b = document.createElement('button');
+    b.className = 'chip'; b.type = 'button'; b.textContent = label;
+    b.addEventListener('click', ()=> openTranslate(code));
+    grid.appendChild(b);
+  });
 
-  const buildPanel = () => {
-    if (panel) return;
+  const openPanel = ()=>{ panel.classList.add('show'); backdrop.classList.add('show'); };
+  const closePanel = ()=>{ panel.classList.remove('show'); backdrop.classList.remove('show'); };
 
-    // backdrop（外クリックで閉じる）
-    backdrop = document.createElement('div');
-    Object.assign(backdrop.style, {
-      position:'fixed', inset:'0', background:'transparent',
-      zIndex:'10000'
-    });
-    backdrop.addEventListener('click', closePanel);
-
-    // panel
-    panel = document.createElement('div');
-    panel.id = 'langPanel'; panel.className = 'lang-panel';
-    Object.assign(panel.style, {
-      position:'fixed', right:'12px', top:'84px',
-      width:'min(560px, 92vw)', maxHeight:'60vh', overflow:'auto',
-      background:'#fff', color:'#0b1220',
-      border:'1px solid #e5e7eb', borderRadius:'14px',
-      boxShadow:'0 24px 60px rgba(0,0,0,.22)', zIndex:'10002'
-    });
-
-    // header
-    const head = document.createElement('div');
-    Object.assign(head.style,{fontWeight:'800',padding:'10px 12px',borderBottom:'1px solid #e5e7eb',display:'flex',alignItems:'center',justifyContent:'space-between'});
-    head.textContent = '言語 / Language';
-    const close = document.createElement('button');
-    close.type='button'; close.textContent='Close';
-    Object.assign(close.style,{border:'1px solid #e5e7eb',background:'#fff',borderRadius:'10px',padding:'6px 10px',cursor:'pointer'});
-    close.addEventListener('click', closePanel);
-    head.appendChild(close);
-
-    // content
-    content = document.createElement('div');
-    Object.assign(content.style,{ padding:'12px' });
-
-    panel.appendChild(head); panel.appendChild(content);
-    document.body.appendChild(backdrop);
-    document.body.appendChild(panel);
-    layoutToFab();
-  };
-
-  // チップ描画（必ず panel 内に入れる）
-  const renderQuickChips = () => {
-    if (!content || content.querySelector('[data-quick]')) return;
-    const wrap = document.createElement('div');
-    wrap.dataset.quick = '1';
-    Object.assign(wrap.style,{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(120px,1fr))', gap:'8px' });
-
-    const clickChip = (code) => {
-      const sel = selectEl || document.querySelector('select.goog-te-combo');
-      if (sel) {
-        sel.value = code;
-        sel.dispatchEvent(new Event('change', { bubbles:true }));
-      } else {
-        const u = location.href;
-        const url = `https://translate.google.com/translate?sl=ja&tl=${encodeURIComponent(code)}&u=${encodeURIComponent(u)}`;
-        window.open(url, '_blank', 'noopener');
-      }
-    };
-
-    langs.forEach(([code,label])=>{
-      const b = document.createElement('button');
-      b.type = 'button'; b.textContent = label;
-      Object.assign(b.style,{
-        padding:'8px 10px', borderRadius:'10px',
-        background:'#f3f4f6', border:'1px solid #e5e7eb', color:'#334155',
-        fontWeight:'700', fontSize:'13px', whiteSpace:'nowrap', cursor:'pointer'
-      });
-      b.addEventListener('click', ()=> clickChip(code));
-      wrap.appendChild(b);
-    });
-    content.appendChild(wrap);
-  };
-
-  // Google翻訳（あれば利用）
-  let gtLoaded = false;
-  const tryMountGoogle = async () => {
-    if (gtLoaded) return !!selectEl;
-    try{
-      await new Promise((resolve)=>{
-        if (window.google?.translate?.TranslateElement) return resolve(true);
-        const s = document.createElement('script');
-        s.src = 'https://translate.google.com/translate_a/element.js?cb=__gtReady';
-        s.async = true;
-        window.__gtReady = () => resolve(true);
-        s.onerror = () => resolve(false);
-        document.head.appendChild(s);
-      });
-      if (!window.google?.translate?.TranslateElement) return false;
-
-      // ダミーコンテナに生成→selectだけ抜き出して panel 内に移植（「Powered by〜」を持ち込まない）
-      const holder = document.createElement('div'); holder.id = 'google_translate_element'; holder.style.display='block';
-      document.body.appendChild(holder);
-      new google.translate.TranslateElement({
-        pageLanguage: 'ja',
-        autoDisplay: false,
-        includedLanguages: langs.map(l=>l[0]).join(','),
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-
-      await new Promise(r=>{
-        const timer = setInterval(()=>{
-          const sel = holder.querySelector('select.goog-te-combo');
-          if (sel) { selectEl = sel; clearInterval(timer); r(true); }
-        }, 50);
-        setTimeout(()=>{ clearInterval(timer); r(false); }, 2000);
-      });
-
-      holder.remove();
-      if (selectEl) {
-        const row = document.createElement('div');
-        Object.assign(row.style,{display:'flex',alignItems:'center',gap:'10px',marginBottom:'10px'});
-        const lab = document.createElement('strong');
-        lab.textContent = 'Select / 言語を選択'; lab.style.fontSize = '13px';
-        selectEl.style.minWidth = '220px';
-        row.appendChild(lab); row.appendChild(selectEl);
-        content.prepend(row);
-      }
-      gtLoaded = true;
-      return !!selectEl;
-    }catch(_){ return false; }
-  };
-
-  function openPanel(){
-    if (open) return;
-    buildPanel(); renderQuickChips(); tryMountGoogle();
-    open = true; layoutToFab();
-    addEventListener('resize', layoutToFab);
-    addEventListener('keydown', onKey);
-  }
-  function closePanel(){
-    if (!open) return;
-    panel?.remove(); backdrop?.remove();
-    panel = backdrop = content = null;
-    open = false;
-    removeEventListener('resize', layoutToFab);
-    removeEventListener('keydown', onKey);
-  }
-  function onKey(e){ if (e.key === 'Escape') closePanel(); }
-
-  fab.addEventListener('click', ()=> open ? closePanel() : openPanel());
+  fab.addEventListener('click', ()=> panel.classList.contains('show') ? closePanel() : openPanel());
+  backdrop.addEventListener('click', closePanel);
+  root.querySelector('.close').addEventListener('click', closePanel);
 })();
