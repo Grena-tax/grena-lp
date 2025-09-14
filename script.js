@@ -189,7 +189,7 @@ window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
 
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* === 追加②：保険（UI縮みの追従だけtransformで相殺） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -224,17 +224,26 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   ▼▼ 言語ボタン（ハンバーガー直下）＋Google翻訳ドロップダウン
-   ——「あの時の見た目」に戻した版
+   ▼▼ 言語ボタン（ハンバーガー直下）＋ Google標準のドロップダウン
+   —— チップUIなどは一切作らず、以前の“セレクト＋Powered by”に固定
    ========================================================= */
-(function mountLanguageUI(){
-  // フローティングの小さなバー（ハンバーガー直下）
-  const bar = document.createElement('button');
-  bar.id = 'langFab';
-  bar.type = 'button';
-  bar.setAttribute('aria-label','Translate / 言語');
-  bar.textContent = 'Translate / 言語';
-  Object.assign(bar.style, {
+(function languageDropdownOnly(){
+  const FAB_ID    = 'langFab';
+  const PANEL_ID  = 'langPanel';
+  const GOOGLE_ID = 'google_translate_element';
+
+  // 既存の言語UIを完全に除去（古いチップUIの掃除も含む）
+  document.getElementById(FAB_ID)?.remove();
+  document.getElementById(PANEL_ID)?.remove();
+  document.querySelectorAll('.lang-cloud, .lang-chip, .lang-quick').forEach(n=>n.remove());
+
+  // フローティング・ボタン（ハンバーガー直下）
+  const fab = document.createElement('button');
+  fab.id = FAB_ID;
+  fab.type = 'button';
+  fab.setAttribute('aria-label','Translate / 言語');
+  fab.textContent = 'Translate / 言語';
+  Object.assign(fab.style, {
     position:'fixed',
     top: `calc(60px + env(safe-area-inset-top, 0px))`,
     right: `calc(10px + env(safe-area-inset-right, 0px))`,
@@ -249,11 +258,11 @@ window.addEventListener('load', cutOnlyBottomDup);
     backdropFilter:'saturate(140%) blur(4px)',
     cursor:'pointer'
   });
-  document.body.appendChild(bar);
+  document.body.appendChild(fab);
 
-  // モーダル本体（ドロップダウン＋Powered by Google）
+  // モーダル（Google標準ウィジェットだけ）
   const panel = document.createElement('div');
-  panel.id = 'langPanel';
+  panel.id = PANEL_ID;
   panel.setAttribute('role','dialog');
   panel.setAttribute('aria-modal','true');
   panel.setAttribute('aria-label','言語を選択 / Translate Language');
@@ -273,57 +282,65 @@ window.addEventListener('load', cutOnlyBottomDup);
   });
   panel.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;border-top-left-radius:14px;border-top-right-radius:14px">
-      <strong style="font-weight:800">言語を選択 / Translate Language</strong>
-      <button id="langClose" type="button" aria-label="Close" style="width:34px;height:34px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer">×</button>
+      <strong style="font-weight:800">言語 / Language</strong>
+      <button id="langClose" type="button" aria-label="Close" style="width:34px;height:34px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;cursor:pointer">Close</button>
     </div>
     <div style="padding:14px 16px">
-      <div id="google_translate_element"></div>
+      <div id="${GOOGLE_ID}"></div>
       <div id="gt-fallback" style="display:none;margin-top:8px;font-size:13px;color:#64748b">
-        Translation module didn't load. Please allow translate.google.com and try again.
+        Translation module didn’t load. Please allow translate.google.com and try again.
       </div>
     </div>
   `;
   document.body.appendChild(panel);
 
-  const open = () => { panel.style.display = 'block'; ensureTranslateLoaded(); };
+  const open = () => { panel.style.display = 'block'; ensureLoader(); };
   const close = () => { panel.style.display = 'none'; };
-  bar.addEventListener('click', open);
+  fab.addEventListener('click', open);
   panel.querySelector('#langClose')?.addEventListener('click', close);
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 
-  // Google Translate ローダ
+  // Google Translate ローダ（標準ドロップダウン固定）
   let loaded = false, failed = false;
-  function ensureTranslateLoaded(){
-    if (loaded || failed) return;
-    if (window.google?.translate?.TranslateElement) { init(); return; }
 
-    const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=__initTranslate__';
-    s.async = true;
-    window.__initTranslate__ = init;
-    s.onerror = () => { failed = true; panel.querySelector('#gt-fallback').style.display='block'; };
-    document.head.appendChild(s);
+  // 既存のコールバックを潰してから定義（多重定義対策）
+  try{ delete window.__googleTranslateInit; }catch(_){ window.__googleTranslateInit = undefined; }
+
+  function ensureLoader(){
+    if (loaded || failed) return;
+    if (window.google?.translate?.TranslateElement) { initWidget(); return; }
+
+    // 既に読み込み中の <script> があれば再利用
+    const existed = Array.from(document.scripts).some(s => s.src.includes('translate_a/element.js'));
+    if (!existed) {
+      const s = document.createElement('script');
+      s.src = 'https://translate.google.com/translate_a/element.js?cb=__googleTranslateInit';
+      s.async = true;
+      s.onerror = () => { failed = true; panel.querySelector('#gt-fallback').style.display='block'; };
+      document.head.appendChild(s);
+    }
+    window.__googleTranslateInit = initWidget;
   }
 
-  function init(){
+  function initWidget(){
     try{
       loaded = true;
+
       new google.translate.TranslateElement({
         pageLanguage: 'ja',
         autoDisplay: false,
+        // ▼ Google標準の「セレクト」UIに固定
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        // 必要に応じて追加してください（広めに設定）
-        includedLanguages: 'en,zh-CN,zh-TW,ko,fr,es,de,ru,ar,hi,th,vi,id,ms,pt,it,tr,uk,pl,fil'
-      }, 'google_translate_element');
+        // ▼ 幅広めに対応（必要に応じて編集）
+        includedLanguages: [
+          'en','zh-CN','zh-TW','ko','fr','es','de','ru','ar','hi','th','vi','id','ms','pt','it','tr',
+          'uk','pl','fil','nl','sv','no','da','fi','cs','sk','hu','el','he','ro','bg','hr','sr','sl'
+        ].join(',')
+      }, GOOGLE_ID);
 
-      // 既存の画像や余計な要素を軽く整理（見た目調整だけ）
-      setTimeout(()=>{
-        const gadget = panel.querySelector('#google_translate_element');
-        gadget?.querySelectorAll('a, img, span[style*="vertical-align:middle"]').forEach(el=>{
-          if (el.tagName==='IMG') el.remove();
-        });
-      }, 300);
-    }catch(err){
+      // 見た目の邪魔になるGoogleの小アイコン等は触らない（＝Powered by は残す）
+      // 余計なカスタムUI（チップ群）を作る処理は一切入れていません。
+    }catch(e){
       failed = true;
       panel.querySelector('#gt-fallback').style.display='block';
     }
