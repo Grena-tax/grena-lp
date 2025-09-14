@@ -1,5 +1,6 @@
 /* =========================================================
-   script.js — 安定版（翻訳ウィジェット純正 / 既存UIは維持）
+   script.js — 安定版（純正Google翻訳 + フォールバック）
+   既存UIは崩さず、ハンバーガー直下に「Translate / 言語」ボタン。
    ========================================================= */
 
 /* ===== 申込フォームURL ===== */
@@ -152,10 +153,10 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   ▼▼ 翻訳UI（純正ウィジェット / ハンバーガー直下ボタン） ▼▼
+   ▼ 翻訳UI（純正ウィジェット / 失敗時は外部翻訳リンクへ）
    ========================================================= */
 (function mountTranslateUI(){
-  // スタイル（CSS変更不要）
+  // スタイル
   const css = `
     .lang-fab{
       position:fixed; z-index:10000;
@@ -170,7 +171,7 @@ window.addEventListener('load', cutOnlyBottomDup);
     .lang-fab .dot{ width:8px; height:8px; border-radius:999px; background:#60a5fa; box-shadow:0 0 0 2px rgba(96,165,250,.35) inset }
     .lang-overlay{ position:fixed; inset:0; z-index:10000; background:rgba(15,23,42,.28); opacity:0; pointer-events:none; transition:opacity .18s ease; }
     .lang-panel{
-      position:fixed; z-index:10001; left:50%; top:110px; transform:translateX(-50%); width:min(860px,92vw);
+      position:fixed; z-index:10001; left:50%; top:110px; transform:translateX(-50%) translateY(-6px); width:min(860px,92vw);
       background:#fff; color:#0b1220; border-radius:14px; border:1px solid #e5e7eb; box-shadow:0 20px 60px rgba(2,6,23,.25);
       overflow:hidden; opacity:0; pointer-events:none; transition:opacity .18s ease, transform .18s ease;
     }
@@ -179,6 +180,9 @@ window.addEventListener('load', cutOnlyBottomDup);
     .lang-body{ padding:12px; min-height:56px; }
     .lang-open .lang-overlay{ opacity:1; pointer-events:auto; }
     .lang-open .lang-panel{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+    .gt-fallback{ display:none; margin-top:8px; }
+    .gt-fallback .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+    .gt-fallback .chips a{ display:inline-flex; padding:.35rem .6rem; border:1px solid #e5e7eb; border-radius:999px; text-decoration:none; color:#0b1220; background:#f8fafc; }
     @media (max-width:480px){ .lang-panel{ top:90px; } }
   `;
   const st = document.createElement('style'); st.id = 'langStyles'; st.textContent = css; document.head.appendChild(st);
@@ -200,8 +204,9 @@ window.addEventListener('load', cutOnlyBottomDup);
     </div>
     <div class="lang-body">
       <div id="google_translate_element"></div>
-      <div id="gt-fail" style="display:none; color:#475569; font-size:12px; margin-top:6px;">
-        Translation module didn’t load. Please allow <code>translate.google.com</code> and try again.
+      <div id="gt-fallback" class="gt-fallback">
+        <div style="font-size:12px; color:#475569">翻訳モジュールの読み込みに失敗しました。下のクイック翻訳をご利用ください。</div>
+        <div class="chips" id="gt-quick"></div>
       </div>
     </div>`;
   document.body.appendChild(overlay); document.body.appendChild(panel);
@@ -213,7 +218,7 @@ window.addEventListener('load', cutOnlyBottomDup);
   panel.querySelector('#langClose')?.addEventListener('click', close);
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 
-  // 純正ウィジェット読み込み（削除・改変なし）
+  /* ---- 純正ウィジェット（削除・改変なし） ---- */
   let requested = false;
   window.googleTranslateElementInit = function(){
     try{
@@ -221,21 +226,56 @@ window.addEventListener('load', cutOnlyBottomDup);
         pageLanguage: 'ja',
         autoDisplay: false,
         includedLanguages: 'en,zh-CN,zh-TW,ko,fr,es,de,ru,ar,hi,th,vi,id,ms,pt,tl,tr,uk,pl,fil,it,nl,sv,fi,da,no,cs,ro,el,he,bg,hu,sk,sl,hr,lt,lv,et,fa,ur,bn,km,lo,si,ne,ca',
+        // ドロップダウン式
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
+      // 成功したらフォールバックは隠す
+      document.getElementById('gt-fallback').style.display = 'none';
     }catch(e){
-      document.getElementById('gt-fail').style.display = 'block';
+      showFallback();
     }
   };
+
   function ensureGoogleTranslateLoaded(){
+    // 既に読み込み済みなら何もしない
     if (window.google && window.google.translate && window.google.translate.TranslateElement) return;
-    if (requested) return;
-    requested = true;
-    const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.async = true; s.onerror = () => { document.getElementById('gt-fail').style.display = 'block'; };
-    document.head.appendChild(s);
-    setTimeout(()=>{ const ok = document.querySelector('#google_translate_element select'); if (!ok) document.getElementById('gt-fail').style.display = 'block'; }, 3500);
+    // 初回リクエスト
+    if (!requested) {
+      requested = true;
+      const s = document.createElement('script');
+      s.id  = 'gt-script';
+      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.async = true;
+      s.onerror = showFallback;
+      document.head.appendChild(s);
+      // タイムアウト監視（ネットワーク/拡張機能でブロック時）
+      setTimeout(()=> {
+        if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) {
+          showFallback();
+        }
+      }, 3500);
+    }
+  }
+
+  /* ---- 失敗時のフォールバック：外部の Google 翻訳ページで表示 ---- */
+  function showFallback(){
+    const hold = document.getElementById('gt-fallback'); if (!hold) return;
+    const list = [
+      ['English','en'], ['中文(简)','zh-CN'], ['中文(繁)','zh-TW'], ['한국어','ko'], ['Français','fr'],
+      ['Español','es'], ['Deutsch','de'], ['Русский','ru'], ['العربية','ar'], ['हिन्दी','hi'],
+      ['ไทย','th'], ['Tiếng Việt','vi'], ['Bahasa Indonesia','id'], ['Bahasa Melayu','ms'], ['Português','pt'],
+      ['Filipino','fil'], ['Türkçe','tr'], ['Українська','uk'], ['Polski','pl'], ['Italiano','it']
+    ];
+    const box = document.getElementById('gt-quick'); box.textContent = '';
+    const base = 'https://translate.google.com/translate?hl=auto&sl=auto';
+    const u = '&u=' + encodeURIComponent(location.href);
+    list.forEach(([label, code])=>{
+      const a = document.createElement('a');
+      a.href = `${base}&tl=${code}${u}`;
+      a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = label;
+      box.appendChild(a);
+    });
+    hold.style.display = 'block';
   }
 })();
-/* ===================== /翻訳UI ===================== */
