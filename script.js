@@ -10,29 +10,25 @@ const slug = (t) => (t || '')
 
 /* === 追加①：ページ本体をスクロール容器に移す（HTMLは無改変） === */
 (function mountScrollRoot(){
-  try{
-    if (document.getElementById('scroll-root')) return;
+  if (document.getElementById('scroll-root')) return;
 
-    const body = document.body;
-    const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
-    const menuBtn = document.getElementById('menuBtn');
-    const menuDrawer = document.getElementById('menuDrawer');
+  const body = document.body;
+  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn = document.getElementById('menuBtn');
+  const menuDrawer = document.getElementById('menuDrawer');
 
-    const wrap = document.createElement('div');
-    wrap.id = 'scroll-root';
+  const wrap = document.createElement('div');
+  wrap.id = 'scroll-root';
 
-    // CTAより上にスクロール容器を挿入
-    if (cta) body.insertBefore(wrap, cta);
-    else body.appendChild(wrap);
+  // CTAより上にスクロール容器を挿入
+  if (cta) body.insertBefore(wrap, cta);
+  else body.appendChild(wrap);
 
-    // CTA・メニューUI以外を全部 #scroll-root に移動
-    const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
-    Array.from(body.childNodes).forEach(n => {
-      if (!keep.has(n)) wrap.appendChild(n);
-    });
-  }catch(e){
-    // 何か起きても後段フェイルセーフで復旧
-  }
+  // CTA・メニューUI以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
+  Array.from(body.childNodes).forEach(n => {
+    if (!keep.has(n)) wrap.appendChild(n);
+  });
 })();
 
 /* ===== ページ内リンク（スムーススクロール） ===== */
@@ -58,6 +54,7 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
+    // スクロール対象は #scroll-root
     const scroller = document.getElementById('scroll-root') || window;
     if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -70,6 +67,7 @@ const adjustCtaPadding = () => {
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
+  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -114,6 +112,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -154,9 +153,10 @@ function buildMenu(){
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
+
+  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
 }
-
 function killPlansHeading(){
   if (!groupsRoot) return;
   groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
@@ -226,9 +226,16 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* ==========================================================
-   言語ボタン（前回のまま・挙動は変更なし）
+   言語ボタン（重複防止 + 代替UIつき・ハンバーガー直下配置）
    ========================================================== */
 (function mountLanguageUI(){
+  if (window.__langUIInited) return; // 多重初期化ロック
+  window.__langUIInited = true;
+
+  // 残骸掃除（重複ボタン/古いパネル）
+  document.querySelectorAll('#langPanel, .lang-panel').forEach(el => el.remove());
+  document.querySelectorAll('#langFab, .lang-fab,[data-role="lang-fab"]').forEach((el,i)=>{ if(i>0) el.remove(); });
+
   const langs = [
     ['en','English'],['zh-CN','中文(简)'],['zh-TW','中文(繁)'],['ko','한국어'],
     ['fr','Français'],['es','Español'],['de','Deutsch'],['ru','Русский'],
@@ -238,159 +245,157 @@ window.addEventListener('load', cutOnlyBottomDup);
     ['tr','Türkçe']
   ];
 
-  const fab = document.createElement('button');
-  fab.id = 'langFab';
-  fab.type = 'button';
-  fab.textContent = 'Translate / 言語';
-  Object.assign(fab.style, {
-    position:'fixed', top: 'calc(62px + var(--safe-top, 0px))', right:'calc(12px + var(--safe-right, 0px))',
-    zIndex: '10001',
-    padding:'8px 12px', borderRadius:'12px', border:'1px solid rgba(255,255,255,.18)',
-    background:'#3a3f4abf', color:'#fff', fontWeight:'700', fontSize:'12px',
-    boxShadow:'0 8px 24px rgba(0,0,0,.18)', backdropFilter:'saturate(140%) blur(6px)', cursor:'pointer'
-  });
-  fab.setAttribute('aria-haspopup','dialog');
-  fab.setAttribute('aria-controls','langPanel');
-  document.body.appendChild(fab);
+  // ===== FAB（ハンバーガーの直下に配置）=====
+  let fab = document.getElementById('langFab');
+  if (!fab) {
+    fab = document.createElement('button');
+    fab.id = 'langFab';
+    fab.dataset.role = 'lang-fab';
+    fab.type = 'button';
+    fab.className = 'lang-fab';
+    fab.textContent = 'Translate / 言語';
+    Object.assign(fab.style, {
+      position:'fixed', right:'calc(12px + var(--safe-right,0px))',
+      zIndex:'10001', padding:'8px 12px', borderRadius:'12px',
+      border:'1px solid rgba(255,255,255,.18)', background:'#2f333abf', color:'#fff',
+      fontWeight:'700', fontSize:'12px', boxShadow:'0 8px 24px rgba(0,0,0,.18)',
+      backdropFilter:'saturate(140%) blur(6px)', cursor:'pointer'
+    });
+    document.body.appendChild(fab);
+  }
 
-  let panel, header, content, closeBtn, tried = false;
+  // ハンバーガーの直下に追従
+  const anchorBtn = document.getElementById('menuBtn');
+  const placeFab = () => {
+    const r = anchorBtn?.getBoundingClientRect();
+    fab.style.top = r ? `${Math.round(r.bottom + 8)}px` : 'calc(62px + var(--safe-top,0px))';
+  };
+  placeFab(); addEventListener('resize', placeFab);
 
-  function buildPanel(){
+  // ===== パネル =====
+  let panel, content, selectEl;
+  const buildPanel = () => {
     if (panel) return;
     panel = document.createElement('div');
     panel.id = 'langPanel';
+    panel.className = 'lang-panel';
     Object.assign(panel.style, {
-      position:'fixed', top:'84px', right:'12px', width:'min(680px, 92vw)',
-      background:'#fff', color:'#0b1220', border:'1px solid #e5e7eb', borderRadius:'14px',
+      position:'fixed', right:'12px', top: 'calc(' + (fab.style.top || '84px') + ' + 8px)',
+      width:'min(760px, 92vw)', background:'#fff', color:'#0b1220',
+      border:'1px solid #e5e7eb', borderRadius:'14px',
       boxShadow:'0 20px 50px rgba(0,0,0,.18)', zIndex:'10000'
     });
-    header = document.createElement('div');
-    header.textContent = '言語 / Language';
-    Object.assign(header.style, {
-      fontWeight:'800', padding:'12px 14px', borderBottom:'1px solid #e5e7eb',
-      display:'flex', alignItems:'center', justifyContent:'space-between'
-    });
-    closeBtn = document.createElement('button');
-    closeBtn.type='button';
-    closeBtn.textContent='Close';
-    Object.assign(closeBtn.style,{
-      border:'1px solid #e5e7eb', background:'#fff', borderRadius:'10px',
-      padding:'6px 10px', cursor:'pointer'
-    });
-    closeBtn.addEventListener('click',()=> panel.remove());
-    header.appendChild(closeBtn);
+    const head = document.createElement('div');
+    head.textContent = '言語 / Language';
+    Object.assign(head.style,{fontWeight:'800',padding:'12px 14px',borderBottom:'1px solid #e5e7eb',
+      display:'flex',alignItems:'center',justifyContent:'space-between'});
+    const close = document.createElement('button');
+    close.type='button'; close.textContent='Close';
+    Object.assign(close.style,{border:'1px solid #e5e7eb',background:'#fff',borderRadius:'10px',padding:'6px 10px',cursor:'pointer'});
+    close.addEventListener('click',()=> panel.remove());
+    head.appendChild(close);
 
     content = document.createElement('div');
     Object.assign(content.style,{ padding:'14px', maxHeight:'60vh', overflow:'auto' });
 
-    const holder = document.createElement('div');
-    holder.id = 'google_translate_element';
-    content.appendChild(holder);
-
-    panel.appendChild(header);
-    panel.appendChild(content);
+    panel.appendChild(head); panel.appendChild(content);
     document.body.appendChild(panel);
-  }
+  };
 
-  function renderFallback(){
-    const wrap = document.createElement('div');
-    wrap.setAttribute('role','group');
-    Object.assign(wrap.style,{ display:'flex', flexWrap:'wrap', gap:'8px', marginTop:'4px' });
-    const u = location.href;
-    const langsList = [
-      ['en','English'],['zh-CN','中文(简)'],['zh-TW','中文(繁)'],['ko','한국어'],
-      ['fr','Français'],['es','Español'],['de','Deutsch'],['ru','Русский'],
-      ['ar','العربية'],['hi','हिन्दी'],['th','ไทย'],['vi','Tiếng Việt'],
-      ['id','Bahasa Indonesia'],['ms','Bahasa Melayu'],['pt','Português'],
-      ['it','Italiano'],['uk','Українська'],['pl','Polski'],['fil','Filipino'],
-      ['tr','Türkçe']
-    ];
-    langsList.forEach(([code, label])=>{
-      const a = document.createElement('a');
-      a.textContent = label;
-      a.href = `https://translate.google.com/translate?sl=ja&tl=${encodeURIComponent(code)}&u=${encodeURIComponent(u)}`;
-      a.target = '_blank'; a.rel = 'noopener';
-      Object.assign(a.style,{
-        display:'inline-block', padding:'8px 12px', borderRadius:'999px',
-        background:'#f3f4f6', border:'1px solid #e5e7eb', textDecoration:'none', color:'#334155',
-        fontWeight:'700', fontSize:'13px', whiteSpace:'nowrap'
-      });
-      wrap.appendChild(a);
-    });
-    content.appendChild(wrap);
-  }
-
-  function loadGoogleTranslate(){
-    return new Promise((resolve)=>{
-      if (window.google && window.google.translate && window.google.translate.TranslateElement) {
-        resolve(true); return;
-      }
-      const s = document.createElement('script');
-      s.src = 'https://translate.google.com/translate_a/element.js?cb=__gtReady';
-      s.async = true;
-      window.__gtReady = () => resolve(true);
-      s.onerror = () => resolve(false);
-      document.head.appendChild(s);
-    });
-  }
-
-  function initTranslateElement(){
+  // Google翻訳ウィジェット読込（成功したらセレクトだけ抽出）
+  const mountGoogleWidget = async () => {
     try{
+      if (!(window.google && window.google.translate && window.google.translate.TranslateElement)) {
+        await new Promise((resolve)=>{
+          const s = document.createElement('script');
+          s.src = 'https://translate.google.com/translate_a/element.js?cb=__gtReady';
+          s.async = true;
+          window.__gtReady = () => resolve(true);
+          s.onerror = () => resolve(false);
+          document.head.appendChild(s);
+        });
+      }
+      if (!window.google?.translate?.TranslateElement) return false;
+
+      const holder = document.createElement('div');
+      holder.id = 'google_translate_element';
+      Object.assign(holder.style,{padding:'0 0 10px'});
+      content.prepend(holder);
+
       new google.translate.TranslateElement({
         pageLanguage: 'ja',
         autoDisplay: false,
         includedLanguages: langs.map(l=>l[0]).join(','),
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
-      const pad = document.createElement('div'); pad.style.height='6px'; content.appendChild(pad);
-    }catch(_){ renderFallback(); }
-  }
+
+      // セレクトが出たら抽出して残りは除去
+      const pick = () => holder.querySelector('select.goog-te-combo');
+      await new Promise(r=>{
+        const t = setInterval(()=>{
+          const sel = pick();
+          if (sel) { clearInterval(t); r(true); }
+        }, 50);
+        setTimeout(()=>{ clearInterval(t); r(false); }, 2000);
+      });
+      const sel = holder.querySelector('select.goog-te-combo');
+      if (sel) {
+        selectEl = sel;
+        // ラベル付きで綺麗に設置
+        const row = document.createElement('div');
+        Object.assign(row.style,{display:'flex',alignItems:'center',gap:'10px',marginBottom:'10px'});
+        const lab = document.createElement('strong');
+        lab.textContent = 'Select / 言語を選択';
+        Object.assign(lab.style,{fontSize:'13px'});
+        row.appendChild(lab);
+        sel.style.minWidth = '220px';
+        row.appendChild(sel);
+        content.prepend(row);
+      }
+      holder.remove(); // 残骸とPowered表記を消す
+      return true;
+    }catch(_){ return false; }
+  };
+
+  // クイックチップ（常に出る）
+  const renderQuickChips = () => {
+    if (content.querySelector('[data-quick]')) return;
+    const wrap = document.createElement('div');
+    wrap.dataset.quick = '1';
+    Object.assign(wrap.style,{ display:'flex', flexWrap:'wrap', gap:'8px' });
+
+    const clickChip = (code) => {
+      // ウィジェットが使えるならその場で切り替え
+      const sel = selectEl || document.querySelector('select.goog-te-combo');
+      if (sel) {
+        sel.value = code;
+        sel.dispatchEvent(new Event('change', { bubbles:true }));
+      } else {
+        // Fallback：新規タブで翻訳
+        const u = location.href;
+        const url = `https://translate.google.com/translate?sl=ja&tl=${encodeURIComponent(code)}&u=${encodeURIComponent(u)}`;
+        window.open(url, '_blank', 'noopener');
+      }
+    };
+
+    langs.forEach(([code,label])=>{
+      const a = document.createElement('button');
+      a.type = 'button';
+      a.textContent = label;
+      Object.assign(a.style,{
+        display:'inline-block', padding:'8px 12px', borderRadius:'999px',
+        background:'#f3f4f6', border:'1px solid #e5e7eb', color:'#334155',
+        fontWeight:'700', fontSize:'13px', whiteSpace:'nowrap', cursor:'pointer'
+      });
+      a.addEventListener('click', ()=> clickChip(code));
+      wrap.appendChild(a);
+    });
+    content.appendChild(wrap);
+  };
 
   fab.addEventListener('click', async ()=>{
     buildPanel();
-    if (!tried){
-      tried = true;
-      const ok = await loadGoogleTranslate();
-      if (ok && window.google?.translate?.TranslateElement) initTranslateElement();
-      else {
-        const msg = document.createElement('div');
-        msg.textContent = 'Translation module didn’t load. Quick language:';
-        Object.assign(msg.style,{ margin:'6px 0 10px', color:'#64748b', fontSize:'13px' });
-        content.appendChild(msg);
-        renderFallback();
-      }
-    }
+    renderQuickChips();             // まずは空にならないUI
+    await mountGoogleWidget();      // 可能ならセレクトも載せる
   });
-})();
-
-/* ==========================================================
-   フェイルセーフ：スクロール/クリック不能の自己修復
-   ========================================================== */
-(function failSafe(){
-  // 1) メニューが誤って開きっぱなしなら閉じる
-  document.documentElement.classList.remove('menu-open');
-
-  // 2) #scroll-root が無い/効いてない場合は、windowスクロールに復旧
-  const scroller = document.getElementById('scroll-root');
-  const unlockWindowScroll = () => {
-    try{
-      document.documentElement.style.setProperty('overflow','auto','important');
-      document.documentElement.style.removeProperty('height');
-      document.body.style.setProperty('overflow','auto','important');
-      document.body.style.removeProperty('height');
-    }catch(_){}
-  };
-
-  if (!scroller) { unlockWindowScroll(); return; }
-
-  // 3) 形はあるがスクロールできない場合（高さが足りない等）も復旧
-  try{
-    const tooShort = scroller.scrollHeight <= scroller.clientHeight + 1;
-    const hasOverflow = getComputedStyle(scroller).overflowY;
-    if (tooShort || hasOverflow === 'hidden') unlockWindowScroll();
-    // 念のためクリック阻害になりそうな透明要素を削除
-    document.querySelectorAll('[data-overlay], .menu-backdrop[style*="opacity: 0"]').forEach(x=>x.remove());
-  }catch(_){
-    unlockWindowScroll();
-  }
 })();
