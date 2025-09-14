@@ -370,3 +370,38 @@ addEventListener('load', cutOnlyBottomDup);
   addEventListener('DOMContentLoaded', unlock);
   addEventListener('load', unlock);
 })();
+/* === 追加：言語FABの自動レイアウト（他UIと重ならない）=== */
+(function balanceLanguageFab(){
+  const fab = document.getElementById('langFab');
+  if (!fab) return;
+
+  function reposition(){
+    // デフォルトの基準（ヘッダーから少し下）
+    const safeTopVar = getComputedStyle(document.documentElement)
+      .getPropertyValue('--safe-top') || '0px';
+    const safeTop = parseInt(safeTopVar) || 0;
+    let top = 56 + safeTop;        // ←基準値（必要ならここだけ調整）
+    let right = 12;                // 右余白
+
+    // ハンバーガー（.menu-button or #menuBtn）と重なる場合は、その下に逃がす
+    const menu = document.querySelector('.menu-button, #menuBtn');
+    if (menu){
+      const r = menu.getBoundingClientRect();
+      const candTop = Math.ceil(r.bottom) + 12; // 12pxの余白
+      if (candTop > top) top = candTop;
+
+      // 右端ギリギリにある場合は、FABも少しだけ左へ
+      const vw = document.documentElement.clientWidth;
+      if (vw - r.right < 64) right = Math.max(12, vw - r.right + 12);
+    }
+
+    fab.style.top = top + 'px';
+    fab.style.right = right + 'px';
+    fab.style.zIndex = 9999; // ハンバーガー(10000)より一段下で視覚衝突回避
+  }
+
+  reposition();
+  addEventListener('resize', reposition);
+  addEventListener('scroll', reposition, { passive: true });
+  addEventListener('orientationchange', () => setTimeout(reposition, 60));
+})();
