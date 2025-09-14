@@ -405,3 +405,74 @@ addEventListener('load', cutOnlyBottomDup);
   addEventListener('scroll', reposition, { passive: true });
   addEventListener('orientationchange', () => setTimeout(reposition, 60));
 })();
+/* === 追加：重複する翻訳チップを排除＆FABのクリックを保証 ================== */
+(function fixLangFabOnce(){
+  const fab   = document.getElementById('langFab');      // こちらを残す
+  const panel = document.getElementById('langPanel');    // 既存パネル
+
+  // 1) 右上に出る「Translate / 言語」などの重複チップを検出→非表示
+  try{
+    if (fab){
+      const vw = document.documentElement.clientWidth;
+      const dupes = Array.from(document.body.querySelectorAll('body *')).filter(el=>{
+        if (!el || el===fab || el.contains(fab) || fab.contains(el)) return false;
+        const txt = (el.textContent || '').trim();
+        if (!/(Translate|言語)/i.test(txt)) return false;
+        const st  = getComputedStyle(el);
+        if (!(st.position==='fixed' || st.position==='sticky')) return false;
+        const r   = el.getBoundingClientRect();
+        const nearTopRight = (r.top < 140) && (vw - r.right < 180);
+        const sizeOK = (r.width < 260 && r.height < 70);
+        return nearTopRight && sizeOK;
+      });
+      dupes.forEach(el => { el.style.display = 'none'; el.setAttribute('data-gt-hidden','1'); });
+    }
+  }catch(_){/* ignore */}
+
+
+  // 2) FAB/パネルのZ軸を明示（他UIに隠れない＆重なりでクリック殺されない）
+  if (fab)   { fab.style.zIndex   = '10010'; fab.style.pointerEvents = 'auto'; }
+  if (panel) { panel.style.zIndex = '10020'; }
+
+  // 3) FABのクリックで必ず開くようワンバインド（既存があっても上書きでOK）
+  function openPanel(){
+    if (!panel) return;
+    panel.style.display = 'block';
+    panel.removeAttribute('aria-hidden');
+    // 初回だけフォーカスを内側に
+    (panel.querySelector('button, [role="button"], select, a, input, [tabindex]')||panel).focus?.();
+  }
+  function closePanel(){
+    if (!panel) return;
+    panel.style.display = '';
+    panel.setAttribute('aria-hidden','true');
+  }
+
+  if (fab){
+    fab.onclick = (e)=>{ e.preventDefault(); e.stopPropagation(); openPanel(); };
+  }
+  // 閉じるボタン（何パターンか拾う）
+  panel?.querySelectorAll('[data-lang-close], .gt-close, .close, [aria-label="Close"]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{ e.preventDefault(); closePanel(); }, { once:false });
+  });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePanel(); }, { passive:true });
+
+  // 4) 画面サイズ/向き変更でFABを少しだけ再配置（右上で安全）
+  function nudge(){
+    if (!fab) return;
+    const menu = document.querySelector('.menu-button, #menuBtn');
+    let top = 56;
+    let right = 12;
+    if (menu){
+      const r = menu.getBoundingClientRect();
+      top = Math.max(top, Math.ceil(r.bottom) + 12);
+      const vw = document.documentElement.clientWidth;
+      if (vw - r.right < 64) right = Math.max(12, vw - r.right + 12);
+    }
+    fab.style.top   = top + 'px';
+    fab.style.right = right + 'px';
+  }
+  nudge();
+  addEventListener('resize', nudge);
+  addEventListener('orientationchange', ()=>setTimeout(nudge,60));
+})();
