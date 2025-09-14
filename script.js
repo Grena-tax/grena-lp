@@ -12,49 +12,33 @@ const slug = (t) => (t || '')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
   .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-/* === スクロール容器 #scroll-root （本文HTMLは無改変） === */
+/* === スクロール容器 #scroll-root（本文HTMLは無改変のまま） === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
-
   const body = document.body;
   const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
   const menuBtn = document.getElementById('menuBtn');
   const menuDrawer = document.getElementById('menuDrawer');
-
-  const wrap = document.createElement('div');
-  wrap.id = 'scroll-root';
-
-  if (cta) body.insertBefore(wrap, cta);
-  else body.appendChild(wrap);
-
+  const wrap = document.createElement('div'); wrap.id = 'scroll-root';
+  if (cta) body.insertBefore(wrap, cta); else body.appendChild(wrap);
   const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
-  Array.from(body.childNodes).forEach(n => {
-    if (!keep.has(n)) wrap.appendChild(n);
-  });
+  Array.from(body.childNodes).forEach(n => { if (!keep.has(n)) wrap.appendChild(n); });
 })();
 
 /* ===== ページ内リンク（スムーススクロール） ===== */
 document.addEventListener('click', (e) => {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  const id = a.getAttribute('href');
-  const target = document.querySelector(id);
-  if (!target) return;
-
+  const a = e.target.closest('a[href^="#"]'); if (!a) return;
+  const id = a.getAttribute('href'); const target = document.querySelector(id); if (!target) return;
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  if (target.id !== 'disclaimer') {
-    const first = target.querySelector('details');
-    if (first && !first.open) first.open = true;
-  }
+  if (target.id !== 'disclaimer') { const first = target.querySelector('details'); if (first && !first.open) first.open = true; }
   history.pushState(null, '', id);
 });
 
 /* ===== 「トップへ」 ===== */
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   const scroller = document.getElementById('scroll-root') || window;
-  if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  scroller.scrollTo?.({ top: 0, behavior: 'smooth' });
 });
 
 /* ===== 固定CTAの高さを本文余白に反映 ===== */
@@ -63,10 +47,8 @@ const adjustCtaPadding = () => {
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-
   const scroller = document.getElementById('scroll-root');
-  if (scroller) scroller.classList.add('has-cta');
-  else document.body.classList.add('has-cta');
+  if (scroller) scroller.classList.add('has-cta'); else document.body.classList.add('has-cta');
 };
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
@@ -97,70 +79,36 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
-  const frag = document.createDocumentFragment();
-  let i = 1;
-
+  const frag = document.createDocumentFragment(); let i = 1;
   sections.forEach(sec=>{
     const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
     if (!details.length) return;
-
-    const wrap = document.createElement('div');
-    wrap.className = 'menu-group';
-
+    const wrap = document.createElement('div'); wrap.className = 'menu-group';
     const h2 = sec.querySelector('h2');
-    if (h2 && sec.id !== 'plans') {
-      const h4 = document.createElement('h4');
-      h4.textContent = (h2.textContent || '').trim();
-      wrap.appendChild(h4);
-    } else {
-      wrap.classList.add('no-title');
-    }
-
-    const ul = document.createElement('ul');
-    ul.className = 'menu-list';
-
+    if (h2 && sec.id !== 'plans') { const h4 = document.createElement('h4'); h4.textContent = (h2.textContent || '').trim(); wrap.appendChild(h4); }
+    else { wrap.classList.add('no-title'); }
+    const ul = document.createElement('ul'); ul.className = 'menu-list';
     details.forEach(d=>{
-      const s = d.querySelector('summary');
-      const t = s?.textContent?.trim() || '項目';
+      const s = d.querySelector('summary'); const t = s?.textContent?.trim() || '項目';
       if (excludeTitles.some(x => t.includes(x))) return;
       if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
-
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href = `#${d.id}`;
-      a.textContent = t;
-      a.addEventListener('click',(e)=>{
-        e.preventDefault();
-        closeMenu();
-        d.open = true;
-        d.scrollIntoView({behavior:'smooth', block:'start'});
-        history.pushState(null,'',`#${d.id}`);
-      });
-      li.appendChild(a);
-      ul.appendChild(li);
+      const li = document.createElement('li'); const a  = document.createElement('a');
+      a.href = `#${d.id}`; a.textContent = t;
+      a.addEventListener('click',(e)=>{ e.preventDefault(); closeMenu(); d.open = true; d.scrollIntoView({behavior:'smooth', block:'start'}); history.pushState(null,'',`#${d.id}`); });
+      li.appendChild(a); ul.appendChild(li);
     });
-
-    wrap.appendChild(ul);
-    frag.appendChild(wrap);
+    wrap.appendChild(ul); frag.appendChild(wrap);
   });
-
   if (!groupsRoot) return;
-  groupsRoot.textContent = '';
-  groupsRoot.appendChild(frag);
-
-  killPlansHeading();
+  groupsRoot.textContent = ''; groupsRoot.appendChild(frag); killPlansHeading();
 }
 function killPlansHeading(){
   if (!groupsRoot) return;
-  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-  });
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{ if (h.textContent.trim().toLowerCase() === 'plans') h.remove(); });
 }
 addEventListener('DOMContentLoaded', buildMenu);
 addEventListener('load', killPlansHeading);
-if (groupsRoot) {
-  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
-}
+if (groupsRoot) new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 
 /* ===== 重複ブロック除去（免責/キャンセルは下だけ残す） ===== */
 function cutOnlyBottomDup() {
@@ -170,10 +118,7 @@ function cutOnlyBottomDup() {
     const t = d.querySelector('summary')?.textContent?.trim() || '';
     if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
   });
-  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    return /キャンセルポリシー/.test(t);
-  });
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>/キャンセルポリシー/.test(d.querySelector('summary')?.textContent?.trim()||''));
   if (cancels.length > 1) {
     const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
     cancels.forEach(d => { if (d !== keep) d.remove(); });
@@ -182,33 +127,23 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== CTAをbottom固定（JSはtransformのみ触る・保険） ===== */
+/* ===== CTA 最下部固定の保険（transformのみ触る） ===== */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
     document.querySelector('.cta-bar')   ||
     document.getElementById('ctaBar');
-
   if (!bar || !window.visualViewport) return;
-
   let stable = 0;
   const apply = () => {
-    const vv  = window.visualViewport;
-    const doc = document.documentElement;
+    const vv  = window.visualViewport; const doc = document.documentElement;
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
-    let maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop);
-    if (maxScroll < 0) maxScroll = 0;
+    let maxScroll = doc.scrollHeight - (vv.height + vv.offsetTop); if (maxScroll < 0) maxScroll = 0;
     const y = (document.getElementById('scroll-root') || window).scrollY || window.scrollY || 0;
-
-    const isBouncingBottom = y > maxScroll + 1;
-    if (!isBouncingBottom) stable = uiGap;
-
-    const use = isBouncingBottom ? stable : uiGap;
-    const tx = `translate3d(0, ${use}px, 0)`;
+    const isBouncingBottom = y > maxScroll + 1; if (!isBouncingBottom) stable = uiGap;
+    const use = isBouncingBottom ? stable : uiGap; const tx = `translate3d(0, ${use}px, 0)`;
     if (bar.style.transform !== tx) bar.style.transform = tx;
   };
-
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
@@ -217,72 +152,47 @@ window.addEventListener('load', cutOnlyBottomDup);
 })();
 
 /* =========================================================
-   ▼▼ 翻訳UI（純正ウィジェット / 直下モーダル） ▼▼
+   ▼▼ 翻訳UI（純正ウィジェット / ハンバーガー直下ボタン） ▼▼
    ========================================================= */
 (function mountTranslateUI(){
-  // 1) スタイル（インライン注入：CSSファイル変更不要）
+  // スタイル（CSS変更不要）
   const css = `
-  .lang-fab{
-    position:fixed; z-index:10000;
-    top: calc(64px + env(safe-area-inset-top, 0px)); /* ハンバーガーの「下」 */
-    right: calc(12px + env(safe-area-inset-right, 0px));
-    display:inline-flex; align-items:center; gap:.5rem;
-    background: rgba(30, 41, 59, .78); color:#fff;
-    border:1px solid rgba(255,255,255,.18); border-radius:12px;
-    padding:.45rem .65rem; font:600 12px/1 system-ui, -apple-system, "Noto Sans JP", sans-serif;
-    box-shadow: 0 8px 24px rgba(0,0,0,.22);
-    backdrop-filter: blur(8px);
-  }
-  .lang-fab .dot{ width:8px; height:8px; border-radius:999px; background:#60a5fa; box-shadow:0 0 0 2px rgba(96,165,250,.35) inset }
-  .lang-overlay{
-    position:fixed; inset:0; z-index:10000; background:rgba(15,23,42,.28);
-    opacity:0; pointer-events:none; transition:opacity .18s ease;
-  }
-  .lang-panel{
-    position:fixed; z-index:10001;
-    left:50%; top:110px; transform:translateX(-50%);
-    width:min(860px, 92vw); background:#fff; color:#0b1220;
-    border-radius:14px; border:1px solid #e5e7eb;
-    box-shadow:0 20px 60px rgba(2,6,23,.25); overflow:hidden;
-    opacity:0; pointer-events:none; transition:opacity .18s ease, transform .18s ease;
-  }
-  .lang-head{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:10px 12px; border-bottom:1px solid #e5e7eb; background:#f8fafc; font-weight:800;
-  }
-  .lang-close{ background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:.35rem .6rem; }
-  .lang-body{ padding:12px; min-height:56px; }
-  .lang-open .lang-overlay{ opacity:1; pointer-events:auto; }
-  .lang-open .lang-panel{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
-  @media (max-width:480px){
-    .lang-panel{ top:90px; }
-  }`;
-  const st = document.createElement('style');
-  st.id = 'langStyles';
-  st.textContent = css;
-  document.head.appendChild(st);
+    .lang-fab{
+      position:fixed; z-index:10000;
+      top: calc(64px + env(safe-area-inset-top, 0px));
+      right: calc(12px + env(safe-area-inset-right, 0px));
+      display:inline-flex; align-items:center; gap:.5rem;
+      background: rgba(30, 41, 59, .78); color:#fff;
+      border:1px solid rgba(255,255,255,.18); border-radius:12px;
+      padding:.45rem .65rem; font:600 12px/1 system-ui, -apple-system, "Noto Sans JP", sans-serif;
+      box-shadow: 0 8px 24px rgba(0,0,0,.22); backdrop-filter: blur(8px);
+    }
+    .lang-fab .dot{ width:8px; height:8px; border-radius:999px; background:#60a5fa; box-shadow:0 0 0 2px rgba(96,165,250,.35) inset }
+    .lang-overlay{ position:fixed; inset:0; z-index:10000; background:rgba(15,23,42,.28); opacity:0; pointer-events:none; transition:opacity .18s ease; }
+    .lang-panel{
+      position:fixed; z-index:10001; left:50%; top:110px; transform:translateX(-50%); width:min(860px,92vw);
+      background:#fff; color:#0b1220; border-radius:14px; border:1px solid #e5e7eb; box-shadow:0 20px 60px rgba(2,6,23,.25);
+      overflow:hidden; opacity:0; pointer-events:none; transition:opacity .18s ease, transform .18s ease;
+    }
+    .lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb; background:#f8fafc; font-weight:800; }
+    .lang-close{ background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:.35rem .6rem; }
+    .lang-body{ padding:12px; min-height:56px; }
+    .lang-open .lang-overlay{ opacity:1; pointer-events:auto; }
+    .lang-open .lang-panel{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
+    @media (max-width:480px){ .lang-panel{ top:90px; } }
+  `;
+  const st = document.createElement('style'); st.id = 'langStyles'; st.textContent = css; document.head.appendChild(st);
 
-  // 2) トリガーボタン（ハンバーガーの下）
+  // トリガー（ハンバーガーの直下）
   const fab = document.createElement('button');
-  fab.type = 'button';
-  fab.id = 'langFab';
-  fab.className = 'lang-fab';
-  fab.setAttribute('aria-haspopup','dialog');
+  fab.type = 'button'; fab.id = 'langFab'; fab.className = 'lang-fab'; fab.setAttribute('aria-haspopup','dialog');
   fab.innerHTML = `<span class="dot" aria-hidden="true"></span><span>Translate / 言語</span>`;
   document.body.appendChild(fab);
 
-  // 3) モーダル骨組み
-  const overlay = document.createElement('div');
-  overlay.id = 'langOverlay';
-  overlay.className = 'lang-overlay';
-
-  const panel = document.createElement('div');
-  panel.id = 'langPanel';
-  panel.className = 'lang-panel';
-  panel.setAttribute('role','dialog');
-  panel.setAttribute('aria-modal','true');
-  panel.setAttribute('aria-label','言語 / Language');
-
+  // モーダル骨組み
+  const overlay = document.createElement('div'); overlay.id = 'langOverlay'; overlay.className = 'lang-overlay';
+  const panel   = document.createElement('div'); panel.id = 'langPanel'; panel.className = 'lang-panel';
+  panel.setAttribute('role','dialog'); panel.setAttribute('aria-modal','true'); panel.setAttribute('aria-label','言語 / Language');
   panel.innerHTML = `
     <div class="lang-head">
       <strong>言語 / Language</strong>
@@ -293,30 +203,23 @@ window.addEventListener('load', cutOnlyBottomDup);
       <div id="gt-fail" style="display:none; color:#475569; font-size:12px; margin-top:6px;">
         Translation module didn’t load. Please allow <code>translate.google.com</code> and try again.
       </div>
-    </div>
-  `;
-  document.body.appendChild(overlay);
-  document.body.appendChild(panel);
+    </div>`;
+  document.body.appendChild(overlay); document.body.appendChild(panel);
 
   const open = ()=>{ document.documentElement.classList.add('lang-open'); };
   const close = ()=>{ document.documentElement.classList.remove('lang-open'); };
-
-  fab.addEventListener('click', () => {
-    open();
-    ensureGoogleTranslateLoaded();
-  });
+  fab.addEventListener('click', () => { open(); ensureGoogleTranslateLoaded(); });
   overlay.addEventListener('click', close);
   panel.querySelector('#langClose')?.addEventListener('click', close);
   document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') close(); });
 
-  // 4) Google Translate 読込（純正・削除/改変なし）
+  // 純正ウィジェット読み込み（削除・改変なし）
   let requested = false;
-  window.__gtInit = function(){
+  window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({
         pageLanguage: 'ja',
         autoDisplay: false,
-        // 主要＋周辺を広めに（必要十分）。ここを削ると候補が減るので注意。
         includedLanguages: 'en,zh-CN,zh-TW,ko,fr,es,de,ru,ar,hi,th,vi,id,ms,pt,tl,tr,uk,pl,fil,it,nl,sv,fi,da,no,cs,ro,el,he,bg,hu,sk,sl,hr,lt,lv,et,fa,ur,bn,km,lo,si,ne,ca',
         layout: google.translate.TranslateElement.InlineLayout.SIMPLE
       }, 'google_translate_element');
@@ -324,26 +227,15 @@ window.addEventListener('load', cutOnlyBottomDup);
       document.getElementById('gt-fail').style.display = 'block';
     }
   };
-
   function ensureGoogleTranslateLoaded(){
-    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
-      return; // すでに用意済み
-    }
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) return;
     if (requested) return;
     requested = true;
-
-    // スクリプト挿入（クリック時のみ）
     const s = document.createElement('script');
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=__gtInit';
-    s.async = true;
-    s.onerror = () => { document.getElementById('gt-fail').style.display = 'block'; };
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true; s.onerror = () => { document.getElementById('gt-fail').style.display = 'block'; };
     document.head.appendChild(s);
-
-    // 3秒でセレクト未生成なら失敗表示（ブロック対策）
-    setTimeout(()=>{
-      const ok = document.querySelector('#google_translate_element select');
-      if (!ok) document.getElementById('gt-fail').style.display = 'block';
-    }, 3000);
+    setTimeout(()=>{ const ok = document.querySelector('#google_translate_element select'); if (!ok) document.getElementById('gt-fail').style.display = 'block'; }, 3500);
   }
 })();
 /* ===================== /翻訳UI ===================== */
