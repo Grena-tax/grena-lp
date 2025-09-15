@@ -295,3 +295,26 @@ html, body{
   transform: translateZ(0);
   will-change: transform;
 }
+/* === Language switch: ハンバーガーの左横に常時表示 === */
+.lang-switch,
+#google_translate_element,
+.weglot-container {
+  position: fixed !important;
+  top: calc(10px + env(safe-area-inset-top));
+  /* ハンバーガー（48px）＋余白14pxぶん左へ寄せる */
+  right: calc(10px + env(safe-area-inset-right) + 48px + 14px);
+  z-index: 10002;          /* menu-button(10000) より前に出す */
+  pointer-events: auto;
+}
+
+@media (max-width:480px){
+  .lang-switch,
+  #google_translate_element,
+  .weglot-container {
+    transform: scale(.9);
+    transform-origin: top right;
+  }
+}
+
+/* 念のため、ハンバーガーのZ順を固定 */
+.menu-button { z-index: 10000; }
