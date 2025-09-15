@@ -143,9 +143,9 @@ th:first-child, td:first-child{ text-align:left }
 
 /* (重複ブロック) */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin上:0 !important; }
-#plans{ padding-top:0 !重要; margin-top:0 !important; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !重要; }
+#corp-setup + #plans{ margin上:0 !重要; }
+#plans{ padding-top:0 !重要; margin-top:0 !重要; }
 #plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
@@ -155,7 +155,7 @@ th:first-child, td:first-child{ text-align:left }
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0    !important; margin-top:0    !important; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !重要; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !重要; }
+#plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
 #plans      .accordion > details:first-child{ margin-top:0 !重要; }
 #corp-setup + #plans{ margin-top:-24px !important; }
@@ -186,11 +186,11 @@ th:first-child, td:first-child{ text-align:left }
   --gap-lift-sp: -44px;
 }
 #corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
-#plans{      padding-top:0 !重要;     margin-top:0  !重要;  }
+#plans{      paddingトップ:0 !重要;     margin-top:0  !重要;  }
 #corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
-#plans .accordion{      padding-top:0  !重要; display:flow-root !重要; }
+#plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
-#plans      .accordion > details:first-child{  margin-top:0 !重要; }
+#plans      .accordion > details:first-child{  marginトップ:0 !重要; }
 #corp-setup + #plans{ margin-top: var(--gap-lift) !重要; }
 @media (max-width: 480px){
   #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !重要; }
@@ -206,7 +206,7 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 /* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
 /* plans 見出しを出さないグループを他と揃えて 2px だけ詰める（重複OK） */
-.menu-group.no-title { padding-top: 2px; }
+.menu-group.no-title { paddingトップ: 2px; }
 
 /* ── ハンバーガー内：#plans グループの余白を微調整 ── */
 .menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
@@ -232,11 +232,11 @@ body.has-cta{
 
 /* ▼▼ 追加：CTAの三つのボタンを必ず1行に収める ▼▼ */
 .cta-btn{
-  white-space: nowrap;            /* 2行化を禁止 */
+  white-space: nowrap;
   word-break: keep-all;
 }
 @media (max-width: 420px){
-  .cta-btn{                       /* 狭い端末だけ少しだけ詰める */
+  .cta-btn{
     padding:12px 10px;
     font-size: clamp(12px, 3.5vw, 14px);
   }
@@ -246,7 +246,7 @@ body.has-cta{
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0 !important;     /* 後勝ちにする */
+  bottom: 0 !important;
   z-index: 9999;
 }
 
@@ -267,7 +267,7 @@ body.has-cta{
 /* ==== iOSラバーバンド根絶：ビューポートはスクロールさせない ==== */
 html, body{
   height: 100%;
-  overflow: hidden;                 /* ← ここで画面自体の弾みを止める */
+  overflow: hidden;
 }
 
 /* 実際にスクロールさせる容器（JSが自動で作る） */
@@ -276,7 +276,7 @@ html, body{
   inset: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;   /* Android/一部ブラウザでも弾み抑制 */
+  overscroll-behavior-y: contain;
   background: inherit;
 }
 
@@ -290,114 +290,8 @@ html, body{
 .fixed-cta{
   position: fixed;
   left: 0; right: 0;
-  bottom: 0 !重要;
+  bottom: 0 !important;
   z-index: 9999;
   transform: translateZ(0);
-  will-change: transform; /* JSがtransformだけ触る */
-}
-
-/* ===== ここから追加パッチ（見出しを少し下＆少し右へ） ===== */
-#corp-setup > h2{
-  margin-top: clamp(10px, 3.2vw, 22px) !important; /* 上に詰まり過ぎ防止 */
-}
-section > h2{
-  padding-left: clamp(6px, 1.2vw, 12px) !important; /* ほんの少し右へ */
-}
-/* === UIトーンを薄い網掛けグレーへ（ハンバーガー／言語ボタン） === */
-
-/* 共通の網掛けグレー（薄い斜めストライプ） */
-:root{
-  --mesh-gray: repeating-linear-gradient(
-    135deg,
-    #f7f9fc 0 8px,
-    #eef2f7 8px 16px
-  );
-}
-
-/* ハンバーガーの丸ボタン（右上） */
-.menu-button{
-  background: var(--mesh-gray) !important;
-  color:#111827 !important;
-  border:1px solid #d1d5db !important;
-  box-shadow: 0 6px 18px rgba(17,24,39,.08) !important;
-}
-
-/* ハンバーガーの3本線は濃いめのグレーに（背景が明るくなるため） */
-.menu-button .bars::before,
-.menu-button .bars::after,
-.menu-button .bars span{
-  background:#111827 !important;
-}
-
-/* 言語ボタン（トップ右側の「Translate / 言語」） */
-#langBtn,
-#langToggle,
-#langFab,
-.lang-button,
-.lang-fab,
-.translate-button{
-  background: var(--mesh-gray) !important;
-  color:#0b1220 !important;
-  border:1px solid #d1d5db !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08) !important;
-}
-
-/* 触感のためにごく控えめなホバー */
-.menu-button:hover,
-#langBtn:hover,
-#langToggle:hover,
-#langFab:hover,
-.lang-button:hover,
-.lang-fab:hover,
-.translate-button:hover{
-  filter: brightness(0.98);
-}
-/* === 濃いめ半透明グレー（ガラス効果なし）— ハンバーガー／言語ボタン === */
-:root{
-  --btn-dg:        rgba(17, 24, 39, .72);  /* 基本 */
-  --btn-dg-hover:  rgba(17, 24, 39, .80);  /* ホバー */
-  --btn-dg-active: rgba(17, 24, 39, .86);  /* クリック */
-  --btn-dg-border: rgba(0, 0, 0, .25);     /* 薄い縁取り */
-}
-
-/* 対象：右上ハンバーガーと言語トグル（名称違いも拾う） */
-.menu-button,
-#langBtn,
-#langToggle,
-#langFab,
-.lang-button,
-.lang-fab,
-.translate-button{
-  background: var(--btn-dg) !important;
-  color: #fff !important;
-  border: 1px solid var(--btn-dg-border) !important;
-  box-shadow: 0 6px 18px rgba(2, 6, 23, .18) !important; /* 少しだけ立体感 */
-}
-
-/* Hover / Active */
-.menu-button:hover,
-#langBtn:hover,
-#langToggle:hover,
-#langFab:hover,
-.lang-button:hover,
-.lang-fab:hover,
-.translate-button:hover{
-  background: var(--btn-dg-hover) !important;
-}
-.menu-button:active,
-#langBtn:active,
-#langToggle:active,
-#langFab:active,
-.lang-button:active,
-.lang-fab:active,
-.translate-button:active{
-  background: var(--btn-dg-active) !important;
-}
-
-/* ハンバーガーの三本線は白でくっきり */
-.menu-button .bars::before,
-.menu-button .bars::after,
-.menu-button .bars span{
-  background: #fff !important;
-  opacity: .95;
+  will-change: transform;
 }
