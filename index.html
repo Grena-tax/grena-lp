@@ -100,42 +100,11 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
-
-  /* ここから：言語ボタン（ハンバーガー“の下”）とモーダル */
-  .lang-trigger{
-    position:fixed;
-    top:calc(64px + var(--safe-top));
-    right:calc(10px + var(--safe-right));
-    z-index:10000;
-    display:inline-flex;align-items:center;gap:.5rem;
-    padding:.6rem .9rem;border-radius:12px;border:1px solid rgba(255,255,255,.08);
-    background:#111827;color:#fff;font-weight:800;text-decoration:none;
-    box-shadow:0 4px 14px rgba(0,0,0,.15);
-  }
-  .lang-trigger:hover{opacity:.95}
-
-  .lang-wrap{position:fixed;inset:0;z-index:10050;display:none;pointer-events:none}
-  .lang-wrap[aria-hidden="false"]{display:block;pointer-events:auto}
-  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35)}
-  .lang-panel{
-    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-    width:min(640px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-    box-shadow:0 20px 60px rgba(0,0,0,.25)
-  }
-  .lang-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff}
-  .lang-title{font-weight:800}
-  .lang-close{width:36px;height:36px;display:inline-grid;place-items:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-  .lang-close:hover{background:#f3f4f6}
-  .lang-content{padding:14px}
-  .lang-note{font-size:.86em;color:#475569;margin-top:10px}
-  /* Googleの上部バナーだけは非表示（レイアウト崩れ防止） */
-  .goog-te-banner-frame{display:none!important}
-  body{top:0!important}
 </style>
 </head>
 <body>
@@ -147,12 +116,6 @@
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
-
-<!-- ★ 追加：ハンバーガーの“下”に固定の言語ボタン（英日併記） -->
-<button class="lang-trigger" id="langBtn" aria-haspopup="dialog" aria-expanded="false" aria-controls="langWrap">
-  🌐 <span>Translate / 言語</span>
-</button>
-
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
@@ -163,21 +126,6 @@
     <div class="menu-groups" id="menuGroups"><!-- JSが自動生成 --></div>
   </aside>
 </nav>
-
-<!-- ★ 追加：言語モーダル（Google翻訳のセレクタをここに差し込む） -->
-<div class="lang-wrap" id="langWrap" aria-hidden="true">
-  <div class="lang-backdrop" id="langBackdrop"></div>
-  <div class="lang-panel" role="dialog" aria-modal="true" aria-labelledby="langTitle">
-    <div class="lang-head">
-      <strong class="lang-title" id="langTitle">言語を選択 / Translate Language</strong>
-      <button class="lang-close" id="langClose" aria-label="閉じる / Close">×</button>
-    </div>
-    <div class="lang-content">
-      <div id="google_translate_element" aria-label="Google Translate Widget"></div>
-      <p class="lang-note">※ 自分の国を調べてください。 / Please check your country’s rules and information.</p>
-    </div>
-  </div>
-</div>
 
 <!-- =========================
   法人設立セクション
@@ -795,6 +743,6 @@
 </div>
 
 <!-- ===== JS（本文は変更せず／操作だけ） ===== -->
-<script src="./script.js?v=20250910-02"></script>
+<script src="./script.js?v=20250910-01"></script>
 </body>
 </html>
