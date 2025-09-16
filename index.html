@@ -8,10 +8,10 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま） -->
+<!-- 既存のメインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー（本文は無改変） -->
+<!-- 追加スタイル（軽微な上書きが必要ならここでもOK） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -100,7 +100,7 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
@@ -116,8 +116,10 @@
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
-<!-- ▼ 言語切替ウィジェットの置き場（ハンバーガー左横固定） -->
-<div class="lang-switch" id="google_translate_element" aria-label="言語切替"></div>
+
+<!-- ▼ 言語スイッチ（Google翻訳 or Weglot用の置き場。片方だけ使えばOK） -->
+<div id="google_translate_element" class="lang-switch" role="region" aria-label="言語切替"></div>
+<!-- <div class="weglot-container lang-switch" role="region" aria-label="言語切替"></div> -->
 
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
@@ -735,7 +737,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
+<!-- 画面最下部 固定CTA -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -745,6 +747,19 @@
 </div>
 
 <!-- ===== JS（本文は変更せず／操作だけ） ===== -->
-<script src="./script.js?v=20250910-01"></script>
+<script src="./script.js?v=20250910-02"></script>
+
+<!-- ▼ Google翻訳を使う場合だけ読み込み（Weglot等なら削除OK） -->
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'ja',
+      includedLanguages: 'ja,en,zh-CN,ko',
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
