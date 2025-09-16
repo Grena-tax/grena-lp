@@ -5,20 +5,17 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4
 const slug = (t) => (t || '')
   .toLowerCase()
   .replace(/[（）()\[\]【】]/g, ' ')
-  .replace(/[^\\w\\u3040-\\u30ff\\u3400-\\u9fff]+/g, '-')
-  .replace(/-+/g, '-').replace(/^-|-$/g, '');
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
+  .replace(/-+/g, '-').replace(/-$/g, '').replace(/^-/,'');
 
-/* === 追加①：ページ本体をスクロール容器に移す（HTMLは無改変） === */
+/* === ページ本体をスクロール容器に移す（HTMLは無改変） === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
 
-  const body   = document.body;
-  const cta    = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
-  const menuBtn    = document.getElementById('menuBtn');
+  const body = document.body;
+  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn = document.getElementById('menuBtn');
   const menuDrawer = document.getElementById('menuDrawer');
-
-  // 言語スイッチ要素（複数の可能性を考慮）
-  const langNodes = Array.from(document.querySelectorAll('.lang-switch, #google_translate_element, .weglot-container'));
 
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
@@ -27,8 +24,10 @@ const slug = (t) => (t || '')
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニューUI・言語スイッチ 以外を全部 #scroll-root に移動
-  const keep = new Set([cta, menuBtn, menuDrawer, wrap, ...langNodes]);
+  // CTA・メニューUI以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap,
+                        document.getElementById('langBtn'),
+                        document.getElementById('langDrawer')]);
   Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
@@ -45,7 +44,6 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 免責(#disclaimer) だけは自動オープンしない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -57,20 +55,18 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    // スクロール対象は #scroll-root
     const scroller = document.getElementById('scroll-root') || window;
     if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映（※bottomはJSで触らない） ===== */
+/* ===== 固定CTAの高さ → 本文余白に反映 ===== */
 const adjustCtaPadding = () => {
   const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
-  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -93,17 +89,17 @@ const overlay    = document.getElementById('menuBackdrop');
 const groupsRoot = document.getElementById('menuGroups');
 
 const openMenu  = () => {
+  // 片方が開いていたら閉じる（言語⇄メニュー排他）
+  closeLang();
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
-  // A11y: 開いたら閉じるボタンへフォーカス
   setTimeout(() => closeBt?.focus(), 0);
 };
 const closeMenu = () => {
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
-  // A11y: 閉じたらトグルにフォーカスを戻す
   btn?.focus();
 };
 
@@ -129,7 +125,6 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -170,8 +165,6 @@ function buildMenu(){
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
-
-  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
 }
 
@@ -187,7 +180,7 @@ if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
 
-/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer だけに揃える） ===== */
+/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer に統一） ===== */
 function cutOnlyBottomDup() {
   document.getElementById('site-disclaimer')?.remove();
   document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
@@ -207,10 +200,9 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-/* 何も書かない（ラバーバンド時に誤検知で浮くのを根絶） */
+/* ===== CTAの bottom はJSで触らない ===== */
 
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* === CTA固定の保険（rubber-band相殺） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -221,14 +213,10 @@ window.addEventListener('load', cutOnlyBottomDup);
 
   const scroller = document.getElementById('scroll-root') || document.documentElement;
 
-  let stable = 0; // 直近の安定値
+  let stable = 0;
   const apply = () => {
     const vv  = window.visualViewport;
-
-    // 端のUIが出たぶんの隙間（iOSのホームバー等）
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
-    // スクロール量/最大量を #scroll-root（存在時）基準に判定
     const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
 
     let y = 0;
@@ -249,13 +237,100 @@ window.addEventListener('load', cutOnlyBottomDup);
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
-
-  // 実際のスクロールイベントも拾う（#scroll-root優先）
   if (scroller && scroller.addEventListener) {
     scroller.addEventListener('scroll', apply, { passive: true });
   } else {
     window.addEventListener('scroll', apply, { passive: true });
   }
-
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
+
+/* =========================================================
+   🌐 Language Drawer（Google Translate 全言語 自動生成）
+   ========================================================= */
+const langBtn      = document.getElementById('langBtn');
+const langDrawer   = document.getElementById('langDrawer');
+const langCloseBtn = document.getElementById('langClose');
+const langBackdrop = document.getElementById('langBackdrop');
+const langList     = document.getElementById('langList');
+const langSearch   = document.getElementById('langSearch');
+
+function openLang(){
+  closeMenu(); // 排他
+  document.documentElement.classList.add('lang-open');
+  langDrawer?.setAttribute('aria-hidden','false');
+  langBtn?.setAttribute('aria-expanded','true');
+  setTimeout(()=>langCloseBtn?.focus(),0);
+}
+function closeLang(){
+  document.documentElement.classList.remove('lang-open');
+  langDrawer?.setAttribute('aria-hidden','true');
+  langBtn?.setAttribute('aria-expanded','false');
+}
+langBtn?.addEventListener('click', ()=>{
+  document.documentElement.classList.contains('lang-open') ? closeLang() : openLang();
+});
+langCloseBtn?.addEventListener('click', closeLang);
+langBackdrop?.addEventListener('click', closeLang);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
+
+/* Googleの<select>が用意されるまで待ってからメニュー生成 */
+function getGoogleSelect(){
+  return document.querySelector('#google_translate_element select.goog-te-combo');
+}
+
+function googCookieLang(){
+  // cookie "googtrans=/auto/xx" を拾って現在の言語を推定
+  const m = (document.cookie || '').match(/(?:^|;\s*)googtrans=([^;]+)/);
+  if (!m) return '';
+  const val = decodeURIComponent(m[1]);
+  const sp = val.split('/');
+  return sp[2] || '';
+}
+
+function buildLangList(){
+  const sel = getGoogleSelect();
+  if (!sel) { setTimeout(buildLangList, 200); return; }
+
+  langList.textContent = '';
+  const current = (googCookieLang() || '').toLowerCase();
+
+  Array.from(sel.options).forEach(opt=>{
+    if (!opt.value) return;
+    const li = document.createElement('li');
+    const b  = document.createElement('button');
+    b.type = 'button';
+    b.className = 'lang-item';
+    b.dataset.code = opt.value;
+    b.textContent = opt.textContent;
+    if (opt.value.toLowerCase() === current) b.classList.add('active');
+    b.addEventListener('click', ()=>{
+      sel.value = b.dataset.code;
+      sel.dispatchEvent(new Event('change'));
+      // アクティブ表示更新
+      langList.querySelectorAll('.lang-item.active').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      closeLang();
+    });
+    li.appendChild(b);
+    langList.appendChild(li);
+  });
+}
+
+/* 検索フィルタ */
+langSearch?.addEventListener('input', ()=>{
+  const q = (langSearch.value || '').toLowerCase().trim();
+  langList.querySelectorAll('li').forEach(li=>{
+    const txt = (li.textContent || '').toLowerCase();
+    li.style.display = txt.includes(q) ? '' : 'none';
+  });
+});
+
+/* GoogleのUIが非同期で変わることがあるので監視して自動再構築 */
+const obsTarget = document.getElementById('google_translate_element');
+if (obsTarget && 'MutationObserver' in window){
+  new MutationObserver(()=>buildLangList())
+    .observe(obsTarget, { childList:true, subtree:true });
+}
+window.addEventListener('load', buildLangList);
+document.addEventListener('DOMContentLoaded', buildLangList);
