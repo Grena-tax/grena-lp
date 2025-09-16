@@ -5,17 +5,20 @@ const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4
 const slug = (t) => (t || '')
   .toLowerCase()
   .replace(/[（）()\[\]【】]/g, ' ')
-  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
+  .replace(/[^\\w\\u3040-\\u30ff\\u3400-\\u9fff]+/g, '-')
   .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
 /* === 追加①：ページ本体をスクロール容器に移す（HTMLは無改変） === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
 
-  const body = document.body;
-  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
-  const menuBtn = document.getElementById('menuBtn');
+  const body   = document.body;
+  const cta    = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn    = document.getElementById('menuBtn');
   const menuDrawer = document.getElementById('menuDrawer');
+
+  // 言語スイッチ要素（複数の可能性を考慮）
+  const langNodes = Array.from(document.querySelectorAll('.lang-switch, #google_translate_element, .weglot-container'));
 
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
@@ -24,8 +27,8 @@ const slug = (t) => (t || '')
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニューUI以外を全部 #scroll-root に移動
-  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
+  // CTA・メニューUI・言語スイッチ 以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap, ...langNodes]);
   Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
@@ -205,7 +208,7 @@ document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
+/* 何も書かない（ラバーバンド時に誤検知で浮くのを根絶） */
 
 /* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
