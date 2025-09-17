@@ -8,10 +8,10 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS -->
+<!-- 既存のメインCSS（そのまま） -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
-<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー（本文は無改変） -->
+<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー＋言語パネル（本文は無改変） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -100,11 +100,64 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
+
+  /* === 追加：言語ボタン＆パネル（右上のハンバーガーの左横） === */
+  .lang-button{
+    position:fixed;
+    top:calc(10px + var(--safe-top));
+    right:calc(10px + var(--safe-right) + 48px + 12px); /* ハンバーガーの左に並べる */
+    z-index:10001;
+    width:44px;height:44px;border-radius:12px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:#ffffff; color:#111827; border:1px solid #e5e7eb;
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
+  }
+  .lang-button:hover{ background:#f8fafc }
+
+  .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
+  .lang-panel{
+    position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
+    background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
+    box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
+    font-size:14px;line-height:1.38;display:flex;flex-direction:column;
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+  .lang-title{font-weight:800;color:#111827}
+  .lang-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-search{padding:10px 12px;background:#fff;border-bottom:1px solid #e5e7eb}
+  .lang-search input{
+    width:100%;padding:.6rem .7rem;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;
+    font-size:14px
+  }
+  .lang-list{list-style:none;margin:0;padding:8px 10px;overflow:auto;flex:1}
+  .lang-list li a{
+    display:flex;align-items:center;gap:.6rem;justify-content:space-between;
+    padding:8px 10px;margin:0 4px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb
+  }
+  .lang-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+  .lang-ft{padding:10px 12px;border-top:1px solid #e5e7eb;background:#fff;color:#475569;font-size:12px}
+  .lang-ft .by{font-weight:700}
+
+  html.lang-open .lang-wrap{pointer-events:auto}
+  html.lang-open .lang-backdrop{opacity:1}
+  html.lang-open .lang-panel{transform:none}
+  html.lang-open,html.lang-open body{overflow:hidden}
+
+  /* Google翻訳の既定UIは画面外へ（機能だけ使う） */
+  #google_translate_element{
+    position:fixed; top:-9999px; left:-9999px; width:1px; height:1px; overflow:hidden;
+  }
+
+  @media (max-width:480px){
+    .lang-button{ right:calc(8px + var(--safe-right) + 48px + 10px); width:42px; height:42px }
+  }
 </style>
 </head>
 <body>
@@ -112,16 +165,36 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
+<!-- 右上：言語ボタン（グローブ） -->
+<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="言語を選択">
+  <!-- シンプルなグローブSVG（依存なし） -->
+  <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Zm7.93 9h-3.07a15.2 15.2 0 0 0-1.1-5.02A8.02 8.02 0 0 1 19.93 11ZM12 4c.86 0 2.36 2.1 3.01 6H8.99C9.64 6.1 11.14 4 12 4ZM8.16 6.98A15.2 15.2 0 0 0 7.14 11H4.07a8.02 8.02 0 0 1 4.09-4.02ZM4.07 13h3.07c.2 1.78.68 3.5 1.45 5.02A8.02 8.02 0 0 1 4.07 13Zm7.93 7c-.86 0-2.36-2.1-3.01-6h6.02c-.65 3.9-2.15 6-3.01 6Zm3.84-2.98c.77-1.52 1.25-3.24 1.45-5.02h3.07a8.02 8.02 0 0 1-4.52 5.02Z"/>
+  </svg>
+</button>
+
 <!-- 右上ハンバーガー -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
 
-<!-- 🌐 言語ボタン（ハンバーガーの左横） -->
-<button class="menu-button lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="言語を選択">
-  <span class="globe" aria-hidden="true">🌐</span>
-</button>
+<!-- 言語パネル（右からスライド） -->
+<nav class="lang-wrap" id="langDrawer" aria-hidden="true">
+  <div class="lang-backdrop" id="langBackdrop"></div>
+  <aside class="lang-panel" role="dialog" aria-modal="true" aria-label="言語を選択">
+    <div class="lang-head">
+      <strong class="lang-title">言語を選択</strong>
+      <button class="lang-close" id="langClose" aria-label="閉じる">×</button>
+    </div>
+    <div class="lang-search">
+      <input id="langSearch" type="search" placeholder="検索（日本語/English/…）">
+    </div>
+    <ul class="lang-list" id="langList"><!-- JSが自動生成 --></ul>
+    <div class="lang-ft"><span class="by">Powered by Google 翻訳</span></div>
+  </aside>
+</nav>
 
+<!-- ハンバーガーの中身 -->
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
@@ -133,30 +206,8 @@
   </aside>
 </nav>
 
-<!-- 言語ドロワー -->
-<nav class="menu-wrap lang-wrap" id="langDrawer" aria-hidden="true">
-  <div class="menu-backdrop" id="langBackdrop"></div>
-  <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="言語を選択">
-    <div class="menu-head">
-      <strong class="menu-title">言語 / Language</strong>
-      <button class="menu-close" id="langClose" aria-label="閉じる">×</button>
-    </div>
-    <div class="menu-groups">
-      <div class="menu-group">
-        <div class="px-3 py-2">
-          <input id="langSearch" type="search" placeholder="言語を検索 / Search language" class="lang-search">
-        </div>
-        <ul class="menu-list" id="langList"><!-- JSで自動生成 --></ul>
-        <div class="px-3 py-2 text-xs powered">
-          Powered by Google Translate
-        </div>
-      </div>
-    </div>
-  </aside>
-</nav>
-
 <!-- =========================
-  法人設立セクション
+  法人設立セクション（本文はそのまま）
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
@@ -760,7 +811,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
+<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -769,19 +820,10 @@
   </div>
 </div>
 
-<!-- Google Translate（画面外に置く：JSで内部の<select>を操作） -->
-<div id="google_translate_element" class="gt-offscreen" aria-hidden="true"></div>
-<script>
-  window.googleTranslateElementInit = function () {
-    new google.translate.TranslateElement({
-      pageLanguage: 'ja',
-      autoDisplay: false
-    }, 'google_translate_element');
-  };
-</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<!-- ===== JS（本文は変更せず／操作だけ） ===== -->
+<script src="./script.js?v=20250910-02"></script>
 
-<!-- JS -->
-<script src="./script.js?v=20250910-01"></script>
+<!-- ▼ Google翻訳本体（コールバック名は script.js 内で定義） -->
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
