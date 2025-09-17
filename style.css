@@ -142,40 +142,40 @@ th:first-child, td:first-child{ text-align:left }
 }
 
 /* (重複ブロック) */
-#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin上:0 !important; }
-#plans{ padding-top:0 !重要; margin-top:0 !important; }
-#plans .accordion{ padding-top:0 !重要; margin-top:0 !重要; }
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !重要; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !重要; }
+#corp-setup + #plans{ margin上:0 !重要; }
+#plans{ padding-top:0 !重要; margin-top:0 !重要; }
+#plans .accordion{ paddingトップ:0 !重要; margin-top:0 !重要; }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ marginトップ:-10px !important; }
+  #corp-setup + #plans{ margin-top:-10px !重要; }
 }
 
 /* === v2.3.6 FINAL – 強制詰め === */
-#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#plans{      padding-top:0    !important; margin-top:0    !important; }
-#corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !重要; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !重要; }
+#corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
+#plans{      paddingトップ:0    !重要; margin-top:0    !重要; }
+#corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
+#plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
 #plans      .accordion > details:first-child{ margin-top:0 !重要; }
-#corp-setup + #plans{ margin-top:-24px !important; }
+#corp-setup + #plans{ margin-top:-24px !重要; }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-28px !important; }
+  #corp-setup + #plans{ margin-top:-28px !重要; }
 }
 #plans{ border-top:1px solid透明; } /* 原文尊重 */
 
 /* === v2.3.7 micro-squeeze === */
-#corp-setup + #plans{ margin-top:-36px !important; }
+#corp-setup + #plans{ margin-top:-36px !重要; }
 @media (max-width: 480px){
-  #corp-setup + #plans{ margin-top:-40px !important; }
+  #corp-setup + #plans{ margin-top:-40px !重要; }
 }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-42px !important; }
+  #corp-setup + #plans{ margin-top:-42px !重要; }
 }
 #corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
-#plans{      padding-top:0 !重要; border-top:1px solid transparent; }
+#plans{      paddingトップ:0 !重要; border-top:1px solid transparent; }
 #corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
-#plans .accordion{      padding-top:0  !重要; display:flow-root !重要; }
+#plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
 #plans      .accordion > details:first-child{  margin-top:0 !重要; }
 
@@ -205,7 +205,6 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 
 /* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
-/* plans 見出しを出さないグループを他と揃えて 2px だけ詰める（重複OK） */
 .menu-group.no-title { padding-top: 2px; }
 
 /* ── ハンバーガー内：#plans グループの余白を微調整 ── */
@@ -260,69 +259,21 @@ body.has-cta{
 html, body{ height: 100%; overflow: hidden; }
 /* 実際にスクロールさせる容器（JSが自動で作る） */
 #scroll-root{
-  position: fixed;
-  inset: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  background: inherit;
+  position: fixed; inset: 0; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: inherit;
 }
 /* CTA 分の下余白はスクロール容器側に確保 */
-#scroll-root.has-cta{ padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
-/* CTA はそのまま固定 */
+#scroll-root.has-cta{
+  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
+/* CTA はそのまま固定（既存の .cta-bar / .fixed-cta どちらでもOK） */
 .cta-bar,.fixed-cta{
-  position: fixed; left: 0; right: 0; bottom: 0 !important;
-  z-index: 9999; transform: translateZ(0); will-change: transform;
+  position: fixed; left: 0; right: 0; bottom: 0 !important; z-index: 9999;
+  transform: translateZ(0); will-change: transform;
 }
 
-/* ====== ここから言語UI ====== */
-
-/* 言語ボタン（ハンバーガーと同じ見た目） */
-.lang-button {
-  position: fixed;
-  top: calc(10px + env(safe-area-inset-top));
-  right: calc(10px + env(safe-area-inset-right) + 48px + 10px); /* ハンバーガーの左 */
-  z-index: 10001;
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 48px; height: 48px; border-radius: 12px;
-  background: #111827; color: #fff; border: 1px solid rgba(255,255,255,.08);
-  box-shadow: 0 4px 14px rgba(0,0,0,.15);
-  cursor: pointer;
-}
-.lang-button .globe{ font-size: 18px; line-height: 1; }
-
-/* 言語ドロワーは既存の .menu-wrap/.menu-panel を流用 */
-.lang-wrap .menu-panel { width: min(480px, 92vw); }
-
-/* リストのボタン */
-#langList li button.lang-item{
-  width:100%; text-align:left; background:#fff; color:#334155;
-  border:1px solid #e5e7eb; border-radius:8px; padding:8px 10px; font-weight:700;
-}
-#langList li button.lang-item:hover{ background:#eef2f7; border-color:#d4d8de; }
-#langList li button.lang-item.active{ background:#e6f2ff; border-color:#c7dbff; color:#143cff; }
-
-/* 検索ボックス */
-.lang-search{
-  width:100%; border:1px solid #e5e7eb; border-radius:8px; padding:10px 12px;
-  font-size:14px; background:#fff;
-}
-.text-xs{ font-size:.8rem; opacity:.7 }
-
-/* ハンバーガーが最前面、言語ボタンはその次 */
-.menu-button{ z-index:10000; }
-.lang-button{ z-index:10001; }
-
-/* Google TranslateデフォルトUIを画面外へ（DOMには残す） */
-.gt-offscreen{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
-iframe.goog-te-banner-frame{ display:none !important; }
-body{ top:0 !important; }
-
-/* スマホ少し縮小 */
-@media (max-width:480px){
-  .lang-button{ transform: scale(.92); transform-origin: top right; }
-}
-
-/* 微調整（ユーティリティ） */
-.px-3{ padding-left:12px; padding-right:12px; }
-.py-2{ padding-top:8px; padding-bottom:8px; }
+/* ====== ここから下：言語スイッチの“見た目だけ”微調整（任意） ====== */
+/* ウィジェットの行間と「Powered by」余白 */
+#google_translate_element{ display:block }
+#google_translate_element .goog-te-gadget{ margin:0!important }
+#google_translate_element .goog-te-gadget .goog-te-combo{ margin:0!important }
