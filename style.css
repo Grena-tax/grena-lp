@@ -143,19 +143,19 @@ th:first-child, td:first-child{ text-align:left }
 
 /* (重複ブロック) */
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !重要; }
-#corp-setup + #plans{ margin上:0 !重要; }
-#plans{ padding-top:0 !重要; margin-top:0 !重要; }
-#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
+#corp-setup + #plans{ margin上:0 !important; }
+#plans{ padding-top:0 !重要; margin-top:0 !important; }
+#plans .accordion{ padding-top:0 !重要; margin-top:0 !重要; }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-10px !important; }
+  #corp-setup + #plans{ marginトップ:-10px !important; }
 }
 
 /* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0    !important; margin-top:0    !important; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !重要; }
-#plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
+#plans .accordion{      padding-top:0  !important; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
 #plans      .accordion > details:first-child{ margin-top:0 !重要; }
 #corp-setup + #plans{ margin-top:-24px !important; }
@@ -186,11 +186,11 @@ th:first-child, td:first-child{ text-align:left }
   --gap-lift-sp: -44px;
 }
 #corp-setup{ padding-bottom:0 !重要; margin-bottom:0 !重要; }
-#plans{      paddingトップ:0 !重要;     margin-top:0  !重要;  }
+#plans{      padding-top:0 !重要;     margin-top:0  !重要;  }
 #corp-setup .accordion{ padding-bottom:0 !重要; display:flow-root !重要; }
 #plans .accordion{      paddingトップ:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
-#plans      .accordion > details:first-child{  marginトップ:0 !重要; }
+#plans      .accordion > details:first-child{  margin-top:0 !重要; }
 #corp-setup + #plans{ margin-top: var(--gap-lift) !重要; }
 @media (max-width: 480px){
   #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !重要; }
@@ -206,7 +206,7 @@ body { padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
 /* メニューグループに見出しが無い（#plans）時の軽微な詰め */
 .menu-group.no-title { padding-top: 2px; }
 /* plans 見出しを出さないグループを他と揃えて 2px だけ詰める（重複OK） */
-.menu-group.no-title { paddingトップ: 2px; }
+.menu-group.no-title { padding-top: 2px; }
 
 /* ── ハンバーガー内：#plans グループの余白を微調整 ── */
 .menu-group.no-title{ padding-top:0 !important; margin-top:-6px !important; }
@@ -249,27 +249,15 @@ body.has-cta{
   bottom: 0 !important;
   z-index: 9999;
 }
-
-/* iPhoneのホームインジケータ分だけ内側に余白を足す */
 @supports (padding: env(safe-area-inset-bottom)) {
-  .cta-bar{
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  }
+  .cta-bar{ padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
 }
-/* ランタイムで bottom を動かすJSがあっても打ち消す最終ガード */
 .cta-bar{ bottom: max(0px, env(safe-area-inset-bottom)) !important; }
 
 /* === 追加：fixed-cta もGPU固定（JSがtransformだけを触る） === */
-.fixed-cta{
-  transform: translateZ(0);
-  will-change: transform;
-}
+.fixed-cta{ transform: translateZ(0); will-change: transform; }
 /* ==== iOSラバーバンド根絶：ビューポートはスクロールさせない ==== */
-html, body{
-  height: 100%;
-  overflow: hidden;
-}
-
+html, body{ height: 100%; overflow: hidden; }
 /* 実際にスクロールさせる容器（JSが自動で作る） */
 #scroll-root{
   position: fixed;
@@ -279,68 +267,17 @@ html, body{
   overscroll-behavior-y: contain;
   background: inherit;
 }
-
 /* CTA 分の下余白はスクロール容器側に確保 */
-#scroll-root.has-cta{
-  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+#scroll-root.has-cta{ padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
+/* CTA はそのまま固定 */
+.cta-bar,.fixed-cta{
+  position: fixed; left: 0; right: 0; bottom: 0 !important;
+  z-index: 9999; transform: translateZ(0); will-change: transform;
 }
 
-/* CTA はそのまま固定（既存の .cta-bar / .fixed-cta どちらでもOK） */
-.cta-bar,
-.fixed-cta{
-  position: fixed;
-  left: 0; right: 0;
-  bottom: 0 !important;
-  z-index: 9999;
-  transform: translateZ(0);
-  will-change: transform;
-}
-/* === Language switch: ハンバーガーの左横に常時表示 === */
-.lang-switch,
-#google_translate_element,
-.weglot-container {
-  position: fixed !important;
-  top: calc(10px + env(safe-area-inset-top));
-  /* ハンバーガー（48px）＋余白14pxぶん左へ寄せる */
-  right: calc(10px + env(safe-area-inset-right) + 48px + 14px);
-  z-index: 10002;          /* menu-button(10000) より前に出す */
-  pointer-events: auto;
-}
+/* ====== ここから言語UI ====== */
 
-@media (max-width:480px){
-  .lang-switch,
-  #google_translate_element,
-  .weglot-container {
-    transform: scale(.9);
-    transform-origin: top right;
-  }
-}
-
-/* 念のため、ハンバーガーのZ順を固定 */
-.menu-button { z-index: 10000; }
-/* === Language switch: ハンバーガーの左横に常時表示 === */
-.lang-switch,
-#google_translate_element,
-.weglot-container {
-  position: fixed !important;
-  top: calc(10px + env(safe-area-inset-top));
-  right: calc(10px + env(safe-area-inset-right) + 48px + 14px); /* ハンバーガー左横 */
-  z-index: 10002;  /* menu-button(10000) より前 */
-  pointer-events: auto;
-}
-
-@media (max-width:480px){
-  .lang-switch,
-  #google_translate_element,
-  .weglot-container {
-    transform: scale(.9);
-    transform-origin: top right;
-  }
-}
-
-/* 念のため、ハンバーガーのZ順を固定 */
-.menu-button { z-index: 10000; }
-/* === Language button（ハンバーガーと同じ見た目） === */
+/* 言語ボタン（ハンバーガーと同じ見た目） */
 .lang-button {
   position: fixed;
   top: calc(10px + env(safe-area-inset-top));
@@ -379,7 +316,7 @@ html, body{
 /* Google TranslateデフォルトUIを画面外へ（DOMには残す） */
 .gt-offscreen{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 iframe.goog-te-banner-frame{ display:none !important; }
-body{ top:0 !important; } /* Chromeが付ける補正の打消し */
+body{ top:0 !important; }
 
 /* スマホ少し縮小 */
 @media (max-width:480px){
