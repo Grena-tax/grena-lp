@@ -277,3 +277,53 @@ html, body{ height: 100%; overflow: hidden; }
 #google_translate_element{ display:block }
 #google_translate_element .goog-te-gadget{ margin:0!important }
 #google_translate_element .goog-te-gadget .goog-te-combo{ margin:0!important }
+/* === Language switch: ハンバーガーの左横に常時表示（モーダル表示） === */
+.lang-button{
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right) + 48px + 10px); /* 右上ハンバーガー(48px)の左 */
+  z-index: 10002;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 12px;
+  background:#fff; color:#111827; border:1px solid #e5e7eb;
+  box-shadow:0 4px 14px rgba(0,0,0,.08); font-size:18px; line-height:1;
+}
+.lang-button:hover{ background:#f8fafc }
+.menu-button{ z-index:10000 } /* 念のための重なり順固定 */
+
+.lang-backdrop{
+  position: fixed; inset: 0; background: rgba(0,0,0,.28);
+  opacity: 0; pointer-events: none; transition: opacity .18s ease; z-index: 10001;
+}
+.lang-pop{
+  position: fixed;
+  top: calc(60px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right));
+  width: min(420px, 92vw); max-height: min(70vh, 560px); overflow: auto;
+  background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+  box-shadow:0 18px 60px rgba(2,6,23,.2); z-index:10003;
+  transform: translateY(-6px); opacity:0; pointer-events:none;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.lang-head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:10px 12px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0;
+}
+.lang-head strong{ font-weight:800 }
+.lang-close{
+  width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:8px; border:1px solid #e5e7eb; background:#fff; color:#111827;
+}
+.lang-close:hover{ background:#f3f4f6 }
+.lang-body{ padding:12px }
+.lang-body #google_translate_element select{
+  width:100%; padding:.6rem .7rem; border-radius:10px; border:1px solid #e5e7eb; background:#fff;
+}
+/* 開いたとき */
+html.lang-open .lang-backdrop{ opacity:1; pointer-events:auto }
+html.lang-open .lang-pop{ transform:none; opacity:1; pointer-events:auto }
+
+/* モバイル微調整 */
+@media (max-width:480px){
+  .lang-button{ transform: translateX(-2px) scale(.96); transform-origin: top right; }
+}
