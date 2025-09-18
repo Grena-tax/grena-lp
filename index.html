@@ -790,5 +790,141 @@
 
 <!-- ===== JS（本文は変更せず／操作だけ） ===== -->
 <script src="./script.js?v=20250910-01"></script>
+<!-- ===== Language switcher (貼り付け先： </body> の直前) ===== -->
+<style>
+  /* フローティングの地球ボタン（ハンバーガーの左横） */
+  .lang-btn{
+    position:fixed;
+    top:calc(10px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right) + 48px + 14px); /* ハンバーガー48px＋余白 */
+    z-index:10050;
+    width:48px;height:48px;border-radius:12px;
+    display:inline-grid;place-items:center;
+    background:#111827;color:#fff;border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer
+  }
+  .lang-btn:active{transform:translateY(1px)}
+
+  /* モーダル全体 */
+  .lang-dialog{position:fixed;inset:0;z-index:10040;display:none;pointer-events:none}
+  .lang-dialog[data-open="1"]{display:block;pointer-events:auto}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px);opacity:1}
+  .lang-panel{
+    position:absolute;top:calc(70px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right));
+    width:min(560px,92vw);max-height:min(70vh,520px);
+    background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;
+    overflow:hidden
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb}
+  .lang-head strong{font-weight:800}
+  .lang-close{width:36px;height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-body{padding:10px 12px}
+  /* Googleのセレクトをここに移植して使う */
+  #langSelectSlot select.goog-te-combo{
+    width:100%;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:16px
+  }
+  .lang-hint{margin-top:8px;color:#64748b;font-size:12px}
+
+  /* 隠しコンテナ（Google翻訳ウィジェット本体用） */
+  #google_translate_element{
+    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none
+  }
+
+  /* 既存の#scroll-root があってもモーダル内は独立スクロール */
+  .lang-panel{overflow:auto;-webkit-overflow-scrolling:touch}
+  @media (max-width:480px){
+    .lang-btn{transform:scale(.92);transform-origin:top right}
+  }
+</style>
+
+<!-- 地球ボタン -->
+<button id="langBtn" class="lang-btn" aria-haspopup="dialog" aria-controls="langDialog" aria-expanded="false" title="言語 / Language" type="button">
+  <!-- シンプルな地球アイコン（SVG） -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
+  </svg>
+</button>
+
+<!-- モーダル -->
+<div id="langDialog" class="lang-dialog" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="lang-backdrop" id="langBackdrop"></div>
+  <div class="lang-panel" role="document">
+    <div class="lang-head">
+      <strong>言語を選択 / Language</strong>
+      <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
+    </div>
+    <div class="lang-body">
+      <!-- ここに Google の <select class="goog-te-combo"> を移植して使う -->
+      <div id="langSelectSlot"></div>
+      <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Google翻訳ウィジェット（隠しておくが、内部のセレクトは利用） -->
+<div id="google_translate_element" aria-hidden="true"></div>
+
+<script>
+  // 1) モーダル開閉
+  (function(){
+    const btn = document.getElementById('langBtn');
+    const dlg = document.getElementById('langDialog');
+    const close = document.getElementById('langClose');
+    const backdrop = document.getElementById('langBackdrop');
+
+    function open(){ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>close.focus(),0); }
+    function closeDlg(){ dlg.removeAttribute('data-open'); dlg.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); btn.focus(); }
+
+    btn?.addEventListener('click', ()=> (dlg.getAttribute('data-open') ? closeDlg() : open()));
+    close?.addEventListener('click', closeDlg);
+    backdrop?.addEventListener('click', closeDlg);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeDlg(); });
+
+    // メニューを開いたままページをタップした時に閉じる（セレクト以外）
+    document.addEventListener('click', (e)=>{
+      if(!dlg.getAttribute('data-open')) return;
+      if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
+      closeDlg();
+    });
+  })();
+
+  // 2) Google翻訳の初期化：隠し要素に作られる .goog-te-combo をモーダルへ移植
+  function googleTranslateElementInit(){
+    // サイトの既定言語（必要に応じて 'ja' を他に）
+    var opts = { pageLanguage: 'ja', autoDisplay: false };
+    // ここで作成（#google_translate_element 内に <select.goog-te-combo> が生成される）
+    new google.translate.TranslateElement(opts, 'google_translate_element');
+
+    // 生成を待ってモーダルへ移植
+    var tries = 0;
+    (function moveCombo(){
+      const slot  = document.getElementById('langSelectSlot');
+      const host  = document.getElementById('google_translate_element');
+      const combo = host && host.querySelector('select.goog-te-combo');
+      if (combo && slot){
+        if (!slot.querySelector('select.goog-te-combo')) {
+          slot.appendChild(combo); // ← ここがポイント：自前UIに組み込む
+          combo.setAttribute('aria-label','言語を選択 / Select Language');
+          combo.style.width = '100%';
+          combo.style.fontSize = '16px';
+        }
+      } else if (tries++ < 40) {
+        setTimeout(moveCombo, 100);
+      }
+    })();
+  }
+
+  // 3) Googleの翻訳スクリプトを読み込む（非同期）
+  (function loadGTE(){
+    var s = document.createElement('script');
+    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+</script>
+<!-- ===== /Language switcher ===== -->
 </body>
 </html>
