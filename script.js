@@ -16,8 +16,6 @@ const slug = (t) => (t || '')
   const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
   const menuBtn = document.getElementById('menuBtn');
   const menuDrawer = document.getElementById('menuDrawer');
-  const langBtn = document.getElementById('langBtn');
-  const langDrawer = document.getElementById('langDrawer');
 
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
@@ -26,9 +24,10 @@ const slug = (t) => (t || '')
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニューUI・言語UI以外を全部 #scroll-root に移動
-  const keep = new Set([cta, menuBtn, menuDrawer, langBtn, langDrawer, wrap]);
-  Array.from([...body.childNodes]).forEach(n => {
+  // CTA・メニューUI以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, document.getElementById('langBtn'),
+                        document.getElementById('langPanel'), document.getElementById('langBackdrop'), wrap]);
+  Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
 })();
@@ -124,6 +123,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -164,6 +164,8 @@ function buildMenu(){
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
+
+  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
   killPlansHeading();
 }
 
@@ -199,9 +201,9 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
+/* ===== CTAの bottom は触らない ===== */
 
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* === 追加②：保険（UI縮み追従） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -251,36 +253,47 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* ===== 言語スイッチ（開閉） ===== */
+/* ===== 言語ポップアップ（Google翻訳 全言語） ===== */
 const langBtn     = document.getElementById('langBtn');
-const langDrawer  = document.getElementById('langDrawer');
+const langPanel   = document.getElementById('langPanel');
 const langClose   = document.getElementById('langClose');
 const langBackdrop= document.getElementById('langBackdrop');
 
+function loadGTranslate(){
+  if (window._gtrLoaded) return;
+  window._gtrLoaded = true;
+  window.googleTranslateElementInit = function() {
+    /* includedLanguages を指定しない＝全言語 */
+    new google.translate.TranslateElement(
+      { pageLanguage: 'ja', autoDisplay: false, layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+      'google_translate_element'
+    );
+  };
+  const s = document.createElement('script');
+  s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+  s.async = true;
+  document.head.appendChild(s);
+}
+
 const openLang = () => {
+  loadGTranslate();
   document.documentElement.classList.add('lang-open');
-  langDrawer?.setAttribute('aria-hidden','false');
+  langPanel?.setAttribute('aria-hidden','false');
   langBtn?.setAttribute('aria-expanded','true');
-  setTimeout(() => langClose?.focus(), 0);
+  langBackdrop?.removeAttribute('hidden');
+  setTimeout(()=>langPanel?.focus(),0);
 };
 const closeLang = () => {
   document.documentElement.classList.remove('lang-open');
-  langDrawer?.setAttribute('aria-hidden','true');
+  langPanel?.setAttribute('aria-hidden','true');
   langBtn?.setAttribute('aria-expanded','false');
+  langBackdrop?.setAttribute('hidden','');
   langBtn?.focus();
 };
 
-langBtn?.addEventListener('click', ()=>{
+langBtn?.addEventListener('click', () => {
   document.documentElement.classList.contains('lang-open') ? closeLang() : openLang();
 });
 langClose?.addEventListener('click', closeLang);
 langBackdrop?.addEventListener('click', closeLang);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
-
-/* メニューと同時開きになったら、どちらかを優先（ここでは最後に開いた方を表示） */
-document.addEventListener('click', (e)=>{
-  // メニューを開く直前に言語パネルが開いていたら閉じる
-  if (e.target.closest('#menuBtn')) closeLang();
-  // 言語パネルを開く直前にメニューが開いていたら閉じる
-  if (e.target.closest('#langBtn')) closeMenu();
-});
