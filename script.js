@@ -320,3 +320,38 @@ function tweakGtrLabels(){
   const obs = new MutationObserver(() => { if (trySet()) obs.disconnect(); });
   obs.observe(host, { childList:true, subtree:true });
 }
+/* ===== Google翻訳メニューのサイズ/位置を確実に適用（出現後にも補正） ===== */
+(function fixTranslateMenu(){
+  function apply(){
+    const f = document.querySelector('iframe.goog-te-menu-frame.skiptranslate');
+    if (!f) return false;
+    // 念押しでJSからも上書き（CSSが効かない端末保険）
+    Object.assign(f.style, {
+      position:'fixed', zIndex:10003,
+      top:'70px', right:'12px',
+      width:'min(560px,92vw)', height:'min(70vh,520px)'
+    });
+    try{
+      const doc = f.contentWindow && f.contentWindow.document;
+      const m = doc && doc.querySelector('.goog-te-menu2');
+      if (m){
+        m.style.maxHeight = '70vh';
+        m.style.overflowY = 'auto';
+        m.style.webkitOverflowScrolling = 'touch';
+      }
+    }catch(_){}
+    return true;
+  }
+  // 言語ボタンやセレクトを触った直後に何度か適用
+  const poke = () => {
+    let n = 0;
+    const t = setInterval(()=>{
+      n++; if (apply() || n > 20) clearInterval(t);
+    }, 80);
+  };
+  document.addEventListener('click', (e)=>{
+    if (e.target.closest('#langBtn') || e.target.closest('#google_translate_element')){
+      setTimeout(poke, 40);
+    }
+  }, true);
+})();
