@@ -24,13 +24,8 @@ const slug = (t) => (t || '')
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニュー・言語UI以外を全部 #scroll-root に移動
-  const keep = new Set([
-    cta, menuBtn, menuDrawer, wrap,
-    document.getElementById('langBtn'),
-    document.getElementById('langPanel'),
-    document.getElementById('langBackdrop')
-  ]);
+  // CTA・メニューUI以外を全部 #scroll-root に移動
+  const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
   Array.from(body.childNodes).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
   });
@@ -59,6 +54,7 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
+    // スクロール対象は #scroll-root
     const scroller = document.getElementById('scroll-root') || window;
     if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -71,6 +67,7 @@ const adjustCtaPadding = () => {
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
+  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -96,12 +93,14 @@ const openMenu  = () => {
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
+  // A11y: 開いたら閉じるボタンへフォーカス
   setTimeout(() => closeBt?.focus(), 0);
 };
 const closeMenu = () => {
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
+  // A11y: 閉じたらトグルにフォーカスを戻す
   btn?.focus();
 };
 
@@ -127,6 +126,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -204,7 +204,10 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない（transformだけ） ===== */
+/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
+// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
+
+/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -252,106 +255,4 @@ window.addEventListener('load', cutOnlyBottomDup);
   }
 
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
-})();
-
-/* ===== 言語ポップアップ（Google翻訳：UI英語＋全言語） ===== */
-const langBtn      = document.getElementById('langBtn');
-const langPanel    = document.getElementById('langPanel');
-const langClose    = document.getElementById('langClose');
-const langBackdrop = document.getElementById('langBackdrop');
-
-function openLang(){
-  document.documentElement.classList.add('lang-open');
-  langPanel?.setAttribute('aria-hidden','false');
-  langBtn?.setAttribute('aria-expanded','true');
-  langBackdrop?.removeAttribute('hidden');
-  setTimeout(()=>langClose?.focus(),0);
-  loadGTranslate(); // 初回だけ読み込み
-}
-function closeLang(){
-  document.documentElement.classList.remove('lang-open');
-  langPanel?.setAttribute('aria-hidden','true');
-  langBtn?.setAttribute('aria-expanded','false');
-  langBackdrop?.setAttribute('hidden','');
-  langBtn?.focus();
-}
-
-langBtn?.addEventListener('click', ()=>{
-  document.documentElement.classList.contains('lang-open') ? closeLang() : openLang();
-});
-langClose?.addEventListener('click', closeLang);
-langBackdrop?.addEventListener('click', closeLang);
-document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
-
-/* Google翻訳スクリプトを1回だけ読み込む（UI英語化 hl=en） */
-function loadGTranslate(){
-  if (window._gtrLoaded) return;
-  window._gtrLoaded = true;
-
-  window.googleTranslateElementInit = function() {
-    new google.translate.TranslateElement(
-      { pageLanguage: 'ja', autoDisplay: false, layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
-      'google_translate_element'
-    );
-    tweakGtrLabels();
-  };
-
-  const s = document.createElement('script');
-  s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
-  s.async = true;
-  document.head.appendChild(s);
-}
-
-/* コンボの先頭ラベルを「Select language / 言語を選択」に差し替え */
-function tweakGtrLabels(){
-  const host = document.getElementById('google_translate_element');
-  if (!host) return;
-
-  const trySet = () => {
-    const sel = host.querySelector('select.goog-te-combo');
-    if (!sel) return false;
-    // 先頭 option を上書き
-    const first = sel.querySelector('option[value=""]') || sel.options[0];
-    if (first) first.textContent = 'Select language / 言語を選択';
-    return !!first;
-  };
-
-  if (trySet()) return;
-  const obs = new MutationObserver(() => { if (trySet()) obs.disconnect(); });
-  obs.observe(host, { childList:true, subtree:true });
-}
-/* ===== Google翻訳メニューのサイズ/位置を確実に適用（出現後にも補正） ===== */
-(function fixTranslateMenu(){
-  function apply(){
-    const f = document.querySelector('iframe.goog-te-menu-frame.skiptranslate');
-    if (!f) return false;
-    // 念押しでJSからも上書き（CSSが効かない端末保険）
-    Object.assign(f.style, {
-      position:'fixed', zIndex:10003,
-      top:'70px', right:'12px',
-      width:'min(560px,92vw)', height:'min(70vh,520px)'
-    });
-    try{
-      const doc = f.contentWindow && f.contentWindow.document;
-      const m = doc && doc.querySelector('.goog-te-menu2');
-      if (m){
-        m.style.maxHeight = '70vh';
-        m.style.overflowY = 'auto';
-        m.style.webkitOverflowScrolling = 'touch';
-      }
-    }catch(_){}
-    return true;
-  }
-  // 言語ボタンやセレクトを触った直後に何度か適用
-  const poke = () => {
-    let n = 0;
-    const t = setInterval(()=>{
-      n++; if (apply() || n > 20) clearInterval(t);
-    }, 80);
-  };
-  document.addEventListener('click', (e)=>{
-    if (e.target.closest('#langBtn') || e.target.closest('#google_translate_element')){
-      setTimeout(poke, 40);
-    }
-  }, true);
 })();
