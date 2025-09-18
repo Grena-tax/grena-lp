@@ -327,3 +327,27 @@ html.lang-open .lang-pop{ transform:none; opacity:1; pointer-events:auto }
 @media (max-width:480px){
   .lang-button{ transform: translateX(-2px) scale(.96); transform-origin: top right; }
 }
+/* ===== Google翻訳ドロップダウン：画面内に固定＆スクロール可 ===== */
+.goog-te-menu-frame.skiptranslate{
+  position: fixed !important;
+  /* ハンバーガーと地球(言語)ボタンの下に出す */
+  top: calc(70px + env(safe-area-inset-top)) !important;
+  right: calc(12px + env(safe-area-inset-right)) !important;
+  width: min(560px, 92vw) !important;
+  height: min(70vh, 520px) !important;
+  z-index: 10003 !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,.25) !important;
+  background: #fff !important;
+}
+
+/* 中身をスクロールできるようにする（iOSもOK） */
+.goog-te-menu2{
+  max-height: min(70vh, 520px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* 見た目の微調整（任意） */
+.goog-te-menu2 *{ font-size:14px !important; line-height:1.35 !important; }
