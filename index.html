@@ -8,7 +8,7 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS -->
+<!-- 既存のメインCSS（そのまま） -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
 <!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー（本文は無改変） -->
@@ -94,50 +94,17 @@
   html.menu-open .menu-panel{transform:none}
   html.menu-open,html.menu-open body{overflow:hidden}
 
-  /* 画面最下部 固定CTA */
+  /* 画面最下部 固定CTA（fixed-cta を使う／旧まま） */
   .fixed-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
-
-  /* 言語ボタン（ハンバーガーの左横）＋ポップアップ */
-  .lang-button{
-    position:fixed;top:calc(10px + var(--safe-top));
-    right:calc(10px + var(--safe-right) + 48px + 10px);
-    z-index:10002;display:inline-flex;align-items:center;justify-content:center;
-    width:44px;height:44px;border-radius:12px;background:#ffffff;color:#111827;
-    border:1px solid #e5e7eb;box-shadow:0 4px 14px rgba(0,0,0,.08);
-    font-size:18px;line-height:1
-  }
-  .lang-button:hover{background:#f8fafc}
-
-  .lang-backdrop{
-    position:fixed;inset:0;background:rgba(0,0,0,.28);
-    opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:10001
-  }
-  .lang-pop{
-    position:fixed;top:calc(60px + var(--safe-top));
-    right:calc(10px + var(--safe-right));
-    width:min(420px,92vw);max-height:min(70vh,560px);overflow:auto;
-    background:#fff;border:1px solid #e5e7eb;border-radius:14px;
-    box-shadow:0 18px 60px rgba(2,6,23,.2);z-index:10003;
-    transform:translateY(-6px);opacity:0;pointer-events:none;transition:transform .18s ease,opacity .18s ease
-  }
-  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0}
-  .lang-head strong{font-weight:800}
-  .lang-close{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-  .lang-close:hover{background:#f3f4f6}
-  .lang-body{padding:12px}
-  .lang-body #google_translate_element select{width:100%;padding:.6rem .7rem;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
-
-  html.lang-open .lang-backdrop{opacity:1;pointer-events:auto}
-  html.lang-open .lang-pop{transform:none;opacity:1;pointer-events:auto}
 </style>
 </head>
 <body>
@@ -149,20 +116,6 @@
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
-
-<!-- 言語ボタン（グローブ） -->
-<button class="lang-button" id="langBtn" aria-controls="langPanel" aria-expanded="false" aria-label="言語 / Language">🌐</button>
-<div class="lang-backdrop" id="langBackdrop" hidden></div>
-<aside class="lang-pop" id="langPanel" aria-hidden="true" role="dialog" aria-modal="true" aria-label="言語を選択 / Language">
-  <div class="lang-head">
-    <strong>言語を選択 <span class="muted">/ Language</span></strong>
-    <button class="lang-close" id="langClose" aria-label="閉じる">×</button>
-  </div>
-  <div class="lang-body">
-    <div id="google_translate_element"></div>
-  </div>
-</aside>
-
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
@@ -779,7 +732,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
+<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -788,15 +741,12 @@
   </div>
 </div>
 
-<!-- ===== JS（本文は変更せず／操作だけ） ===== -->
-<script src="./script.js?v=20250910-01"></script>
-<!-- ===== Language switcher (貼り付け先： </body> の直前) ===== -->
+<!-- ===== Language switcher（地球儀ボタン＋モーダル / 全言語） ===== -->
 <style>
-  /* フローティングの地球ボタン（ハンバーガーの左横） */
   .lang-btn{
     position:fixed;
     top:calc(10px + env(safe-area-inset-top));
-    right:calc(10px + env(safe-area-inset-right) + 48px + 14px); /* ハンバーガー48px＋余白 */
+    right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
     z-index:10050;
     width:48px;height:48px;border-radius:12px;
     display:inline-grid;place-items:center;
@@ -804,51 +754,38 @@
     box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer
   }
   .lang-btn:active{transform:translateY(1px)}
-
-  /* モーダル全体 */
   .lang-dialog{position:fixed;inset:0;z-index:10040;display:none;pointer-events:none}
   .lang-dialog[data-open="1"]{display:block;pointer-events:auto}
-  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px);opacity:1}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px)}
   .lang-panel{
     position:absolute;top:calc(70px + env(safe-area-inset-top));
     right:calc(10px + env(safe-area-inset-right));
     width:min(560px,92vw);max-height:min(70vh,520px);
     background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-    box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;
-    overflow:hidden
+    box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:auto;
+    -webkit-overflow-scrolling:touch
   }
   .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb}
   .lang-head strong{font-weight:800}
   .lang-close{width:36px;height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
   .lang-close:hover{background:#f3f4f6}
   .lang-body{padding:10px 12px}
-  /* Googleのセレクトをここに移植して使う */
   #langSelectSlot select.goog-te-combo{
     width:100%;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:16px
   }
   .lang-hint{margin-top:8px;color:#64748b;font-size:12px}
-
-  /* 隠しコンテナ（Google翻訳ウィジェット本体用） */
   #google_translate_element{
     position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none
   }
-
-  /* 既存の#scroll-root があってもモーダル内は独立スクロール */
-  .lang-panel{overflow:auto;-webkit-overflow-scrolling:touch}
-  @media (max-width:480px){
-    .lang-btn{transform:scale(.92);transform-origin:top right}
-  }
+  @media (max-width:480px){ .lang-btn{transform:scale(.92);transform-origin:top right} }
 </style>
 
-<!-- 地球ボタン -->
 <button id="langBtn" class="lang-btn" aria-haspopup="dialog" aria-controls="langDialog" aria-expanded="false" title="言語 / Language" type="button">
-  <!-- シンプルな地球アイコン（SVG） -->
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
   </svg>
 </button>
 
-<!-- モーダル -->
 <div id="langDialog" class="lang-dialog" aria-hidden="true" role="dialog" aria-modal="true">
   <div class="lang-backdrop" id="langBackdrop"></div>
   <div class="lang-panel" role="document">
@@ -857,74 +794,66 @@
       <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
     </div>
     <div class="lang-body">
-      <!-- ここに Google の <select class="goog-te-combo"> を移植して使う -->
       <div id="langSelectSlot"></div>
       <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
     </div>
   </div>
 </div>
 
-<!-- Google翻訳ウィジェット（隠しておくが、内部のセレクトは利用） -->
 <div id="google_translate_element" aria-hidden="true"></div>
 
 <script>
-  // 1) モーダル開閉
   (function(){
     const btn = document.getElementById('langBtn');
     const dlg = document.getElementById('langDialog');
-    const close = document.getElementById('langClose');
+    const closeBt = document.getElementById('langClose');
     const backdrop = document.getElementById('langBackdrop');
 
-    function open(){ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>close.focus(),0); }
-    function closeDlg(){ dlg.removeAttribute('data-open'); dlg.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); btn.focus(); }
+    const open = () => { dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>closeBt?.focus(),0); };
+    const close= () => { dlg.removeAttribute('data-open'); dlg.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); btn?.focus(); };
 
-    btn?.addEventListener('click', ()=> (dlg.getAttribute('data-open') ? closeDlg() : open()));
-    close?.addEventListener('click', closeDlg);
-    backdrop?.addEventListener('click', closeDlg);
-    document.addEventListener('keydown', e => { if(e.key==='Escape') closeDlg(); });
+    btn?.addEventListener('click', ()=> dlg.getAttribute('data-open') ? close() : open());
+    closeBt?.addEventListener('click', close);
+    backdrop?.addEventListener('click', close);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 
-    // メニューを開いたままページをタップした時に閉じる（セレクト以外）
+    // モーダル外クリックで閉じる（保険）
     document.addEventListener('click', (e)=>{
       if(!dlg.getAttribute('data-open')) return;
       if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
-      closeDlg();
+      close();
     });
   })();
 
-  // 2) Google翻訳の初期化：隠し要素に作られる .goog-te-combo をモーダルへ移植
+  // Google翻訳の初期化：隠し要素に生成された <select.goog-te-combo> をモーダルへ移植
   function googleTranslateElementInit(){
-    // サイトの既定言語（必要に応じて 'ja' を他に）
-    var opts = { pageLanguage: 'ja', autoDisplay: false };
-    // ここで作成（#google_translate_element 内に <select.goog-te-combo> が生成される）
-    new google.translate.TranslateElement(opts, 'google_translate_element');
+    new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
 
-    // 生成を待ってモーダルへ移植
-    var tries = 0;
+    let tries = 0;
     (function moveCombo(){
-      const slot  = document.getElementById('langSelectSlot');
       const host  = document.getElementById('google_translate_element');
+      const slot  = document.getElementById('langSelectSlot');
       const combo = host && host.querySelector('select.goog-te-combo');
       if (combo && slot){
         if (!slot.querySelector('select.goog-te-combo')) {
-          slot.appendChild(combo); // ← ここがポイント：自前UIに組み込む
+          slot.appendChild(combo);
           combo.setAttribute('aria-label','言語を選択 / Select Language');
-          combo.style.width = '100%';
-          combo.style.fontSize = '16px';
+          combo.style.width='100%'; combo.style.fontSize='16px';
         }
-      } else if (tries++ < 40) {
+      } else if (tries++ < 60) {
         setTimeout(moveCombo, 100);
       }
     })();
   }
-
-  // 3) Googleの翻訳スクリプトを読み込む（非同期）
   (function loadGTE(){
-    var s = document.createElement('script');
-    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.defer = true;
-    document.head.appendChild(s);
+    var s=document.createElement('script');
+    s.src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.defer=true; document.head.appendChild(s);
   })();
 </script>
 <!-- ===== /Language switcher ===== -->
+
+<!-- ===== JS（本文は変更せず／操作だけ） ===== -->
+<script src="./script.js?v=20250910-01"></script>
 </body>
 </html>
