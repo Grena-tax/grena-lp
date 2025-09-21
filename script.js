@@ -54,7 +54,6 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    // スクロール対象は #scroll-root
     const scroller = document.getElementById('scroll-root') || window;
     if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -67,7 +66,6 @@ const adjustCtaPadding = () => {
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
-  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -93,14 +91,12 @@ const openMenu  = () => {
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
-  // A11y: 開いたら閉じるボタンへフォーカス
   setTimeout(() => closeBt?.focus(), 0);
 };
 const closeMenu = () => {
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
-  // A11y: 閉じたらトグルにフォーカスを戻す
   btn?.focus();
 };
 
@@ -126,7 +122,6 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -167,22 +162,8 @@ function buildMenu(){
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
-
-  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
-  killPlansHeading();
-}
-
-function killPlansHeading(){
-  if (!groupsRoot) return;
-  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-  });
 }
 addEventListener('DOMContentLoaded', buildMenu);
-addEventListener('load', killPlansHeading);
-if (groupsRoot) {
-  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
-}
 
 /* ===== 重複ブロック除去（免責/キャンセルを #disclaimer だけに揃える） ===== */
 function cutOnlyBottomDup() {
@@ -190,7 +171,7 @@ function cutOnlyBottomDup() {
   document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
   document.querySelectorAll('details').forEach(d=>{
     const t = d.querySelector('summary')?.textContent?.trim() || '';
-    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
+    if (/免責事項/.test(t) && !t.includes('キャンセル') && !d.closest('#disclaimer')) d.remove();
   });
   const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
     const t = d.querySelector('summary')?.textContent?.trim() || '';
@@ -205,7 +186,6 @@ document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
 /* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
 
 /* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
@@ -247,7 +227,6 @@ window.addEventListener('load', cutOnlyBottomDup);
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
 
-  // 実際のスクロールイベントも拾う（#scroll-root優先）
   if (scroller && scroller.addEventListener) {
     scroller.addEventListener('scroll', apply, { passive: true });
   } else {
@@ -255,4 +234,183 @@ window.addEventListener('load', cutOnlyBottomDup);
   }
 
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
+})();
+
+/* =========================================================
+   多言語：何度でも切り替えできるプロキシセレクト方式
+   - オリジナルの .goog-te-combo は隠しホストに保持
+   - UI はクローンを使い、毎回オリジナルへ change を伝播
+   ========================================================= */
+(function languageSwitcherStable(){
+
+  // 1) Google翻訳スクリプトが未読込なら読み込む（二重読込ガード）
+  function ensureGoogleScript(){
+    if (window.google && window.google.translate) return;
+    if (document.getElementById('___goog_translate_lib')) return;
+    const s = document.createElement('script');
+    s.id = '___goog_translate_lib';
+    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+
+  // 2) オリジナルの select を探す（隠しホスト or 既存スロット）
+  function findOriginalCombo(){
+    return document.querySelector('#google_translate_element select.goog-te-combo') ||
+           document.querySelector('#langSelectSlot select.goog-te-combo');
+  }
+
+  // 3) cookie から現在言語を読む（/ja/en みたいな形式）
+  function getLangFromCookie(){
+    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    if (!m) return '';
+    try{
+      const v = decodeURIComponent(m[1]);
+      const parts = v.split('/');
+      return parts[parts.length - 1] || '';
+    }catch(_){ return ''; }
+  }
+
+  // 4) プロキシを rebuild（オプションを毎回コピー）
+  function rebuildProxy(){
+    const slot = document.getElementById('langSelectSlot');
+    if (!slot) return;
+
+    // 既存を掃除
+    const old = slot.querySelector('#langProxy');
+    if (old) old.remove();
+
+    const orig = findOriginalCombo();
+    const proxy = document.createElement('select');
+    proxy.id = 'langProxy';
+    proxy.setAttribute('aria-label', '言語を選択 / Select Language');
+    proxy.style.width = '100%';
+    proxy.style.height = '40px';
+    proxy.style.borderRadius = '8px';
+    proxy.style.border = '1px solid #d1d5db';
+    proxy.style.padding = '0 10px';
+    proxy.style.fontSize = '16px';
+
+    // オプションを複製（存在しないときはプレースホルダ）
+    if (orig && orig.options && orig.options.length){
+      for (let i=0; i<orig.options.length; i++){
+        const o = orig.options[i].cloneNode(true);
+        proxy.appendChild(o);
+      }
+      // 先頭は「原文 / Original」に名称変更（valueは空のまま＝原文）
+      if (proxy.options.length){
+        proxy.options[0].textContent = '原文 / Original';
+      }
+    }else{
+      const p = document.createElement('option');
+      p.value = '';
+      p.textContent = 'Loading languages…';
+      proxy.appendChild(p);
+    }
+
+    // 現在言語に同期（cookieベース）
+    const cur = getLangFromCookie();
+    if (cur && Array.from(proxy.options).some(o => o.value === cur)){
+      proxy.value = cur;
+    }else{
+      proxy.value = '';
+    }
+
+    proxy.addEventListener('change', ()=>{
+      applyLanguage(proxy.value);
+    });
+
+    slot.appendChild(proxy);
+  }
+
+  // 5) 実際に言語を適用（毎回最新の orig を取り直して change 発火）
+  function applyLanguage(val){
+    const orig = findOriginalCombo();
+    if (!orig) {
+      // まだ生成前なら少し待って再試行
+      let tries = 0;
+      const t = setInterval(()=>{
+        const o2 = findOriginalCombo();
+        if (o2 || tries++ > 40){
+          clearInterval(t);
+          if (o2){
+            o2.value = val;
+            o2.dispatchEvent(new Event('change'));
+          }
+        }
+      }, 100);
+      return;
+    }
+    if (orig.value !== val){
+      orig.value = val;
+    }
+    orig.dispatchEvent(new Event('change'));
+  }
+
+  // 6) モーダルの開閉に合わせて毎回 rebuild（＝何度でも確実に使える）
+  (function wireModal(){
+    const btn = document.getElementById('langBtn');
+    const dlg = document.getElementById('langDialog');
+    const close = document.getElementById('langClose');
+    const backdrop = document.getElementById('langBackdrop');
+
+    function open(){ 
+      dlg?.setAttribute('data-open','1'); 
+      dlg?.setAttribute('aria-hidden','false'); 
+      btn?.setAttribute('aria-expanded','true'); 
+      rebuildProxy();
+      setTimeout(()=>close?.focus(),0); 
+    }
+    function closeDlg(){ 
+      dlg?.removeAttribute('data-open'); 
+      dlg?.setAttribute('aria-hidden','true'); 
+      btn?.setAttribute('aria-expanded','false'); 
+      btn?.focus(); 
+    }
+
+    btn?.addEventListener('click', ()=> (dlg?.getAttribute('data-open') ? closeDlg() : open()));
+    close?.addEventListener('click', closeDlg);
+    backdrop?.addEventListener('click', closeDlg);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeDlg(); });
+  })();
+
+  // 7) Google翻訳の初期化（すでに初期化済みならそのまま）
+  window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
+    try{
+      new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+    }catch(_){}
+    // 生成完了を待って初回プロキシ構築
+    let tries = 0;
+    const waiter = setInterval(()=>{
+      if (findOriginalCombo() || tries++ > 40){
+        clearInterval(waiter);
+        rebuildProxy();
+      }
+    }, 100);
+    // 以後、隠しホストの変化を監視 → オプションが差し替わったら再構築
+    const host = document.getElementById('google_translate_element');
+    if (host && 'MutationObserver' in window){
+      new MutationObserver(()=>rebuildProxy())
+        .observe(host, { childList:true, subtree:true });
+    }
+  };
+
+  // 起動
+  ensureGoogleScript();
+
+  // ページロード後、cookie 変化に応じてプロキシ表示を追従（ゆるくポーリング）
+  let last = getLangFromCookie();
+  setInterval(()=>{
+    const cur = getLangFromCookie();
+    if (cur !== last){
+      last = cur;
+      const proxy = document.getElementById('langProxy');
+      if (proxy && Array.from(proxy.options).some(o => o.value === cur)){
+        proxy.value = cur;
+      }else if (proxy){
+        proxy.value = '';
+      }
+    }
+  }, 800);
+
 })();
