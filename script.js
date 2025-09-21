@@ -20,15 +20,11 @@ const slug = (t) => (t || '')
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
 
-  // CTAより上にスクロール容器を挿入
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニューUI以外を全部 #scroll-root に移動
   const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
-  Array.from(body.childNodes).forEach(n => {
-    if (!keep.has(n)) wrap.appendChild(n);
-  });
+  Array.from(body.childNodes).forEach(n => { if (!keep.has(n)) wrap.appendChild(n); });
 })();
 
 /* ===== ページ内リンク（スムーススクロール） ===== */
@@ -42,7 +38,6 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 免責(#disclaimer) だけは自動オープンしない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -55,7 +50,7 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
     const scroller = document.getElementById('scroll-root') || window;
-    if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+    scroller.scrollTo?.({ top: 0, behavior: 'smooth' });
   }
 });
 
@@ -109,7 +104,6 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
-
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
@@ -185,9 +179,9 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
+/* ===== CTAの bottom はJSで触らない（視差ずれ防止） ===== */
 
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* === 追加②：UI縮み追従だけtransformで相殺（bounce中は凍結） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -197,23 +191,14 @@ window.addEventListener('load', cutOnlyBottomDup);
   if (!bar || !window.visualViewport) return;
 
   const scroller = document.getElementById('scroll-root') || document.documentElement;
-
-  let stable = 0; // 直近の安定値
+  let stable = 0;
   const apply = () => {
     const vv  = window.visualViewport;
-
-    // 端のUIが出たぶんの隙間（iOSのホームバー等）
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
-    // スクロール量/最大量を #scroll-root（存在時）基準に判定
     const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
-
-    let y = 0;
-    if (scroller === document.documentElement || scroller === document.body) {
-      y = window.scrollY || document.documentElement.scrollTop || 0;
-    } else {
-      y = scroller.scrollTop || 0;
-    }
+    let y = (scroller === document.documentElement || scroller === document.body)
+      ? (window.scrollY || document.documentElement.scrollTop || 0)
+      : (scroller.scrollTop || 0);
 
     const isBouncingBottom = y > maxScroll + 1;
     if (!isBouncingBottom) stable = uiGap;
@@ -226,41 +211,125 @@ window.addEventListener('load', cutOnlyBottomDup);
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
-
-  if (scroller && scroller.addEventListener) {
-    scroller.addEventListener('scroll', apply, { passive: true });
-  } else {
-    window.addEventListener('scroll', apply, { passive: true });
-  }
-
+  (scroller.addEventListener ? scroller : window).addEventListener('scroll', apply, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
 /* =========================================================
-   多言語：何度でも切り替えできるプロキシセレクト方式
-   - オリジナルの .goog-te-combo は隠しホストに保持
-   - UI はクローンを使い、毎回オリジナルへ change を伝播
+   多言語（自己修復・何度でも切替OK）
+   - 必要なHTML/CSSが無ければ自動生成
+   - オリジナル .goog-te-combo は隠しホストに置きっぱなし
+   - UIはプロキシ<select>で操作→毎回オリジナルへchange伝搬
    ========================================================= */
-(function languageSwitcherStable(){
+(function languageSwitcherSelfHealing(){
 
-  // 1) Google翻訳スクリプトが未読込なら読み込む（二重読込ガード）
+  // 0) 必要なHTML/CSSを自動生成（無い場合のみ）
+  function ensureLangMarkup(){
+    const head = document.head || document.getElementsByTagName('head')[0];
+    if (!document.getElementById('lang-style')) {
+      const css = document.createElement('style');
+      css.id = 'lang-style';
+      css.textContent = `
+        .lang-btn{
+          position:fixed; top:calc(10px + env(safe-area-inset-top));
+          right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
+          z-index:10050; width:48px;height:48px;border-radius:12px;
+          display:inline-grid;place-items:center;background:#111827;color:#fff;
+          border:1px solid rgba(255,255,255,.08); box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer;
+        }
+        .lang-btn:active{ transform:translateY(1px) }
+        .lang-dialog{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
+        .lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
+        .lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px); }
+        .lang-panel{
+          position:absolute; top:calc(70px + env(safe-area-inset-top));
+          right:calc(10px + env(safe-area-inset-right));
+          width:min(560px,92vw); max-height:min(70vh,520px);
+          background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+          box-shadow:0 20px 50px rgba(0,0,0,.25); display:flex; flex-direction:column; overflow:auto;
+          -webkit-overflow-scrolling:touch;
+        }
+        .lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+        .lang-head strong{ font-weight:800 }
+        .lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff }
+        .lang-close:hover{ background:#f3f4f6 }
+        .lang-body{ padding:10px 12px }
+        #langSelectSlot select{
+          width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px;
+        }
+        .lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
+        #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
+        @media (max-width:480px){ .lang-btn{ transform:scale(.92); transform-origin:top right } }
+        .menu-button{ z-index:10000; }
+      `;
+      head.appendChild(css);
+    }
+
+    if (!document.getElementById('langBtn')) {
+      const btn = document.createElement('button');
+      btn.id = 'langBtn';
+      btn.className = 'lang-btn';
+      btn.type = 'button';
+      btn.title = '言語 / Language';
+      btn.setAttribute('aria-haspopup', 'dialog');
+      btn.setAttribute('aria-controls', 'langDialog');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
+        </svg>
+      `;
+      document.body.appendChild(btn);
+    }
+
+    if (!document.getElementById('langDialog')) {
+      const dlg = document.createElement('div');
+      dlg.id = 'langDialog';
+      dlg.className = 'lang-dialog';
+      dlg.setAttribute('aria-hidden','true');
+      dlg.setAttribute('role','dialog');
+      dlg.setAttribute('aria-modal','true');
+      dlg.innerHTML = `
+        <div class="lang-backdrop" id="langBackdrop"></div>
+        <div class="lang-panel" role="document">
+          <div class="lang-head">
+            <strong>言語を選択 / Language</strong>
+            <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
+          </div>
+          <div class="lang-body">
+            <div id="langSelectSlot"></div>
+            <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(dlg);
+    }
+
+    if (!document.getElementById('google_translate_element')) {
+      const host = document.createElement('div');
+      host.id = 'google_translate_element';
+      host.setAttribute('aria-hidden','true');
+      document.body.appendChild(host);
+    }
+  }
+
+  // 1) Google翻訳スクリプト読み込み（重複防止）
   function ensureGoogleScript(){
     if (window.google && window.google.translate) return;
     if (document.getElementById('___goog_translate_lib')) return;
     const s = document.createElement('script');
     s.id = '___goog_translate_lib';
-    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.defer = true;
     document.head.appendChild(s);
   }
 
-  // 2) オリジナルの select を探す（隠しホスト or 既存スロット）
+  // 2) オリジナル<select>の参照
   function findOriginalCombo(){
-    return document.querySelector('#google_translate_element select.goog-te-combo') ||
-           document.querySelector('#langSelectSlot select.goog-te-combo');
+    return document.querySelector('#google_translate_element select.goog-te-combo');
   }
 
-  // 3) cookie から現在言語を読む（/ja/en みたいな形式）
+  // 3) cookie から現言語
   function getLangFromCookie(){
     const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
     if (!m) return '';
@@ -271,12 +340,11 @@ window.addEventListener('load', cutOnlyBottomDup);
     }catch(_){ return ''; }
   }
 
-  // 4) プロキシを rebuild（オプションを毎回コピー）
+  // 4) プロキシ<select>の再生成
   function rebuildProxy(){
     const slot = document.getElementById('langSelectSlot');
     if (!slot) return;
 
-    // 既存を掃除
     const old = slot.querySelector('#langProxy');
     if (old) old.remove();
 
@@ -284,20 +352,11 @@ window.addEventListener('load', cutOnlyBottomDup);
     const proxy = document.createElement('select');
     proxy.id = 'langProxy';
     proxy.setAttribute('aria-label', '言語を選択 / Select Language');
-    proxy.style.width = '100%';
-    proxy.style.height = '40px';
-    proxy.style.borderRadius = '8px';
-    proxy.style.border = '1px solid #d1d5db';
-    proxy.style.padding = '0 10px';
-    proxy.style.fontSize = '16px';
 
-    // オプションを複製（存在しないときはプレースホルダ）
     if (orig && orig.options && orig.options.length){
       for (let i=0; i<orig.options.length; i++){
-        const o = orig.options[i].cloneNode(true);
-        proxy.appendChild(o);
+        proxy.appendChild(orig.options[i].cloneNode(true));
       }
-      // 先頭は「原文 / Original」に名称変更（valueは空のまま＝原文）
       if (proxy.options.length){
         proxy.options[0].textContent = '原文 / Original';
       }
@@ -308,7 +367,6 @@ window.addEventListener('load', cutOnlyBottomDup);
       proxy.appendChild(p);
     }
 
-    // 現在言語に同期（cookieベース）
     const cur = getLangFromCookie();
     if (cur && Array.from(proxy.options).some(o => o.value === cur)){
       proxy.value = cur;
@@ -316,39 +374,29 @@ window.addEventListener('load', cutOnlyBottomDup);
       proxy.value = '';
     }
 
-    proxy.addEventListener('change', ()=>{
-      applyLanguage(proxy.value);
-    });
-
+    proxy.addEventListener('change', ()=> applyLanguage(proxy.value));
     slot.appendChild(proxy);
   }
 
-  // 5) 実際に言語を適用（毎回最新の orig を取り直して change 発火）
+  // 5) 実適用：毎回オリジナルを取り直して change 発火
   function applyLanguage(val){
-    const orig = findOriginalCombo();
-    if (!orig) {
-      // まだ生成前なら少し待って再試行
-      let tries = 0;
-      const t = setInterval(()=>{
-        const o2 = findOriginalCombo();
-        if (o2 || tries++ > 40){
-          clearInterval(t);
-          if (o2){
-            o2.value = val;
-            o2.dispatchEvent(new Event('change'));
-          }
-        }
-      }, 100);
-      return;
-    }
-    if (orig.value !== val){
-      orig.value = val;
-    }
-    orig.dispatchEvent(new Event('change'));
+    const tryApply = ()=>{
+      const orig = findOriginalCombo();
+      if (!orig) return false;
+      if (orig.value !== val) orig.value = val;
+      orig.dispatchEvent(new Event('change'));
+      return true;
+    };
+    if (tryApply()) return;
+    // まだ生成前なら待機
+    let tries = 0;
+    const t = setInterval(()=>{
+      if (tryApply() || tries++ > 40) clearInterval(t);
+    }, 100);
   }
 
-  // 6) モーダルの開閉に合わせて毎回 rebuild（＝何度でも確実に使える）
-  (function wireModal(){
+  // 6) モーダルの開閉に合わせて毎回rebuild（＝確実）
+  function wireModal(){
     const btn = document.getElementById('langBtn');
     const dlg = document.getElementById('langDialog');
     const close = document.getElementById('langClose');
@@ -358,7 +406,7 @@ window.addEventListener('load', cutOnlyBottomDup);
       dlg?.setAttribute('data-open','1'); 
       dlg?.setAttribute('aria-hidden','false'); 
       btn?.setAttribute('aria-expanded','true'); 
-      rebuildProxy();
+      rebuildProxy(); 
       setTimeout(()=>close?.focus(),0); 
     }
     function closeDlg(){ 
@@ -372,14 +420,23 @@ window.addEventListener('load', cutOnlyBottomDup);
     close?.addEventListener('click', closeDlg);
     backdrop?.addEventListener('click', closeDlg);
     document.addEventListener('keydown', e => { if(e.key==='Escape') closeDlg(); });
-  })();
 
-  // 7) Google翻訳の初期化（すでに初期化済みならそのまま）
+    // ダイアログ外クリックで閉じる
+    document.addEventListener('click', (e)=>{
+      if(!dlg?.getAttribute('data-open')) return;
+      if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
+      closeDlg();
+    });
+  }
+
+  // 7) 初期化
+  ensureLangMarkup();
+  wireModal();
+
   window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
     try{
       new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
     }catch(_){}
-    // 生成完了を待って初回プロキシ構築
     let tries = 0;
     const waiter = setInterval(()=>{
       if (findOriginalCombo() || tries++ > 40){
@@ -387,18 +444,16 @@ window.addEventListener('load', cutOnlyBottomDup);
         rebuildProxy();
       }
     }, 100);
-    // 以後、隠しホストの変化を監視 → オプションが差し替わったら再構築
+
     const host = document.getElementById('google_translate_element');
     if (host && 'MutationObserver' in window){
-      new MutationObserver(()=>rebuildProxy())
-        .observe(host, { childList:true, subtree:true });
+      new MutationObserver(()=>rebuildProxy()).observe(host, { childList:true, subtree:true });
     }
   };
 
-  // 起動
   ensureGoogleScript();
 
-  // ページロード後、cookie 変化に応じてプロキシ表示を追従（ゆるくポーリング）
+  // cookie 変化をゆるく追従
   let last = getLangFromCookie();
   setInterval(()=>{
     const cur = getLangFromCookie();
