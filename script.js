@@ -20,11 +20,15 @@ const slug = (t) => (t || '')
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
 
+  // CTAより上にスクロール容器を挿入
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
+  // CTA・メニューUI以外を全部 #scroll-root に移動
   const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
-  Array.from(body.childNodes).forEach(n => { if (!keep.has(n)) wrap.appendChild(n); });
+  Array.from(body.childNodes).forEach(n => {
+    if (!keep.has(n)) wrap.appendChild(n);
+  });
 })();
 
 /* ===== ページ内リンク（スムーススクロール） ===== */
@@ -38,6 +42,7 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
+  // 免責(#disclaimer) だけは自動オープンしない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -49,8 +54,9 @@ document.addEventListener('click', (e) => {
 document.getElementById('toTop')?.addEventListener('click', (e)=>{
   if (!document.querySelector('#page-top')) {
     e.preventDefault();
+    // スクロール対象は #scroll-root
     const scroller = document.getElementById('scroll-root') || window;
-    scroller.scrollTo?.({ top: 0, behavior: 'smooth' });
+    if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
 });
 
@@ -61,6 +67,7 @@ const adjustCtaPadding = () => {
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
 
+  // 余白を付けるのは実際にスクロールする要素（#scroll-root）
   const scroller = document.getElementById('scroll-root');
   if (scroller) scroller.classList.add('has-cta');
   else document.body.classList.add('has-cta');
@@ -86,12 +93,14 @@ const openMenu  = () => {
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
+  // A11y: 開いたら閉じるボタンへフォーカス
   setTimeout(() => closeBt?.focus(), 0);
 };
 const closeMenu = () => {
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
+  // A11y: 閉じたらトグルにフォーカスを戻す
   btn?.focus();
 };
 
@@ -104,6 +113,7 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
 
 /* ===== メニュー（ハンバーガー内）自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
 function buildMenu(){
   const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
@@ -116,6 +126,7 @@ function buildMenu(){
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
+    // #plans は見出し(h4)を出さない
     const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
@@ -156,8 +167,22 @@ function buildMenu(){
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
+
+  // 念のため：どこかの古いJSが h4 "plans" を作っても即削除
+  killPlansHeading();
+}
+
+function killPlansHeading(){
+  if (!groupsRoot) return;
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
+  });
 }
 addEventListener('DOMContentLoaded', buildMenu);
+addEventListener('load', killPlansHeading);
+if (groupsRoot) {
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
 
 /* ===== 重複ブロック除去（免責/キャンセルを #disclaimer だけに揃える） ===== */
 function cutOnlyBottomDup() {
@@ -165,7 +190,7 @@ function cutOnlyBottomDup() {
   document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
   document.querySelectorAll('details').forEach(d=>{
     const t = d.querySelector('summary')?.textContent?.trim() || '';
-    if (/免責事項/.test(t) && !t.includes('キャンセル') && !d.closest('#disclaimer')) d.remove();
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
   });
   const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
     const t = d.querySelector('summary')?.textContent?.trim() || '';
@@ -179,9 +204,10 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== CTAの bottom はJSで触らない ===== */
+/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
+// 何も書かない（ラバーバンド時に誤検知で浮くのを根絶）
 
-/* === 追加②：UI縮み追従だけtransformで相殺（bounce中は凍結） === */
+/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -191,14 +217,23 @@ window.addEventListener('load', cutOnlyBottomDup);
   if (!bar || !window.visualViewport) return;
 
   const scroller = document.getElementById('scroll-root') || document.documentElement;
-  let stable = 0;
+
+  let stable = 0; // 直近の安定値
   const apply = () => {
     const vv  = window.visualViewport;
+
+    // 端のUIが出たぶんの隙間（iOSのホームバー等）
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+
+    // スクロール量/最大量を #scroll-root（存在時）基準に判定
     const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
-    let y = (scroller === document.documentElement || scroller === document.body)
-      ? (window.scrollY || document.documentElement.scrollTop || 0)
-      : (scroller.scrollTop || 0);
+
+    let y = 0;
+    if (scroller === document.documentElement || scroller === document.body) {
+      y = window.scrollY || document.documentElement.scrollTop || 0;
+    } else {
+      y = scroller.scrollTop || 0;
+    }
 
     const isBouncingBottom = y > maxScroll + 1;
     if (!isBouncingBottom) stable = uiGap;
@@ -211,276 +246,214 @@ window.addEventListener('load', cutOnlyBottomDup);
   apply();
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
-  (scroller.addEventListener ? scroller : window).addEventListener('scroll', apply, { passive: true });
+
+  // 実際のスクロールイベントも拾う（#scroll-root優先）
+  if (scroller && scroller.addEventListener) {
+    scroller.addEventListener('scroll', apply, { passive: true });
+  } else {
+    window.addEventListener('scroll', apply, { passive: true });
+  }
+
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* =========================================================
-   多言語スイッチャ（強制表示・何度でも切替OK・CSS依存を排除）
-   - ボタン/モーダル/隠しホストを自動生成
-   - CSSが壊れても inline-style で確実に開く
-   - Google翻訳の成否に関係なく UI は動作（開閉・選択）
-   ========================================================= */
-(function languageSwitcherSolid(){
-  try {
-    // --- 必要DOMを強制用意（なければ作る） ---
-    function ensureMarkup(){
-      // 地球儀ボタン
-      let btn = document.getElementById('langBtn');
-      if (!btn) {
-        btn = document.createElement('button');
-        btn.id = 'langBtn';
-        btn.type = 'button';
-        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>';
-        document.body.appendChild(btn);
-      }
-      // 必ず見えるように inline で上書き
-      Object.assign(btn.style, {
-        position:'fixed', top:'calc(10px + env(safe-area-inset-top))',
-        right:'calc(10px + env(safe-area-inset-right) + 48px + 14px)',
-        zIndex: '10050', width:'48px', height:'48px', borderRadius:'12px',
-        display:'inline-grid', placeItems:'center',
-        background:'#111827', color:'#fff',
-        border:'1px solid rgba(255,255,255,.08)',
-        boxShadow:'0 4px 14px rgba(0,0,0,.15)', cursor:'pointer', pointerEvents:'auto'
-      });
-      btn.setAttribute('aria-haspopup','dialog');
-      btn.setAttribute('aria-controls','langDialog');
-      btn.setAttribute('aria-expanded','false');
-      btn.title = '言語 / Language';
+/* ============================================================
+   Language Switcher（地球儀ボタン＋モーダル）— 完全自己完結版
+   - HTML/CSSは一切いじらなくてOK（このJSが注入）
+   - Googleリストは英語表記（hl=en）
+   - 何回でも切替可／Originalへリセット可
+   ============================================================ */
+(function initLanguageUI(){
 
-      // モーダル
-      let dlg = document.getElementById('langDialog');
-      if (!dlg) {
-        dlg = document.createElement('div');
-        dlg.id = 'langDialog';
-        dlg.innerHTML = `
-          <div id="langBackdrop"></div>
-          <div id="langPanel">
-            <div id="langHead">
-              <strong>言語を選択 / Language</strong>
-              <button id="langClose" type="button" aria-label="閉じる">×</button>
-            </div>
-            <div id="langBody">
-              <div id="langSelectSlot"></div>
-              <p id="langHint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
-            </div>
-          </div>
-        `;
-        document.body.appendChild(dlg);
-      }
-      // 見えるように inline でスタイル（displayは後で切替）
-      Object.assign(dlg.style, {
-        position:'fixed', inset:'0px', zIndex:'10040',
-        display:'none', pointerEvents:'none'
-      });
-      const bd = document.getElementById('langBackdrop');
-      Object.assign(bd.style, {
-        position:'absolute', inset:'0px',
-        background:'rgba(0,0,0,.35)', backdropFilter:'blur(1px)'
-      });
-      const panel = document.getElementById('langPanel');
-      Object.assign(panel.style, {
-        position:'absolute',
-        top:'calc(70px + env(safe-area-inset-top))',
-        right:'calc(10px + env(safe-area-inset-right))',
-        width:'min(560px,92vw)', maxHeight:'min(70vh,520px)',
-        background:'#fff', border:'1px solid #e5e7eb', borderRadius:'12px',
-        boxShadow:'0 20px 50px rgba(0,0,0,.25)',
-        display:'flex', flexDirection:'column', overflow:'auto',
-        WebkitOverflowScrolling:'touch'
-      });
-      const head = document.getElementById('langHead');
-      Object.assign(head.style, {
-        display:'flex', alignItems:'center', justifyContent:'space-between',
-        gap:'8px', padding:'10px 12px', borderBottom:'1px solid #e5e7eb'
-      });
-      const close = document.getElementById('langClose');
-      Object.assign(close.style, {
-        width:'36px', height:'36px', borderRadius:'10px',
-        border:'1px solid #e5e7eb', background:'#fff', cursor:'pointer'
-      });
-      const body = document.getElementById('langBody');
-      Object.assign(body.style, { padding:'10px 12px' });
-      const hint = document.getElementById('langHint');
-      Object.assign(hint.style, { marginTop:'8px', color:'#64748b', fontSize:'12px' });
-
-      // 隠しホスト
-      if (!document.getElementById('google_translate_element')){
-        const host = document.createElement('div');
-        host.id = 'google_translate_element';
-        Object.assign(host.style, {
-          position:'fixed', left:'-9999px', top:'-9999px',
-          width:'0px', height:'0px', overflow:'hidden', opacity:'0', pointerEvents:'none'
-        });
-        document.body.appendChild(host);
-      }
-    }
-
-    // --- ダイアログ開閉（CSSに依存しない） ---
-    function openLangDialog(){
-      const dlg = document.getElementById('langDialog');
-      const btn = document.getElementById('langBtn');
-      if (!dlg) return;
-      dlg.style.display = 'block';
-      dlg.style.pointerEvents = 'auto';
-      btn?.setAttribute('aria-expanded','true');
-      rebuildProxy(); // ここで毎回プロキシ再構築
-      setTimeout(()=>document.getElementById('langClose')?.focus(),0);
-    }
-    function closeLangDialog(){
-      const dlg = document.getElementById('langDialog');
-      const btn = document.getElementById('langBtn');
-      if (!dlg) return;
-      dlg.style.display = 'none';
-      dlg.style.pointerEvents = 'none';
-      btn?.setAttribute('aria-expanded','false');
-      btn?.focus();
-    }
-
-    // --- Google翻訳ロード（重複防止 & https固定） ---
-    function ensureGoogleScript(){
-      if (window.google && window.google.translate) return;
-      if (document.getElementById('___goog_translate_lib')) return;
-      const s = document.createElement('script');
-      s.id = '___goog_translate_lib';
-      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      s.defer = true;
-      document.head.appendChild(s);
-    }
-
-    // --- オリジナル<select>参照 ---
-    const findOriginalCombo = () =>
-      document.querySelector('#google_translate_element select.goog-te-combo');
-
-    // --- cookie → 現在言語 ---
-    function getLangFromCookie(){
-      const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
-      if (!m) return '';
-      try{
-        const v = decodeURIComponent(m[1]);
-        const parts = v.split('/');
-        return parts[parts.length - 1] || '';
-      }catch(_){ return ''; }
-    }
-
-    // --- プロキシ<select>を毎回作り直し（何回でも切替OK） ---
-    function rebuildProxy(){
-      const slot = document.getElementById('langSelectSlot');
-      if (!slot) return;
-
-      const old = slot.querySelector('#langProxy');
-      if (old) old.remove();
-
-      const orig = findOriginalCombo();
-      const proxy = document.createElement('select');
-      proxy.id = 'langProxy';
-      proxy.setAttribute('aria-label','言語を選択 / Select Language');
-      Object.assign(proxy.style, {
-        width:'100%', height:'40px', borderRadius:'8px',
-        border:'1px solid #d1d5db', padding:'0 10px', fontSize:'16px'
-      });
-
-      if (orig && orig.options && orig.options.length){
-        for (let i=0; i<orig.options.length; i++){
-          proxy.appendChild(orig.options[i].cloneNode(true));
-        }
-        if (proxy.options.length){
-          proxy.options[0].textContent = '原文 / Original';
-        }
-      }else{
-        const p = document.createElement('option');
-        p.value = '';
-        p.textContent = 'Loading languages…';
-        proxy.appendChild(p);
-      }
-
-      const cur = getLangFromCookie();
-      if (cur && Array.from(proxy.options).some(o => o.value === cur)){
-        proxy.value = cur;
-      }else{
-        proxy.value = '';
-      }
-
-      proxy.addEventListener('change', ()=> applyLanguage(proxy.value));
-      slot.appendChild(proxy);
-    }
-
-    // --- 実適用：毎回オリジナルへ change を伝搬 ---
-    function applyLanguage(val){
-      const tryApply = ()=>{
-        const orig = findOriginalCombo();
-        if (!orig) return false;
-        if (orig.value !== val) orig.value = val;
-        orig.dispatchEvent(new Event('change'));
-        return true;
-      };
-      if (tryApply()) return;
-      let tries = 0;
-      const t = setInterval(()=>{
-        if (tryApply() || tries++ > 40) clearInterval(t);
-      }, 100);
-    }
-
-    // --- イベント（委任） ---
-    document.addEventListener('click', (e)=>{
-      const onBtn   = e.target.closest('#langBtn');
-      const onClose = e.target.closest('#langClose');
-      const dlgOpen = document.getElementById('langDialog')?.style.display === 'block';
-      if (onBtn){
-        e.preventDefault();
-        dlgOpen ? closeLangDialog() : openLangDialog();
-        return;
-      }
-      if (onClose){
-        e.preventDefault(); closeLangDialog(); return;
-      }
-      const dlg = document.getElementById('langDialog');
-      if (dlg && dlg.style.display === 'block' && !e.target.closest('#langPanel')){
-        closeLangDialog();
-      }
-    });
-    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeLangDialog(); });
-
-    // --- 初期化 ---
-    ensureMarkup();
-
-    // Googleの初期化CB（UIは先に開ける／翻訳は後から有効化）
-    window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
-      try{
-        new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
-      }catch(_){}
-      let tries = 0;
-      const waiter = setInterval(()=>{
-        if (findOriginalCombo() || tries++ > 40){
-          clearInterval(waiter);
-          rebuildProxy();
-        }
-      }, 100);
-
-      const host = document.getElementById('google_translate_element');
-      if (host && 'MutationObserver' in window){
-        new MutationObserver(()=>rebuildProxy()).observe(host, { childList:true, subtree:true });
-      }
-    };
-    ensureGoogleScript();
-
-    // cookie 変化に追従（戻した/変えたをUIに反映）
-    let last = getLangFromCookie();
-    setInterval(()=>{
-      const cur = getLangFromCookie();
-      if (cur !== last){
-        last = cur;
-        const proxy = document.getElementById('langProxy');
-        if (proxy && Array.from(proxy.options).some(o => o.value === cur)){
-          proxy.value = cur;
-        }else if (proxy){
-          proxy.value = '';
-        }
-      }
-    }, 800);
-
-  } catch (err) {
-    console.error('Language switcher init error:', err);
+  // --- 注入CSS（ボタン・モーダル） ---
+  const css = `
+  .lang-btn{
+    position:fixed;
+    top:calc(10px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
+    z-index:10050;
+    width:48px;height:48px;border-radius:12px;
+    display:inline-grid;place-items:center;
+    background:#111827;color:#fff;border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer
   }
+  .lang-btn:active{transform:translateY(1px)}
+  .lang-dialog{position:fixed;inset:0;z-index:10040;display:none;pointer-events:none}
+  .lang-dialog[data-open="1"]{display:block;pointer-events:auto}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px)}
+  .lang-panel{
+    position:absolute;top:calc(70px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right));
+    width:min(560px,92vw);max-height:min(70vh,520px);
+    background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:auto
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb}
+  .lang-head strong{font-weight:800}
+  .lang-close{width:36px;height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-body{padding:12px}
+  #langProxy{width:100%;height:42px;border-radius:10px;border:1px solid #d1d5db;padding:0 10px;font-size:16px}
+  .lang-hint{margin-top:8px;color:#64748b;font-size:12px}
+  /* 隠し本体 */
+  #google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
+  @media (max-width:480px){ .lang-btn{transform:scale(.92);transform-origin:top right} }
+  `;
+  const styleTag = document.createElement('style');
+  styleTag.id = 'lang-style';
+  styleTag.textContent = css;
+  document.head.appendChild(styleTag);
+
+  // --- UI生成（地球儀ボタン＋モーダル） ---
+  const btn = document.createElement('button');
+  btn.id = 'langBtn';
+  btn.className = 'lang-btn';
+  btn.type = 'button';
+  btn.title = '言語 / Language';
+  btn.setAttribute('aria-haspopup','dialog');
+  btn.setAttribute('aria-expanded','false');
+  btn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"></circle>
+      <path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"></path>
+    </svg>
+  `;
+  document.body.appendChild(btn);
+
+  const dlg = document.createElement('div');
+  dlg.id = 'langDialog';
+  dlg.className = 'lang-dialog';
+  dlg.setAttribute('aria-hidden','true');
+  dlg.setAttribute('role','dialog');
+  dlg.setAttribute('aria-modal','true');
+  dlg.innerHTML = `
+    <div class="lang-backdrop" id="langBackdrop"></div>
+    <div class="lang-panel" role="document">
+      <div class="lang-head">
+        <strong>言語を選択 / Language</strong>
+        <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
+      </div>
+      <div class="lang-body">
+        <select id="langProxy" aria-label="Select Language">
+          <option value="__RESET">Original / 原文（Reset）</option>
+          <option value="" disabled>Loading languages…</option>
+        </select>
+        <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(dlg);
+
+  const closeBtn = dlg.querySelector('#langClose');
+  const backdrop = dlg.querySelector('#langBackdrop');
+  const proxySel = dlg.querySelector('#langProxy');
+
+  function open()  { dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>closeBtn?.focus(),0); }
+  function close() { dlg.removeAttribute('data-open');  dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); btn.focus(); }
+
+  btn.addEventListener('click', ()=> dlg.getAttribute('data-open') ? close() : open());
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+  document.addEventListener('click', (e)=>{
+    if(!dlg.getAttribute('data-open')) return;
+    if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
+    close();
+  });
+
+  // --- Google翻訳 本体の設置（隠し） ---
+  const host = document.createElement('div');
+  host.id = 'google_translate_element';
+  document.body.appendChild(host);
+
+  // 旧「</body>直前ブロック」が残っていたら無効化（重複対策）
+  const legacy = document.getElementById('langSelectSlot');
+  if (legacy) legacy.remove();
+
+  // --- Google初期化コールバック（グローバルに必要） ---
+  window.googleTranslateElementInit = function(){
+    try{
+      /* UI英語化のため hl=en を使用 */
+      new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+    }catch(e){}
+    // 生成完了を待ってプロキシに一覧をクローン
+    cloneOptionsToProxy();
+  };
+
+  // --- Googleスクリプト読込（UI英語表記にするため hl=en を付与） ---
+  (function loadGTE(){
+    const s = document.createElement('script');
+    s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
+    s.defer = true;
+    document.head.appendChild(s);
+  })();
+
+  // --- プロキシセレクトへ言語を複製 ---
+  function cloneOptionsToProxy(){
+    let tries = 0;
+    (function tick(){
+      const combo = document.querySelector('#google_translate_element select.goog-te-combo');
+      if (!combo){
+        if (tries++ < 50) return setTimeout(tick, 120);
+        return; // give up
+      }
+      // 一度だけクローン（毎回開くたびに重複しないようクリアしてから）
+      const keepReset = proxySel.querySelector('option[value="__RESET"]');
+      proxySel.innerHTML = '';
+      if (keepReset) proxySel.appendChild(keepReset);
+
+      Array.from(combo.options).forEach((op, idx)=>{
+        // 最初の "Select Language" 的なダミーはスキップ
+        if (idx === 0) return;
+        const o = document.createElement('option');
+        o.value = op.value;
+        o.textContent = op.textContent;
+        proxySel.appendChild(o);
+      });
+
+      // 現在の状態に合わせて選択表示
+      const current = getCurrentLangFromCookie() || '';
+      if (!current) proxySel.value = '__RESET';
+      else proxySel.value = current;
+
+      // 選択変更 → 本体へ反映
+      proxySel.onchange = function(){
+        const val = this.value;
+        const combo = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!combo) return;
+        if (val === '__RESET') {
+          clearGT();
+          // すぐに原文に戻す
+          combo.value = '';
+          combo.dispatchEvent(new Event('change'));
+          return;
+        }
+        combo.value = val;
+        combo.dispatchEvent(new Event('change'));
+      };
+    })();
+  }
+
+  // Cookieから現在の言語コードを読む（例：/ja/en）
+  function getCurrentLangFromCookie(){
+    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    if (!m) return '';
+    try{
+      const v = decodeURIComponent(m[1]);
+      const parts = v.split('/');
+      return parts[2] || '';
+    }catch(e){ return ''; }
+  }
+
+  // 翻訳状態のクッキーを消去
+  function clearGT(){
+    const d = location.hostname.replace(/^www\./,'');
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.${d}`;
+    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${d}`;
+  }
+
+  // モーダルを開くたびに最新の一覧/状態へ同期
+  btn.addEventListener('click', cloneOptionsToProxy);
+
 })();
