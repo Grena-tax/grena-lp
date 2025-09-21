@@ -179,7 +179,7 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== CTAの bottom はJSで触らない（視差ずれ防止） ===== */
+/* ===== CTAの bottom はJSで触らない ===== */
 
 /* === 追加②：UI縮み追従だけtransformで相殺（bounce中は凍結） === */
 (function lockCtaToBottomFreeze(){
@@ -218,254 +218,268 @@ window.addEventListener('load', cutOnlyBottomDup);
 /* =========================================================
    多言語（自己修復・何度でも切替OK）
    - 必要なHTML/CSSが無ければ自動生成
-   - オリジナル .goog-te-combo は隠しホストに置きっぱなし
+   - クリックはイベント委任で確実に拾う（IDズレ/生成順の影響なし）
    - UIはプロキシ<select>で操作→毎回オリジナルへchange伝搬
    ========================================================= */
 (function languageSwitcherSelfHealing(){
+  try {
 
-  // 0) 必要なHTML/CSSを自動生成（無い場合のみ）
-  function ensureLangMarkup(){
-    const head = document.head || document.getElementsByTagName('head')[0];
-    if (!document.getElementById('lang-style')) {
-      const css = document.createElement('style');
-      css.id = 'lang-style';
-      css.textContent = `
-        .lang-btn{
-          position:fixed; top:calc(10px + env(safe-area-inset-top));
-          right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
-          z-index:10050; width:48px;height:48px;border-radius:12px;
-          display:inline-grid;place-items:center;background:#111827;color:#fff;
-          border:1px solid rgba(255,255,255,.08); box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer;
-        }
-        .lang-btn:active{ transform:translateY(1px) }
-        .lang-dialog{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
-        .lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
-        .lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px); }
-        .lang-panel{
-          position:absolute; top:calc(70px + env(safe-area-inset-top));
-          right:calc(10px + env(safe-area-inset-right));
-          width:min(560px,92vw); max-height:min(70vh,520px);
-          background:#fff; border:1px solid #e5e7eb; border-radius:12px;
-          box-shadow:0 20px 50px rgba(0,0,0,.25); display:flex; flex-direction:column; overflow:auto;
-          -webkit-overflow-scrolling:touch;
-        }
-        .lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
-        .lang-head strong{ font-weight:800 }
-        .lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff }
-        .lang-close:hover{ background:#f3f4f6 }
-        .lang-body{ padding:10px 12px }
-        #langSelectSlot select{
-          width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px;
-        }
-        .lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
-        #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
-        @media (max-width:480px){ .lang-btn{ transform:scale(.92); transform-origin:top right } }
-        .menu-button{ z-index:10000; }
-      `;
-      head.appendChild(css);
-    }
-
-    if (!document.getElementById('langBtn')) {
-      const btn = document.createElement('button');
-      btn.id = 'langBtn';
-      btn.className = 'lang-btn';
-      btn.type = 'button';
-      btn.title = '言語 / Language';
-      btn.setAttribute('aria-haspopup', 'dialog');
-      btn.setAttribute('aria-controls', 'langDialog');
-      btn.setAttribute('aria-expanded', 'false');
-      btn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
-        </svg>
-      `;
-      document.body.appendChild(btn);
-    }
-
-    if (!document.getElementById('langDialog')) {
-      const dlg = document.createElement('div');
-      dlg.id = 'langDialog';
-      dlg.className = 'lang-dialog';
-      dlg.setAttribute('aria-hidden','true');
-      dlg.setAttribute('role','dialog');
-      dlg.setAttribute('aria-modal','true');
-      dlg.innerHTML = `
-        <div class="lang-backdrop" id="langBackdrop"></div>
-        <div class="lang-panel" role="document">
-          <div class="lang-head">
-            <strong>言語を選択 / Language</strong>
-            <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
-          </div>
-          <div class="lang-body">
-            <div id="langSelectSlot"></div>
-            <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(dlg);
-    }
-
-    if (!document.getElementById('google_translate_element')) {
-      const host = document.createElement('div');
-      host.id = 'google_translate_element';
-      host.setAttribute('aria-hidden','true');
-      document.body.appendChild(host);
-    }
-  }
-
-  // 1) Google翻訳スクリプト読み込み（重複防止）
-  function ensureGoogleScript(){
-    if (window.google && window.google.translate) return;
-    if (document.getElementById('___goog_translate_lib')) return;
-    const s = document.createElement('script');
-    s.id = '___goog_translate_lib';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.defer = true;
-    document.head.appendChild(s);
-  }
-
-  // 2) オリジナル<select>の参照
-  function findOriginalCombo(){
-    return document.querySelector('#google_translate_element select.goog-te-combo');
-  }
-
-  // 3) cookie から現言語
-  function getLangFromCookie(){
-    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
-    if (!m) return '';
-    try{
-      const v = decodeURIComponent(m[1]);
-      const parts = v.split('/');
-      return parts[parts.length - 1] || '';
-    }catch(_){ return ''; }
-  }
-
-  // 4) プロキシ<select>の再生成
-  function rebuildProxy(){
-    const slot = document.getElementById('langSelectSlot');
-    if (!slot) return;
-
-    const old = slot.querySelector('#langProxy');
-    if (old) old.remove();
-
-    const orig = findOriginalCombo();
-    const proxy = document.createElement('select');
-    proxy.id = 'langProxy';
-    proxy.setAttribute('aria-label', '言語を選択 / Select Language');
-
-    if (orig && orig.options && orig.options.length){
-      for (let i=0; i<orig.options.length; i++){
-        proxy.appendChild(orig.options[i].cloneNode(true));
+    // 0) 必要なHTML/CSSを自動生成（無い場合のみ）
+    function ensureLangMarkup(){
+      const head = document.head || document.getElementsByTagName('head')[0];
+      if (!document.getElementById('lang-style')) {
+        const css = document.createElement('style');
+        css.id = 'lang-style';
+        css.textContent = `
+          .lang-btn{
+            position:fixed; top:calc(10px + env(safe-area-inset-top));
+            right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
+            z-index:10050 !important; width:48px;height:48px;border-radius:12px;
+            display:inline-grid;place-items:center;background:#111827;color:#fff;
+            border:1px solid rgba(255,255,255,.08); box-shadow:0 4px 14px rgba(0,0,0,.15);
+            cursor:pointer; pointer-events:auto;
+          }
+          .lang-btn:active{ transform:translateY(1px) }
+          .lang-dialog{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
+          .lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
+          .lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px); }
+          .lang-panel{
+            position:absolute; top:calc(70px + env(safe-area-inset-top));
+            right:calc(10px + env(safe-area-inset-right));
+            width:min(560px,92vw); max-height:min(70vh,520px);
+            background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+            box-shadow:0 20px 50px rgba(0,0,0,.25); display:flex; flex-direction:column; overflow:auto;
+            -webkit-overflow-scrolling:touch;
+          }
+          .lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+          .lang-head strong{ font-weight:800 }
+          .lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff }
+          .lang-close:hover{ background:#f3f4f6 }
+          .lang-body{ padding:10px 12px }
+          #langSelectSlot select{
+            width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px;
+          }
+          .lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
+          #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
+          @media (max-width:480px){ .lang-btn{ transform:scale(.92); transform-origin:top right } }
+          .menu-button{ z-index:10000; }
+        `;
+        head.appendChild(css);
       }
-      if (proxy.options.length){
-        proxy.options[0].textContent = '原文 / Original';
+
+      if (!document.getElementById('langBtn')) {
+        const btn = document.createElement('button');
+        btn.id = 'langBtn';
+        btn.className = 'lang-btn';
+        btn.type = 'button';
+        btn.title = '言語 / Language';
+        btn.setAttribute('aria-haspopup', 'dialog');
+        btn.setAttribute('aria-controls', 'langDialog');
+        btn.setAttribute('aria-expanded', 'false');
+        btn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
+          </svg>
+        `;
+        document.body.appendChild(btn);
       }
-    }else{
-      const p = document.createElement('option');
-      p.value = '';
-      p.textContent = 'Loading languages…';
-      proxy.appendChild(p);
+
+      if (!document.getElementById('langDialog')) {
+        const dlg = document.createElement('div');
+        dlg.id = 'langDialog';
+        dlg.className = 'lang-dialog';
+        dlg.setAttribute('aria-hidden','true');
+        dlg.setAttribute('role','dialog');
+        dlg.setAttribute('aria-modal','true');
+        dlg.innerHTML = `
+          <div class="lang-backdrop" id="langBackdrop"></div>
+          <div class="lang-panel" role="document">
+            <div class="lang-head">
+              <strong>言語を選択 / Language</strong>
+              <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
+            </div>
+            <div class="lang-body">
+              <div id="langSelectSlot"></div>
+              <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(dlg);
+      }
+
+      if (!document.getElementById('google_translate_element')) {
+        const host = document.createElement('div');
+        host.id = 'google_translate_element';
+        host.setAttribute('aria-hidden','true');
+        document.body.appendChild(host);
+      }
     }
 
-    const cur = getLangFromCookie();
-    if (cur && Array.from(proxy.options).some(o => o.value === cur)){
-      proxy.value = cur;
-    }else{
-      proxy.value = '';
+    // 1) Google翻訳スクリプト読み込み（重複防止）
+    function ensureGoogleScript(){
+      if (window.google && window.google.translate) return;
+      if (document.getElementById('___goog_translate_lib')) return;
+      const s = document.createElement('script');
+      s.id = '___goog_translate_lib';
+      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      s.defer = true;
+      document.head.appendChild(s);
     }
 
-    proxy.addEventListener('change', ()=> applyLanguage(proxy.value));
-    slot.appendChild(proxy);
-  }
+    // 2) オリジナル<select>の参照
+    function findOriginalCombo(){
+      return document.querySelector('#google_translate_element select.goog-te-combo');
+    }
 
-  // 5) 実適用：毎回オリジナルを取り直して change 発火
-  function applyLanguage(val){
-    const tryApply = ()=>{
+    // 3) cookie から現言語
+    function getLangFromCookie(){
+      const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+      if (!m) return '';
+      try{
+        const v = decodeURIComponent(m[1]);
+        const parts = v.split('/');
+        return parts[parts.length - 1] || '';
+      }catch(_){ return ''; }
+    }
+
+    // 4) プロキシ<select>の再生成
+    function rebuildProxy(){
+      const slot = document.getElementById('langSelectSlot');
+      if (!slot) return;
+
+      const old = slot.querySelector('#langProxy');
+      if (old) old.remove();
+
       const orig = findOriginalCombo();
-      if (!orig) return false;
-      if (orig.value !== val) orig.value = val;
-      orig.dispatchEvent(new Event('change'));
-      return true;
-    };
-    if (tryApply()) return;
-    // まだ生成前なら待機
-    let tries = 0;
-    const t = setInterval(()=>{
-      if (tryApply() || tries++ > 40) clearInterval(t);
-    }, 100);
-  }
+      const proxy = document.createElement('select');
+      proxy.id = 'langProxy';
+      proxy.setAttribute('aria-label', '言語を選択 / Select Language');
 
-  // 6) モーダルの開閉に合わせて毎回rebuild（＝確実）
-  function wireModal(){
-    const btn = document.getElementById('langBtn');
-    const dlg = document.getElementById('langDialog');
-    const close = document.getElementById('langClose');
-    const backdrop = document.getElementById('langBackdrop');
-
-    function open(){ 
-      dlg?.setAttribute('data-open','1'); 
-      dlg?.setAttribute('aria-hidden','false'); 
-      btn?.setAttribute('aria-expanded','true'); 
-      rebuildProxy(); 
-      setTimeout(()=>close?.focus(),0); 
-    }
-    function closeDlg(){ 
-      dlg?.removeAttribute('data-open'); 
-      dlg?.setAttribute('aria-hidden','true'); 
-      btn?.setAttribute('aria-expanded','false'); 
-      btn?.focus(); 
-    }
-
-    btn?.addEventListener('click', ()=> (dlg?.getAttribute('data-open') ? closeDlg() : open()));
-    close?.addEventListener('click', closeDlg);
-    backdrop?.addEventListener('click', closeDlg);
-    document.addEventListener('keydown', e => { if(e.key==='Escape') closeDlg(); });
-
-    // ダイアログ外クリックで閉じる
-    document.addEventListener('click', (e)=>{
-      if(!dlg?.getAttribute('data-open')) return;
-      if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
-      closeDlg();
-    });
-  }
-
-  // 7) 初期化
-  ensureLangMarkup();
-  wireModal();
-
-  window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
-    try{
-      new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
-    }catch(_){}
-    let tries = 0;
-    const waiter = setInterval(()=>{
-      if (findOriginalCombo() || tries++ > 40){
-        clearInterval(waiter);
-        rebuildProxy();
+      if (orig && orig.options && orig.options.length){
+        for (let i=0; i<orig.options.length; i++){
+          proxy.appendChild(orig.options[i].cloneNode(true));
+        }
+        if (proxy.options.length){
+          proxy.options[0].textContent = '原文 / Original';
+        }
+      }else{
+        const p = document.createElement('option');
+        p.value = '';
+        p.textContent = 'Loading languages…';
+        proxy.appendChild(p);
       }
-    }, 100);
 
-    const host = document.getElementById('google_translate_element');
-    if (host && 'MutationObserver' in window){
-      new MutationObserver(()=>rebuildProxy()).observe(host, { childList:true, subtree:true });
-    }
-  };
-
-  ensureGoogleScript();
-
-  // cookie 変化をゆるく追従
-  let last = getLangFromCookie();
-  setInterval(()=>{
-    const cur = getLangFromCookie();
-    if (cur !== last){
-      last = cur;
-      const proxy = document.getElementById('langProxy');
-      if (proxy && Array.from(proxy.options).some(o => o.value === cur)){
+      const cur = getLangFromCookie();
+      if (cur && Array.from(proxy.options).some(o => o.value === cur)){
         proxy.value = cur;
-      }else if (proxy){
+      }else{
         proxy.value = '';
       }
-    }
-  }, 800);
 
+      proxy.addEventListener('change', ()=> applyLanguage(proxy.value));
+      slot.appendChild(proxy);
+    }
+
+    // 5) 実適用：毎回オリジナルを取り直して change 発火
+    function applyLanguage(val){
+      const tryApply = ()=>{
+        const orig = findOriginalCombo();
+        if (!orig) return false;
+        if (orig.value !== val) orig.value = val;
+        orig.dispatchEvent(new Event('change'));
+        return true;
+      };
+      if (tryApply()) return;
+      // まだ生成前なら待機
+      let tries = 0;
+      const t = setInterval(()=>{
+        if (tryApply() || tries++ > 40) clearInterval(t);
+      }, 100);
+    }
+
+    // 6) モーダルの開閉（イベント委任で“必ず拾う”）
+    function openLangDialog(){
+      const dlg = document.getElementById('langDialog');
+      const btn = document.getElementById('langBtn');
+      dlg?.setAttribute('data-open','1');
+      dlg?.setAttribute('aria-hidden','false');
+      btn?.setAttribute('aria-expanded','true');
+      rebuildProxy();
+      setTimeout(()=>document.getElementById('langClose')?.focus(),0);
+    }
+    function closeLangDialog(){
+      const dlg = document.getElementById('langDialog');
+      const btn = document.getElementById('langBtn');
+      dlg?.removeAttribute('data-open');
+      dlg?.setAttribute('aria-hidden','true');
+      btn?.setAttribute('aria-expanded','false');
+      btn?.focus();
+    }
+
+    // ——— イベント委任（ここがポイント） ———
+    document.addEventListener('click', (e)=>{
+      const onBtn = e.target.closest('#langBtn, .lang-btn');
+      if (onBtn){
+        e.preventDefault();
+        if (document.getElementById('langDialog')?.getAttribute('data-open')) {
+          closeLangDialog();
+        } else {
+          openLangDialog();
+        }
+        return;
+      }
+      const onClose = e.target.closest('#langClose');
+      if (onClose){
+        e.preventDefault();
+        closeLangDialog();
+        return;
+      }
+      const dlg = document.getElementById('langDialog');
+      if (dlg?.getAttribute('data-open') && !e.target.closest('#langDialog')){
+        closeLangDialog();
+      }
+    });
+
+    document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeLangDialog(); });
+
+    // 7) 初期化
+    ensureLangMarkup();
+    // Google翻訳の初期化コールバック
+    window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
+      try{
+        new google.translate.TranslateElement({ pageLanguage: 'ja', autoDisplay: false }, 'google_translate_element');
+      }catch(_){}
+      let tries = 0;
+      const waiter = setInterval(()=>{
+        if (findOriginalCombo() || tries++ > 40){
+          clearInterval(waiter);
+          rebuildProxy();
+        }
+      }, 100);
+
+      const host = document.getElementById('google_translate_element');
+      if (host && 'MutationObserver' in window){
+        new MutationObserver(()=>rebuildProxy()).observe(host, { childList:true, subtree:true });
+      }
+    };
+    ensureGoogleScript();
+
+    // cookie 変化をゆるく追従（手動で戻した時もUIに反映）
+    let last = getLangFromCookie();
+    setInterval(()=>{
+      const cur = getLangFromCookie();
+      if (cur !== last){
+        last = cur;
+        const proxy = document.getElementById('langProxy');
+        if (proxy && Array.from(proxy.options).some(o => o.value === cur)){
+          proxy.value = cur;
+        }else if (proxy){
+          proxy.value = '';
+        }
+      }
+    }, 800);
+
+  } catch (err) {
+    console.error('Language switcher init error:', err);
+  }
 })();
