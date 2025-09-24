@@ -1255,5 +1255,61 @@ function clearGT(){ delCookie('googtrans'); }
 })();
 </script>
 <!-- ===== /Google Translate bar: 重なり回避 ===== -->
+<!-- === GT banner kill & UI offset (paste right before </body>) === -->
+<style>
+  /* GTバーが出てもUIが被らないように上側オフセットを変数化 */
+  :root{ --gt-bar-h: 0px; }
+
+  /* 既存の .menu-button/.lang-btn の top を上書き（安全域 + GTバー高さ） */
+  .menu-button{ top: calc(10px + env(safe-area-inset-top) + var(--gt-bar-h)) !important; }
+  .lang-btn{    top: calc(10px + env(safe-area-inset-top) + var(--gt-bar-h)) !important; }
+
+  /* GTの上部バナーiframeをCSSで隠す（見える前に非表示） */
+  iframe.goog-te-banner-frame,
+  .goog-te-banner-frame.skiptranslate{ display:none !important; }
+  body{ top:0 !important; } /* GTが body に付ける押し下げスタイルを無効化 */
+</style>
+
+<script>
+/* GTバナーの除去 & 高さ計測 → UIを自動で避ける */
+(function manageGTBar(){
+  function updateOffset(){
+    let h = 0;
+    const f = document.querySelector('iframe.goog-te-banner-frame');
+    if (f) { try { h = Math.ceil(f.getBoundingClientRect().height || 0); } catch(e){} }
+    document.documentElement.style.setProperty('--gt-bar-h', h + 'px');
+    if (document.body && document.body.style.top) document.body.style.top = '0px';
+  }
+
+  function kill(){
+    let removed = false;
+    document.querySelectorAll('iframe.goog-te-banner-frame').forEach(el => { el.remove(); removed = true; });
+    if (removed && document.body) document.body.style.top = '0px';
+    updateOffset();
+  }
+
+  // すぐ実行＆しつこく監視（GTが後注入しても即除去）
+  kill();
+  let tries = 0;
+  const iv = setInterval(()=>{ kill(); if(++tries > 40) clearInterval(iv); }, 200);
+  new MutationObserver(kill).observe(document.documentElement, {childList:true, subtree:true});
+  addEventListener('resize', updateOffset);
+
+  // 古い翻訳Cookieで自動翻訳され続けるのを初回だけ解除
+  try{
+    if (!sessionStorage.getItem('gt_reset_done')) {
+      const had = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
+      if (had){
+        const host = location.hostname.replace(/^www\./,'');
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+host;
+        sessionStorage.setItem('gt_reset_done','1');
+        location.reload();
+      }
+    }
+  }catch(_){}
+})();
+</script>
+<!-- === /GT banner kill & UI offset === -->
 </body>
 </html>
