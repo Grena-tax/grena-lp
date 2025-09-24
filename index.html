@@ -1222,5 +1222,38 @@ function clearGT(){ delCookie('googtrans'); }
     location.reload();
   })();
 </script>
+<!-- ===== Google Translate bar: 重なり回避（</body>直前に貼るだけ） ===== -->
+<style>
+  :root{ --gtbar-h: 0px; }
+  /* バーが出ている間だけ、地球儀/ハンバーガーをバーの高さぶん下げる */
+  html[data-gtbar="1"] .menu-button,
+  html[data-gtbar="1"] .lang-btn{
+    top: calc(10px + var(--gtbar-h) + env(safe-area-inset-top));
+  }
+</style>
+<script>
+(function watchGTBar(){
+  function visible(el){
+    if(!el) return false;
+    const cs = getComputedStyle(el), r = el.getBoundingClientRect();
+    return r.height>0 && r.width>0 && cs.display!=='none' && cs.visibility!=='hidden';
+  }
+  function update(){
+    const bar = document.querySelector('iframe.goog-te-banner-frame');
+    if(visible(bar)){
+      const h = (bar.getBoundingClientRect().height || 40);
+      document.documentElement.style.setProperty('--gtbar-h', h + 'px');
+      document.documentElement.setAttribute('data-gtbar','1');
+    }else{
+      document.documentElement.removeAttribute('data-gtbar');
+      document.documentElement.style.removeProperty('--gtbar-h');
+    }
+  }
+  update();
+  new MutationObserver(update).observe(document.documentElement, {subtree:true, childList:true, attributes:true});
+  addEventListener('load', update);
+})();
+</script>
+<!-- ===== /Google Translate bar: 重なり回避 ===== -->
 </body>
 </html>
