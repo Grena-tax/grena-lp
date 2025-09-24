@@ -1188,5 +1188,11 @@ function clearGT(){ delCookie('googtrans'); }
 })();
 </script>
 <!-- ===== /Language Switcher v3.4 ===== -->
+<!-- GT bar: hide (paste just before </body>) -->
+<style>
+  /* Google Website Translator の上部バーを非表示 */
+  .goog-te-banner-frame.skiptranslate { display:none !important; }
+  body { top:0 !important; } /* バーで body が押し下げられるのを無効化 */
+</style>
 </body>
 </html>
