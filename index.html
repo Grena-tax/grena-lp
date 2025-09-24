@@ -1194,5 +1194,33 @@ function clearGT(){ delCookie('googtrans'); }
   .goog-te-banner-frame.skiptranslate { display:none !important; }
   body { top:0 !important; } /* バーで body が押し下げられるのを無効化 */
 </style>
+<!-- Hide Google Translate bar + reset stale cookie (paste right before </body>) -->
+<style>
+  /* バナー iframe を確実に非表示（環境差対策で2パターン指定） */
+  iframe.goog-te-banner-frame { display:none !important; }
+  .goog-te-banner-frame.skiptranslate { display:none !important; }
+  /* バナーで body が押し下げられる副作用を打ち消し */
+  body { top:0 !important; }
+</style>
+<script>
+  // 初回だけ、過去の翻訳クッキーが残っていれば削除して原文に戻す
+  (function resetGoogleTranslateOnce(){
+    if (sessionStorage.getItem('gt_reset_done')) return;
+    var hadCookie = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
+    if (!hadCookie) return;
+
+    // クッキーを host と .host 両方で削除
+    function del(name) {
+      var host = location.hostname.replace(/^www\./,'');
+      document.cookie = name+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+      document.cookie = name+'=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+host;
+    }
+    del('googtrans');
+
+    // 無限ループ防止フラグ → 1回だけリロード
+    sessionStorage.setItem('gt_reset_done','1');
+    location.reload();
+  })();
+</script>
 </body>
 </html>
