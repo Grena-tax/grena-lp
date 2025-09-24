@@ -1014,5 +1014,179 @@ function clearGT(){ delCookie('googtrans'); }
 })();
 </script>
 <!-- ===== /Language switcher ===== -->
+<!-- ===== Language Switcher v3.4 — paste just before </body> ===== -->
+<style>
+  /* 地球ボタン（右上のハンバーガー左横に固定） */
+  .ls-btn{
+    position:fixed;
+    top:calc(10px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right) + 48px + 14px); /* ハンバーガー48px＋隙間 */
+    z-index:10050;
+    width:48px;height:48px;border-radius:12px;
+    display:grid;place-items:center;
+    background:#111827;color:#fff;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 14px rgba(0,0,0,.15);
+    cursor:pointer
+  }
+  .ls-btn:active{ transform:translateY(1px) }
+
+  /* モーダル */
+  .ls-dlg{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
+  .ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
+  .ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
+  .ls-panel{
+    position:absolute;
+    top:calc(70px + env(safe-area-inset-top));
+    right:calc(10px + env(safe-area-inset-right));
+    width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25)
+  }
+  .ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+  .ls-body{ padding:10px 12px }
+  .ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
+  .ls-close:hover{ background:#f3f4f6 }
+  #ls-slot select.goog-te-combo{
+    width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px
+  }
+  .ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
+
+  /* Google青バーを非表示（ページ位置ズレ対策） */
+  .goog-te-banner-frame{ display:none !important }
+  body{ top:0 !important }
+
+  /* Google本体は画面外に隠す（selectだけ移植して使う） */
+  #google_translate_element{
+    position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none
+  }
+
+  @media (max-width:480px){ .ls-btn{ transform:scale(.92); transform-origin:top right } }
+</style>
+
+<!-- 地球ボタン -->
+<button id="ls-btn" class="ls-btn" type="button" aria-haspopup="dialog" aria-controls="ls-dlg" aria-expanded="false" title="言語 / Language">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+</button>
+
+<!-- モーダル -->
+<div id="ls-dlg" class="ls-dlg" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="ls-back" id="ls-back"></div>
+  <div class="ls-panel" role="document">
+    <div class="ls-head">
+      <strong>言語を選択 / Language</strong>
+      <button id="ls-close" class="ls-close" type="button" aria-label="閉じる">×</button>
+    </div>
+    <div class="ls-body">
+      <div id="ls-slot">
+        <!-- フォールバック（読み込み中の見た目） -->
+        <select style="width:100%;height:40px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:16px" disabled>
+          <option>Loading languages...</option>
+        </select>
+      </div>
+      <p class="ls-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Google翻訳のホスト（本体は非表示） -->
+<div id="google_translate_element" aria-hidden="true"></div>
+
+<script>
+/* ==============================
+   Language Switcher v3.4 (no-dup)
+   ============================== */
+(function(){
+  if (window.__LS_READY__) return;         // 二重起動ガード
+  window.__LS_READY__ = true;
+
+  /* ---- モーダルUI ---- */
+  const btn   = document.getElementById('ls-btn');
+  const dlg   = document.getElementById('ls-dlg');
+  const back  = document.getElementById('ls-back');
+  const close = document.getElementById('ls-close');
+
+  const open  = ()=>{ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>close?.focus(),0); };
+  const hide  = ()=>{ dlg.removeAttribute('data-open');   dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); };
+
+  btn?.addEventListener('click', () => dlg.getAttribute('data-open') ? hide() : open());
+  back?.addEventListener('click', hide);
+  close?.addEventListener('click', hide);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
+
+  /* ---- Cookie helpers (googtrans) ---- */
+  function setCookie(name, value, days, domain){
+    const d = new Date(); d.setTime(d.getTime() + days*864e5);
+    const parts = [name + '=' + encodeURIComponent(value), 'expires=' + d.toUTCString(), 'path=/'];
+    if (domain) parts.push('domain=' + domain);
+    document.cookie = parts.join('; ');
+  }
+  function delCookie(name){
+    setCookie(name,'',-1);
+    const host = location.hostname;
+    if (host.includes('.')) setCookie(name,'',-1,'.'+host.replace(/^www\./,''));
+  }
+  function setGT(src,dst){
+    const val = '/'+src+'/'+dst;
+    setCookie('googtrans',val,365);
+    const host = location.hostname;
+    if (host.includes('.')) setCookie('googtrans',val,365,'.'+host.replace(/^www\./,''));
+  }
+  function clearGT(){ delCookie('googtrans'); }
+
+  /* ---- Google翻訳 初期化＆セレクト移植 ---- */
+  window.googleTranslateElementInit = function(){
+    new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
+
+    let tries = 0;
+    (function moveCombo(){
+      const host  = document.getElementById('google_translate_element');
+      const slot  = document.getElementById('ls-slot');
+      const combo = host && host.querySelector('select.goog-te-combo');
+      if (combo && slot){
+        // 一度だけ移植
+        if (!slot.querySelector('select.goog-te-combo')) {
+          // Reset(原文) を先頭に追加
+          if (!combo.querySelector('option[data-reset]')){
+            const opt = document.createElement('option');
+            opt.value = ''; opt.setAttribute('data-reset','1');
+            opt.textContent = 'Original / 原文 (Reset)';
+            combo.insertBefore(opt, combo.firstChild);
+          }
+          combo.setAttribute('aria-label', '言語を選択 / Select Language');
+          slot.innerHTML = '';
+          slot.appendChild(combo);
+        }
+
+        // 現在のCookieに合わせて選択を同期
+        const ck = (document.cookie.match(/(?:^|;)\s*googtrans=([^;]+)/)||[])[1];
+        if (ck){
+          const lang = decodeURIComponent(ck).split('/').pop() || '';
+          if (lang && combo.value !== lang) combo.value = lang;
+        }
+
+        // 変更でクッキー更新→リロード（何回でも切替OK）
+        combo.onchange = function(){
+          const v = combo.value;
+          if (!v) clearGT(); else setGT('ja', v);
+          location.reload();
+        };
+      } else if (tries++ < 80){
+        setTimeout(moveCombo, 150);
+      }
+    })();
+  };
+
+  /* ---- script二重ロード防止して https で読込 ---- */
+  if (!document.getElementById('ls-gte')) {
+    const s = document.createElement('script');
+    s.id = 'ls-gte';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+})();
+</script>
+<!-- ===== /Language Switcher v3.4 ===== -->
 </body>
 </html>
