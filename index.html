@@ -916,5 +916,41 @@
 <!-- 既存のJS（ハンバーガー/CTA/スムーススクロール等。あなたの script.js をそのまま） -->
 <script src="./script.js?v=20250910-01"></script>
 
+<!-- === Google Translate: 旧クッキーを1回だけクリア & バナー非表示（</body>直前に貼る） === -->
+<style>
+  /* 上部のGoogle翻訳バナーiframeは常に非表示／押し下げ無効化 */
+  iframe.goog-te-banner-frame,
+  .goog-te-banner-frame.skiptranslate { display:none !important; }
+  body { top:0 !important; }
+</style>
+<script>
+  (function resetOldGTOnce(){
+    // すでに実行済みなら何もしない（1セッション1回だけ）
+    if (sessionStorage.getItem('gt_reset_done')) return;
+
+    // 旧クッキーが残っていれば削除 → 1回だけリロード
+    var hasOld = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
+    if (!hasOld) return;
+
+    var host = location.hostname.replace(/^www\./,'');
+    // host と .host の両方で削除
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+host;
+
+    sessionStorage.setItem('gt_reset_done','1');
+    location.reload();
+  })();
+
+  // 念のため：バナーが出ても即除去（GTが後から挿入してきた場合）
+  (function killGTBar(){
+    function kill(){
+      document.querySelectorAll('iframe.goog-te-banner-frame').forEach(el=>el.remove());
+      if (document.body && document.body.style.top) document.body.style.top='0px';
+    }
+    kill();
+    new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
+  })();
+</script>
+<!-- === /Google Translate reset === -->
 </body>
 </html>
