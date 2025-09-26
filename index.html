@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
+<!-- （任意）差し替え確認用ピンクバー：不要なら削除OK -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま） -->
+<!-- 既存のメインCSS（そのままでOK） -->
 <link rel="stylesheet" href="./style.css?v=20250816-04" id="main-css">
 
 <!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー（本文は無改変） -->
@@ -366,12 +366,11 @@
           <div class="meta">
             <small>※ 初年度「基本プラン」ご利用でLPやドメイン未整備の方向け追加メニューです。</small>
           </div>
-        </div>
-
-        <div class="progress-steps">
-          <div class="step completed">1. 相談</div>
-          <div class="step">2. 申込</div>
-          <div class="step">3. 維持更新</div>
+          <div class="progress-steps">
+            <div class="step completed">1. 相談</div>
+            <div class="step">2. 申込</div>
+            <div class="step">3. 維持更新</div>
+          </div>
         </div>
       </div>
     </details>
@@ -741,56 +740,69 @@
   </div>
 </div>
 
-<!-- =========================
-     Language Switcher（地球ボタン → モーダル → Google翻訳）
-     ★ この塊は </body> の直前。重複は置かない（1回だけ）
-========================== -->
+<!-- ===== あなたのサイト用のメインJS（既存のまま） ===== -->
+<script src="./script.js?v=20250910-01"></script>
+
+<!-- ===== Language Switcher v3.6 — paste just before </body> ===== -->
 <style>
-  /* 地球ボタン（右上：ハンバーガーの左横） */
+  /* 地球ボタン（右上のハンバーガー左横に固定） */
   .ls-btn{
     position:fixed;
     top:calc(10px + env(safe-area-inset-top));
     right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
     z-index:10050;
     width:48px;height:48px;border-radius:12px;
-    display:grid;place-items:center;background:#111827;color:#fff;
-    border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer
+    display:grid;place-items:center;
+    background:#111827;color:#fff;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 4px 14px rgba(0,0,0,.15);
+    cursor:pointer
   }
-  .ls-btn:active{transform:translateY(1px)}
+  .ls-btn:active{ transform:translateY(1px) }
 
   /* モーダル */
-  .ls-dlg{position:fixed;inset:0;z-index:10040;display:none;pointer-events:none}
-  .ls-dlg[data-open="1"]{display:block;pointer-events:auto}
-  .ls-back{position:absolute;inset:0;background:rgba(0,0,0,.35);backdrop-filter:blur(1px)}
+  .ls-dlg{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
+  .ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
+  .ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
   .ls-panel{
-    position:absolute;top:calc(70px + env(safe-area-inset-top));
+    position:absolute;
+    top:calc(70px + env(safe-area-inset-top));
     right:calc(10px + env(safe-area-inset-right));
-    width:min(560px,92vw);max-height:min(70vh,520px);overflow:auto;
-    background:#fff;border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.25)
+    width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+    box-shadow:0 20px 50px rgba(0,0,0,.25)
   }
-  .ls-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb}
-  .ls-body{padding:10px 12px}
-  .ls-close{width:36px;height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff}
-  .ls-close:hover{background:#f3f4f6}
-  #ls-slot select.goog-te-combo{width:100%;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:16px}
-  .ls-hint{margin-top:8px;color:#64748b;font-size:12px}
+  .ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+  .ls-body{ padding:10px 12px }
+  .ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
+  .ls-close:hover{ background:#f3f4f6 }
+  #ls-slot select.goog-te-combo{
+    width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px
+  }
+  .ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
 
-  /* Google青バーを非表示（押し下げ対策） */
+  /* Google青バーを非表示（ページ位置ズレ対策） */
   iframe.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate{display:none !important}
-  body{top:0 !important}
+  .goog-te-banner-frame.skiptranslate{ display:none !important }
+  body{ top:0 !important }
 
-  /* Googleの本体は画面外へ（select だけ移植して使う） */
+  /* Google本体は画面外に隠す（selectだけ移植して使う） */
   #google_translate_element{
-    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none
+    position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none
   }
 
-  @media (max-width:480px){ .ls-btn{transform:scale(.92);transform-origin:top right} }
+  @media (max-width:480px){ .ls-btn{ transform:scale(.92); transform-origin:top right } }
 </style>
 
 <!-- 地球ボタン -->
-<button id="ls-btn" class="ls-btn" type="button" aria-haspopup="dialog" aria-controls="ls-dlg" aria-expanded="false" title="言語 / Language">
-  <!-- シンプルな地球アイコン -->
+<button
+  id="ls-btn"
+  class="ls-btn"
+  type="button"
+  aria-haspopup="dialog"
+  aria-controls="ls-dlg"
+  aria-expanded="false"
+  title="Select language / 言語を選択">
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
     <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/>
   </svg>
@@ -801,12 +813,12 @@
   <div class="ls-back" id="ls-back"></div>
   <div class="ls-panel" role="document">
     <div class="ls-head">
-      <strong>言語を選択 / Language</strong>
+      <strong>Select language / 言語を選択</strong>
       <button id="ls-close" class="ls-close" type="button" aria-label="閉じる">×</button>
     </div>
     <div class="ls-body">
       <div id="ls-slot">
-        <!-- 読み込み中フォールバック -->
+        <!-- 読み込み中の見た目 -->
         <select style="width:100%;height:40px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:16px" disabled>
           <option>Loading languages...</option>
         </select>
@@ -816,16 +828,32 @@
   </div>
 </div>
 
-<!-- Google翻訳ホスト（非表示） -->
+<!-- Google翻訳のホスト（本体は非表示） -->
 <div id="google_translate_element" aria-hidden="true"></div>
 
 <script>
-/* ===== Language Switcher v3.6（重複禁止・何度でも切替OK） ===== */
+/* ==============================
+   Language Switcher v3.6
+   ============================== */
 (function(){
-  if (window.__LS_READY__) return; // 二重起動ガード
+  if (window.__LS_READY__) return;         // 二重起動ガード
   window.__LS_READY__ = true;
 
-  // --- モーダルUI ---
+  /* ---- 初回だけ：古い翻訳Cookieが残ってたら原文へ戻す ---- */
+  try{
+    if (!sessionStorage.getItem('gt_reset_done')) {
+      const had = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
+      if (had){
+        const host = location.hostname.replace(/^www\./,'');
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+host;
+        sessionStorage.setItem('gt_reset_done','1');
+        location.reload();
+      }
+    }
+  }catch(_){}
+
+  /* ---- モーダルUI ---- */
   const btn   = document.getElementById('ls-btn');
   const dlg   = document.getElementById('ls-dlg');
   const back  = document.getElementById('ls-back');
@@ -839,7 +867,7 @@
   close?.addEventListener('click', hide);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
 
-  // --- Cookie helpers（googtrans を確実に更新） ---
+  /* ---- Cookie helpers (googtrans) ---- */
   function setCookie(name, value, days, domain){
     const d = new Date(); d.setTime(d.getTime() + days*864e5);
     const parts = [name + '=' + encodeURIComponent(value), 'expires=' + d.toUTCString(), 'path=/'];
@@ -848,18 +876,18 @@
   }
   function delCookie(name){
     setCookie(name,'',-1);
-    const host = location.hostname.replace(/^www\./,'');
-    if (host.includes('.')) setCookie(name,'',-1,'.'+host);
+    const host = location.hostname;
+    if (host.includes('.')) setCookie(name,'',-1,'.'+host.replace(/^www\./,''));
   }
   function setGT(src,dst){
     const val = '/'+src+'/'+dst;
     setCookie('googtrans',val,365);
-    const host = location.hostname.replace(/^www\./,'');
-    if (host.includes('.')) setCookie('googtrans',val,365,'.'+host);
+    const host = location.hostname;
+    if (host.includes('.')) setCookie('googtrans',val,365,'.'+host.replace(/^www\./,''));
   }
   function clearGT(){ delCookie('googtrans'); }
 
-  // --- Google翻訳 初期化 → セレクト移植 ---
+  /* ---- Google翻訳 初期化＆セレクト移植 ---- */
   window.googleTranslateElementInit = function(){
     new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
 
@@ -869,27 +897,27 @@
       const slot  = document.getElementById('ls-slot');
       const combo = host && host.querySelector('select.goog-te-combo');
       if (combo && slot){
-        // Reset(原文)を先頭に追加（1回だけ）
-        if (!combo.querySelector('option[data-reset]')){
-          const opt = document.createElement('option');
-          opt.value = ''; opt.setAttribute('data-reset','1');
-          opt.textContent = 'Original / 原文 (Reset)';
-          combo.insertBefore(opt, combo.firstChild);
+        if (!slot.querySelector('select.goog-te-combo')) {
+          // Reset(原文) を先頭に追加
+          if (!combo.querySelector('option[data-reset]')){
+            const opt = document.createElement('option');
+            opt.value = ''; opt.setAttribute('data-reset','1');
+            opt.textContent = 'Original / 原文 (Reset)';
+            combo.insertBefore(opt, combo.firstChild);
+          }
+          combo.setAttribute('aria-label','Select language / 言語を選択');
+          slot.innerHTML = '';
+          slot.appendChild(combo);
         }
-        combo.setAttribute('aria-label','言語を選択 / Select Language');
 
-        // 挿し替え（前の中身は消す）
-        slot.innerHTML = '';
-        slot.appendChild(combo);
-
-        // Cookie 現在値で選択状態を同期
+        // 現在のCookieに合わせて選択を同期
         const ck = (document.cookie.match(/(?:^|;)\s*googtrans=([^;]+)/)||[])[1];
         if (ck){
           const lang = decodeURIComponent(ck).split('/').pop() || '';
           if (lang && combo.value !== lang) combo.value = lang;
         }
 
-        // 変更時：Cookie更新 → リロード（何回でも切替OK）
+        // 変更でクッキー更新→リロード（何回でも切替OK）
         combo.onchange = function(){
           const v = combo.value;
           if (!v) clearGT(); else setGT('ja', v);
@@ -901,56 +929,17 @@
     })();
   };
 
-  // --- Google公式JSを https で一度だけ読込（UI言語は英語） ---
+  /* ---- scriptを一回だけ https で読込 ---- */
   if (!document.getElementById('ls-gte')) {
     const s = document.createElement('script');
     s.id = 'ls-gte';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.async = true;
     document.head.appendChild(s);
   }
 })();
 </script>
-<!-- /Language Switcher -->
+<!-- ===== /Language Switcher v3.6 ===== -->
 
-<!-- 既存のJS（ハンバーガー/CTA/スムーススクロール等。あなたの script.js をそのまま） -->
-<script src="./script.js?v=20250910-01"></script>
-
-<!-- === Google Translate: 旧クッキーを1回だけクリア & バナー非表示（</body>直前に貼る） === -->
-<style>
-  /* 上部のGoogle翻訳バナーiframeは常に非表示／押し下げ無効化 */
-  iframe.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate { display:none !important; }
-  body { top:0 !important; }
-</style>
-<script>
-  (function resetOldGTOnce(){
-    // すでに実行済みなら何もしない（1セッション1回だけ）
-    if (sessionStorage.getItem('gt_reset_done')) return;
-
-    // 旧クッキーが残っていれば削除 → 1回だけリロード
-    var hasOld = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
-    if (!hasOld) return;
-
-    var host = location.hostname.replace(/^www\./,'');
-    // host と .host の両方で削除
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.'+host;
-
-    sessionStorage.setItem('gt_reset_done','1');
-    location.reload();
-  })();
-
-  // 念のため：バナーが出ても即除去（GTが後から挿入してきた場合）
-  (function killGTBar(){
-    function kill(){
-      document.querySelectorAll('iframe.goog-te-banner-frame').forEach(el=>el.remove());
-      if (document.body && document.body.style.top) document.body.style.top='0px';
-    }
-    kill();
-    new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
-  })();
-</script>
-<!-- === /Google Translate reset === -->
 </body>
 </html>
