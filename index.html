@@ -1045,5 +1045,50 @@
   /* 念のため、以前の薄色指定を打ち消す */
   .ls-btn{ background:#111827 !important; }
 </style>
+<!-- icons unify (hamburger & globe) — FINAL override -->
+<style id="icons-unify">
+  :root{
+    --icon-size: 48px;
+    --icon-radius: 12px;
+    --icon-bg: #111827;
+    --icon-fg: #fff;
+    --icon-shadow: 0 4px 14px rgba(0,0,0,.15);
+    --icon-border: 1px solid rgba(255,255,255,.08);
+  }
+
+  /* 同一ルック＆サイズを強制（後勝ち） */
+  .menu-button,
+  #ls-btn{
+    width:var(--icon-size) !important;
+    height:var(--icon-size) !important;
+    border-radius:var(--icon-radius) !important;
+    background:var(--icon-bg) !important;
+    color:var(--icon-fg) !important;
+    box-shadow:var(--icon-shadow) !important;
+    border:var(--icon-border) !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    opacity:1 !important;           /* 半透明対策 */
+    transform:none !important;
+  }
+
+  /* それぞれの配置（既存値と同じだが後勝ちで固定） */
+  .menu-button{
+    right:calc(10px + env(safe-area-inset-right)) !important;
+    top:calc(10px + env(safe-area-inset-top)) !important;
+    z-index:10000 !important;
+  }
+  #ls-btn{
+    right:calc(10px + env(safe-area-inset-right) + var(--icon-size) + 14px) !important;
+    top:calc(10px + env(safe-area-inset-top)) !important;
+    z-index:10000 !important;
+  }
+
+  /* 地球儀のSVGもサイズ固定 */
+  #ls-btn svg{ width:22px !important; height:22px !important; }
+  /* タップ時の押し下げ感は両方統一 */
+  .menu-button:active, #ls-btn:active{ transform:translateY(1px) !important; }
+</style>
 </body>
 </html>
