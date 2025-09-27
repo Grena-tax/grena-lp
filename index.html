@@ -911,5 +911,25 @@
 </script>
 <!-- ===== /Language Switcher v3.7 ===== -->
 
+<style>
+  /* --- 強制的にGoogle翻訳バナーを消す（全パターン） --- */
+  iframe.goog-te-banner-frame, .goog-te-banner-frame { display:none !important; }
+  html body .skiptranslate { display:none !important; }   /* バナー用の押し下げコンテナ */
+  #goog-gt-tt, .goog-te-balloon-style { display:none !important; } /* 吹き出し等 */
+  body { top:0 !important; }  /* 押し下げ復元 */
+</style>
+<script>
+/* Safari/モバイル対策：ロード後に何度か潰す */
+(function killGte(){
+  function nuke(){
+    var f1 = document.querySelector('iframe.goog-te-banner-frame'); if (f1) f1.style.display='none';
+    var f2 = document.querySelector('.goog-te-banner-frame');       if (f2) f2.style.display='none';
+    var sk = document.querySelector('.skiptranslate');               if (sk) sk.style.display='none';
+    if (document.body && getComputedStyle(document.body).top !== '0px') document.body.style.top = '0px';
+  }
+  nuke();
+  var i = 0, timer = setInterval(function(){ nuke(); if(++i > 40) clearInterval(timer); }, 250);
+})();
+</script>
 </body>
 </html>
