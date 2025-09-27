@@ -971,5 +971,53 @@
     window.addEventListener('scroll', onScroll, {passive:true});
   })();
 </script>
+<!-- Globe soften override (paste just before </body>) -->
+<style>
+  /* 地球儀ボタンだけを強制的に半透明＆少し小さく */
+  #ls-btn{
+    width:42px !important;
+    height:42px !important;
+    border-radius:12px !important;
+    background:rgba(17,24,39,.62) !important;    /* ←半透明 */
+    backdrop-filter:saturate(140%) blur(6px) !important;
+    border:1px solid rgba(255,255,255,.14) !important;
+    box-shadow:0 6px 18px rgba(0,0,0,.18) !important;
+    opacity:.85 !important;
+    transition:opacity .2s ease, transform .2s ease !important;
+  }
+  #ls-btn:hover,
+  #ls-btn:focus{ opacity:1 !important; }
+
+  /* アイコン線も少しだけ淡く */
+  #ls-btn svg{ opacity:.9 !important; }
+  
+  /* さらに控えめにしたい時は 42→38 に下げてOK */
+  @media (max-width:480px){
+    #ls-btn{ width:40px !important; height:40px !important; }
+  }
+</style>
+
+<script>
+  /* スクロール中は地球儀を薄くする（読書時に目立たせない） */
+  (function(){
+    var g = document.getElementById('ls-btn');
+    if(!g) return;
+    var t;
+    function onScroll(){
+      if (window.pageYOffset > 40) g.setAttribute('data-shy','1');
+      clearTimeout(t);
+      t = setTimeout(function(){ g.removeAttribute('data-shy'); }, 220);
+    }
+    window.addEventListener('scroll', onScroll, {passive:true});
+  })();
+</script>
+<style>
+  /* “shy”状態の見た目 */
+  #ls-btn[data-shy="1"]{
+    opacity:.18 !important;
+    transform:translateY(2px) !important;
+    pointer-events:none !important;
+  }
+</style>
 </body>
 </html>
