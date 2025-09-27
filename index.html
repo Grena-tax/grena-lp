@@ -1019,5 +1019,31 @@
     pointer-events:none !important;
   }
 </style>
+<!-- unify globe with hamburger (color/size/shadow) -->
+<style id="ls-unify" nonce>
+  /* ハンバーガー(.menu-button)と同じ見た目に強制 */
+  #ls-btn{
+    width:48px !important;
+    height:48px !important;
+    border-radius:12px !important;
+    background:#111827 !important;                /* ← 同色 */
+    color:#fff !important;
+    border:1px solid rgba(255,255,255,.08) !important;
+    box-shadow:0 4px 14px rgba(0,0,0,.15) !important;
+    display:grid !important;
+    place-items:center !important;
+    opacity:1 !important;                          /* 半透明を無効化 */
+    transform:none !important;                     /* 縮小を無効化 */
+    z-index:10000 !important;
+  }
+  /* アイコンサイズも合わせる */
+  #ls-btn svg{ width:22px !important; height:22px !important; opacity:1 !important; }
+
+  /* 押下挙動も一致 */
+  #ls-btn:active, .menu-button:active{ transform:translateY(1px) !important; }
+
+  /* 念のため、以前の薄色指定を打ち消す */
+  .ls-btn{ background:#111827 !important; }
+</style>
 </body>
 </html>
