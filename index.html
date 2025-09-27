@@ -78,7 +78,7 @@
     box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
     font-size:14px;line-height:1.38
   }
-  .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+  .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;位置:sticky;top:0;z-index:2}
   .menu-title{font-weight:800;color:#111827}
   .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
   .menu-close:hover{background:#f3f4f6}
@@ -94,13 +94,13 @@
   html.menu-open .menu-panel{transform:none}
   html.menu-open,html.menu-open body{overflow:hidden}
 
-  /* 画面最下部 固定CTA（fixed-cta を使う／旧まま） */
+  /* 画面最下部 固定CTA */
   .fixed-cta{
     position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
@@ -127,9 +127,7 @@
   </aside>
 </nav>
 
-<!-- =========================
-  法人設立セクション
-========================== -->
+<!-- ========================= 法人設立 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
   <div class="space-y-3 accordion">
@@ -271,9 +269,7 @@
   </div>
 </section>
 
-<!-- =========================
-  料金プラン
-========================== -->
+<!-- ========================= 料金プラン ========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
@@ -389,9 +385,7 @@
   </div>
 </section>
 
-<!-- =========================
-  個人事業主（IE + SBS）
-========================== -->
+<!-- ========================= 個人事業主（IE + SBS） ========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
   <div class="space-y-3 accordion">
@@ -513,9 +507,7 @@
   </div>
 </section>
 
-<!-- =========================
-  個人口座開設（銀行）
-========================== -->
+<!-- ========================= 個人口座開設（銀行） ========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
   <div class="space-y-3 accordion">
@@ -598,8 +590,7 @@
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
         <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
-
-        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は特定の条件（金利・為替など）に基づいた仮定の計算例であり、将来の運用成果を約束・保証するものではありません。金利、為替レート、税制は変動します。</p>
+        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は仮定の計算例で将来の成果を保証しません。</p>
 
         <table>
           <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
@@ -614,10 +605,8 @@
 
         <ul>
           <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
-          <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
+          <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計</strong>（保証ではありません）。</li>
         </ul>
-
-        <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
     </details>
 
@@ -625,8 +614,7 @@
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
         <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
-
-        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は一定の前提条件に基づく参考例で、将来の結果を保証するものではありません。税・為替・商品条件により実績は異なります。</p>
+        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 一定の前提条件に基づく参考例で、将来の結果は保証されません。</p>
 
         <table>
           <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
@@ -652,7 +640,6 @@
           </tbody>
         </table>
 
-        <p class="text-sm muted">※ 上記は単純計算の目安です。税・為替・商品条件により実績は異なります。将来の成果は保証されません。</p>
       </div>
     </details>
 
@@ -689,9 +676,7 @@
   </div>
 </section>
 
-<!-- =========================
-  免責事項・キャンセル（アコーディオン）
-========================== -->
+<!-- ========================= 免責・キャンセル ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
@@ -707,7 +692,7 @@
           <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
           <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
-          <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
+          <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします。</li>
         </ul>
       </div>
     </details>
@@ -716,15 +701,9 @@
       <summary>キャンセルポリシー（返金条件）</summary>
       <div class="content">
         <ul>
-          <li>お客様のご都合によるキャンセルは、次の区分によりキャンセル料を申し受けます。
-            <ul>
-              <li>当社が現地パートナーへの業務依頼を開始前：返金手数料（1万円）を差し引いた額を返金</li>
-              <li>当社が現地パートナーへの業務依頼を開始後：お支払いいただいた金額の100%</li>
-            </ul>
-          </li>
-          <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
-          <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
-          <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
+          <li>開始前：返金手数料（1万円）控除後を返金</li>
+          <li>開始後：お支払いの100%</li>
+          <li>当社の明確な不履行がある場合は返金・再対応</li>
         </ul>
       </div>
     </details>
@@ -743,54 +722,36 @@
 <!-- ===== あなたのサイト用のメインJS（既存のまま） ===== -->
 <script src="./script.js?v=20250910-01"></script>
 
-<!-- ===== Language Switcher v3.6 — paste just before </body> ===== -->
+<!-- ===== Language Switcher v3.7 (EN list + placeholder fix) — paste just before </body> ===== -->
 <style>
-  /* 地球ボタン（右上のハンバーガー左横に固定） */
   .ls-btn{
     position:fixed;
     top:calc(10px + env(safe-area-inset-top));
     right:calc(10px + env(safe-area-inset-right) + 48px + 14px);
     z-index:10050;
     width:48px;height:48px;border-radius:12px;
-    display:grid;place-items:center;
-    background:#111827;color:#fff;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 4px 14px rgba(0,0,0,.15);
-    cursor:pointer
+    display:grid;place-items:center;background:#111827;color:#fff;
+    border:1px solid rgba(255,255,255,.08);box-shadow:0 4px 14px rgba(0,0,0,.15);cursor:pointer
   }
   .ls-btn:active{ transform:translateY(1px) }
-
-  /* モーダル */
   .ls-dlg{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
   .ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
   .ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
   .ls-panel{
-    position:absolute;
-    top:calc(70px + env(safe-area-inset-top));
+    position:absolute; top:calc(70px + env(safe-area-inset-top));
     right:calc(10px + env(safe-area-inset-right));
     width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
-    background:#fff; border:1px solid #e5e7eb; border-radius:12px;
-    box-shadow:0 20px 50px rgba(0,0,0,.25)
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25)
   }
   .ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
   .ls-body{ padding:10px 12px }
   .ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
   .ls-close:hover{ background:#f3f4f6 }
-  #ls-slot select.goog-te-combo{
-    width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px
-  }
+  #ls-slot select.goog-te-combo{ width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px }
   .ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
-
-  /* Google青バーを非表示（ページ位置ズレ対策） */
-  iframe.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate{ display:none !important }
+  iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
   body{ top:0 !important }
-
-  /* Google本体は画面外に隠す（selectだけ移植して使う） */
-  #google_translate_element{
-    position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none
-  }
-
+  #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
   @media (max-width:480px){ .ls-btn{ transform:scale(.92); transform-origin:top right } }
 </style>
 
@@ -818,12 +779,11 @@
     </div>
     <div class="ls-body">
       <div id="ls-slot">
-        <!-- 読み込み中の見た目 -->
         <select style="width:100%;height:40px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:16px" disabled>
           <option>Loading languages...</option>
         </select>
       </div>
-      <p class="ls-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+      <p class="ls-hint">Select a language to translate the page. / リストから選ぶと即時翻訳されます。</p>
     </div>
   </div>
 </div>
@@ -833,13 +793,13 @@
 
 <script>
 /* ==============================
-   Language Switcher v3.6
+   Language Switcher v3.7  (EN list + placeholder/Reset)
    ============================== */
 (function(){
-  if (window.__LS_READY__) return;         // 二重起動ガード
+  if (window.__LS_READY__) return;
   window.__LS_READY__ = true;
 
-  /* ---- 初回だけ：古い翻訳Cookieが残ってたら原文へ戻す ---- */
+  /* 初回だけ：古い翻訳Cookieが残ってたら原文へ戻す */
   try{
     if (!sessionStorage.getItem('gt_reset_done')) {
       const had = /(?:^|;)\s*googtrans=\/[^/]+\/[^/]+/.test(document.cookie);
@@ -853,7 +813,7 @@
     }
   }catch(_){}
 
-  /* ---- モーダルUI ---- */
+  /* モーダルUI */
   const btn   = document.getElementById('ls-btn');
   const dlg   = document.getElementById('ls-dlg');
   const back  = document.getElementById('ls-back');
@@ -867,7 +827,7 @@
   close?.addEventListener('click', hide);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
 
-  /* ---- Cookie helpers (googtrans) ---- */
+  /* Cookie helpers (googtrans) */
   function setCookie(name, value, days, domain){
     const d = new Date(); d.setTime(d.getTime() + days*864e5);
     const parts = [name + '=' + encodeURIComponent(value), 'expires=' + d.toUTCString(), 'path=/'];
@@ -887,7 +847,7 @@
   }
   function clearGT(){ delCookie('googtrans'); }
 
-  /* ---- Google翻訳 初期化＆セレクト移植 ---- */
+  /* Google翻訳 初期化＆セレクト移植 */
   window.googleTranslateElementInit = function(){
     new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
 
@@ -898,28 +858,38 @@
       const combo = host && host.querySelector('select.goog-te-combo');
       if (combo && slot){
         if (!slot.querySelector('select.goog-te-combo')) {
-          // Reset(原文) を先頭に追加
+          /* 先頭に placeholder と Reset を追加（placeholderは選択不可） */
+          if (!combo.querySelector('option[data-ph]')){
+            const ph = document.createElement('option');
+            ph.value = '__'; ph.disabled = true; ph.selected = true;
+            ph.setAttribute('data-ph','1');
+            ph.textContent = 'Select language / 言語を選択';
+            combo.insertBefore(ph, combo.firstChild);
+          }
           if (!combo.querySelector('option[data-reset]')){
             const opt = document.createElement('option');
             opt.value = ''; opt.setAttribute('data-reset','1');
             opt.textContent = 'Original / 原文 (Reset)';
-            combo.insertBefore(opt, combo.firstChild);
+            combo.insertBefore(opt, combo.children[1] || null);
           }
           combo.setAttribute('aria-label','Select language / 言語を選択');
           slot.innerHTML = '';
           slot.appendChild(combo);
         }
 
-        // 現在のCookieに合わせて選択を同期
+        /* 現在のCookieに合わせて選択を同期。Cookieなければ placeholder に合わせる */
         const ck = (document.cookie.match(/(?:^|;)\s*googtrans=([^;]+)/)||[])[1];
         if (ck){
           const lang = decodeURIComponent(ck).split('/').pop() || '';
           if (lang && combo.value !== lang) combo.value = lang;
+        }else{
+          combo.value = '__';
         }
 
-        // 変更でクッキー更新→リロード（何回でも切替OK）
+        /* 変更でクッキー更新→リロード（placeholderは何もしない） */
         combo.onchange = function(){
           const v = combo.value;
+          if (v === '__') return;
           if (!v) clearGT(); else setGT('ja', v);
           location.reload();
         };
@@ -929,17 +899,17 @@
     })();
   };
 
-  /* ---- scriptを一回だけ https で読込 ---- */
+  /* Googleスクリプトを英語UIで一回だけ読込（&hl=en） */
   if (!document.getElementById('ls-gte')) {
     const s = document.createElement('script');
     s.id = 'ls-gte';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
     s.async = true;
     document.head.appendChild(s);
   }
 })();
 </script>
-<!-- ===== /Language Switcher v3.6 ===== -->
+<!-- ===== /Language Switcher v3.7 ===== -->
 
 </body>
 </html>
