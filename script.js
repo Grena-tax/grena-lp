@@ -1,5 +1,5 @@
 /* =========================================================
-   script.js — COMPLETE (v3.1 with fallback)
+   script.js — COMPLETE (v3.2 fallback-first)
    ========================================================= */
 'use strict';
 
@@ -142,7 +142,7 @@ function buildMenu(){
 addEventListener('DOMContentLoaded', buildMenu);
 
 /* =========================================================
-   6) Language Switcher（フォールバック付き）
+   6) Language Switcher（必ず選べる：フォールバック先行）
    ========================================================= */
 (function initLanguageUI(){
 
@@ -170,10 +170,7 @@ addEventListener('DOMContentLoaded', buildMenu);
         <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
       </div>
       <div class="lang-body">
-        <select id="langProxy" aria-label="Select Language">
-          <option value="__RESET">Original / 原文 (Reset)</option>
-          <option value="" disabled>Loading languages...</option>
-        </select>
+        <select id="langProxy" aria-label="Select Language"></select>
         <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
       </div>
     </div>`;
@@ -222,77 +219,77 @@ addEventListener('DOMContentLoaded', buildMenu);
     try{ return (decodeURIComponent(m[1]).split('/')[2]||''); }catch(_){ return ''; }
   }
 
-  /* --- Fallback list（Googleが塞がれても選べる） --- */
+  /* --- Fallback list：先に必ず埋める --- */
   const FALLBACK_LANGS = [
+    ['__RESET','Original / 原文 (Reset)'],
     ['en','English'], ['ko','Korean'], ['zh-CN','Chinese (Simplified)'], ['zh-TW','Chinese (Traditional)'],
     ['th','Thai'], ['vi','Vietnamese'], ['ru','Russian'], ['es','Spanish'],
     ['fr','French'], ['de','German'], ['it','Italian'], ['pt','Portuguese'],
     ['id','Indonesian'], ['tr','Turkish'], ['uk','Ukrainian'], ['ar','Arabic'],
     ['hi','Hindi'], ['ms','Malay'], ['pl','Polish'], ['nl','Dutch']
   ];
+  function fillFallback(){
+    proxySel.innerHTML = '';
+    for (const [val,label] of FALLBACK_LANGS){
+      const o=document.createElement('option'); o.value=val; o.textContent=label; proxySel.appendChild(o);
+    }
+    const cur = currentLangFromCookie();
+    proxySel.value = cur || '__RESET';
+    if (proxySel.selectedIndex < 0) proxySel.selectedIndex = 0; // Safariの空表示対策
+    proxySel.onchange = function(){
+      const v = this.value;
+      if (v === '__RESET'){ clearGT(); location.reload(); return; }
+      setGT('ja', v); location.reload();
+    };
+  }
+  fillFallback(); // ←最初から表示される
 
-  /* --- Google init callback --- */
+  /* --- Google init: 成功したら本家リストへ差し替え --- */
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
     }catch(_){}
-    cloneOptionsToProxy(); // 正常時は本家リストを複製
+    cloneFromGoogleOrKeepFallback();
   };
 
-  /* --- load Google script (https + hl=en) --- */
+  function cloneFromGoogleOrKeepFallback(){
+    let tries = 0;
+    (function poll(){
+      const combo = $('#google_translate_element select.goog-te-combo');
+      if (!combo){
+        if (tries++ < 80){ setTimeout(poll,150); return; }
+        // 取得できなければフォールバックのまま
+        return;
+      }
+      // 取得できたら置き換え
+      const cur = currentLangFromCookie();
+      proxySel.innerHTML = '';
+      const reset = document.createElement('option');
+      reset.value='__RESET'; reset.textContent='Original / 原文 (Reset)';
+      proxySel.appendChild(reset);
+      Array.from(combo.options).forEach((op,idx)=>{
+        if (idx===0) return;
+        const o=document.createElement('option'); o.value=op.value; o.textContent=op.textContent;
+        proxySel.appendChild(o);
+      });
+      proxySel.value = cur || '__RESET';
+      if (proxySel.selectedIndex < 0) proxySel.selectedIndex = 0;
+      proxySel.onchange = function(){
+        const v = this.value;
+        if (v === '__RESET'){ clearGT(); combo.value=''; combo.dispatchEvent(new Event('change')); location.reload(); return; }
+        combo.value = v; combo.dispatchEvent(new Event('change'));
+      };
+    })();
+  }
+
+  // 毎回開くたび最新化
+  gbtn.addEventListener('click', cloneFromGoogleOrKeepFallback);
+
+  // Google script 読み込み（hl=en）
   if (!$('#ls-gte-script')){
     const s = document.createElement('script');
     s.id='ls-gte-script';
     s.src='https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
     s.async=true; document.head.appendChild(s);
   }
-
-  /* --- clone to proxy, or fallback if not available --- */
-  function cloneOptionsToProxy(){
-    let tries = 0;
-    (function poll(){
-      const combo = $('#google_translate_element select.goog-te-combo');
-      if (!combo){
-        if (tries++ < 80){ setTimeout(poll,150); return; }
-        // ここまで来たらフォールバックで埋める
-        fillFallback();
-        return;
-      }
-      const keepReset = proxySel.querySelector('option[value="__RESET"]');
-      proxySel.innerHTML = ''; if (keepReset) proxySel.appendChild(keepReset);
-      Array.from(combo.options).forEach((op, idx)=>{
-        if (idx===0) return; // dummy skip
-        const o=document.createElement('option'); o.value=op.value; o.textContent=op.textContent;
-        proxySel.appendChild(o);
-      });
-      const cur = currentLangFromCookie();
-      proxySel.value = cur ? cur : '__RESET';
-      proxySel.onchange = function(){
-        const val = this.value;
-        const base = $('#google_translate_element select.goog-te-combo');
-        if (val === '__RESET'){ clearGT(); base && (base.value=''); base && base.dispatchEvent(new Event('change')); location.reload(); return; }
-        if (base){ base.value = val; base.dispatchEvent(new Event('change')); }
-        else { setGT('ja', val); location.reload(); }
-      };
-    })();
-  }
-
-  function fillFallback(){
-    const keepReset = proxySel.querySelector('option[value="__RESET"]');
-    proxySel.innerHTML=''; if (keepReset) proxySel.appendChild(keepReset);
-    for (const [code,label] of FALLBACK_LANGS){
-      const o=document.createElement('option'); o.value=code; o.textContent=label; proxySel.appendChild(o);
-    }
-    const cur = currentLangFromCookie();
-    proxySel.value = cur ? cur : '__RESET';
-    proxySel.onchange = function(){
-      const val = this.value;
-      if (val === '__RESET'){ clearGT(); location.reload(); return; }
-      setGT('ja', val); location.reload();
-    };
-  }
-
-  // 毎回開くたび最新化（Google成功時は本家、失敗時はフォールバック）
-  gbtn.addEventListener('click', cloneOptionsToProxy);
-
 })();
