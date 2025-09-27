@@ -1,115 +1,136 @@
-/* =========================================
-   script.js — FINAL v2025-09-28
-   - スクロール/CTA/メニュー/重複除去/言語UI
-   ========================================= */
+/* =========================================================
+   script.js — COMPLETE (v3.0)
+   - スクロール最適化 / CTA高さ反映
+   - ハンバーガー生成 & メニュー自動化
+   - Language Switcher（Google Website Translator を内蔵UIで）
+   ========================================================= */
 
-/* ===== 申込フォームURL ===== */
-const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
+'use strict';
+
+/* ===== 設定 ===== */
+const FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
 /* ===== util ===== */
-const slug = (t) => (t || '')
-  .toLowerCase()
-  .replace(/[（）()\[\]【】]/g, ' ')
-  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
-  .replace(/-+/g, '-').replace(/^-|-$/g, '');
+const $  = (sel,root=document)=>root.querySelector(sel);
+const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+const slug = (t)=> (t||'').toLowerCase()
+  .replace(/[（）()\[\]【】]/g,' ')
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
+  .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
-/* === 追加①：ページ本体をスクロール容器に移す（HTML無改変） === */
+/* =========================================================
+   1) iOSラバーバンド対策：スクロール容器 #scroll-root を作る
+   ========================================================= */
 (function mountScrollRoot(){
-  if (document.getElementById('scroll-root')) return;
+  if ($('#scroll-root')) return;
 
   const body = document.body;
-  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
-  const menuBtn = document.getElementById('menuBtn');
-  const menuDrawer = document.getElementById('menuDrawer');
+  const cta  = $('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn = $('#menuBtn');
+  const menuDrawer = $('#menuDrawer');
 
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
+  wrap.style.position = 'fixed';
+  wrap.style.inset = '0';
+  wrap.style.overflowY = 'auto';
+  wrap.style.webkitOverflowScrolling = 'touch';
+  wrap.style.overscrollBehaviorY = 'contain';
+  wrap.style.background = 'inherit';
 
-  if (cta) body.insertBefore(wrap, cta);
-  else body.appendChild(wrap);
+  // CTAの上に差し込む
+  if (cta) body.insertBefore(wrap, cta); else body.appendChild(wrap);
 
+  // CTA・メニューUI以外を丸ごと移す
   const keep = new Set([cta, menuBtn, menuDrawer, wrap]);
-  Array.from(body.childNodes).forEach(n => {
-    if (!keep.has(n)) wrap.appendChild(n);
-  });
+  Array.from(body.childNodes).forEach(n => { if (!keep.has(n)) wrap.appendChild(n); });
+
+  // body/HTML は固定化（実スクロールは #scroll-root）
+  document.documentElement.style.height = '100%';
+  document.documentElement.style.overflow = 'hidden';
+  body.style.height = '100%';
+  body.style.overflow = 'hidden';
 })();
 
-/* ===== ページ内リンク（スムーススクロール） ===== */
-document.addEventListener('click', (e) => {
+/* =========================================================
+   2) スムーススクロール & #top
+   ========================================================= */
+document.addEventListener('click',(e)=>{
   const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
+  if(!a) return;
   const id = a.getAttribute('href');
-  const target = document.querySelector(id);
-  if (!target) return;
-
+  const target = $(id);
+  if(!target) return;
   e.preventDefault();
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+  target.scrollIntoView({ behavior:'smooth', block:'start' });
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
   }
-  history.pushState(null, '', id);
+  history.pushState(null,'',id);
 });
 
-/* ===== 「トップへ」 ===== */
-document.getElementById('toTop')?.addEventListener('click', (e)=>{
-  const scroller = document.getElementById('scroll-root') || window;
-  if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+$('#toTop')?.addEventListener('click',(e)=>{
+  const scroller = $('#scroll-root') || window;
+  if (scroller.scrollTo) scroller.scrollTo({ top:0, behavior:'smooth' });
 });
 
-/* ===== 固定CTAの高さを本文余白に反映 ===== */
-const adjustCtaPadding = () => {
-  const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
-  if (!bar) return;
+/* =========================================================
+   3) CTA の高さを本文余白に反映（bottomは触らない）
+   ========================================================= */
+function adjustCtaPadding(){
+  const bar = $('.cta-bar') || $('#ctaBar') || $('.fixed-cta');
+  if(!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
   document.documentElement.style.setProperty('--cta-h', h + 'px');
-
-  const scroller = document.getElementById('scroll-root');
-  if (scroller) scroller.classList.add('has-cta');
-  else document.body.classList.add('has-cta');
-};
+  const scroller = $('#scroll-root');
+  if (scroller) scroller.classList.add('has-cta'); else document.body.classList.add('has-cta');
+}
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
 
-/* ===== 申込ボタン ===== */
-document.getElementById('applyNow')?.addEventListener('click', (e) => {
+/* =========================================================
+   4) 申込ボタン
+   ========================================================= */
+$('#applyNow')?.addEventListener('click',(e)=>{
   e.preventDefault();
-  if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
+  if (!FORM_URL){ alert('フォームURLが未設定です'); return; }
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* ===== ハンバーガー開閉 ===== */
-const btn        = document.getElementById('menuBtn');
-const drawer     = document.getElementById('menuDrawer');
-const closeBt    = document.getElementById('menuClose');
-const overlay    = document.getElementById('menuBackdrop');
-const groupsRoot = document.getElementById('menuGroups');
+/* =========================================================
+   5) ハンバーガー開閉 & メニュー内リンク自動生成
+   ========================================================= */
+const btn        = $('#menuBtn');
+const drawer     = $('#menuDrawer');
+const closeBt    = $('#menuClose');
+const overlay    = $('#menuBackdrop');
+const groupsRoot = $('#menuGroups');
 
-const openMenu  = () => {
+const openMenu  = ()=>{
   document.documentElement.classList.add('menu-open');
   drawer?.setAttribute('aria-hidden','false');
   btn?.setAttribute('aria-expanded','true');
-  setTimeout(() => closeBt?.focus(), 0);
+  setTimeout(()=>closeBt?.focus(),0);
 };
-const closeMenu = () => {
+const closeMenu = ()=>{
   document.documentElement.classList.remove('menu-open');
   drawer?.setAttribute('aria-hidden','true');
   btn?.setAttribute('aria-expanded','false');
   btn?.focus();
 };
 
-btn?.addEventListener('click', () => {
-  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
-});
+btn?.classList.add('ui-fab'); // 見た目を統一
+btn?.addEventListener('click', ()=> document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu());
 closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* ===== メニュー自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
 function buildMenu(){
-  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const sections = $$('section[id]');
   const frag = document.createDocumentFragment();
   let i = 1;
 
@@ -129,8 +150,7 @@ function buildMenu(){
       wrap.classList.add('no-title');
     }
 
-    const ul = document.createElement('ul');
-    ul.className = 'menu-list';
+    const ul = document.createElement('ul'); ul.className = 'menu-list';
 
     details.forEach(d=>{
       const s = d.querySelector('summary');
@@ -140,8 +160,7 @@ function buildMenu(){
 
       const li = document.createElement('li');
       const a  = document.createElement('a');
-      a.href = `#${d.id}`;
-      a.textContent = t;
+      a.href = `#${d.id}`; a.textContent = t;
       a.addEventListener('click',(e)=>{
         e.preventDefault();
         closeMenu();
@@ -149,92 +168,30 @@ function buildMenu(){
         d.scrollIntoView({behavior:'smooth', block:'start'});
         history.pushState(null,'',`#${d.id}`);
       });
-      li.appendChild(a);
-      ul.appendChild(li);
+      li.appendChild(a); ul.appendChild(li);
     });
 
-    wrap.appendChild(ul);
-    frag.appendChild(wrap);
+    wrap.appendChild(ul); frag.appendChild(wrap);
   });
 
   if (!groupsRoot) return;
   groupsRoot.textContent = '';
   groupsRoot.appendChild(frag);
-  killPlansHeading();
-}
-function killPlansHeading(){
-  if (!groupsRoot) return;
-  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
-    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
-  });
 }
 addEventListener('DOMContentLoaded', buildMenu);
-addEventListener('load', killPlansHeading);
-if (groupsRoot) new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 
-/* ===== 重複ブロック除去（免責/キャンセル） ===== */
-function cutOnlyBottomDup() {
-  document.getElementById('site-disclaimer')?.remove();
-  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
-  document.querySelectorAll('details').forEach(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
-  });
-  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    return /キャンセルポリシー/.test(t);
-  });
-  if (cancels.length > 1) {
-    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
-    cancels.forEach(d => { if (d !== keep) d.remove(); });
-  }
-}
-document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
-window.addEventListener('load', cutOnlyBottomDup);
-
-/* ===== CTAを下端にロック（bounce中は値を凍結） ===== */
-(function lockCtaToBottomFreeze(){
-  const bar =
-    document.querySelector('.fixed-cta') ||
-    document.querySelector('.cta-bar')   ||
-    document.getElementById('ctaBar');
-
-  if (!bar || !window.visualViewport) return;
-
-  const scroller = document.getElementById('scroll-root') || document.documentElement;
-  let stable = 0;
-  const apply = () => {
-    const vv  = window.visualViewport;
-    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-    const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
-    let y = (scroller === document.documentElement || scroller === document.body)
-      ? (window.scrollY || document.documentElement.scrollTop || 0)
-      : (scroller.scrollTop || 0);
-    const isBouncingBottom = y > maxScroll + 1;
-    if (!isBouncingBottom) stable = uiGap;
-    const use = isBouncingBottom ? stable : uiGap;
-    const tx = `translate3d(0, ${use}px, 0)`;
-    if (bar.style.transform !== tx) bar.style.transform = tx;
-  };
-  apply();
-  visualViewport.addEventListener('resize',  apply);
-  visualViewport.addEventListener('scroll',  apply);
-  (document.getElementById('scroll-root') || window).addEventListener('scroll', apply, { passive:true });
-  window.addEventListener('orientationchange', () => setTimeout(apply, 50));
-})();
-
-/* ============================================================
-   Language Switcher（地球儀）— 完全自己完結
-   - Googleホストは画面外退避のみ（0×0禁止）
-   - hl=en で英語表記
-   - Original / 原文 (Reset) 付き
-   ============================================================ */
+/* =========================================================
+   6) Language Switcher（Google Website Translator）
+   - 右上の地球儀ボタン（ハンバーガーと同じサイズ/色）
+   - 自前モーダル内で Google の <select> を使う
+   - 「Original / 原文 (Reset)」で即座に原文に戻す
+   ========================================================= */
 (function initLanguageUI(){
 
-  // --- UI生成（地球儀ボタン＋モーダル） ---
+  /* --- ボタン作成（見た目は CSS .ui-fab と同じ） --- */
   const btn = document.createElement('button');
   btn.id = 'langBtn';
-  btn.className = 'lang-btn';
+  btn.className = 'lang-btn ui-fab';
   btn.type = 'button';
   btn.title = 'Select language / 言語を選択';
   btn.setAttribute('aria-haspopup','dialog');
@@ -247,12 +204,12 @@ window.addEventListener('load', cutOnlyBottomDup);
   `;
   document.body.appendChild(btn);
 
+  /* --- モーダル --- */
   const dlg = document.createElement('div');
   dlg.id = 'langDialog';
   dlg.className = 'lang-dialog';
   dlg.setAttribute('aria-hidden','true');
-  dlg.setAttribute('role','dialog');
-  dlg.setAttribute('aria-modal','true');
+  dlg.setAttribute('role','dialog'); dlg.setAttribute('aria-modal','true');
   dlg.innerHTML = `
     <div class="lang-backdrop" id="langBackdrop"></div>
     <div class="lang-panel" role="document">
@@ -263,37 +220,58 @@ window.addEventListener('load', cutOnlyBottomDup);
       <div class="lang-body">
         <select id="langProxy" aria-label="Select Language">
           <option value="__RESET">Original / 原文 (Reset)</option>
-          <option value="" disabled>Loading languages…</option>
+          <option value="" disabled>Loading languages...</option>
         </select>
-        <p class="lang-hint">Select a language to translate the page. / リストから選ぶと即時翻訳されます。</p>
+        <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
       </div>
     </div>
   `;
   document.body.appendChild(dlg);
+  const closeBtn = $('#langClose', dlg);
+  const backdrop = $('#langBackdrop', dlg);
+  const proxySel = $('#langProxy', dlg);
 
-  const closeBtn = dlg.querySelector('#langClose');
-  const backdrop = dlg.querySelector('#langBackdrop');
-  const proxySel = dlg.querySelector('#langProxy');
+  const openDlg  = ()=>{ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>closeBtn?.focus(),0); };
+  const closeDlg = ()=>{ dlg.removeAttribute('data-open');  dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); btn.focus(); };
 
-  const open  = ()=>{ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>closeBtn?.focus(),0); };
-  const close = ()=>{ dlg.removeAttribute('data-open');   dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); btn.focus(); };
-
-  btn.addEventListener('click', ()=> dlg.getAttribute('data-open') ? close() : open());
-  closeBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+  btn.addEventListener('click', ()=> dlg.getAttribute('data-open') ? closeDlg() : openDlg());
+  closeBtn.addEventListener('click', closeDlg);
+  backdrop.addEventListener('click', closeDlg);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeDlg(); });
   document.addEventListener('click', (e)=>{
     if(!dlg.getAttribute('data-open')) return;
     if(e.target.closest('#langDialog') || e.target.closest('#langBtn')) return;
-    close();
+    closeDlg();
   });
 
-  // --- Google翻訳の隠しホスト ---
+  /* --- Google本体（画面外ホスト） --- */
   const host = document.createElement('div');
   host.id = 'google_translate_element';
   document.body.appendChild(host);
 
-  // --- cookie helper ---
+  /* --- 旧スニペットが残っていたら無効化（重複防止） --- */
+  $('#langSelectSlot')?.remove();
+
+  /* --- Google初期化コールバック --- */
+  window.googleTranslateElementInit = function(){
+    try{
+      new google.translate.TranslateElement(
+        { pageLanguage:'ja', autoDisplay:false }, 'google_translate_element'
+      );
+    }catch(e){}
+    cloneOptionsToProxy();
+  };
+
+  /* --- Googleスクリプト読込（https強制 + UI英語化） --- */
+  if (!$('#ls-gte-script')){
+    const s = document.createElement('script');
+    s.id = 'ls-gte-script';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  /* --- Cookie操作 --- */
   function clearGT(){
     const d = location.hostname.replace(/^www\./,'');
     document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
@@ -303,62 +281,54 @@ window.addEventListener('load', cutOnlyBottomDup);
   function currentLangFromCookie(){
     const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
     if (!m) return '';
-    try{ return decodeURIComponent(m[1]).split('/')[2] || ''; }catch(_){ return ''; }
+    try{
+      const v = decodeURIComponent(m[1]); return (v.split('/')[2]||'');
+    }catch(e){ return ''; }
   }
 
-  // --- リスト複製 ---
+  /* --- Googleの<select> → プロキシへクローン --- */
   function cloneOptionsToProxy(){
     let tries = 0;
-    (function tick(){
-      const combo = document.querySelector('#google_translate_element select.goog-te-combo');
+    (function poll(){
+      const combo = $('#google_translate_element select.goog-te-combo');
       if (!combo){
-        if (tries++ < 100) return setTimeout(tick, 150);
-        return;
+        if (tries++ < 120) return setTimeout(poll, 120); // ~14秒待つ
+        return; // give up
       }
+      // 一度だけクローン（重複防止）
       const keepReset = proxySel.querySelector('option[value="__RESET"]');
       proxySel.innerHTML = '';
       if (keepReset) proxySel.appendChild(keepReset);
 
       Array.from(combo.options).forEach((op, idx)=>{
-        if (idx === 0) return; // dummy skip
+        if (idx === 0) return; // ダミーはスキップ
         const o = document.createElement('option');
-        o.value = op.value;
-        o.textContent = op.textContent;
+        o.value = op.value; o.textContent = op.textContent;
         proxySel.appendChild(o);
       });
 
+      // 現在状態に同期
       const cur = currentLangFromCookie();
       proxySel.value = cur ? cur : '__RESET';
 
+      // 変更 → 本体に反映
       proxySel.onchange = function(){
-        const v = this.value;
-        const combo = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (!combo) return;
-        if (v === '__RESET'){ clearGT(); combo.value=''; combo.dispatchEvent(new Event('change')); return; }
-        combo.value = v; combo.dispatchEvent(new Event('change'));
+        const val = this.value;
+        const base = $('#google_translate_element select.goog-te-combo');
+        if (!base) return;
+        if (val === '__RESET'){
+          clearGT();
+          base.value = '';
+          base.dispatchEvent(new Event('change'));
+          return;
+        }
+        base.value = val;
+        base.dispatchEvent(new Event('change'));
       };
     })();
   }
 
-  // --- Google init（英語UI / https固定） ---
-  window.googleTranslateElementInit = function(){
-    try{
-      new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
-    }catch(_){}
-    cloneOptionsToProxy();
-  };
-  (function loadGTE(){
-    const s = document.createElement('script');
-    s.id = 'ls-gte';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
-    s.async = true;
-    document.head.appendChild(s);
-  })();
-
-  // 開くたびに最新の状態へ同期
+  // モーダルを開くたびに最新化
   btn.addEventListener('click', cloneOptionsToProxy);
-
-  // 念のための追撃（initが遅い/失敗時）
-  setTimeout(() => { try{ cloneOptionsToProxy(); }catch(_){}} , 1500);
 
 })();
