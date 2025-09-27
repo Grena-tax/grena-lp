@@ -1,12 +1,7 @@
 /* =========================================================
    style.css — COMPLETE (v3.0)
-   - ベース/アコーディオン/UI
-   - ハンバーガー & 地球儀の見た目を統一
-   - Google翻訳バナーを隠す
-   - CTA固定 & iOSセーフエリア対応
    ========================================================= */
 
-/* ---- 基本設定 ---- */
 :root{
   --safe-top:    env(safe-area-inset-top, 0px);
   --safe-right:  env(safe-area-inset-right, 0px);
@@ -14,36 +9,35 @@
   --cta-h: 72px;
 }
 
-*{ box-sizing: border-box }
-html{ -webkit-text-size-adjust: 100%; }
+*{ box-sizing:border-box }
+html{ -webkit-text-size-adjust:100% }
 html,body{
-  height: auto;
-  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-               "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-               Roboto,Helvetica,Arial,sans-serif !important;
+  height:auto;
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+  "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif !important;
 }
 body{
   margin:0; line-height:1.7; color:#222; background:#fff;
-  padding-bottom: calc(var(--cta-h) + var(--safe-bottom));
+  padding-bottom:calc(var(--cta-h) + var(--safe-bottom));
 }
 img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:#0e63d3 }
-.container{ width:min(1100px,92%); margin-inline:auto; }
+.container{ width:min(1100px,92%); margin-inline:auto }
 
-/* ---- 見出し ---- */
+/* heading */
 section>h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
   font-size:clamp(22px,2.8vw,30px);
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* ---- アコーディオン ---- */
+/* accordion */
 .accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
   box-shadow:0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
+  overflow:hidden; transition:box-shadow .25s ease, transform .2s ease
 }
 .accordion details+details{ margin-top:12px }
 .accordion summary{
@@ -51,50 +45,49 @@ section>h2{
   padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
   display:flex; align-items:center; gap:.6rem;
   background:linear-gradient(180deg,#fff,#fbfcff);
-  border-bottom:1px solid #eef2f7;
+  border-bottom:1px solid #eef2f7
 }
 .accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
 .accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
 .accordion details[open] summary{ background:linear-gradient(180deg,#f9fbff,#f4f8ff) }
-/* +/- ボタン */
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
   line-height:1; font-size:14px; background:#eef4ff; color:#3657ff;
-  border:1px solid #dbe7ff; font-weight:900;
+  border:1px solid #dbe7ff; font-weight:900
 }
 .accordion details[open] > summary::after{
-  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
+  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff
 }
 .accordion .content{
-  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
+  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151
 }
 .accordion .content p{ margin:12px 0 }
 .accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
 .accordion .content li+li{ margin-top:.25em }
 
-/* アコーディオン内テーブル */
+/* tables in accordion */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
-  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
+  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff
 }
 .accordion .content thead th{
-  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
+  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb
 }
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* ---- ユーティリティ ---- */
+/* utils */
 .muted{ color:#475569 }
 .text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800; }
+.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
 .security-note{
-  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
-  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
+  font-size:.9em; color:#334155; background:#f1f5f9; border:1px solid #e2e8f0;
+  border-radius:10px; padding:.8rem 1rem; margin-top:.6rem
 }
 
-/* ---- レスポンシブ ---- */
+/* responsive */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
@@ -102,9 +95,7 @@ section>h2{
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* =========================================================
-   ハンバーガー & 地球儀（見た目・サイズ完全一致）
-   ========================================================= */
+/* ===== ハンバーガー & 地球儀（同サイズ・同色） ===== */
 .ui-fab{
   position:fixed; z-index:10000;
   width:48px; height:48px; border-radius:12px;
@@ -113,35 +104,29 @@ section>h2{
   border:1px solid rgba(255,255,255,.12);
   box-shadow:0 8px 24px rgba(0,0,0,.25);
   -webkit-backdrop-filter:saturate(160%) blur(10px);
-  backdrop-filter:saturate(160%) blur(10px);
+  backdrop-filter:saturate(160%) blur(10px)
 }
 .ui-fab:hover{ background:rgba(17,24,39,.86) }
 .ui-fab:active{ transform:translateY(1px) }
 
-/* 右上ハンバーガー */
-.menu-button.ui-fab,
-.menu-button{ /* 既存互換 */
+/* hamburger */
+.menu-button.ui-fab, .menu-button{
   top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right));
+  right:calc(10px + var(--safe-right))
 }
 .menu-button .bars{ display:block; width:28px; height:20px; position:relative }
-.menu-button .bars::before,
-.menu-button .bars::after,
-.menu-button .bars span{
+.menu-button .bars::before, .menu-button .bars::after, .menu-button .bars span{
   content:""; position:absolute; left:0; right:0; height:2px; background:#fff; border-radius:2px
 }
-.menu-button .bars::before{ top:0 }
-.menu-button .bars span{ top:9px }
-.menu-button .bars::after{ bottom:0 }
+.menu-button .bars::before{ top:0 } .menu-button .bars span{ top:9px } .menu-button .bars::after{ bottom:0 }
 
-/* 地球儀（ハンバーガーの左に同サイズで配置） */
-.lang-btn.ui-fab,
-.lang-btn{
+/* globe */
+.lang-btn.ui-fab, .lang-btn{
   top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 12px);
+  right:calc(10px + var(--safe-right) + 48px + 12px)
 }
 
-/* ドロワー */
+/* drawer */
 .menu-wrap{ position:fixed; inset:0; z-index:9999; pointer-events:none }
 .menu-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .18s ease; backdrop-filter:blur(1px) }
 .menu-panel{
@@ -166,9 +151,7 @@ html.menu-open .menu-backdrop{ opacity:1 }
 html.menu-open .menu-panel{ transform:none }
 html.menu-open,html.menu-open body{ overflow:hidden }
 
-/* =========================================================
-   Language モーダル（ボタン以外は JS が注入）
-   ========================================================= */
+/* ===== Language modal (UI は JS で注入) ===== */
 .lang-dialog{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
 .lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
 .lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
@@ -183,36 +166,26 @@ html.menu-open,html.menu-open body{ overflow:hidden }
 .lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
 .lang-close:hover{ background:#f3f4f6 }
 .lang-body{ padding:10px 12px }
-#langProxy{
-  width:100%; height:42px; border-radius:10px; border:1px solid #d1d5db; padding:0 10px; font-size:16px
-}
+#langProxy{ width:100%; height:42px; border-radius:10px; border:1px solid #d1d5db; padding:0 10px; font-size:16px }
 .lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
 
-/* Google Website Translator: 上部青バナーを隠す（本文ズレ防止） */
-iframe.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate{ display:none !important }
+/* Google top banner off */
+iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
 body{ top:0 !important }
 
-/* Google本体は画面外に（セレクトだけ拝借） */
+/* hide host */
 #google_translate_element{
   position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none
 }
 
-/* =========================================================
-   CTA（既存 .fixed-cta でも .cta-bar でもOK）
-   ========================================================= */
-.cta-bar,
-.fixed-cta{
+/* ===== CTA ===== */
+.cta-bar, .fixed-cta{
   position:fixed; left:0; right:0; bottom:0 !important; z-index:9999;
   background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
   border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom: var(--safe-bottom);
-  transform:translateZ(0); will-change:transform;
+  padding-bottom:var(--safe-bottom);
+  transform:translateZ(0); will-change:transform
 }
-
-/* 端末のホームインジケータ分の内側余白（iOS） */
-@supports (padding: env(safe-area-inset-bottom)) {
-  .cta-bar, .fixed-cta{
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
-  }
+@supports (padding: env(safe-area-inset-bottom)){
+  .cta-bar, .fixed-cta{ padding-bottom:calc(10px + env(safe-area-inset-bottom)) }
 }
