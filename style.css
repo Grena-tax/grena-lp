@@ -1,33 +1,34 @@
 /* =========================================
-   style.css — FINAL v4
+   style.css — FINAL (2025-09-28)
+   - フォント/アコーディオン/メニュー/CTA/言語UI
+   - Google翻訳ホストは画面外退避のみ（0×0禁止）
    ========================================= */
 
-/* 0) デバッグ表示（読めてるか確認用。不要なら削除OK） */
-:root{ --_ver:"CSS FINAL v4"; }
+/* 0) Debug (任意) */
+:root{ --_ver:"CSS FINAL"; }
 .css-debug-banner{
   position: fixed; right:10px; bottom:10px; z-index: 99999;
   background: linear-gradient(180deg,#1a56ff,#0f43cf);
   color:#fff; font:700 12px/1.2 system-ui, "Noto Sans JP", sans-serif;
   padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
-  letter-spacing:.02em;
 }
 .css-debug-banner::after{ content: var(--_ver); }
 
-/* 1) Base / Font（フォント固定） */
+/* 1) Base / Font */
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100%; }
 html,body{
-  height: 100%;
-  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-               "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-               Roboto,Helvetica,Arial,sans-serif !important;
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+              Roboto,Helvetica,Arial,sans-serif !important;
+  line-height:1.7; color:#222; background:#fff;
 }
-body{
-  margin:0; line-height:1.7; color:#222; background:#fff;
-}
-img{ max-width:100%; height:auto; display:block }
-a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
-a:hover{ color:#0e63d3 }
+body{ margin:0; }
+
+/* スクロール用のラッパ（JSが作る） */
+#scroll-root{ background:inherit }
+
+/* コンテナ */
 .container{ width:min(1100px,92%); margin-inline:auto; }
 
 /* 2) Section heading */
@@ -37,11 +38,11 @@ section > h2{
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* 3) Accordion (<details>) */
+/* 3) Accordion */
 .accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow: 0 10px 30px rgba(20,35,70,.05);
+  box-shadow:0 10px 30px rgba(20,35,70,.05);
   overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
 .accordion details+details{ margin-top:12px }
@@ -53,14 +54,17 @@ section > h2{
   border-bottom:1px solid #eef2f7;
 }
 .accordion summary::-webkit-details-marker{ display:none }
-.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
+.accordion summary:focus-visible{
+  outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
 .accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
 .accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
+
 /* +/- ボタン */
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
+  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff;
+  border:1px solid #dbe7ff; font-weight:900;
 }
 .accordion details[open] > summary::after{
   content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
@@ -83,34 +87,7 @@ section > h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* 4) Notes */
-.accordion .content .note,
-.accordion .content .abbr-note{
-  display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
-}
-.accordion .content .note::before,
-.accordion .content .abbr-note::before{ content:"※ "; font-weight:700; color:#475569; }
-.accordion summary .note,
-.accordion summary .abbr-note{ display:none !important; }
-
-/* 5) Gap FIX — KYC ↔ 料金プラン */
-#corp-setup, #plans{
-  padding-top:0 !important;
-  padding-bottom:0 !important;
-  margin:0 !important;
-  display: flow-root;
-}
-#corp-setup .accordion{ padding-bottom:0 !important; }
-#plans .accordion{ padding-top:0 !important; }
-#corp-setup + #plans{ margin-top:-40px !important; }
-@supports (-webkit-touch-callout: none){
-  #corp-setup + #plans{ margin-top:-42px !important; }
-}
-@media (max-width:480px){
-  #corp-setup + #plans{ margin-top:-44px !important; }
-}
-
-/* 6) Utilities */
+/* 4) Notes/Utilities */
 .muted{ color:#475569 }
 .text-sm{ font-size:.86em; opacity:.9 }
 .smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
@@ -119,12 +96,27 @@ section > h2{
   border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
 }
 
-/* 7) Tables (fallback) */
-table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
-th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
-th:first-child, td:first-child{ text-align:left }
+/* 5) Gap FIX — KYC ↔ 料金プラン（重複排除済） */
+:root{
+  --gap-lift: -40px;
+  --gap-lift-ios: -42px;
+  --gap-lift-sp: -44px;
+}
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans     { padding-top:0  !important; margin-top:0  !important; }
+#corp-setup .accordion,
+#plans .accordion{ display:flow-root !important; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#plans      .accordion > details:first-child{ margin-top:0 !important; }
+#corp-setup + #plans{ margin-top: var(--gap-lift) !important; }
+@media (max-width: 480px){
+  #corp-setup + #plans{ margin-top: var(--gap-lift-sp) !important; }
+}
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top: var(--gap-lift-ios) !important; }
+}
 
-/* 8) Responsive */
+/* 6) Responsive */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
@@ -132,69 +124,48 @@ th:first-child, td:first-child{ text-align:left }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* ===== 固定CTA・iOS対策（スクロール容器 #scroll-root を使う） ===== */
-html, body{ overflow: hidden; }
-#scroll-root{
-  position: fixed;
-  inset: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-  background: inherit;
+/* 7) CTA（最下部固定） */
+:root{
+  --cta-h: 72px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-:root{ --cta-h: 72px; }
+.cta-bar,
+.fixed-cta{
+  position: fixed; left:0; right:0; bottom:0 !important; z-index:9999;
+  background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
+  border-top:1px solid rgba(0,0,0,.06);
+  transform: translateZ(0); will-change: transform;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
 #scroll-root.has-cta{
   padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
 }
-.cta-bar, .fixed-cta{
-  position: fixed; left:0; right:0; bottom:0 !important;
-  z-index: 9999;
-  transform: translateZ(0);
-  will-change: transform;
-}
 
-/* ===== 右上 UIボタン（ハンバーガー＆地球儀の見た目完全一致） ===== */
-:root{
-  --ui-btn-size: 48px;
-  --ui-btn-gap: 14px;
-  --ui-btn-bg: rgba(17,24,39,.86); /* #111827 の半透明 */
-  --ui-btn-br: 12px;
-}
+/* CTAボタン */
+.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;
+  border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;
+  text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn.neutral{background:#e5e7eb;color:#111827}
+.btn.secondary{background:#1f2937;color:#fff}
+.btn.success{background:#10b981;color:#fff}
+.btn:hover{opacity:.92}
+
+/* 8) ハンバーガー（右上） */
 .menu-button{
-  position:fixed;
-  top:calc(10px + env(safe-area-inset-top));
-  right:calc(10px + env(safe-area-inset-right));
-  z-index:10000;
-  display:inline-flex;align-items:center;justify-content:center;
-  width:var(--ui-btn-size);height:var(--ui-btn-size);border-radius:var(--ui-btn-br);
-  background:var(--ui-btn-bg); color:#fff;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 4px 14px rgba(0,0,0,.15);
+  position:fixed; top:calc(10px + var(--safe-top)); right:calc(10px + var(--safe-right)); z-index:10000;
+  display:inline-flex; align-items:center; justify-content:center;
+  width:48px; height:48px; border-radius:12px;
+  background:rgba(17,24,39,.82); color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15); border:1px solid rgba(255,255,255,.08)
 }
 .menu-button .bars{display:block;width:28px;height:20px;position:relative}
 .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
-}
+  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px}
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-.lang-btn{
-  position:fixed;
-  top:calc(10px + env(safe-area-inset-top));
-  right:calc(10px + env(safe-area-inset-right) + var(--ui-btn-size) + var(--ui-btn-gap));
-  z-index:10001;
-  width:var(--ui-btn-size);height:var(--ui-btn-size);border-radius:var(--ui-btn-br);
-  display:grid;place-items:center;
-  background:var(--ui-btn-bg); color:#fff;
-  border:1px solid rgba(255,255,255,.08);
-  box-shadow:0 4px 14px rgba(0,0,0,.15);
-  cursor:pointer;
-}
-.lang-btn:active{ transform:translateY(1px) }
-@media (max-width:480px){
-  .menu-button,.lang-btn{ transform:scale(.92); transform-origin:top right }
-}
-
-/* ===== ハンバーガー内ドロワー ===== */
+/* ドロワー */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
@@ -217,33 +188,46 @@ html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 html.menu-open,html.menu-open body{overflow:hidden}
+.menu-group.no-title{ padding-top: 2px; }
+@media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
 
-/* ===== Language modal ===== */
-.lang-dialog{ position:fixed; inset:0; z-index:10040; display:none; pointer-events:none }
-.lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
-.lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
+/* 9) 言語ボタン（地球儀）— ハンバーガーと統一 */
+.lang-btn{
+  position:fixed;
+  top:calc(10px + var(--safe-top));
+  right:calc(10px + var(--safe-right) + 48px + 14px);
+  z-index:10050;
+  width:48px;height:48px;border-radius:12px;
+  display:inline-grid;place-items:center;
+  background:rgba(17,24,39,.82); color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer
+}
+.lang-btn:active{transform:translateY(1px)}
+@media (max-width:480px){ .lang-btn{transform:scale(.92);transform-origin:top right} }
+
+/* 言語モーダル */
+.lang-dialog{position:fixed; inset:0; z-index:10040; display:none; pointer-events:none}
+.lang-dialog[data-open="1"]{display:block; pointer-events:auto}
+.lang-backdrop{position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px)}
 .lang-panel{
-  position:absolute; top:calc(70px + env(safe-area-inset-top));
-  right:calc(10px + env(safe-area-inset-right));
+  position:absolute; top:calc(70px + var(--safe-top)); right:calc(10px + var(--safe-right));
   width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
   background:#fff; border:1px solid #e5e7eb; border-radius:12px;
   box-shadow:0 20px 50px rgba(0,0,0,.25)
 }
-.lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
-.lang-body{ padding:10px 12px }
+.lang-head{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb}
 .lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
 .lang-close:hover{ background:#f3f4f6 }
-#langProxy{
-  width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px
-}
+.lang-body{ padding:12px }
+#langProxy{ width:100%; height:42px; border-radius:10px; border:1px solid #d1d5db; padding:0 10px; font-size:16px }
 .lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
 
-/* Google青バナーを隠す＋原文押し下げ防止 */
+/* 10) Google青バー非表示 + body押し下げ防止 */
 iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
 body{ top:0 !important }
-/* Google本体（隠す） */
+
+/* 11) Google翻訳ホストを画面外退避（サイズは潰さない） */
 #google_translate_element{
-  position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none
+  position:fixed; left:-9999px; top:-9999px; opacity:0; pointer-events:none; overflow:hidden;
 }
-/* (Reset) の括弧を常に半角表示にする */
-#langProxy option{ font-variant-east-asian: proportional-width; }
