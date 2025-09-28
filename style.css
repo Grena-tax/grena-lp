@@ -135,27 +135,27 @@ th:first-child, td:first-child{ text-align:left }
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:0 !important; }
-#plans{ padding-top:0 !important; margin-top:0 !important; }
+#plans{ padding-top:0 !重要; margin-top:0 !重要; }
 #plans .accordion{ padding-top:0 !重要; margin-top:0 !重要; }
 @supports (-webkit-touch-callout:none){
   #corp-setup + #plans{ margin-top:-10px !important; }
 }
 
 /* (重複ブロック) */
-#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup .accordion details:last-of-type{ margin-bottom:0 !important; }
-#corp-setup + #plans{ margin上:0 !important; }
-#plans{ padding-top:0 !重要; margin-top:0 !important; }
-#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !重要; }
+#corp-setup .accordion details:last-of-type{ margin-bottom:0 !重要; }
+#corp-setup + #plans{ margin上:0 !重要; }
+#plans{ padding-top:0 !重要; margin-top:0 !重要; }
+#plans .accordion{ padding-top:0 !重要; margin-top:0 !重要; }
 @supports (-webkit-touch-callout:none){
-  #corp-setup + #plans{ margin-top:-10px !important; }
+  #corp-setup + #plans{ margin-top:-10px !重要; }
 }
 
 /* === v2.3.6 FINAL – 強制詰め === */
 #corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans{      padding-top:0    !important; margin-top:0    !important; }
 #corp-setup .accordion{ padding-bottom:0 !important; display:flow-root !重要; }
-#plans .accordion{      padding-top:0  !important; display:flow-root !重要; }
+#plans .accordion{      padding-top:0  !重要; display:flow-root !重要; }
 #corp-setup .accordion > details:last-child{ margin-bottom:0 !重要; }
 #plans      .accordion > details:first-child{ margin-top:0 !重要; }
 #corp-setup + #plans{ margin-top:-24px !important; }
@@ -232,11 +232,11 @@ body.has-cta{
 
 /* ▼▼ 追加：CTAの三つのボタンを必ず1行に収める ▼▼ */
 .cta-btn{
-  white-space: nowrap;            /* 2行化を禁止 */
+  white-space: nowrap;
   word-break: keep-all;
 }
 @media (max-width: 420px){
-  .cta-btn{                       /* 狭い端末だけ少しだけ詰める */
+  .cta-btn{
     padding:12px 10px;
     font-size: clamp(12px, 3.5vw, 14px);
   }
@@ -246,7 +246,7 @@ body.has-cta{
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 0 !important;     /* 後勝ちにする */
+  bottom: 0 !important;
   z-index: 9999;
 }
 
@@ -267,7 +267,7 @@ body.has-cta{
 /* ==== iOSラバーバンド根絶：ビューポートはスクロールさせない ==== */
 html, body{
   height: 100%;
-  overflow: hidden;                 /* ← ここで画面自体の弾みを止める */
+  overflow: hidden;
 }
 
 /* 実際にスクロールさせる容器（JSが自動で作る） */
@@ -276,7 +276,7 @@ html, body{
   inset: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;   /* Android/一部ブラウザでも弾み抑制 */
+  overscroll-behavior-y: contain;
   background: inherit;
 }
 
@@ -293,52 +293,86 @@ html, body{
   bottom: 0 !important;
   z-index: 9999;
   transform: translateZ(0);
-  will-change: transform; /* JSがtransformだけ触る */
+  will-change: transform;
 }
-<style>
-  /* === Language Switcher (globe) === */
-  :root{ --ls-icon:48px; }
 
-  /* 本文が角のボタンに被らないようスクロール容器に上余白を確保 */
-  #scroll-root{ padding-top: calc(64px + env(safe-area-inset-top,0px)); }
+/* ===============================
+   ▼ Language Switcher — FULL CSS
+   （ハンバーガー左隣、モーダル右上）
+=============================== */
 
-  /* 地球儀ボタン：ハンバーガーの左に固定 */
-  #ls-btn{
-    position:fixed;
-    top:calc(10px + env(safe-area-inset-top,0px));
-    right:calc(10px + env(safe-area-inset-right,0px) + var(--ls-icon) + 14px);
-    z-index:10000;
-    width:var(--ls-icon); height:var(--ls-icon);
-    border-radius:12px; display:grid; place-items:center; cursor:pointer;
-    background:#111827; color:#fff;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 4px 14px rgba(0,0,0,.15);
-  }
-  #ls-btn svg{ width:22px; height:22px }
+:root{
+  --icon-size:48px;
+  --icon-radius:12px;
+  --icon-bg:#111827;
+  --icon-fg:#fff;
+  --icon-shadow:0 4px 14px rgba(0,0,0,.15);
+  --icon-border:1px solid rgba(255,255,255,.08);
+}
 
-  /* モーダル */
-  .ls-dlg{ position:fixed; inset:0; z-index:11000; display:none; pointer-events:none; }
-  .ls-dlg[data-open="1"]{ display:block; pointer-events:auto; }
-  .ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px); }
-  .ls-panel{
-    position:absolute;
-    top:calc(70px + env(safe-area-inset-top,0px));
-    right:calc(10px + env(safe-area-inset-right,0px));
-    width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
-    background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25);
-  }
-  .ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb; }
-  .ls-body{ padding:10px 12px }
-  .ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
-  #ls-slot select.goog-te-combo{ width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px; }
-  .ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
+/* 地球儀ボタン */
+.ls-btn,
+#ls-btn{
+  position:fixed;
+  top:calc(10px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + 14px);
+  z-index:10050;
+  width:var(--icon-size);
+  height:var(--icon-size);
+  border-radius:var(--icon-radius);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--icon-bg);
+  color:var(--icon-fg);
+  box-shadow:var(--icon-shadow);
+  border:var(--icon-border);
+  cursor:pointer;
+  transition:opacity .18s ease, transform .18s ease;
+}
+#ls-btn svg{ width:22px; height:22px }
+html.menu-open #ls-btn{ opacity:0; transform:scale(.95); pointer-events:none }
+#ls-btn:active{ transform:translateY(1px) }
 
-  /* ハンバーガーが開いている間は地球儀は隠して誤タップ防止 */
-  html.menu-open #ls-btn{ opacity:0; transform:scale(.98); pointer-events:none; }
+/* モーダル */
+.ls-dlg,#ls-dlg{ position:fixed; inset:0; z-index:11000; display:none; pointer-events:none; }
+.ls-dlg[data-open="1"],#ls-dlg[data-open="1"]{ display:block; pointer-events:auto; }
+.ls-back,#ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px); }
+.ls-panel{
+  position:absolute;
+  top:calc(70px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));
+  width:min(560px,92vw);
+  max-height:min(70vh,520px);
+  overflow:auto;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+.ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb; }
+.ls-close,#ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer; }
+.ls-close:hover{ background:#f3f4f6 }
+.ls-body{ padding:10px 12px }
+#ls-slot select.goog-te-combo{
+  width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px;
+}
+.ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
 
-  /* Google翻訳の青いバーと押し下げを完全に消す */
-  iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important; }
-  body{ top:0 !important; }
-  /* Google本体は画面外へ（selectだけを移植） */
-  #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none; }
-</style>
+/* Google翻訳の上バナーを殺す（押し下げ防止） */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+body{ top:0 !important }
+
+/* Googleのウィジェットは画面外へ退避 */
+#google_translate_element{
+  position:fixed; left:-9999px; top:-9999px;
+  width:0; height:0; overflow:hidden; opacity:0; pointer-events:none;
+}
+
+/* 小さい端末の微調整＆スクロール時の控えめ表示 */
+@media (max-width:480px){
+  :root{ --icon-size:44px; }
+  #ls-btn{ transform:translateZ(0) scale(.98); }
+}
+#ls-btn[data-shy="1"]{ opacity:.18; transform:translateY(2px); pointer-events:none; }
