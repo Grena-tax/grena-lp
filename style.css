@@ -1,58 +1,48 @@
 /* =========================================
-   style.css — FINAL (CTA lock / gaps / header-safe / menu-safe)
+   style.css — FINAL v3.1
+   目的:
+   - CTA を最下部に完全固定（iOS含む）
+   - 画面スクロールは #scroll-root に一本化（bounce無効）
+   - KYC(#corp-setup) ⇄ 料金(#plans) の隙間ゼロ
+   - 地球儀/ハンバーガーは常にタップ可 & 本文と重ならない
+   - ドロワー最下部まで読める（キャンセルポリシー見える）
    ========================================= */
 
-/* ---- base ---- */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px;                 /* JSで実高へ上書きされる */
-  --ui-fixed-stack: 64px;        /* 右上ボタン群の高さぶん本文に余白を確保 */
+/* 0) Debug */
+:root{ --_ver:"CSS v3.1"; }
+.css-debug-banner{
+  position: fixed; right:10px; bottom:10px; z-index: 99999;
+  background: linear-gradient(180deg,#1a56ff,#0f43cf);
+  color:#fff; font:700 12px/1.2 system-ui, "Noto Sans JP", sans-serif;
+  padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
+  letter-spacing:.02em;
 }
+.css-debug-banner::after{ content: var(--_ver); }
 
+/* 1) Base / Font */
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100% }
-html,body{ height:100%; margin:0 }
+html,body{ height:100% } /* ※JSで #scroll-root を作る前提 */
 body{
-  line-height:1.7; color:#222; background:#fff;
-  /* ▼本文が右上ボタンに隠れないよう常に上余白を確保 */
-  padding-top: calc(var(--ui-fixed-stack) + var(--safe-top));
-  /* ▼CTAぶんの下余白はJSが #scroll-root に付与。保険としてここにも */
-  padding-bottom: calc(var(--cta-h) + var(--safe-bottom));
+  margin:0; line-height:1.7; color:#222; background:#fff;
   font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-              Roboto,Helvetica,Arial,sans-serif !important;
-  overscroll-behavior-y: none;
+    "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif !important;
+  /* 画面はスクロールさせない（#scroll-root に委譲） */
+  overflow:hidden;
 }
-
-/* 実スクロール容器（JSで生成） */
-#scroll-root{
-  position:fixed; inset:0; overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
-  overscroll-behavior-y:contain;
-  background:inherit;
-}
-#scroll-root.has-cta{
-  padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important;
-}
-
 img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:#0e63d3 }
 .container{ width:min(1100px,92%); margin-inline:auto }
 
-/* ---- headings ---- */
+/* 2) Section heading */
 section>h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
   font-size:clamp(22px,2.8vw,30px);
-  margin:0 0 .8rem; padding:.0 0 .35rem;
-  border-bottom:2px solid #eaeaea;
-  /* 右上ボタンと+バッジに当たらないよう右へ余白 */
-  padding-right: 84px;
+  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* ---- accordion ---- */
+/* 3) Accordion (<details>) */
 .accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
@@ -74,19 +64,16 @@ section>h2{
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900; line-height:1;
+  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
 }
 .accordion details[open]>summary::after{ content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff }
 .accordion .content{ padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151 }
 .accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
+.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em }
 .accordion .content li+li{ margin-top:.25em }
-
-/* 表（内側） */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
-  display:block; overflow-x:auto; -webkit-overflow-scrolling:touch;
 }
 .accordion .content thead th{
   background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
@@ -94,48 +81,85 @@ section>h2{
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* ---- utilities ---- */
-.muted{ color:#475569 } .text-sm{ font-size:.86em; opacity:.9 }
+/* 4) Notes */
+.accordion .content .note,.accordion .content .abbr-note{
+  display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
+}
+.accordion .content .note::before,.accordion .content .abbr-note::before{
+  content:"※ "; font-weight:700; color:#475569;
+}
+.accordion summary .note,.accordion summary .abbr-note{ display:none !important }
+
+/* 5) Gap FIX — KYC ↔ 料金プラン（強制ゼロ） */
+#corp-setup,#plans{
+  padding-top:0 !important; padding-bottom:0 !important;
+  margin-top:0 !important; margin-bottom:0 !important; display:flow-root;
+}
+#corp-setup .accordion{ padding-bottom:0 !important }
+#plans .accordion{ padding-top:0 !important }
+#corp-setup + #plans{ margin-top:0 !important }        /* 基本ゼロ */
+@supports (-webkit-touch-callout:none){
+  #corp-setup + #plans{ margin-top:0 !important }      /* iOS でもゼロ */
+}
+
+/* 6) Utilities */
+.muted{ color:#475569 }
+.text-sm{ font-size:.86em; opacity:.9 }
 .smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
-.security-note{ font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem }
-
-/* ---- KYC ⇄ 料金プラン の隙間を強制ゼロ ---- */
-/* 既存の後勝ちインラインCSSに勝つため強いセレクタ＋!importantで再定義 */
-html body section#corp-setup + section#plans{ margin-top:0 !important; }
-html body section#plans{ padding-top:0 !important; margin-top:0 !important; }
-
-/* 互換（もし構成が変わっても該当させる） */
-#corp-setup, #plans{ padding-top:0 !important; padding-bottom:0 !important; margin-top:0 !important; margin-bottom:0 !important; display:flow-root; }
-
-/* ---- CTA を常に最下部へ固定 ---- */
-.cta-bar, .fixed-cta{
-  position:fixed; left:0; right:0; bottom:0 !important; z-index:9999;
-  background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
-  border-top:1px solid rgba(0,0,0,.06);
-  transform:translateZ(0); will-change:transform;
+.security-note{
+  font-size:.9em; color:#334155; background:#f1f5f9; border:1px solid #e2e8f0;
+  border-radius:10px; padding:.8rem 1rem; margin-top:.6rem;
 }
 
-/* ---- 右上ボタン（地球儀・ハンバーガー）統一デザイン ---- */
-.menu-button, .ls-btn, #ls-btn{
-  position:fixed; z-index:10050; width:48px; height:48px; border-radius:12px;
-  display:grid; place-items:center; color:#fff; background:#111827;
-  border:1px solid rgba(255,255,255,.08); box-shadow:0 4px 14px rgba(0,0,0,.15);
-}
-.menu-button{ top:calc(10px + var(--safe-top)); right:calc(10px + var(--safe-right)); }
-.ls-btn, #ls-btn{ top:calc(10px + var(--safe-top)); right:calc(10px + var(--safe-right) + 48px + 14px); }
-.menu-button:active, .ls-btn:active{ transform:translateY(1px) }
+/* 7) Fallback table */
+table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
+th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
+th:first-child,td:first-child{ text-align:left }
 
-/* メニュー（ドロワー）側のスクロールエリアに CTA 高さぶんの下余白を付与 */
-.menu-groups{ padding:10px 0 calc(12px + var(--cta-h) + var(--safe-bottom)) !important; }
-
-/* Google翻訳バナーを完全に無効化（クリック妨害を防止） */
-iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
-body{ top:0 !important }
-
-/* ---- responsive 微調整 ---- */
+/* 8) Responsive */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
-  section>h2{ padding-right:84px }
+  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
+
+/* === スクロール統一（本文だけスクロール） === */
+#scroll-root{
+  position:fixed; inset:0; overflow-y:auto;
+  -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain;
+  background:inherit;
+}
+/* Topの安全帯（地球儀/ハンバーガーぶん） */
+#scroll-root.with-top-ui{ padding-top: var(--ui-safe-top, 0px) !important; }
+
+/* === CTA を常に最下部に固定 === */
+:root{ --cta-h:60px; --cta-gap:10px; --safe-bottom: env(safe-area-inset-bottom, 0px) }
+body.has-cta{ padding-bottom: calc(var(--cta-h) + var(--cta-gap) + var(--safe-bottom)) !important; }
+#scroll-root.has-cta{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)) !important; }
+
+.cta-bar,.fixed-cta{
+  position:fixed; left:0; right:0; bottom:0 !important; z-index:9999;
+  transform:translateZ(0); will-change:transform;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+}
+.cta-bar{ bottom: max(0px, env(safe-area-inset-bottom)) !important; } /* 最終ガード */
+
+/* === 上部UI（地球儀/ハンバーガー）の扱い === */
+#langBtn,
+#menuBtn,
+.lang-btn,
+.hamburger,
+.menu-toggle,
+.menu-button{
+  z-index:10060 !important;
+  pointer-events:auto !important;
+}
+
+/* === ハンバーガードロワー下端まで読めるように === */
+#menuDrawer{
+  padding-bottom: calc(16px + var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
+
+/* 表のはみ出し保険（SP横スクロール許可） */
+.accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
