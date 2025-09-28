@@ -1,5 +1,3 @@
-GitHubコード　js 9/13
-
 /* ===== 申込フォームURL ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
