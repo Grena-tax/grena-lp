@@ -376,3 +376,29 @@ body{ top:0 !important }
   #ls-btn{ transform:translateZ(0) scale(.98); }
 }
 #ls-btn[data-shy="1"]{ opacity:.18; transform:translateY(2px); pointer-events:none; }
+/* ===== Hamburger TOC hard guard (closed = hidden) ===== */
+.menu-wrap[hidden]{ display:none !important; }
+.menu-wrap{
+  position:fixed !important;
+  inset:0 !important;
+  z-index:9999 !important;
+}
+.menu-panel{
+  position:fixed !important;
+  top:0; right:0;
+  height:100%;
+  width:min(420px,92vw);
+  background:#f5f7fa;
+  border-left:1px solid #e5e7eb;
+  box-shadow:-16px 0 40px rgba(0,0,0,.12);
+  transform:translateX(100%) !important;
+  transition:transform .22s ease;
+}
+html.menu-open .menu-panel{ transform:none !important; }
+.menu-backdrop{
+  opacity:0 !important;
+  transition:opacity .18s ease;
+  background:rgba(0,0,0,.35);
+  backdrop-filter:blur(1px);
+}
+html.menu-open .menu-backdrop{ opacity:1 !important; }
