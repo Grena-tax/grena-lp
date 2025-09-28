@@ -2,53 +2,48 @@
    style.css — SAFE consolidated
    ========================================= */
 
-/* Base / Font */
+/* ========== Base ========== */
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100% }
-html,body{
-  margin:0; padding:0; line-height:1.7; color:#222; background:#fff;
-  font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+body{
+  margin:0; line-height:1.7; color:#0b1220; background:#fff;
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
                "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
                Roboto,Helvetica,Arial,sans-serif;
 }
-/* Container */
+
+/* layout helpers */
 .container{ width:min(1100px,92%); margin-inline:auto }
-
-/* Headings */
-section > h2{
-  font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size: clamp(22px, 2.8vw, 30px);
-  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
-}
-.smallish{ font-size: clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
-
-/* Links & images */
+img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:#0e63d3 }
-img{ max-width:100%; height:auto; display:block }
 
-/* =========================================
-   Accordion
-   ========================================= */
+/* ========== Headings ========== */
+section > h2{
+  font-weight:800; letter-spacing:.01em; line-height:1.25;
+  font-size:clamp(22px,2.8vw,30px);
+  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
+}
+.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800 }
+
+/* ========== Accordion (<details>) ========== */
 .accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow: 0 10px 30px rgba(20,35,70,.05); overflow:hidden;
-  transition: box-shadow .25s ease, transform .2s ease;
+  box-shadow:0 10px 30px rgba(20,35,70,.05);
+  overflow:hidden; transition:box-shadow .25s ease, transform .2s ease;
 }
 .accordion details+details{ margin-top:12px }
 .accordion summary{
-  list-style:none; cursor:pointer;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
+  list-style:none; cursor:pointer; position:relative;
+  padding:14px 52px 14px 16px; font-weight:800; font-size:16px;
   display:flex; align-items:center; gap:.6rem;
-  background: linear-gradient(180deg,#fff,#fbfcff);
+  background:linear-gradient(180deg,#fff,#fbfcff);
   border-bottom:1px solid #eef2f7;
 }
 .accordion summary::-webkit-details-marker{ display:none }
-.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
-.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
-/* +/- */
+.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
+.accordion details[open] summary{ background:linear-gradient(180deg,#f9fbff,#f4f8ff) }
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
@@ -57,12 +52,14 @@ img{ max-width:100%; height:auto; display:block }
 .accordion details[open] > summary::after{
   content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
 }
-.accordion .content{ padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151 }
+.accordion .content{
+  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
+}
 .accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
+.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em }
 .accordion .content li+li{ margin-top:.25em }
 
-/* Tables inside accordion */
+/* tables inside accordion */
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
@@ -73,16 +70,15 @@ img{ max-width:100%; height:auto; display:block }
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
 
-/* Notes */
-.muted{ color:#475569 }
+/* notes / tiny text */
 .text-sm{ font-size:.86em; opacity:.9 }
-.note{ display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5 }
+.muted{ color:#475569 }
+.note{ display:block; font-size:.85em; color:#64748b; line-height:1.5; margin-top:.3rem }
 
-/* Tighten KYC⇄料金プラン（軽め・安全） */
-#corp-setup{ padding-bottom:8px }
-#plans{ padding-top:4px }
-
-/* Responsive */
+/* responsive tables fallback */
+table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
+th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
+th:first-child,td:first-child{ text-align:left }
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
@@ -90,48 +86,75 @@ img{ max-width:100%; height:auto; display:block }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* =========================================
-   Hamburger (UIのみ。生成はJS)
-   ========================================= */
-.menu-button{
-  position:fixed; top:calc(10px + env(safe-area-inset-top,0px)); right:calc(10px + env(safe-area-inset-right,0px)); z-index:10000;
-  display:inline-flex; align-items:center; justify-content:center;
-  width:48px; height:48px; border-radius:12px; background:#111827; color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15); border:1px solid rgba(255,255,255,.08); cursor:pointer;
-}
-.menu-button .bars{display:block;width:28px;height:20px;position:relative}
-.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
-}
-.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
+/* ========== Gap tweak: #corp-setup ↔ #plans ========== */
+#corp-setup{ padding-bottom:0 !important; margin-bottom:0 !important }
+#plans{ padding-top:0 !important; margin-top:0 !important }
+#corp-setup .accordion{ padding-bottom:0 !important }
+#plans .accordion{ padding-top:0 !important }
+#corp-setup + #plans{ margin-top:-36px !important }
+@media (max-width:480px){ #corp-setup + #plans{ margin-top:-40px !important } }
+@supports (-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-42px !important } }
 
-.menu-wrap{position:fixed; inset:0; z-index:9999; pointer-events:none}
-.menu-backdrop{position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .18s ease; backdrop-filter:blur(1px)}
+/* ========== Hamburger (menu button + drawer) ========== */
+.menu-button{
+  position:fixed; top:calc(10px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px)); z-index:10000;
+  width:48px; height:48px; border-radius:12px; background:#111827; color:#fff;
+  display:inline-flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.15); border:1px solid rgba(255,255,255,.08);
+}
+.menu-button .bars{ display:block; width:28px; height:20px; position:relative }
+.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
+  content:""; position:absolute; left:0; right:0; height:2px; background:#fff; border-radius:2px;
+}
+.menu-button .bars::before{ top:0 } .menu-button .bars span{ top:9px } .menu-button .bars::after{ bottom:0 }
+
+.menu-wrap{ position:fixed; inset:0; z-index:9999; pointer-events:none }
+.menu-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); opacity:0; transition:opacity .18s ease; backdrop-filter:blur(1px) }
 .menu-panel{
   position:absolute; top:0; right:0; height:100%; width:min(420px,92vw);
   background:#f5f7fa; color:#0b1220; border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12); transform:translateX(100%); transition:transform .22s ease;
-  font-size:14px; line-height:1.38
+  font-size:14px; line-height:1.38;
 }
-.menu-head{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0; z-index:2}
-.menu-title{font-weight:800; color:#111827}
-.menu-close{width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #e5e7eb; background:#fff; color:#111827}
-.menu-close:hover{background:#f3f4f6}
-.menu-groups{overflow:auto; height:calc(100% - 60px); padding:10px 0}
-.menu-group{padding:8px 10px 6px}
-.menu-group h4{margin:0 0 6px; padding:0 6px; font-size:.92rem; color:#111827; font-weight:700; opacity:.9}
-.menu-list{list-style:none; margin:0; padding:0}
-.menu-list li a{display:block; padding:7px 10px; margin:0 6px 6px; border-radius:8px; text-decoration:none; color:#334155; background:#fff; border:1px solid #e5e7eb}
-.menu-list li a:hover{background:#eef2f7; border-color:#d4d8de}
-html.menu-open .menu-wrap{pointer-events:auto}
-html.menu-open .menu-backdrop{opacity:1}
-html.menu-open .menu-panel{transform:none}
-html.menu-open,html.menu-open body{overflow:hidden}
-.menu-group.no-title{ padding-top:2px }
+.menu-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 14px; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0; z-index:2 }
+.menu-title{ font-weight:800; color:#111827 }
+.menu-close{ width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center; border-radius:10px; border:1px solid #e5e7eb; background:#fff; color:#111827 }
+.menu-close:hover{ background:#f3f4f6 }
+.menu-groups{ overflow:auto; height:calc(100% - 60px); padding:10px 0 }
+.menu-group{ padding:8px 10px 6px }
+.menu-group h4{ margin:0 0 6px; padding:0 6px; font-size:.92rem; color:#111827; font-weight:700; opacity:.9 }
+.menu-list{ list-style:none; margin:0; padding:0 }
+.menu-list li a{ display:block; padding:7px 10px; margin:0 6px 6px; border-radius:8px; text-decoration:none; color:#334155; background:#fff; border:1px solid #e5e7eb }
+.menu-list li a:hover{ background:#eef2f7; border-color:#d4d8de }
+html.menu-open .menu-wrap{ pointer-events:auto }
+html.menu-open .menu-backdrop{ opacity:1 }
+html.menu-open .menu-panel{ transform:none }
+html.menu-open,html.menu-open body{ overflow:hidden }
 
-/* =========================================
-   Language Switcher （右上地球儀＋モーダル）
-   ========================================= */
+/* ========== Fixed CTA (use .fixed-cta / #ctaBar) ========== */
+:root{
+  --cta-h:72px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+body{ padding-bottom:calc(var(--cta-h) + var(--safe-bottom)) } /* reserve space for CTA */
+
+.fixed-cta{
+  position:fixed; left:0; right:0; bottom:0; z-index:9998; background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px); border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:var(--safe-bottom);
+}
+.fixed-cta .row{
+  max-width:64rem; margin:0 auto; display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
+  padding:.6rem 1rem; min-height:var(--cta-h);
+}
+.btn{ display:inline-flex; gap:.5rem; align-items:center; justify-content:center; border-radius:10px; padding:.55rem .9rem; font-weight:700; border:1px solid transparent; text-decoration:none; white-space:nowrap; cursor:pointer }
+.btn.neutral{ background:#e5e7eb; color:#111827 }
+.btn.secondary{ background:#1f2937; color:#fff }
+.btn.success{ background:#10b981; color:#fff }
+.btn:hover{ opacity:.92 }
+
+/* ========== Language Switcher (globe button + modal) ========== */
 :root{
   --icon-size:48px; --icon-radius:12px; --icon-bg:#111827; --icon-fg:#fff;
   --icon-shadow:0 4px 14px rgba(0,0,0,.15); --icon-border:1px solid rgba(255,255,255,.08);
@@ -139,59 +162,40 @@ html.menu-open,html.menu-open body{overflow:hidden}
 #ls-btn{
   position:fixed;
   top:calc(10px + env(safe-area-inset-top,0px));
-  right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + 14px);
-  z-index:10050;
-  width:var(--icon-size); height:var(--icon-size); border-radius:var(--icon-radius);
-  display:inline-flex; align-items:center; justify-content:center;
+  right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + 14px); /* hamburgerの左 */
+  z-index:10050; width:var(--icon-size); height:var(--icon-size);
+  border-radius:var(--icon-radius); display:inline-flex; align-items:center; justify-content:center;
   background:var(--icon-bg); color:var(--icon-fg); box-shadow:var(--icon-shadow); border:var(--icon-border); cursor:pointer;
   transition:opacity .18s ease, transform .18s ease;
 }
-#ls-btn:active{ transform:translateY(1px) }
+#ls-btn svg{ width:22px; height:22px }
 html.menu-open #ls-btn{ opacity:0; transform:scale(.95); pointer-events:none }
-@media (max-width:480px){ :root{ --icon-size:44px } }
+#ls-btn:active{ transform:translateY(1px) }
 
-.ls-dlg{ position:fixed; inset:0; z-index:11000; display:none; pointer-events:none }
-.ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
-.ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
+#ls-dlg{ position:fixed; inset:0; z-index:11000; display:none; pointer-events:none }
+#ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
+#ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
 .ls-panel{
-  position:absolute; top:calc(70px + env(safe-area-inset-top,0px)); right:calc(10px + env(safe-area-inset-right,0px));
+  position:absolute; top:calc(70px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));
   width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
   background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25);
 }
 .ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
-.ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
-.ls-close:hover{ background:#f3f4f6 }
+.ls-title{ font-weight:800 }
+#ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
+#ls-close:hover{ background:#f3f4f6 }
 .ls-body{ padding:10px 12px }
 #ls-slot select.goog-te-combo{ width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px }
 .ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
 
-/* Google翻訳バナーを消す（押し下げ防止）*/
-iframe.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate{ display:none !important }
+/* Google banner kill + offscreen element for injector */
+iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
 body{ top:0 !important }
-/* Google本体は画面外 */
 #google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
 
-/* =========================================
-   CTA （常時固定）
-   ========================================= */
-:root{ --cta-h:72px }
-.fixed-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9998; background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px); border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom:env(safe-area-inset-bottom);
-}
-.fixed-cta .row{
-  max-width:64rem; margin:0 auto; display:flex; gap:.6rem; align-items:center; justify-content:flex-end;
-  padding:.6rem 1rem; min-height:var(--cta-h)
-}
-.btn{ display:inline-flex; gap:.5rem; align-items:center; justify-content:center; border-radius:10px; padding:.55rem .9rem; font-weight:700; border:1px solid transparent; text-decoration:none; white-space:nowrap; cursor:pointer }
-.btn.neutral{ background:#e5e7eb; color:#111827 }
-.btn.secondary{ background:#1f2937; color:#fff }
-.btn.success{ background:#10b981; color:#fff }
-.btn:hover{ opacity:.92 }
-body{ padding-bottom:calc(var(--cta-h) + env(safe-area-inset-bottom)) } /* CTA分の下余白 */
-
-@media (max-width:420px){
-  .cta-btn{ padding:12px 10px; font-size:clamp(12px,3.5vw,14px) }
+/* small devices */
+@media (max-width:480px){
+  :root{ --icon-size:44px }
+  .menu-button{ width:44px; height:44px }
 }
