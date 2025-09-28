@@ -290,3 +290,42 @@ addEventListener('resize', normalizeKycPlansGap);
     document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${d}`;
   }
 })();
+/* --- FINAL PATCH (place LAST) --- */
+(function(){
+  const scroller = document.getElementById('scroll-root');
+  if (!scroller) return;
+
+  /* フローティングUIは必ず<body>直下へ退避（押せなくなるのを防止） */
+  ['langBtn','langDialog','menuBtn','menuDrawer'].forEach(id=>{
+    const el = document.getElementById(id);
+    if (el && scroller.contains(el)) document.body.appendChild(el);
+  });
+
+  /* トップ用スペーサー（UIと本文の被り防止） */
+  if (!scroller.querySelector('.top-spacer')){
+    const s = document.createElement('div');
+    s.className = 'top-spacer';
+    scroller.prepend(s);
+  }
+
+  /* CTA 高さを計測して本文側に反映（bottomはCSSで固定） */
+  function adjustCta(){
+    const bar = document.querySelector('.cta-bar, .fixed-cta, #ctaBar');
+    if (!bar) return;
+    const h = Math.ceil(bar.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--cta-h', h + 'px');
+    scroller.classList.add('has-cta');
+  }
+  window.addEventListener('load', adjustCta);
+  window.addEventListener('resize', adjustCta);
+
+  /* KYC ↔ 料金の最終ガード：12pxに矯正 */
+  function fixGap(){
+    const a = document.getElementById('corp-setup');
+    const b = document.getElementById('plans');
+    if (!(a && b)) return;
+    b.style.marginTop = '12px';
+  }
+  window.addEventListener('load', fixGap);
+  window.addEventListener('resize', fixGap);
+})();
