@@ -206,3 +206,25 @@ body{ top:0 !important }
 /* 本文側にCTAぶんの下余白を必ず確保（#scroll-root優先） */
 #scroll-root{ padding-bottom: calc(var(--cta-h,72px) + env(safe-area-inset-bottom)) !important; }
 body.has-cta{ padding-bottom: calc(var(--cta-h,72px) + env(safe-area-inset-bottom)) !important; }
+/* トップUIの高さぶんだけ本文を下げる（SP時） */
+:root{ --top-ui: calc(10px + env(safe-area-inset-top) + 48px + 14px); }
+#scroll-root{ padding-top: var(--top-ui) !important; }
+@media (min-width: 768px){
+  #scroll-root{ padding-top: calc(6px + env(safe-area-inset-top)) !important; }
+}
+
+/* 地球儀とハンバーガーの見た目・スタックを揃える */
+.menu-button{ background:#111827; color:#fff; opacity:.88; }
+.menu-button:hover{ opacity:1; }
+.ls-btn,#langBtn{
+  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+  opacity:.88; box-shadow:0 4px 14px rgba(0,0,0,.15);
+  z-index:10050; pointer-events:auto;
+}
+.ls-btn:hover,#langBtn:hover{ opacity:1; }
+
+/* Google 翻訳の上部バナーは常に無効化 */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+body{ top:0 !important }
+#google_translate_element{ position:fixed; left:-9999px; top:-9999px; pointer-events:none; }
