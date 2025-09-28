@@ -402,3 +402,49 @@ html.menu-open .menu-panel{ transform:none !important; }
   backdrop-filter:blur(1px);
 }
 html.menu-open .menu-backdrop{ opacity:1 !important; }
+/* ===== JSが生きている時だけ本体スクロールをロックする安全ガード ===== */
+html.js-ok, body.js-ok{
+  height: 100% !important;
+  overflow: hidden !important;
+}
+html:not(.js-ok), body:not(.js-ok){
+  height: auto !important;
+  overflow: auto !important;
+}
+
+/* ===== Language Switcher ボタン/モーダル（まだ未導入なら） ===== */
+:root{
+  --icon-size:48px; --icon-radius:12px; --icon-bg:#111827; --icon-fg:#fff;
+  --icon-shadow:0 4px 14px rgba(0,0,0,.15); --icon-border:1px solid rgba(255,255,255,.08);
+}
+#ls-btn{
+  position:fixed; top:calc(10px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + 14px);
+  z-index:10050; width:var(--icon-size); height:var(--icon-size);
+  border-radius:var(--icon-radius); display:inline-flex; align-items:center; justify-content:center;
+  background:var(--icon-bg); color:var(--icon-fg); box-shadow:var(--icon-shadow); border:var(--icon-border); cursor:pointer;
+  transition:opacity .18s ease, transform .18s ease;
+}
+#ls-btn svg{ width:22px; height:22px }
+html.menu-open #ls-btn{ opacity:0; transform:scale(.95); pointer-events:none }
+#ls-btn:active{ transform:translateY(1px) }
+#ls-dlg{ position:fixed; inset:0; z-index:11000; display:none; pointer-events:none }
+#ls-dlg[data-open="1"]{ display:block; pointer-events:auto }
+#ls-back{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
+.ls-panel{
+  position:absolute; top:calc(70px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));
+  width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25);
+}
+.ls-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+.ls-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff; cursor:pointer }
+.ls-close:hover{ background:#f3f4f6 }
+.ls-body{ padding:10px 12px }
+#ls-slot select.goog-te-combo{ width:100%; height:40px; border-radius:8px; border:1px solid #d1d5db; padding:0 10px; font-size:16px }
+.ls-hint{ margin-top:8px; color:#64748b; font-size:12px }
+iframe.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate{ display:none !important }
+body{ top:0 !important }
+#google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
+@media (max-width:480px){ :root{ --icon-size:44px } #ls-btn{ transform:translateZ(0) scale(.98) } }
+#ls-btn[data-shy="1"]{ opacity:.18; transform:translateY(2px); pointer-events:none }
