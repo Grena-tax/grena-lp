@@ -1,5 +1,5 @@
 /* =========================================
-   script.js — v3.2 (CTA lock, menu builder, language UI)
+   script.js — v3.2.1 (CTA lock, menu builder, gap fix)
    ========================================= */
 'use strict';
 
@@ -34,16 +34,16 @@ const slug = (t)=> (t||'').toLowerCase()
   cta ? body.insertBefore(wrap, cta) : body.appendChild(wrap);
 
   // 既存ノードを #scroll-root へ（CTAとメニュー/言語UIは除外）
-  const uiIds = ['menuBtn','menuDrawer','langBtn','langDialog'];
+  const uiIds = ['menuBtn','menuDrawer','langBtn','langDialog','ls-btn','ls-dlg'];
   Array.from(body.childNodes).forEach(n=>{
-    if (n.nodeType !== 1) return; // elementのみ
-    if (keep.has(n)) return;
+    if (n.nodeType !== 1) return;          // elementのみ
+    if (keep.has(n)) return;               // CTAは除外
     if (uiIds.some(id => n.id === id || (n.querySelector && n.querySelector('#'+id)))) return;
-    wrap.appendChild(n);
+    wrap.appendChild(n);                   // 本文を容器へ退避
   });
 })();
 
-/* ====== CTA の高さ → 本文余白へ反映（bottomはCSSで固定） ====== */
+/* ====== CTA の高さ → 本文余白へ反映 ====== */
 function adjustCtaPadding(){
   const bar = document.querySelector('.cta-bar, .fixed-cta, #ctaBar');
   if (!bar) return;
@@ -95,7 +95,7 @@ closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* ====== メニュー（ハンバーガー内）自動生成（無ければ差し込み） ====== */
+/* ====== メニュー自動生成 ====== */
 const EXCLUDE = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function ensureMenuRoot(){
@@ -166,137 +166,23 @@ function buildMenu(){
 }
 addEventListener('DOMContentLoaded', buildMenu);
 
-/* ====== KYC ↔ 料金のギャップ最終ガード（計算でズレても正す） ====== */
+/* ====== KYC ↔ 料金のギャップ（最終ガード） ====== */
 function normalizeKycPlansGap(){
   const a = document.getElementById('corp-setup');
   const b = document.getElementById('plans');
   if (!a || !b) return;
-  // 期待値 12px
-  const desired = 12;
-  const rectA = a.getBoundingClientRect();
-  const rectB = b.getBoundingClientRect();
-  if (rectB.top - rectA.bottom !== desired){
-    b.style.marginTop = desired + 'px';
-  }
+  b.style.marginTop = '12px'; // 常に12pxで固定
 }
 addEventListener('load', normalizeKycPlansGap);
 addEventListener('resize', normalizeKycPlansGap);
 
-/* ====== Language Switcher（地球儀ボタン＋モーダル） ====== */
-(function initLanguageUI(){
-  // 既に作成済みなら抜ける
-  if (document.getElementById('langBtn')) return;
-
-  // ボタン
-  const btn = document.createElement('button');
-  btn.id = 'langBtn'; btn.className = 'lang-btn floating-ui'; btn.type = 'button';
-  btn.title = '言語 / Language'; btn.setAttribute('aria-haspopup','dialog'); btn.setAttribute('aria-expanded','false');
-  btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>`;
-  document.body.appendChild(btn);
-
-  // ダイアログ
-  const dlg = document.createElement('div');
-  dlg.id = 'langDialog'; dlg.className = 'lang-dialog'; dlg.setAttribute('aria-hidden','true'); dlg.setAttribute('role','dialog'); dlg.setAttribute('aria-modal','true');
-  dlg.innerHTML = `
-    <div class="lang-backdrop" id="langBackdrop"></div>
-    <div class="lang-panel" role="document">
-      <div class="lang-head">
-        <strong>Select language / 言語を選択</strong>
-        <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
-      </div>
-      <div class="lang-body">
-        <select id="langProxy" aria-label="Select Language">
-          <option value="__RESET">Original / 原文 (Reset)</option>
-          <option value="" disabled>Loading languages…</option>
-        </select>
-        <p class="lang-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
-      </div>
-    </div>`;
-  document.body.appendChild(dlg);
-
-  const closeBtn = dlg.querySelector('#langClose');
-  const backdrop = dlg.querySelector('#langBackdrop');
-  const proxySel = dlg.querySelector('#langProxy');
-
-  function open(){ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=> closeBtn?.focus(),0); cloneOptionsToProxy(true); }
-  function close(){ dlg.removeAttribute('data-open'); dlg.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); btn.focus(); }
-
-  btn.addEventListener('click', ()=> dlg.getAttribute('data-open') ? close() : open());
-  closeBtn.addEventListener('click', close);
-  backdrop.addEventListener('click', close);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
-
-  // Google本体（hidden host）
-  const host = document.createElement('div'); host.id = 'google_translate_element'; document.body.appendChild(host);
-
-  // Google callback
-  window.googleTranslateElementInit = function(){
-    try{
-      new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
-    }catch(e){}
-    cloneOptionsToProxy(false);
-  };
-
-  // loader
-  const s = document.createElement('script');
-  s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
-  s.defer = true; document.head.appendChild(s);
-
-  // プロキシへオプション複製
-  function cloneOptionsToProxy(force){
-    let tries = 0;
-    (function tick(){
-      const combo = document.querySelector('#google_translate_element select.goog-te-combo');
-      if (!combo){
-        if (tries++ < 60){ setTimeout(tick, 120); return; }
-        return;
-      }
-      if (!force && proxySel.options.length > 1) return; // 既に複製済み
-
-      const keepReset = proxySel.querySelector('option[value="__RESET"]');
-      proxySel.innerHTML = ''; if (keepReset) proxySel.appendChild(keepReset);
-
-      Array.from(combo.options).forEach((op, idx)=>{
-        if (idx===0) return;
-        const o = document.createElement('option');
-        o.value = op.value; o.textContent = op.textContent;
-        proxySel.appendChild(o);
-      });
-
-      // 現在の言語状態に追従
-      const lang = getCurrentLangFromCookie();
-      proxySel.value = lang || '__RESET';
-
-      // 変更 → 本体反映
-      proxySel.onchange = function(){
-        const val = this.value;
-        const combo = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (!combo) return;
-        if (val === '__RESET'){ clearGT(); combo.value=''; combo.dispatchEvent(new Event('change')); return; }
-        combo.value = val; combo.dispatchEvent(new Event('change'));
-      };
-    })();
-  }
-
-  function getCurrentLangFromCookie(){
-    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
-    if (!m) return '';
-    try{ const v = decodeURIComponent(m[1]).split('/'); return v[2] || ''; }catch(e){ return ''; }
-  }
-  function clearGT(){
-    const d = location.hostname.replace(/^www\./,'');
-    document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.${d}`;
-    document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${d}`;
-  }
-})();
-/* --- FINAL PATCH (place LAST) --- */
+/* ====== FINAL PATCH ====== */
 (function(){
   const scroller = document.getElementById('scroll-root');
   if (!scroller) return;
 
   /* フローティングUIは必ず<body>直下へ退避（押せなくなるのを防止） */
-  ['langBtn','langDialog','menuBtn','menuDrawer'].forEach(id=>{
+  ['langBtn','langDialog','menuBtn','menuDrawer','ls-btn','ls-dlg'].forEach(id=>{
     const el = document.getElementById(id);
     if (el && scroller.contains(el)) document.body.appendChild(el);
   });
@@ -308,7 +194,7 @@ addEventListener('resize', normalizeKycPlansGap);
     scroller.prepend(s);
   }
 
-  /* CTA 高さを計測して本文側に反映（bottomはCSSで固定） */
+  /* CTA 高さを計測して本文側に反映 */
   function adjustCta(){
     const bar = document.querySelector('.cta-bar, .fixed-cta, #ctaBar');
     if (!bar) return;
@@ -318,14 +204,4 @@ addEventListener('resize', normalizeKycPlansGap);
   }
   window.addEventListener('load', adjustCta);
   window.addEventListener('resize', adjustCta);
-
-  /* KYC ↔ 料金の最終ガード：12pxに矯正 */
-  function fixGap(){
-    const a = document.getElementById('corp-setup');
-    const b = document.getElementById('plans');
-    if (!(a && b)) return;
-    b.style.marginTop = '12px';
-  }
-  window.addEventListener('load', fixGap);
-  window.addEventListener('resize', fixGap);
 })();
