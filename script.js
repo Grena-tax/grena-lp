@@ -226,3 +226,97 @@ window.addEventListener('load', cutOnlyBottomDup);
   window.addEventListener('scroll',          apply, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
+<script>
+/* === Language Switcher (globe) — minimal & safe === */
+(function(){
+  if (window.__LS_READY__) return; window.__LS_READY__ = true;
+
+  const html  = document.documentElement;
+  const btn   = document.getElementById('ls-btn');
+  const dlg   = document.getElementById('ls-dlg');
+  const back  = document.getElementById('ls-back');
+  const close = document.getElementById('ls-close');
+
+  const open  = ()=>{ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>close?.focus(),0); };
+  const hide  = ()=>{ dlg.removeAttribute('data-open');   dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); };
+
+  btn?.addEventListener('click', () => dlg.getAttribute('data-open') ? hide() : open());
+  back?.addEventListener('click', hide);
+  close?.addEventListener('click', hide);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
+
+  /* mountScrollRoot が作る #scroll-root 内に巻き込まれたら body 直下へ退避（クリック不可を防止） */
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const sc = document.getElementById('scroll-root');
+    ['ls-btn','ls-dlg'].forEach(id=>{
+      const el = document.getElementById(id);
+      if (sc && el && sc.contains(el)) document.body.appendChild(el);
+    });
+  });
+
+  /* Cookie helpers for googtrans */
+  function setCookie(name,val,days,domain){
+    const d = new Date(); d.setTime(d.getTime()+days*864e5);
+    document.cookie = name+'='+encodeURIComponent(val)+'; expires='+d.toUTCString()+'; path=/'+(domain?'; domain='+domain:'');
+  }
+  function clearCookie(name){
+    setCookie(name,'',-1);
+    const host = location.hostname.replace(/^www\./,'');
+    if (host.includes('.')) setCookie(name,'',-1,'.'+host);
+  }
+  function setGT(src,dst){
+    const v = '/'+src+'/'+dst;
+    setCookie('googtrans',v,365);
+    const host = location.hostname.replace(/^www\./,'');
+    if (host.includes('.')) setCookie('googtrans',v,365,'.'+host);
+  }
+  function clearGT(){ clearCookie('googtrans'); }
+
+  /* Google Translate 初期化 → <select> をモーダルに移植＋Reset 追加 */
+  window.googleTranslateElementInit = function(){
+    try{
+      new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
+    }catch(_){}
+
+    let tries = 0;
+    (function moveCombo(){
+      const host  = document.getElementById('google_translate_element');
+      const slot  = document.getElementById('ls-slot');
+      const combo = host && host.querySelector('select.goog-te-combo');
+      if (combo && slot){
+        if (!slot.querySelector('select.goog-te-combo')) {
+          if (!combo.querySelector('option[data-reset]')){
+            const opt = document.createElement('option');
+            opt.value=''; opt.setAttribute('data-reset','1');
+            opt.textContent='Original / 原文 (Reset)';
+            combo.insertBefore(opt, combo.firstChild);
+          }
+          combo.setAttribute('aria-label','Select language / 言語を選択');
+          slot.innerHTML = '';
+          slot.appendChild(combo);
+        }
+        /* Cookieに合わせて現在値を反映 */
+        const ck = (document.cookie.match(/(?:^|;)\s*googtrans=([^;]+)/)||[])[1];
+        if (ck){
+          const lang = decodeURIComponent(ck).split('/').pop() || '';
+          if (lang && combo.value !== lang) combo.value = lang;
+        }
+        combo.onchange = function(){
+          const v = combo.value;
+          if (!v) clearGT(); else setGT('ja', v);
+          location.reload();
+        };
+      }else if (tries++ < 80){ setTimeout(moveCombo, 150); }
+    })();
+  };
+
+  /* Google script を一度だけ読込 */
+  if (!document.getElementById('ls-gte')) {
+    const s = document.createElement('script');
+    s.id = 'ls-gte';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+})();
+</script>
