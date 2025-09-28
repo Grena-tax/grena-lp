@@ -1,80 +1,85 @@
-/* =========================================================
-   style.css — FINAL (CTA固定 / KYC↔料金ぴったり / クリック改善 / 言語UI)
-   ========================================================= */
+/* =========================================
+   style.css — v3.0 (CTA固定 / KYC⇄料金 / 言語UI)
+   ========================================= */
 
-/* デバッグタグ（見えたらCSS読めてる） */
-:root { --_ver: "CSS FINAL 2025-09-28"; }
+/* 0) Debug banner */
+:root{ --_ver:"CSS v3.0"; }
 .css-debug-banner{
-  position:fixed; right:10px; bottom:10px; z-index:99999;
-  background:linear-gradient(180deg,#1a56ff,#0f43cf); color:#fff;
-  font:700 12px/1 system-ui,"Noto Sans JP",sans-serif;
-  padding:.5rem .6rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2)
+  position: fixed; right:10px; bottom:10px; z-index: 99999;
+  background: linear-gradient(180deg,#1a56ff,#0f43cf);
+  color:#fff; font:700 12px/1.2 system-ui, "Noto Sans JP", sans-serif;
+  padding:.55rem .7rem; border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.2);
+  letter-spacing:.02em;
 }
-.css-debug-banner::after{ content:var(--_ver); }
+.css-debug-banner::after{ content: var(--_ver); }
 
-/* ====== ベース ====== */
+/* 1) Base / Font */
 *{ box-sizing:border-box }
-html{ -webkit-text-size-adjust:100% }
+html{ -webkit-text-size-adjust:100%; }
 html,body{
-  height:auto;
-  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif !important;
+  height:100%;
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+              Roboto,Helvetica,Arial,sans-serif !important;
+  overflow:hidden; /* ← 画面のラバーバンドを止める */
 }
+
+/* 画面を実際にスクロールさせる容器。JSで挿入される */
+#scroll-root{
+  position: fixed; inset: 0;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain; background: inherit;
+  padding-top: calc(10px + env(safe-area-inset-top) + 56px); /* ← 上部の地球儀/ハンバーガーと被らない余白 */
+}
+/* CTAがあるときの下余白（JSが --cta-h を設定） */
+#scroll-root.has-cta{
+  padding-bottom: calc(var(--cta-h,80px) + env(safe-area-inset-bottom)) !important;
+}
+
 body{ margin:0; line-height:1.7; color:#222; background:#fff; }
-
-/* 本文が右上のフローティングUI（地球儀/ハンバーガー）と被らないための上側セーフ領域 */
-:root{
-  --fab-safe-top: calc(64px + env(safe-area-inset-top)); /* 右上UIの高さぶん */
-  --cta-h: 64px;          /* JSで実寸に上書きされる */
-  --cta-gap: 10px;        /* 本文とCTAのすき間 */
-  --safe-bottom: env(safe-area-inset-bottom);
-}
-body{ padding-top: var(--fab-safe-top); }
-
-/* アンカーで飛んだときも隠れない（地球儀/ハンバーガー対策） */
-section[id], h2[id], details[id] { scroll-margin-top: calc(var(--fab-safe-top) + 6px); }
-
 img{ max-width:100%; height:auto; display:block }
 a{ color:#1178ff; text-decoration:underline; text-underline-offset:2px }
 a:hover{ color:#0e63d3 }
-.container{ width:min(1100px,92%); margin-inline:auto }
+.container{ width:min(1100px,92%); margin-inline:auto; }
 
-/* ====== セクション見出し ====== */
+/* 2) Section heading */
 section > h2{
   font-weight:800; letter-spacing:.01em; line-height:1.25;
-  font-size:clamp(22px,2.8vw,30px);
+  font-size: clamp(22px, 2.8vw, 30px);
   margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
 }
 
-/* ====== アコーディオン ====== */
+/* 3) Accordion */
 .accordion{ padding:24px 0 }
 .accordion details{
   border:1px solid #e7ebf2; border-radius:12px; background:#fff;
-  box-shadow:0 10px 30px rgba(20,35,70,.05);
+  box-shadow: 0 10px 30px rgba(20,35,70,.05);
   overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
 .accordion details+details{ margin-top:12px }
 .accordion summary{
-  list-style:none; cursor:pointer; position:relative;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px;
+  list-style:none; cursor:pointer;
+  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
   display:flex; align-items:center; gap:.6rem;
-  background:linear-gradient(180deg,#fff,#fbfcff);
+  background: linear-gradient(180deg,#fff,#fbfcff);
   border-bottom:1px solid #eef2f7;
 }
 .accordion summary::-webkit-details-marker{ display:none }
 .accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform:translateY(-1px) }
-.accordion details[open] summary{ background:linear-gradient(180deg,#f9fbff,#f4f8ff) }
+.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
+.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
 .accordion summary::after{
   content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
   width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
   line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
 }
-.accordion details[open] > summary::after{
-  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
-}
+.accordion details[open] > summary::after{ content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff; }
 .accordion .content{
   padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
 }
+.accordion .content p{ margin:12px 0 }
+.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
+.accordion .content li+li{ margin-top:.25em }
 .accordion .content table{
   width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
   font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
@@ -84,108 +89,38 @@ section > h2{
 }
 .accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
 .accordion .content tr:last-child td{ border-bottom:none }
-.accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
-.accordion .content li+li{ margin-top:.25em }
 
-/* ノート */
-.accordion .content .note, .accordion .content .abbr-note{
+/* 4) Notes */
+.accordion .content .note,.accordion .content .abbr-note{
   display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5;
 }
-.accordion .content .note::before, .accordion .content .abbr-note::before{ content:"※ "; font-weight:700; color:#475569; }
-.accordion summary .note, .accordion summary .abbr-note{ display:none !important; }
+.accordion .content .note::before,.accordion .content .abbr-note::before{ content:"※ "; font-weight:700; color:#475569; }
+.accordion summary .note,.accordion summary .abbr-note{ display:none !important; }
 
-/* ====== KYC ↔ 料金プラン（間延び解消：常に同じ余白） ====== */
-/* セクションID: #corp-setup（KYC） と #plans（料金）という前提 */
-#corp-setup, #plans{
-  padding-top:0 !important; padding-bottom:0 !important;
-  margin-top:0 !important;  margin-bottom:0 !important;
-  display:flow-root;
-}
-#corp-setup .accordion{ padding-bottom:0 !important; }
-#plans      .accordion{ padding-top:0  !important; }
+/* 5) KYC ⇄ 料金プラン：強制で詰める（有効な宣言のみ） */
+#corp-setup, #plans{ padding:0 !important; margin:0 !important; display:flow-root; }
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans .accordion{ padding-top:0 !important; margin-top:0 !important; }
+/* セクション間の余白を固定（端末差を吸収） */
+#corp-setup + #plans{ margin-top:-32px !important; }
+@media (max-width:480px){ #corp-setup + #plans{ margin-top:-36px !important; } }
+@supports (-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-40px !important; } }
 
-/* 直列時のスキマを“12px”に統一（iOSでも崩れないようflow-root済み） */
-#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
-#plans      .accordion > details:first-child{ margin-top:0 !important; }
-#corp-setup + #plans{ margin-top:12px !important; }   /* ←ここだけで調整 */
-
-/* ====== 下部「免責・キャンセル」まわりのダブり/余白を抑制 ====== */
-#disclaimer .accordion{ padding-top:16px; padding-bottom:20px }
-#disclaimer .accordion > details:first-child{ margin-top:0 !important }
-
-/* ====== ユーティリティ ====== */
+/* 6) Utilities */
 .muted{ color:#475569 }
 .text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size:clamp(20px,3.6vw,24px); margin-bottom:.75rem; font-weight:800; }
+.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
 .security-note{
-  font-size:.9em; color:#334155; background:#f1f5f9; border:1px solid #e2e8f0;
-  border-radius:10px; padding:.8rem 1rem; margin-top:.6rem;
+  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
+  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
 }
 
-/* ====== CTA を常に最下部に固定 ====== */
-body.has-cta{
-  /* JSが--cta-hを実寸で上書き。ここは本文側の下余白 */
-  padding-bottom: calc(var(--cta-h) + var(--cta-gap) + var(--safe-bottom)) !important;
-}
-.cta-bar, .fixed-cta{
-  position:fixed; left:0; right:0; bottom:0 !important; z-index:9999;
-  transform:translateZ(0); will-change:transform;
-}
-/* iPhoneホームインジケータぶん余白 */
-@supports (padding: env(safe-area-inset-bottom)){
-  .cta-bar, .fixed-cta{ padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-}
-/* ランタイムで bottom を触られても最終ガード */
-.cta-bar{ bottom:max(0px, env(safe-area-inset-bottom)) !important; }
+/* 7) Tables fallback */
+table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
+th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
+th:first-child, td:first-child{ text-align:left }
 
-/* ====== スクロール安定化（iOSラバーバンド対策） ====== */
-html, body{ overscroll-behavior-y:none; }
-
-/* #scroll-root（JSで挿入）を実際のスクロール容器にする */
-#scroll-root{
-  position:fixed; inset:0; overflow-y:auto;
-  -webkit-overflow-scrolling:touch; overscroll-behavior-y:contain; background:inherit;
-}
-#scroll-root.has-cta{ padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
-
-/* ====== 言語スイッチャ（地球儀）UI ====== */
-.lang-btn{
-  position:fixed;
-  top:calc(10px + env(safe-area-inset-top));
-  right:calc(10px + env(safe-area-inset-right) + 56px + 12px); /* 右のハンバーガーぶんを避ける */
-  z-index:10060; width:48px; height:48px; border-radius:12px;
-  display:grid; place-items:center; color:#fff; background:#111827;
-  border:1px solid rgba(255,255,255,.08); box-shadow:0 4px 14px rgba(0,0,0,.15);
-}
-.lang-btn:active{ transform:translateY(1px) }
-.lang-dialog{ position:fixed; inset:0; z-index:10050; display:none; pointer-events:none }
-.lang-dialog[data-open="1"]{ display:block; pointer-events:auto }
-.lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(1px) }
-/* パネルを中央寄せに修正（左ズレ対策） */
-.lang-panel{
-  position:absolute; left:50%; top:calc(72px + env(safe-area-inset-top));
-  transform:translateX(-50%);
-  width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
-  background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25);
-  display:flex; flex-direction:column;
-}
-.lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
-.lang-head strong{ font-weight:800 }
-.lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff }
-.lang-close:hover{ background:#f3f4f6 }
-.lang-body{ padding:12px }
-#langProxy{
-  width:100%; height:44px; border-radius:10px; border:1px solid #d1d5db; padding:0 10px; font-size:16px;
-  color:#111; background:#fff;
-}
-#langProxy option{ color:#111 }
-.lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
-
-/* Google本体は完全に隠す（クリック阻害しない） */
-#google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none }
-
-/* ====== レスポンシブ ====== */
+/* 8) Responsive */
 @media (max-width:600px){
   .accordion{ padding:20px 0 }
   .accordion summary{ padding:12px 42px 12px 12px }
@@ -193,5 +128,57 @@ html, body{ overscroll-behavior-y:none; }
   .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch }
 }
 
-/* （念のため）ハンバーガーが最前 & クリック可 */
-#menuBtn{ position:fixed; top:calc(10px + env(safe-area-inset-top)); right:10px; z-index:10070 }
+/* === CTA 常時固定（iOS対応）=== */
+.cta-bar,.fixed-cta{
+  position: fixed; left:0; right:0; bottom:0 !important; z-index: 12000;
+  transform: translateZ(0); will-change: transform;
+}
+@supports (padding: env(safe-area-inset-bottom)){
+  .cta-bar,.fixed-cta{ padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+}
+
+/* === Google翻訳の上バナー等を完全無効化（クリック妨害の根絶） === */
+iframe.goog-te-banner-frame, .goog-te-banner-frame, .goog-te-gadget-icon{ display:none !important; }
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+body{ top:0 !important; }
+#google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none; }
+
+/* === 地球儀ボタン & モーダル（常に前面/クリック可） === */
+.lang-btn{
+  position:fixed;
+  top:calc(10px + env(safe-area-inset-top));
+  right:calc(10px + env(safe-area-inset-right) + 54px);
+  z-index:13000; width:48px; height:48px; border-radius:12px;
+  display:grid; place-items:center; color:#fff; background:#111827dd;
+  border:1px solid rgba(255,255,255,.06); box-shadow:0 6px 18px rgba(0,0,0,.22);
+  backdrop-filter: blur(2px); -webkit-tap-highlight-color: transparent;
+}
+.lang-btn:active{ transform: translateY(1px); }
+
+.lang-dialog{ position:fixed; inset:0; z-index:14000; display:none; }
+.lang-dialog[data-open="1"]{ display:block; }
+.lang-backdrop{ position:absolute; inset:0; background:rgba(0,0,0,.38); backdrop-filter: blur(1px); }
+.lang-panel{
+  position:absolute; left:50%; transform:translateX(-50%);
+  top:calc(72px + env(safe-area-inset-top));
+  width:min(560px,92vw); max-height:min(70vh,520px); overflow:auto;
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.28);
+}
+.lang-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border-bottom:1px solid #e5e7eb }
+.lang-close{ width:36px; height:36px; border-radius:10px; border:1px solid #e5e7eb; background:#fff }
+.lang-close:hover{ background:#f3f4f6 }
+.lang-body{ padding:12px }
+#langProxy{ width:100%; height:44px; border-radius:10px; border:1px solid #d1d5db; padding:0 10px; font-size:16px; }
+.lang-hint{ margin-top:8px; color:#64748b; font-size:12px }
+
+/* === ハンバーガーが本文と被らない（ページ上端の余白で吸収） === */
+/* 上で #scroll-root に top padding を与えているのでOK */
+
+/* === ドロワー（メニュー）最下部がCTAに隠れないよう確保（idは想定） === */
+#menuDrawer{ padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important; }
+
+/* === CTAボタン内文言が2行化しないように === */
+.cta-btn{ white-space:nowrap; word-break:keep-all; }
+@media (max-width:420px){
+  .cta-btn{ padding:12px 10px; font-size: clamp(12px,3.5vw,14px); }
+}
