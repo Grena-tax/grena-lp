@@ -177,3 +177,26 @@ html,body{ height:100%; overflow:hidden; overscroll-behavior-y:none; }
 
 /* === フローティングUI（ハンバーガーなど）が本文を隠さない最終保険 === */
 .floating-ui{ z-index:10045; }
+/* --- FINAL PATCH (place LAST) --- */
+:root{ --top-ui:68px; }
+
+/* 本文がフローティングUIに隠れないように */
+#scroll-root{ padding-top: var(--top-ui); }
+
+/* KYC ↔ 料金：構造差や折り畳みを無効化して 12px に統一 */
+#corp-setup, #plans{ display:flow-root !important; padding:0 !important; margin:0 !important; }
+#corp-setup .accordion, #plans .accordion{ padding:0 !important; margin:0 !important; }
+#corp-setup .accordion>details:last-child{ margin-bottom:0 !important; }
+#plans .accordion>details:first-child{ margin-top:0 !important; }
+#corp-setup + #plans{ margin-top:12px !important; }
+
+/* CTAは最下部固定（高さ分はJSで余白を与える） */
+.cta-bar, .fixed-cta{ position:fixed; left:0; right:0; bottom:0 !important; z-index:9999; transform:translateZ(0); will-change:transform; }
+#scroll-root.has-cta{ padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important; }
+
+/* フローティングボタンの操作優先度を上げる */
+#langBtn, #menuBtn{ position:fixed; z-index:10060; pointer-events:auto; }
+#langDialog[aria-hidden="true"]{ pointer-events:none; }
+
+/* Google翻訳の隠し本体は絶対にクリックを邪魔させない */
+#google_translate_element{ position:fixed; left:-9999px; top:-9999px; width:0; height:0; overflow:hidden; opacity:0; pointer-events:none; }
