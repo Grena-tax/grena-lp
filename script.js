@@ -262,3 +262,14 @@ addEventListener('DOMContentLoaded', buildMenu);
   const cancel = () => { if (bar.style.transform) bar.style.transform = 'none'; };
   setInterval(cancel, 250); // 軽量ポーリング（位置はCSSが支配）
 })();
+/* KYC(#corp-setup) ⇄ 料金(#plans) の間隔を単一ルールで固定 */
+#corp-setup{ padding-bottom:0 !important; }
+#plans{ padding-top:0 !important; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#plans      .accordion > details:first-child{ margin-top:0 !important; }
+#corp-setup + #plans{ margin-top:12px !important; }      /* PC/標準 */
+@media (max-width:480px){
+  #corp-setup + #plans{ margin-top:8px !important; }     /* SP */
+}
+/* 末尾セクションがCTAに隠れない（スクロール余白） */
+#disclaimer{ scroll-margin-bottom: calc(var(--cta-h,72px) + 12px); }
