@@ -180,3 +180,29 @@ body{ top:0 !important }
   .accordion summary{ padding:12px 42px 12px 12px }
   .accordion .content{ padding:12px 12px 14px }
 }
+/* ===== CTA HARD-LOCK (always fixed at bottom) ===== */
+.fixed-cta,
+.cta-bar,
+#ctaBar{
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 9999 !important;
+  /* どんなJSよりも優先して“動かない” */
+  transform: none !important;
+  background: #ffffffcc;
+  backdrop-filter: saturate(140%) blur(8px);
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* iPhoneのホームインジケータに被らない */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .fixed-cta,
+  .cta-bar,
+  #ctaBar{ padding-bottom: calc(10px + env(safe-area-inset-bottom)) !important; }
+}
+
+/* 本文側にCTAぶんの下余白を必ず確保（#scroll-root優先） */
+#scroll-root{ padding-bottom: calc(var(--cta-h,72px) + env(safe-area-inset-bottom)) !important; }
+body.has-cta{ padding-bottom: calc(var(--cta-h,72px) + env(safe-area-inset-bottom)) !important; }
