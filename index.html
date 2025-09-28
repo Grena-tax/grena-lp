@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 上部ピンクバー（読込確認用。不要なら削除OK） -->
+<!-- デバッグ目印（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- メインCSS（★差し替え済み） -->
+<!-- 外部CSS（このまま） -->
 <link rel="stylesheet" href="./style.css?v=20250929-safe" id="main-css">
 </head>
 <body>
@@ -16,15 +16,18 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：翻訳ボタン（地球儀）＆ハンバーガー -->
+<!-- 右上：言語切替ボタン（ハンバーガーの左） -->
+<button id="ls-btn" class="ls-btn" aria-label="言語を選択">
+  <!-- 地球儀アイコン（インラインSVG） -->
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+    <path fill="currentColor" d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm7.93 9h-3.09a15.8 15.8 0 0 0-1.02-5.02A8.02 8.02 0 0 1 19.93 11ZM15.3 11h-6.6c.19-2.21.92-4.27 2.02-5.73.42-.54.85-.87 1.28-.87s.86.33 1.28.87c1.1 1.46 1.83 3.52 2.02 5.73Zm-9.23 0H2.98a8.02 8.02 0 0 1 4.14-5.02A15.8 15.8 0 0 0 6.07 11Zm0 2a15.8 15.8 0 0 0 1.05 5.02A8.02 8.02 0 0 1 2.98 13h3.09Zm2.93 0h6.6c-.19 2.21-.92 4.27-2.02 5.73-.42.54-.85.87-1.28.87s-.86-.33-1.28-.87c-1.1-1.46-1.83-3.52-2.02-5.73Zm9.23 0a8.02 8.02 0 0 1-4.14 5.02c.46-1.58.74-3.24.82-5.02h3.32Z"/>
+  </svg>
+</button>
+
+<!-- 右上：ハンバーガー -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
-<button id="ls-btn" aria-controls="ls-dlg" aria-expanded="false" aria-label="言語を選択">
-  <!-- 地球儀アイコン（生SVG） -->
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2Zm7.93 9h-3.19a15.2 15.2 0 0 0-1.01-5.04A8.03 8.03 0 0 1 19.93 11ZM12 4c.9 1.3 1.61 3.3 1.93 6H10.1c.32-2.7 1.03-4.7 1.9-6ZM8.27 5.96A15.2 15.2 0 0 0 7.26 11H4.07A8.03 8.03 0 0 1 8.27 5.96Zm-4.2 7.04h3.19c.22 1.87.74 3.63 1.48 5.04A8.03 8.03 0 0 1 4.07 13Zm7.93 7c-.9-1.3-1.61-3.3-1.93-6h3.83c-.32 2.7-1.03 4.7-1.9 6Zm3.73-1.96c.74-1.41 1.26-3.17 1.48-5.04h3.19a8.03 8.03 0 0 1-4.67 5.04ZM14.9 11H9.1c.32-2.28.98-4.22 1.9-5.64.92 1.42 1.58 3.36 1.9 5.64Z"/></svg>
-</button>
-
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
@@ -36,28 +39,26 @@
   </aside>
 </nav>
 
-<!-- ▼ 翻訳モーダル（地球儀の中身） -->
+<!-- ===== 言語モーダル（Google翻訳セレクトをここに移植） ===== -->
 <div id="ls-dlg" class="ls-dlg" data-open="0" aria-hidden="true">
-  <div id="ls-back" class="ls-back" tabindex="-1"></div>
+  <div id="ls-back" class="ls-back" role="button" aria-label="閉じる"></div>
   <div class="ls-panel" role="dialog" aria-modal="true" aria-labelledby="ls-title">
     <div class="ls-head">
       <strong id="ls-title">Select language / 言語を選択</strong>
       <button id="ls-close" class="ls-close" aria-label="閉じる">×</button>
     </div>
     <div class="ls-body">
-      <div id="ls-slot">
-        <!-- Google翻訳のセレクトをここに移植 -->
-        <select class="goog-te-combo" aria-label="Language"></select>
-      </div>
+      <div id="ls-slot"><!-- Googleの<select>を移植 --></div>
       <p class="ls-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
     </div>
   </div>
 </div>
-<!-- Google側の本体（画面外に退避し、selectだけ拝借） -->
-<div id="google_translate_element"></div>
+
+<!-- Googleの本体（画面外に退避）-->
+<div id="google_translate_element" aria-hidden="true"></div>
 
 <!-- =========================
-  法人設立（以下、本文はあなたの元データと同じ構成）
+  法人設立セクション
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜OECD・PwC準拠／MoU契約／完全オンライン</h2>
@@ -251,12 +252,13 @@
           </div>
         </details>
 
+        <!-- オプション -->
         <details>
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
             <ul>
-              <li><strong>Nominee構成（代表者/株主名義）</strong>：€2,500/年 <span class="text-sm">（税込／2025年8月時点）</span></li>
-              <li><strong>LP＋.geドメイン追加（2年目以降）</strong>：¥250,000 <span class="text-sm">（税込）</span></li>
+              <li><strong>Nominee構成（代表者/株主名義）</strong>：€2,500/年 <span class="text-sm">（税込／2025年8月時点）</span><br><span class="text-sm muted">MoU＋委任状＋支配者証明で正規構成。<strong>UBO開示が法的に求められます。</strong></span></li>
+              <li><strong>LP＋.geドメイン追加（2年目以降）</strong>：¥250,000 <span class="text-sm">（税込）</span><br><span class="text-sm muted">初年度「基本プラン」ご利用でLPやドメイン未整備の方向け。</span></li>
               <li><strong>RS.ge税務ポータル開設サポート（任意）</strong>：¥33,000〜</li>
               <li><strong>公証／アポスティーユ</strong>：¥15,000〜／書類</li>
               <li><strong>書類国際郵送（DHL）</strong>：¥5,000〜</li>
@@ -339,6 +341,18 @@
       </div>
     </details>
 
+    <details>
+      <summary>このサービスが向いている方</summary>
+      <div class="content">
+        <ul>
+          <li>海外クライアントと直接契約したいフリーランス</li>
+          <li>副業を「国際事業」として正式登録したい個人</li>
+          <li>渡航せずに海外ビジネス基盤を持ちたい人</li>
+          <li>節税よりも「法制度準拠の安心感」を重視する人</li>
+        </ul>
+      </div>
+    </details>
+
     <details open>
       <summary>サポート内容と料金</summary>
       <div class="content">
@@ -363,6 +377,14 @@
             <span>日英喬／全言語 対応</span>
           </div>
         </div>
+
+        <h5>別途費用（必要に応じて実費）</h5>
+        <ul>
+          <li>書類国際郵送（DHL）：¥5,000〜</li>
+          <li>公証／アポスティーユ：¥15,000〜／書類</li>
+          <li>RS.ge税務ポータル開設サポート（任意）：¥33,000〜</li>
+        </ul>
+        <span class="note">※ RS.ge＝税務ポータル／DHL＝国際宅配便</span>
       </div>
     </details>
 
@@ -414,6 +436,7 @@
           <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着10社</span></div>
           <div class="meta"><small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small></div>
         </div>
+        <span class="note">※ IE＝Individual Entrepreneur</span>
       </div>
     </details>
 
@@ -441,6 +464,7 @@
           <div class="step">制度整備</div>
         </div>
         <p class="text-sm muted">※ 指標は変動します。投資判断は各自でご確認ください。</p>
+        <span class="note">※ IMF＝国際通貨基金／ADB＝アジア開発銀行／EBRD＝欧州復興開発銀行／AIIB＝アジアインフラ投資銀行／EIB＝欧州投資銀行</span>
       </div>
     </details>
 
@@ -461,6 +485,7 @@
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
+        <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
 
@@ -474,6 +499,7 @@
           <li>書類原本の国際郵送（PDF不可）</li>
         </ul>
         <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
       </div>
     </details>
 
@@ -498,6 +524,90 @@
       </div>
     </details>
 
+    <details>
+      <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
+      <div class="content">
+        <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は特定の条件（金利・為替など）に基づいた仮定の計算例であり、将来の運用成果を約束・保証するものではありません。金利、為替レート、税制は変動します。</p>
+        <table>
+          <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
+          <tbody>
+            <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td>+¥398,860</td></tr>
+            <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,547, -</td><td>+約¥227,000</td></tr>
+            <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375, -</td><td>+約¥55,000</td></tr>
+            <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,290, -</td><td>約▲¥30,000</td></tr>
+            <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889, -</td><td>+約¥569,000</td></tr>
+          </tbody>
+        </table>
+        <ul>
+          <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
+          <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
+        </ul>
+        <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>複利の力（年10%複利・概算）</summary>
+      <div class="content">
+        <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
+        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は一定の前提条件に基づく参考例で、将来の結果を保証するものではありません。税・為替・商品条件により実績は異なります。</p>
+        <table>
+          <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
+          <tbody>
+            <tr><td>1年</td><td>1,100,000</td><td>1.10倍</td></tr>
+            <tr><td>2年</td><td>1,210,000</td><td>1.21倍</td></tr>
+            <tr><td>3年</td><td>1,331,000</td><td>1.33倍</td></tr>
+            <tr><td>4年</td><td>1,464,100</td><td>1.46倍</td></tr>
+            <tr><td>5年</td><td>1,610,510</td><td>1.61倍</td></tr>
+            <tr><td>6年</td><td>1,771,561</td><td>1.77倍</td></tr>
+            <tr><td>7年</td><td>1,948,717</td><td><strong>1.95倍（約2倍）</strong></td></tr>
+          </tbody>
+        </table>
+        <table>
+          <thead><tr><th>到達倍率</th><th>目安年数</th><th>残高（円・概算）</th></tr></thead>
+          <tbody>
+            <tr><td>5倍</td><td>約17年</td><td>5,000,000</td></tr>
+            <tr><td>10倍</td><td>約25年</td><td>10,000,000</td></tr>
+            <tr><td>30倍</td><td>約36年</td><td>30,000,000</td></tr>
+            <tr><td>50倍</td><td>約42年</td><td>50,000,000</td></tr>
+            <tr><td>100倍</td><td>約49年</td><td>100,000,000</td></tr>
+          </tbody>
+        </table>
+        <p class="text-sm muted">※ 上記は単純計算の目安です。税・為替・商品条件により実績は異なります。将来の成果は保証されません。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>よくある質問（Q&A）</summary>
+      <div class="content">
+        <ul>
+          <li>Q. 元本保証は？ → A. GEL 30,000 まで預金保護（自動）。</li>
+          <li>Q. 為替リスクは？ → A. 為替が大幅下落しない限り利息がクッションに。分散が有効。</li>
+          <li>Q. 出金方法は？ → A. SWIFT送金／現地ATM 等。</li>
+          <li>Q. 審査が落ちたら？ → A. 銀行判断のため保証不可。必要に応じて再申請の案内可。</li>
+        </ul>
+        <span class="note">※ SWIFT＝国際送金網</span>
+      </div>
+    </details>
+
+    <details>
+      <summary>進め方（スケジュール目安）</summary>
+      <div class="content">
+        <ol>
+          <li>書類の公証＋アポスティーユ取得（約5〜7営業日）</li>
+          <li>原本郵送＆現地処理（約5〜7日）</li>
+          <li>口座開設・SMS設定（開設後にeSIM納品可）</li>
+        </ol>
+        <div class="progress-steps">
+          <div class="step completed">1. 書類準備</div>
+          <div class="step">2. 申請</div>
+          <div class="step">3. 開設・運用</div>
+        </div>
+        <p class="text-sm muted">※ 金利・条件・必要書類は銀行やタイミングで変わります。最新情報は都度ご案内します。</p>
+      </div>
+    </details>
+
   </div>
 </section>
 
@@ -506,26 +616,37 @@
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
+
   <div class="accordion">
     <details>
       <summary>免責事項（必ずお読みください）</summary>
       <div class="content">
         <ul>
-          <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>であり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
-          <li>実際の銀行口座開設は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
-          <li>当社の料金は<strong>紹介料・サポート料</strong>で、銀行手数料や預入金とは関係ありません。</li>
-          <li>税務・法務の<strong>助言</strong>は行いません。税理士・弁護士へ必ずご相談ください。</li>
-          <li>金利・条件・審査は変動し、<strong>開設や条件を保証できません</strong>。</li>
+          <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>を提供するものであり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
+          <li>実際の銀行口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行の規程に基づき直接実施します。</li>
+          <li>当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。</li>
+          <li>税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
+          <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
+          <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
+          <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
+          <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
         </ul>
       </div>
     </details>
+
     <details>
       <summary>キャンセルポリシー（返金条件）</summary>
       <div class="content">
         <ul>
-          <li>依頼開始前：返金手数料（1万円）差引きで返金</li>
-          <li>依頼開始後：お支払額の100%</li>
-          <li>当社の明確な不履行がある場合は返金・再対応</li>
+          <li>お客様のご都合によるキャンセルは、次の区分によりキャンセル料を申し受けます。
+            <ul>
+              <li>当社が現地パートナーへの業務依頼を開始前：返金手数料（1万円）を差し引いた額を返金</li>
+              <li>当社が現地パートナーへの業務依頼を開始後：お支払いいただいた金額の100%</li>
+            </ul>
+          </li>
+          <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
+          <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
+          <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
         </ul>
       </div>
     </details>
@@ -533,27 +654,15 @@
 </section>
 
 <!-- 画面最下部 固定CTA -->
-<div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
+<div class="fixed-cta cta-bar" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
-    <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
-    <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
+    <a class="btn neutral cta-btn" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
+    <a class="btn secondary cta-btn" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
+    <a class="btn success cta-btn" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
   </div>
 </div>
 
-<!-- Google Translate ライブラリ -->
-<script>
-  window.googleTranslateElementInit = function(){
-    new google.translate.TranslateElement({
-      pageLanguage: 'ja',
-      autoDisplay: false,
-      includedLanguages: 'en,ja,ko,zh-CN,zh-TW,th,vi,ru,de,fr,es,it,pt,ar'
-    }, 'google_translate_element');
-  };
-</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<!-- メインJS（★差し替え済み） -->
+<!-- JS -->
 <script src="./script.js?v=20250929-safe"></script>
 </body>
 </html>
