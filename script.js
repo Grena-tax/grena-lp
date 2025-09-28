@@ -1,140 +1,208 @@
 /* =========================================
-   script.js — v3.0
-   - CTAを絶対に固定（bottomはCSSのみ。JSはtransform補正だけ）
-   - #scroll-root を自動挿入して実スクロールをそこで行う
-   - KYC/料金のDOMは触らない（詰めはCSSで完結）
-   - 言語モーダル：Googleの読込が遅い場合はフォールバックを自動注入
+   script.js — v3.2 (CTA lock, menu builder, language UI)
    ========================================= */
-
 'use strict';
 
-/* ===== 申込フォームURL ===== */
-const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
+/* ====== 定数 ====== */
+const FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-/* ===== util ===== */
-const $ = (sel,root=document)=>root.querySelector(sel);
-const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
+/* ====== 小ユーティリティ ====== */
+const slug = (t)=> (t||'').toLowerCase()
+  .replace(/[（）()\[\]【】]/g,' ')
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g,'-')
+  .replace(/-+/g,'-').replace(/^-|-$/g,'');
 
-/* === 1) スクロール容器 #scroll-root を作り、本文を全部入れる === */
+/* ====== 画面固定＋スクロール容器作成 ====== */
 (function mountScrollRoot(){
-  if ($('#scroll-root')) return;
+  if (document.getElementById('scroll-root')) return;
+
   const body = document.body;
-  const cta  = $('.fixed-cta, .cta-bar, #ctaBar');
+  const cta  = document.querySelector('.cta-bar, .fixed-cta, #ctaBar');
   const keep = new Set([cta]);
 
+  // スクロール容器
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
-  if (cta) body.insertBefore(wrap, cta); else body.appendChild(wrap);
 
-  // グローバルUIは後でbody直下に生成するので退避不要
-  Array.from(body.childNodes).forEach(n => {
-    if (!keep.has(n) && n !== wrap) wrap.appendChild(n);
+  // 先頭に本文とUIのスペーサーを挿入（フローティングUIと被らない）
+  const spacer = document.createElement('div');
+  spacer.className = 'top-spacer';
+  wrap.appendChild(spacer);
+
+  // CTA より上に入れる
+  cta ? body.insertBefore(wrap, cta) : body.appendChild(wrap);
+
+  // 既存ノードを #scroll-root へ（CTAとメニュー/言語UIは除外）
+  const uiIds = ['menuBtn','menuDrawer','langBtn','langDialog'];
+  Array.from(body.childNodes).forEach(n=>{
+    if (n.nodeType !== 1) return; // elementのみ
+    if (keep.has(n)) return;
+    if (uiIds.some(id => n.id === id || (n.querySelector && n.querySelector('#'+id)))) return;
+    wrap.appendChild(n);
   });
 })();
 
-/* === 2) CTA高さ → 本文側の下余白（CSS変数） === */
+/* ====== CTA の高さ → 本文余白へ反映（bottomはCSSで固定） ====== */
 function adjustCtaPadding(){
-  const bar = $('.cta-bar') || $('#ctaBar') || $('.fixed-cta');
+  const bar = document.querySelector('.cta-bar, .fixed-cta, #ctaBar');
   if (!bar) return;
   const h = Math.ceil(bar.getBoundingClientRect().height);
-  document.documentElement.style.setProperty('--cta-h', h + 'px');
-  $('#scroll-root')?.classList.add('has-cta');
+  document.documentElement.style.setProperty('--cta-h', h+'px');
+  const scroller = document.getElementById('scroll-root');
+  scroller && scroller.classList.add('has-cta');
 }
 addEventListener('load', adjustCtaPadding);
 addEventListener('resize', adjustCtaPadding);
 
-/* === 3) CTAを“常に”画面最下部へロック（iOSホームバー/ズームUIでのズレ補正） === */
-(function lockCtaToBottomFreeze(){
-  const bar = $('.fixed-cta') || $('.cta-bar') || $('#ctaBar');
-  if (!bar || !window.visualViewport) return;
-
-  const scroller = $('#scroll-root');
-  let stable = 0;
-  const apply = () => {
-    const vv  = window.visualViewport;
-    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
-    const maxScroll = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
-    const y = scroller.scrollTop || 0;
-    const isBouncingBottom = y > maxScroll + 1;
-
-    if (!isBouncingBottom) stable = uiGap;
-    const use = isBouncingBottom ? stable : uiGap;
-
-    const tx = `translate3d(0, ${use}px, 0)`;
-    if (bar.style.transform !== tx) bar.style.transform = tx;
-  };
-  apply();
-  visualViewport.addEventListener('resize', apply);
-  visualViewport.addEventListener('scroll', apply);
-  scroller.addEventListener('scroll', apply, { passive:true });
-  addEventListener('orientationchange', () => setTimeout(apply, 60));
-})();
-
-/* === 4) ページ内リンクのスムーススクロール（#scroll-root基準） === */
-document.addEventListener('click', (e)=>{
-  const a = e.target.closest('a[href^="#"]');
-  if(!a) return;
-  const id = a.getAttribute('href');
-  const target = document.querySelector(id);
-  if(!target) return;
-  e.preventDefault();
-  target.scrollIntoView({ behavior:'smooth', block:'start' });
-
-  const first = target.querySelector('details');
-  if (first && !/disclaimer/.test(target.id)) first.open = true;
-
-  history.pushState(null,'',id);
-});
-
-/* === 5) トップへ === */
-$('#toTop')?.addEventListener('click', (e)=>{
-  if (!$('#page-top')) {
+/* ====== 「トップへ」 ====== */
+document.getElementById('toTop')?.addEventListener('click', (e)=>{
+  if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    const scroller = $('#scroll-root') || window;
-    scroller.scrollTo?.({ top: 0, behavior: 'smooth' });
+    const sc = document.getElementById('scroll-root') || window;
+    sc.scrollTo?.({ top:0, behavior:'smooth' });
   }
 });
 
-/* === 6) ハンバーガー開閉（既存ID想定） === */
-const menuBtn     = $('#menuBtn');
-const menuDrawer  = $('#menuDrawer');
-const menuClose   = $('#menuClose');
-const menuOverlay = $('#menuBackdrop');
+/* ====== 申込ボタン ====== */
+document.getElementById('applyNow')?.addEventListener('click', (e)=>{
+  e.preventDefault();
+  if (!FORM_URL){ alert('フォームURLが未設定です'); return; }
+  window.open(FORM_URL, '_blank', 'noopener');
+});
 
-const openMenu  = () => { document.documentElement.classList.add('menu-open'); menuDrawer?.setAttribute('aria-hidden','false'); menuBtn?.setAttribute('aria-expanded','true'); setTimeout(()=>menuClose?.focus(),0); };
-const closeMenu = () => { document.documentElement.classList.remove('menu-open'); menuDrawer?.setAttribute('aria-hidden','true');  menuBtn?.setAttribute('aria-expanded','false'); menuBtn?.focus(); };
-menuBtn?.addEventListener('click', ()=> document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu());
-menuClose?.addEventListener('click', closeMenu);
-menuOverlay?.addEventListener('click', closeMenu);
+/* ====== ハンバーガー開閉 ====== */
+const btn        = document.getElementById('menuBtn');
+const drawer     = document.getElementById('menuDrawer');
+const closeBt    = document.getElementById('menuClose') || drawer?.querySelector('[data-close]');
+const overlay    = document.getElementById('menuBackdrop') || drawer?.querySelector('.backdrop');
+const groupsRoot = document.getElementById('menuGroups'); // 無ければ後で作る
+
+const openMenu = () => {
+  document.documentElement.classList.add('menu-open');
+  drawer?.setAttribute('aria-hidden','false');
+  btn?.setAttribute('aria-expanded','true');
+  setTimeout(()=> closeBt?.focus(), 0);
+};
+const closeMenu = () => {
+  document.documentElement.classList.remove('menu-open');
+  drawer?.setAttribute('aria-hidden','true');
+  btn?.setAttribute('aria-expanded','false');
+  btn?.focus();
+};
+btn?.addEventListener('click', ()=> document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu());
+closeBt?.addEventListener('click', closeMenu);
+overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* === 7) 言語スイッチャ（地球儀＋モーダル） === */
+/* ====== メニュー（ハンバーガー内）自動生成（無ければ差し込み） ====== */
+const EXCLUDE = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
+function ensureMenuRoot(){
+  if (document.getElementById('menuGroups')) return document.getElementById('menuGroups');
+  if (!drawer) return null;
+  const host = drawer.querySelector('.menu-body') || drawer;
+  const div = document.createElement('div');
+  div.id = 'menuGroups';
+  host.appendChild(div);
+  return div;
+}
+
+function buildMenu(){
+  const host = ensureMenuRoot();
+  if (!host) return;
+
+  const sections = Array.from(document.querySelectorAll('section[id]'));
+  const frag = document.createDocumentFragment();
+  let i = 1;
+
+  sections.forEach(sec=>{
+    const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
+    if (!details.length) return;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'menu-group';
+
+    const h2 = sec.querySelector(':scope > h2');
+    if (h2 && sec.id !== 'plans'){
+      const h4 = document.createElement('h4');
+      h4.textContent = (h2.textContent||'').trim();
+      wrap.appendChild(h4);
+    }else{
+      wrap.classList.add('no-title');
+    }
+
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    details.forEach(d=>{
+      const s = d.querySelector(':scope > summary');
+      const text = s?.textContent?.trim() || '';
+      if (EXCLUDE.some(x=> text.includes(x))) return;
+
+      if (!d.id) d.id = `acc-${i++}-${slug(text) || 'item'}`;
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = `#${d.id}`;
+      a.textContent = text;
+      a.addEventListener('click', (e)=>{
+        e.preventDefault();
+        closeMenu();
+        d.open = true;
+        d.scrollIntoView({ behavior:'smooth', block:'start' });
+        history.pushState(null,'',`#${d.id}`);
+      });
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    wrap.appendChild(ul);
+    frag.appendChild(wrap);
+  });
+
+  host.textContent = '';
+  host.appendChild(frag);
+}
+addEventListener('DOMContentLoaded', buildMenu);
+
+/* ====== KYC ↔ 料金のギャップ最終ガード（計算でズレても正す） ====== */
+function normalizeKycPlansGap(){
+  const a = document.getElementById('corp-setup');
+  const b = document.getElementById('plans');
+  if (!a || !b) return;
+  // 期待値 12px
+  const desired = 12;
+  const rectA = a.getBoundingClientRect();
+  const rectB = b.getBoundingClientRect();
+  if (rectB.top - rectA.bottom !== desired){
+    b.style.marginTop = desired + 'px';
+  }
+}
+addEventListener('load', normalizeKycPlansGap);
+addEventListener('resize', normalizeKycPlansGap);
+
+/* ====== Language Switcher（地球儀ボタン＋モーダル） ====== */
 (function initLanguageUI(){
+  // 既に作成済みなら抜ける
+  if (document.getElementById('langBtn')) return;
+
   // ボタン
   const btn = document.createElement('button');
-  btn.id = 'langBtn';
-  btn.className = 'lang-btn';
-  btn.type = 'button';
-  btn.title = 'Language';
-  btn.setAttribute('aria-haspopup','dialog');
-  btn.setAttribute('aria-expanded','false');
+  btn.id = 'langBtn'; btn.className = 'lang-btn floating-ui'; btn.type = 'button';
+  btn.title = '言語 / Language'; btn.setAttribute('aria-haspopup','dialog'); btn.setAttribute('aria-expanded','false');
   btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>`;
   document.body.appendChild(btn);
 
-  // モーダル
+  // ダイアログ
   const dlg = document.createElement('div');
-  dlg.id = 'langDialog';
-  dlg.className = 'lang-dialog';
-  dlg.setAttribute('aria-hidden','true');
-  dlg.setAttribute('role','dialog');
-  dlg.setAttribute('aria-modal','true');
+  dlg.id = 'langDialog'; dlg.className = 'lang-dialog'; dlg.setAttribute('aria-hidden','true'); dlg.setAttribute('role','dialog'); dlg.setAttribute('aria-modal','true');
   dlg.innerHTML = `
     <div class="lang-backdrop" id="langBackdrop"></div>
     <div class="lang-panel" role="document">
       <div class="lang-head">
         <strong>Select language / 言語を選択</strong>
-        <button id="langClose" class="lang-close" type="button" aria-label="Close">×</button>
+        <button id="langClose" class="lang-close" type="button" aria-label="閉じる">×</button>
       </div>
       <div class="lang-body">
         <select id="langProxy" aria-label="Select Language">
@@ -146,67 +214,74 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
     </div>`;
   document.body.appendChild(dlg);
 
-  const closeBtn = $('#langClose', dlg);
-  const backdrop = $('#langBackdrop', dlg);
-  const proxySel = $('#langProxy', dlg);
+  const closeBtn = dlg.querySelector('#langClose');
+  const backdrop = dlg.querySelector('#langBackdrop');
+  const proxySel = dlg.querySelector('#langProxy');
 
-  const open = ()=>{ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=>closeBtn?.focus(),0); };
-  const close= ()=>{ dlg.removeAttribute('data-open');  dlg.setAttribute('aria-hidden','true');  btn.setAttribute('aria-expanded','false'); btn.focus(); };
+  function open(){ dlg.setAttribute('data-open','1'); dlg.setAttribute('aria-hidden','false'); btn.setAttribute('aria-expanded','true'); setTimeout(()=> closeBtn?.focus(),0); cloneOptionsToProxy(true); }
+  function close(){ dlg.removeAttribute('data-open'); dlg.setAttribute('aria-hidden','true'); btn.setAttribute('aria-expanded','false'); btn.focus(); }
 
   btn.addEventListener('click', ()=> dlg.getAttribute('data-open') ? close() : open());
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
-  document.addEventListener('click', (e)=>{ if(!dlg.getAttribute('data-open')) return; if(e.target.closest('#langDialog')||e.target.closest('#langBtn')) return; close(); });
 
-  // Google 本体のホスト（不可視）
-  const host = document.createElement('div');
-  host.id = 'google_translate_element';
-  document.body.appendChild(host);
+  // Google本体（hidden host）
+  const host = document.createElement('div'); host.id = 'google_translate_element'; document.body.appendChild(host);
 
-  // Google 初期化
+  // Google callback
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({ pageLanguage:'ja', autoDisplay:false }, 'google_translate_element');
     }catch(e){}
-    cloneOptionsToProxy();
+    cloneOptionsToProxy(false);
   };
-  // 読込（UIは英語）
+
+  // loader
   const s = document.createElement('script');
   s.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en';
-  s.defer = true;
-  document.head.appendChild(s);
+  s.defer = true; document.head.appendChild(s);
 
-  // コンボの中身をプロキシに複製（失敗時はフォールバック注入）
-  function cloneOptionsToProxy(){
-    let tries = 0, done = false;
-    const fallback = [
-      ['en','English'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
-      ['ko','Korean'],['th','Thai'],['vi','Vietnamese'],['id','Indonesian'],
-      ['ru','Russian'],['es','Spanish'],['fr','French'],['de','German']
-    ];
+  // プロキシへオプション複製
+  function cloneOptionsToProxy(force){
+    let tries = 0;
     (function tick(){
-      const combo = $('#google_translate_element select.goog-te-combo');
+      const combo = document.querySelector('#google_translate_element select.goog-te-combo');
       if (!combo){
         if (tries++ < 60){ setTimeout(tick, 120); return; }
-        // Fallback（60回 ≒7.2秒待っても来ないとき）
-        const keepReset = proxySel.querySelector('option[value="__RESET"]');
-        proxySel.innerHTML = ''; if (keepReset) proxySel.appendChild(keepReset);
-        fallback.forEach(([v,t])=>{ const o=document.createElement('option'); o.value=v; o.textContent=t; proxySel.appendChild(o); });
-        wireProxy(); done = true; return;
+        return;
       }
-      if (done) return;
+      if (!force && proxySel.options.length > 1) return; // 既に複製済み
+
       const keepReset = proxySel.querySelector('option[value="__RESET"]');
       proxySel.innerHTML = ''; if (keepReset) proxySel.appendChild(keepReset);
-      Array.from(combo.options).forEach((op,idx)=>{ if(idx===0) return; const o=document.createElement('option'); o.value=op.value; o.textContent=op.textContent; proxySel.appendChild(o); });
-      wireProxy();
+
+      Array.from(combo.options).forEach((op, idx)=>{
+        if (idx===0) return;
+        const o = document.createElement('option');
+        o.value = op.value; o.textContent = op.textContent;
+        proxySel.appendChild(o);
+      });
+
+      // 現在の言語状態に追従
+      const lang = getCurrentLangFromCookie();
+      proxySel.value = lang || '__RESET';
+
+      // 変更 → 本体反映
+      proxySel.onchange = function(){
+        const val = this.value;
+        const combo = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!combo) return;
+        if (val === '__RESET'){ clearGT(); combo.value=''; combo.dispatchEvent(new Event('change')); return; }
+        combo.value = val; combo.dispatchEvent(new Event('change'));
+      };
     })();
   }
 
   function getCurrentLangFromCookie(){
     const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
     if (!m) return '';
-    try{ const v = decodeURIComponent(m[1]).split('/'); return v[2] || ''; }catch(_){ return ''; }
+    try{ const v = decodeURIComponent(m[1]).split('/'); return v[2] || ''; }catch(e){ return ''; }
   }
   function clearGT(){
     const d = location.hostname.replace(/^www\./,'');
@@ -214,36 +289,4 @@ document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); })
     document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.${d}`;
     document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${d}`;
   }
-  function wireProxy(){
-    const combo = $('#google_translate_element select.goog-te-combo');
-    const current = getCurrentLangFromCookie() || '';
-    proxySel.value = current || '__RESET';
-    proxySel.onchange = function(){
-      const val = this.value;
-      if (val === '__RESET'){ clearGT(); if(combo){ combo.value=''; combo.dispatchEvent(new Event('change')); } return; }
-      if (combo){ combo.value = val; combo.dispatchEvent(new Event('change')); }
-    };
-  }
-
-  // モーダルを開くたびに最新状態へ同期
-  btn.addEventListener('click', cloneOptionsToProxy);
 })();
-
-/* === 8) 申込ボタン === */
-$('#applyNow')?.addEventListener('click', (e)=>{
-  e.preventDefault();
-  if (!FORM_URL){ alert('フォームURLが未設定です'); return; }
-  window.open(FORM_URL,'_blank','noopener');
-});
-
-/* === 9) 免責/キャンセルの重複カット（本文側のみ残す） === */
-function cutOnlyBottomDup(){
-  $('#site-disclaimer')?.remove();
-  $$('details.disclaimer').forEach(d=>d.remove());
-  $$('details').forEach(d=>{
-    const t = d.querySelector('summary')?.textContent?.trim() || '';
-    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
-  });
-}
-document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
-addEventListener('load', cutOnlyBottomDup);
