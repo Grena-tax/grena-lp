@@ -271,3 +271,219 @@ function mountTranslateSelect(){
   window.addEventListener('scroll',          apply, { passive: true });
   window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
+/* =========================================================
+   Language Switcher — FULL JS (append-only / no layout change)
+   ペースト先：既存 script.js の一番下
+   ========================================================= */
+(() => {
+  if (window.__LANG_SW_INIT__) return; // 二重読込ガード
+  window.__LANG_SW_INIT__ = true;
+
+  /* ---------- 1) UI を自動で挿入（ボタン＋モーダル＋隠しGT容器） ---------- */
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+  // 地球儀ボタン
+  if (!$('#ls-btn')) {
+    const btn = document.createElement('button');
+    btn.id = 'ls-btn';
+    btn.type = 'button';
+    btn.setAttribute('aria-label', '言語を選択');
+    btn.innerHTML =
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2Zm7.9 9h-3.38a15.2 15.2 0 0 0-1.2-5.03A8.02 8.02 0 0 1 19.9 11ZM12 4.1c.93 0 2.4 1.87 3.11 5.9H8.89c.7-4.03 2.18-5.9 3.11-5.9Zm-3.32 1A15.2 15.2 0 0 0 7.48 11H4.1a8.02 8.02 0 0 1 4.58-5.9ZM4.1 13h3.38c.27 1.86.78 3.64 1.4 5.03A8.02 8.02 0 0 1 4.1 13Zm7.9 6.9c-.93 0-2.4-1.87-3.11-5.9h6.22c-.7 4.03-2.18 5.9-3.11 5.9Zm3.32-1a15.2 15.2 0 0 0 1.2-5.03h3.38a8.02 8.02 0 0 1-4.58 5.03Z"/></svg>';
+    document.body.appendChild(btn);
+  }
+
+  // モーダル
+  if (!$('#ls-dlg')) {
+    const dlg = document.createElement('div');
+    dlg.id = 'ls-dlg';
+    dlg.setAttribute('role', 'dialog');
+    dlg.setAttribute('aria-modal', 'true');
+    dlg.setAttribute('aria-label', '言語を選択');
+    dlg.dataset.open = '0';
+    dlg.innerHTML = `
+      <div class="ls-back" id="ls-back"></div>
+      <div class="ls-panel" role="document">
+        <div class="ls-head">
+          <strong>Select language / 言語を選択</strong>
+          <button class="ls-close" id="ls-close" aria-label="閉じる">×</button>
+        </div>
+        <div class="ls-body">
+          <div id="ls-slot"><select class="goog-te-combo" disabled><option>Loading…</option></select></div>
+          <p class="ls-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+          <div style="margin-top:10px;display:flex;gap:8px">
+            <button type="button" id="ls-reset" class="ls-close" style="height:36px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;">Original / 原文に戻す</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(dlg);
+  }
+
+  // Google Translate の隠し置き場
+  if (!$('#google_translate_element')) {
+    const ghost = document.createElement('div');
+    ghost.id = 'google_translate_element';
+    ghost.setAttribute('aria-hidden', 'true');
+    Object.assign(ghost.style, {
+      position: 'fixed', left: '-9999px', top: '-9999px', width: '0', height: '0',
+      overflow: 'hidden', opacity: '0', pointerEvents: 'none'
+    });
+    document.body.appendChild(ghost);
+  }
+
+  const btn = $('#ls-btn');
+  const dlg = $('#ls-dlg');
+  const closeBtn = $('#ls-close');
+  const back = $('#ls-back');
+  const slot = $('#ls-slot');
+
+  const openDlg  = () => { dlg.dataset.open = '1'; };
+  const closeDlg = () => { dlg.dataset.open = '0'; };
+
+  btn?.addEventListener('click', openDlg);
+  closeBtn?.addEventListener('click', closeDlg);
+  back?.addEventListener('click', closeDlg);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDlg(); });
+
+  // スクロール中はボタンを少し控えめに（任意）
+  const scroller = document.getElementById('scroll-root') || window;
+  let shyTimer = null;
+  scroller.addEventListener('scroll', () => {
+    btn?.setAttribute('data-shy', '1');
+    clearTimeout(shyTimer);
+    shyTimer = setTimeout(() => btn?.removeAttribute('data-shy'), 180);
+  }, { passive: true });
+
+  /* ---------- 2) Google Translate をロード ---------- */
+  function loadGoogleTranslate() {
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+      initGoogleTranslate();
+      return;
+    }
+    // コールバックをグローバルに
+    window.googleTranslateElementInit = initGoogleTranslate;
+    const s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  function initGoogleTranslate() {
+    try {
+      new window.google.translate.TranslateElement(
+        { pageLanguage: 'ja', autoDisplay: false },
+        'google_translate_element'
+      );
+    } catch (e) {
+      // 失敗しても次の処理でリトライ
+    }
+    // select を移植する
+    waitAndGraftSelect();
+  }
+
+  /* ---------- 3) Google の <select> をモーダルに移植 ---------- */
+  function graftSelect() {
+    const sel = $('#google_translate_element select.goog-te-combo');
+    if (!sel) return false;
+
+    // 既に移植済みならスキップ
+    if (slot.contains(sel)) return true;
+
+    // リセットボタン & 値の同期
+    $('#ls-reset')?.addEventListener('click', () => {
+      clearGTCookies();
+      sel.value = '';
+      fireChange(sel);
+      localStorage.removeItem('lsLang');
+      closeDlg();
+    });
+
+    // 「原文に戻す」を option に入れたい場合はここで追加も可
+    // const opt = document.createElement('option');
+    // opt.value = '';
+    // opt.textContent = 'Original / 原文 (Reset)';
+    // sel.insertBefore(opt, sel.firstChild);
+
+    // モーダルへ移植
+    slot.textContent = '';
+    slot.appendChild(sel);
+
+    // 選択時に保存＆閉じる
+    sel.addEventListener('change', () => {
+      // Google側の値は '' or 'en' 等
+      const v = sel.value || '';
+      if (v) localStorage.setItem('lsLang', v);
+      closeDlg();
+    }, { passive: true });
+
+    // 以前の選択を復元
+    const saved = readSavedLang();
+    if (saved && sel.value !== saved) {
+      sel.value = saved;
+      fireChange(sel);
+    }
+
+    return true;
+  }
+
+  function waitAndGraftSelect() {
+    const maxWait = 8000; // 8秒で諦め
+    const start = Date.now();
+    const timer = setInterval(() => {
+      if (graftSelect()) { clearInterval(timer); return; }
+      if (Date.now() - start > maxWait) clearInterval(timer);
+    }, 120);
+  }
+
+  /* ---------- 4) ユーティリティ ---------- */
+  function fireChange(el) {
+    const ev = document.createEvent('HTMLEvents');
+    ev.initEvent('change', true, true);
+    el.dispatchEvent(ev);
+  }
+
+  function clearGTCookies() {
+    // GTが設定するクッキーを全パターンで消す
+    try {
+      const kill = (name, domain) => {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/` + (domain ? `; domain=${domain}` : '');
+      };
+      const host = location.hostname.replace(/^www\./, '');
+      kill('googtrans');          // カレントドメイン
+      kill('googtrans', '.' + host); // ルートドメイン
+      // 互換
+      kill('googtrans', location.hostname);
+    } catch (e) { /* noop */ }
+  }
+
+  function readSavedLang() {
+    // localStorage 優先、無ければ googtrans クッキーから推測
+    const v = localStorage.getItem('lsLang');
+    if (v) return v;
+    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    if (m && m[1]) {
+      // 形式: /ja/en など → 後半を返す
+      const parts = decodeURIComponent(m[1]).split('/');
+      return parts[2] || '';
+    }
+    return '';
+  }
+
+  /* ---------- 5) 実行 ---------- */
+  loadGoogleTranslate();
+
+  // 既存のハンバーガー開閉と被ったら地球儀を隠す（CSSでも制御）
+  const menuBtn = document.getElementById('menuBtn');
+  if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+      // CSS側の `html.menu-open #ls-btn { opacity:0; pointer-events:none }` が効きます
+      // ここでは特に処理しない（将来の拡張用）
+    });
+  }
+
+  // 互換：Googleの上部バナーが出ても画面押し下げを即時戻す
+  const bannerFix = () => { try { document.body.style.top = '0px'; } catch (e) {} };
+  window.addEventListener('load', bannerFix);
+  setTimeout(bannerFix, 1500);
+})();
