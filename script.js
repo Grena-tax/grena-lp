@@ -237,3 +237,28 @@ addEventListener('DOMContentLoaded', buildMenu);
   // 開く度に最新を反映
   btn.addEventListener('click', cloneOptions);
 })();
+/* ===== CTA HARD-LOCK SUPPORT (height only, no movement) ===== */
+(function hardLockCTA(){
+  const bar = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  if (!bar) return;
+
+  // 高さを CSS 変数 --cta-h に反映（本文側の下余白に使用）
+  const set = () => {
+    const h = Math.ceil(bar.getBoundingClientRect().height || 72);
+    document.documentElement.style.setProperty('--cta-h', h + 'px');
+    document.body.classList.add('has-cta');
+    const scroller = document.getElementById('scroll-root');
+    if (scroller) scroller.classList.add('has-cta');
+  };
+
+  set();
+  addEventListener('load', set);
+  addEventListener('resize', set);
+  if (window.ResizeObserver){
+    new ResizeObserver(set).observe(bar);
+  }
+
+  // もし過去コードが transform を当てても即座に打ち消す
+  const cancel = () => { if (bar.style.transform) bar.style.transform = 'none'; };
+  setInterval(cancel, 250); // 軽量ポーリング（位置はCSSが支配）
+})();
