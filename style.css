@@ -305,3 +305,29 @@ iframe.goog-te-menu-frame {
 @media (max-width:480px){
   #corp-setup + #plans{ margin-top:8px !important; }
 }
+/* === Google翻訳メニュー：縦スクロールの固定パネル化 === */
+.goog-te-banner-frame.skiptranslate{ display:none !important; }
+#goog-gt-tt{ display:none !important; }
+body{ top:0 !important; }
+
+/* メニューの iframe を右上に固定し、縦スクロール可能にする */
+iframe.goog-te-menu-frame{
+  position: fixed !important;
+  top: calc(64px + env(safe-area-inset-top,0px)) !important;
+  right: calc(10px + env(safe-area-inset-right,0px)) !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: 360px !important;           /* JS が画面幅に応じて再調整します */
+  height: 70vh !important;           /* ← ここで縦スクロールが出ます */
+  max-height: 560px !important;
+  border-radius: 12px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,.18) !important;
+  z-index: 11050 !important;
+  overflow: hidden !important;
+}
+
+/* KYC と 料金プランの間の幅だけ揃える（他は触らない） */
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#corp-setup + #plans{ margin-top:8px !important; }
+#plans{ padding-top:0 !important; }
