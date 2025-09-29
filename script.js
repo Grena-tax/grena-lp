@@ -199,7 +199,9 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* === 追加②：CTAをホームバーの隙間に同期（JSはtransformだけ触る） === */
+/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
+
+/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -275,127 +277,125 @@ langClose?.addEventListener('click', closeLang);
 langBackdrop?.addEventListener('click', closeLang);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
 
-/* メニューと同時開きを避ける（どちらかを閉じる） */
+/* メニューと同時開きを避ける（最後に開いた方を優先） */
 document.addEventListener('click', (e)=>{
   if (e.target.closest('#menuBtn')) closeLang();
   if (e.target.closest('#langBtn')) closeMenu();
 });
-// --- Ensure Google Translate language list is usable (scrollable & fixed) ---
-(function ensureTranslateMenuUsable(){
-  const apply = () => {
-    const fr = document.querySelector('iframe.goog-te-menu-frame');
-    if (!fr) return;
-    Object.assign(fr.style, {
-      position: 'fixed',
-      top: `calc(64px + env(safe-area-inset-top, 0px))`,
-      right: `calc(10px + env(safe-area-inset-right, 0px))`,
-      left: 'auto',
-      bottom: 'auto',
-      width: 'min(380px, 92vw)',
-      maxHeight: '70vh',
-      height: 'auto',
-      overflow: 'auto',
-      borderRadius: '12px',
-      boxShadow: '0 16px 40px rgba(0,0,0,.12)',
-      border: '1px solid #e5e7eb',
-      zIndex: '11050'
+
+/* ====== カスタム：英語名の“縦スクロール言語リスト”で全言語を選択 ======
+   仕組み：Googleの隠し<select.goog-te-combo>に値を入れてchange発火。
+   → 公式UIに依存せず、A〜Zすべて縦にスクロールして選べる。
+====================================================================== */
+
+/* 英語名 & Googleコードの一覧（主要＋全言語） */
+const LANGS = [
+  // A
+  ['af','Afrikaans'],['sq','Albanian'],['am','Amharic'],['ar','Arabic'],['hy','Armenian'],['az','Azerbaijani'],
+  // B
+  ['eu','Basque'],['be','Belarusian'],['bn','Bengali'],['bs','Bosnian'],['bg','Bulgarian'],
+  // C
+  ['my','Burmese'],['ca','Catalan'],['ceb','Cebuano'],['ny','Chichewa'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
+  ['co','Corsican'],['hr','Croatian'],['cs','Czech'],
+  // D
+  ['da','Danish'],['nl','Dutch'],
+  // E
+  ['en','English'],['eo','Esperanto'],['et','Estonian'],
+  // F
+  ['tl','Filipino'],['fi','Finnish'],['fr','French'],['fy','Frisian'],
+  // G
+  ['gl','Galician'],['ka','Georgian'],['de','German'],['el','Greek'],['gu','Gujarati'],
+  // H
+  ['ht','Haitian Creole'],['ha','Hausa'],['haw','Hawaiian'],['iw','Hebrew'],['hi','Hindi'],['hmn','Hmong'],['hu','Hungarian'],
+  // I
+  ['is','Icelandic'],['ig','Igbo'],['id','Indonesian'],['ga','Irish'],['it','Italian'],
+  // J
+  ['ja','Japanese'],['jw','Javanese'],
+  // K
+  ['kn','Kannada'],['kk','Kazakh'],['km','Khmer'],['rw','Kinyarwanda'],['ko','Korean'],['ku','Kurdish'],['ky','Kyrgyz'],
+  // L
+  ['lo','Lao'],['la','Latin'],['lv','Latvian'],['lt','Lithuanian'],['lb','Luxembourgish'],
+  // M
+  ['mk','Macedonian'],['mg','Malagasy'],['ms','Malay'],['ml','Malayalam'],['mt','Maltese'],['mi','Maori'],['mr','Marathi'],['mn','Mongolian'],
+  // N
+  ['ne','Nepali'],['no','Norwegian'],['or','Odia'],['ps','Pashto'],['fa','Persian'],['pl','Polish'],['pt','Portuguese'],
+  // Q〜R
+  ['pa','Punjabi'],['ro','Romanian'],['ru','Russian'],
+  // S
+  ['sm','Samoan'],['gd','Scots Gaelic'],['sr','Serbian'],['st','Sesotho'],['sn','Shona'],['sd','Sindhi'],['si','Sinhala'],
+  ['sk','Slovak'],['sl','Slovenian'],['so','Somali'],['es','Spanish'],['su','Sundanese'],['sw','Swahili'],['sv','Swedish'],
+  // T
+  ['tg','Tajik'],['ta','Tamil'],['tt','Tatar'],['te','Telugu'],['th','Thai'],['tr','Turkish'],['tk','Turkmen'],
+  // U
+  ['uk','Ukrainian'],['ur','Urdu'],['ug','Uyghur'],['uz','Uzbek'],
+  // V–Z
+  ['vi','Vietnamese'],['cy','Welsh'],['xh','Xhosa'],['yi','Yiddish'],['yo','Yoruba'],['zu','Zulu']
+];
+
+/* 公式<select>取得（ロード後に存在）→ 遅延で掴む */
+let gtSelect = null;
+function grabGoogleSelect(retry = 20){
+  gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
+  if (gtSelect) return;
+  if (retry>0) setTimeout(()=>grabGoogleSelect(retry-1), 250);
+}
+grabGoogleSelect();
+
+/* 言語リストを描画（英語名でA→Z） */
+const langListEl = document.getElementById('langList');
+const searchEl   = document.getElementById('langSearch');
+
+function renderLangList(filter = ''){
+  if (!langListEl) return;
+  const q = (filter || '').trim().toLowerCase();
+  langListEl.textContent = '';
+
+  const frag = document.createDocumentFragment();
+  LANGS
+    .filter(([code,name]) => !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q))
+    .forEach(([code,name])=>{
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'ls-item';
+      item.setAttribute('role','option');
+      item.dataset.code = code;
+
+      const label = document.createElement('span');
+      label.textContent = name;
+
+      const codeEl = document.createElement('span');
+      codeEl.className = 'ls-code';
+      codeEl.textContent = code;
+
+      item.appendChild(label);
+      item.appendChild(codeEl);
+
+      item.addEventListener('click', () => {
+        if (!gtSelect) gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!gtSelect) return;
+
+        gtSelect.value = code;                // 公式selectに反映
+        gtSelect.dispatchEvent(new Event('change')); // Googleに通知
+        // 選択中ハイライト
+        langListEl.querySelectorAll('.ls-item').forEach(x=>x.classList.toggle('ls-active', x===item));
+        // パネルは開いたまま（必要なら closeLang() に変更可）
+      });
+
+      frag.appendChild(item);
     });
-  };
 
-  // メニューを開いた直後は生成タイミングに差があるので短期リトライ
-  const nudge = () => {
-    let i = 0;
-    const t = setInterval(() => { apply(); if (++i >= 10) clearInterval(t); }, 50);
-  };
+  langListEl.appendChild(frag);
+}
+// 初期描画（全件）
+renderLangList();
+searchEl?.addEventListener('input', (e)=>renderLangList(e.target.value));
 
-  document.addEventListener('click', nudge, { passive: true });
-  window.addEventListener('resize', apply);
-})();
-/* ===== Google Translate の言語メニューを使いやすく強制整形 ===== */
-(function fixGTranslateMenu(){
-  // メニュー iframe を見つけて、全画面側に広げる
-  const ensure = () => {
-    const f = document.querySelector('iframe.goog-te-menu-frame, .goog-te-menu-frame.skiptranslate');
-    if (!f) return;
-
-    // 画面上で邪魔されないように最前面＆広めのサイズに
-    const s = f.style;
-    s.position    = 'fixed';
-    s.top         = 'calc(66px + env(safe-area-inset-top,0px))';
-    s.left        = '12px';
-    s.right       = '12px';
-    s.bottom      = 'auto';
-    s.width       = 'min(1024px, 96vw)';   // 横幅を広げて A〜Z まで列を収める
-    s.maxHeight   = '78vh';                // 画面内に収める
-    s.height      = 'auto';
-    s.border      = '1px solid #e5e7eb';
-    s.borderRadius= '12px';
-    s.boxShadow   = '0 16px 48px rgba(0,0,0,.25)';
-    s.zIndex      = '11050';
-    s.overflow    = 'auto';                // ブラウザによっては効く（横スクロール保険）
-  };
-
-  // 開いた直後はDOMが落ち着かないので短時間だけ連続適用
-  const nudge = () => {
-    let i = 0;
-    const t = setInterval(() => { ensure(); if (++i > 25) clearInterval(t); }, 30);
-  };
-
-  // ▼「言語を選択」<select> をクリックしたタイミングで実行
-  document.addEventListener('click', (e) => {
-    if (e.target.closest('#google_translate_element select')) nudge();
+/* 現在の言語をハイライト（初期は日本語） */
+function highlightCurrent(code){
+  langListEl?.querySelectorAll('.ls-item').forEach(x=>{
+    x.classList.toggle('ls-active', x.dataset.code === code);
   });
+}
+highlightCurrent('ja');
 
-  // 画面サイズが変わったら再適用
-  window.addEventListener('resize', ensure);
-
-  // Googleが iframe を作った瞬間も拾う
-  new MutationObserver(() => ensure())
-    .observe(document.body, { childList: true, subtree: true });
-})();
-// === Google Translate の言語メニューを「縦スクロールの固定パネル」に保つ ===
-(function ensureTranslateMenuUsable(){
-  // メニューが開いた直後は Google 側に上書きされやすいので、少しの間だけ連続で補正する
-  const nudge = () => {
-    let i = 0;
-    const t = setInterval(() => {
-      const fr = document.querySelector('iframe.goog-te-menu-frame');
-      if (fr) {
-        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-        const width  = Math.min(360, Math.floor(vw * 0.92));     // 画面に収まる幅
-        const height = Math.min(Math.floor(window.innerHeight * 0.70), 560);
-
-        Object.assign(fr.style, {
-          position: 'fixed',
-          top: `calc(64px + env(safe-area-inset-top,0px))`,
-          right: `calc(10px + env(safe-area-inset-right,0px))`,
-          left: 'auto',
-          bottom: 'auto',
-          width: width + 'px',
-          height: height + 'px',
-          maxHeight: height + 'px',
-          borderRadius: '12px',
-          border: '1px solid #e5e7eb',
-          boxShadow: '0 16px 40px rgba(0,0,0,.18)',
-          zIndex: '11050',
-          overflow: 'hidden'
-        });
-
-        // 内部ドキュメント（言語リスト）側も縦スクロールになるように保険
-        try {
-          const doc = fr.contentDocument || fr.contentWindow?.document;
-          const root = doc?.documentElement;
-          const body = doc?.body;
-          if (root) root.style.overflowY = 'auto';
-          if (body) body.style.overflowY = 'auto';
-        } catch(_) {}
-      }
-      if (++i > 40) clearInterval(t); // 約 2 秒で終了（競合対策）
-    }, 50);
-  };
-
-  // メニューを開く操作・画面サイズ変更のたびに補正
-  document.addEventListener('click', nudge, true);
-  window.addEventListener('resize', nudge);
-  window.addEventListener('orientationchange', () => setTimeout(nudge, 50));
-})();
+/* ===== ここまで：カスタム言語リスト ===== */
