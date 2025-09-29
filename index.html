@@ -8,7 +8,7 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（触らない） -->
+<!-- 既存のメインCSS（そのまま） -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
 <!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー＋言語UI（本文は無改変） -->
@@ -54,8 +54,9 @@
 
   @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-  #corp-setup{padding-bottom:2rem!important}
-  #plans{padding-top:.75rem!important}
+  /* ▼ ご指定：KYCと料金の隙間を他とそろえる（詰める） */
+  #corp-setup{padding-bottom:0!important}
+  #plans{padding-top:0!important;margin-top:0!important}
 
   /* 右上ハンバーガー */
   .menu-button{
@@ -106,23 +107,22 @@
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
 
-  /* ▼ 言語スイッチ（ハンバーガー左に固定） */
+  /* ▼ 言語スイッチ（英語UI・縦スクロールのフルリスト） */
   .lang-button{
     position:fixed;top:calc(10px + var(--safe-top));
-    right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガー左隣 */
+    right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの左横 */
     z-index:10001; width:48px;height:48px;border-radius:12px;
-    background:#ffffff; color:#111827; border:1px solid #e5e7eb;
+    background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
     display:inline-flex;align-items:center;justify-content:center;
-    box-shadow:0 4px 14px rgba(0,0,0,.08)
+    box-shadow:0 4px 14px rgba(0,0,0,.15)
   }
-  .lang-button:hover{background:#f8fafc}
   .lang-button .globe{font-size:20px;line-height:1}
 
   .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
   .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
   .lang-panel{
     position:absolute;top:calc(64px + var(--safe-top));right:calc(10px + var(--safe-right));
-    width:min(380px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
     box-shadow:0 16px 40px rgba(0,0,0,.12);
     transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
     font-size:14px;line-height:1.5
@@ -137,24 +137,35 @@
   html.lang-open .lang-backdrop{opacity:1}
   html.lang-open .lang-panel{transform:none;opacity:1}
 
-  /* Google翻訳の余計なバナー等は非表示に */
+  /* Google翻訳のバナー等は隠す（押し下げ防止） */
   .goog-te-banner-frame{display:none!important}
   #goog-gt-tt{display:none!important}
   body{top:0!important}
-  .goog-te-gadget{font-size:0!important}
-  .goog-te-gadget .goog-te-combo{font-size:14px!important; width:100%; padding:.5rem; border-radius:8px; border:1px solid #e5e7eb}
-  .goog-logo-link{opacity:.75}
-  .skiptranslate iframe{box-shadow:none!important}
+  /* 公式ウィジェット自体は画面外へ退避（selectはJSから操作） */
+  #google_translate_element{
+    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+  }
+
+  /* カスタムのフル言語リスト（縦スクロール） */
+  .ls-search{display:flex;gap:8px;margin:6px 0 10px}
+  .ls-search input{
+    flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px
+  }
+  .ls-list{
+    display:grid;grid-template-columns:1fr;gap:6px;
+    max-height:min(60vh,520px);overflow:auto;padding:2px
+  }
+  .ls-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
+  }
+  .ls-item:hover{background:#f3f4f6}
+  .ls-code{font-size:12px;color:#64748b}
+  .ls-active{outline:2px solid #2563eb}
+
   @media (max-width:480px){
     .lang-button{transform:scale(.92);transform-origin:top right}
   }
-
-  /* ===== KYC ↔ 料金プランの間隔を揃える “最終パッチ” ===== */
-  #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-  #plans{ padding-top:0 !important; margin-top:0 !important; }
-  #corp-setup + #plans{ margin-top:-40px !important; }
-  @media (max-width: 480px){ #corp-setup + #plans{ margin-top:-44px !important; } }
-  @supports (-webkit-touch-callout:none){ #corp-setup + #plans{ margin-top:-42px !important; } }
 </style>
 </head>
 <body>
@@ -162,7 +173,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ（ハンバーガー左） -->
+<!-- 右上：言語スイッチ（ハンバーガー左に固定） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -174,6 +185,11 @@
       <button class="lang-close" id="langClose" aria-label="Close">×</button>
     </div>
     <div class="lang-body">
+      <div class="ls-search">
+        <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
+      </div>
+      <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
+      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
@@ -628,6 +644,20 @@
       </div>
     </details>
 
+    <details>
+      <summary>必要書類（日本在住・非居住者向け）</summary>
+      <div class="content">
+        <ul>
+          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
+          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
+          <li>署名（パスポートと一致の筆跡／公証書にも記載）</li>
+          <li>書類原本の国際郵送（PDF不可）</li>
+        </ul>
+        <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
+      </div>
+    </details>
+
     <details open>
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
@@ -795,21 +825,19 @@
   </div>
 </div>
 
-<!-- ===== 自作JS（本文は変更せず／操作だけ） ===== -->
-<script src="./script.js?v=20250929-en"></script>
+<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
+<script src="./script.js?v=20250912-gt"></script>
 
-<!-- Google翻訳（UI英語・言語名英語） -->
+<!-- Google翻訳（全言語） -->
 <script>
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'ja',
-      autoDisplay: false,
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      // includedLanguages を指定しないときは“全対応言語”。必要なら下行のコメントを外して使ってください。
-      // includedLanguages: 'af,am,ar,az,be,bg,bn,bs,ca,ceb,co,cs,cy,da,de,el,en,eo,es,et,eu,fa,fi,fr,fy,ga,gd,gl,gu,ha,haw,he,hi,hmn,hr,ht,hu,hy,id,ig,is,it,ja,jw,ka,kk,km,kn,ko,ku,ky,la,lb,lo,lt,lv,mg,mi,mk,ml,mn,mr,ms,mt,my,ne,nl,no,ny,or,pa,pl,ps,pt,ro,ru,sd,si,sk,sl,sm,sn,so,sq,sr,st,sv,sw,ta,te,tg,th,tl,tr,uk,ur,uz,vi,xh,yi,yo,zh-CN,zh-TW,zu'
+      autoDisplay: false
+      // includedLanguages を省略 → Googleが対応する全言語を表示
     }, 'google_translate_element');
   }
 </script>
-<!-- ここを置き換え（&hl=en を追加） -->
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en"></script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
 </html>
