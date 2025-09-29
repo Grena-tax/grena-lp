@@ -311,3 +311,45 @@ document.addEventListener('click', (e)=>{
   document.addEventListener('click', nudge, { passive: true });
   window.addEventListener('resize', apply);
 })();
+/* ===== Google Translate の言語メニューを使いやすく強制整形 ===== */
+(function fixGTranslateMenu(){
+  // メニュー iframe を見つけて、全画面側に広げる
+  const ensure = () => {
+    const f = document.querySelector('iframe.goog-te-menu-frame, .goog-te-menu-frame.skiptranslate');
+    if (!f) return;
+
+    // 画面上で邪魔されないように最前面＆広めのサイズに
+    const s = f.style;
+    s.position    = 'fixed';
+    s.top         = 'calc(66px + env(safe-area-inset-top,0px))';
+    s.left        = '12px';
+    s.right       = '12px';
+    s.bottom      = 'auto';
+    s.width       = 'min(1024px, 96vw)';   // 横幅を広げて A〜Z まで列を収める
+    s.maxHeight   = '78vh';                // 画面内に収める
+    s.height      = 'auto';
+    s.border      = '1px solid #e5e7eb';
+    s.borderRadius= '12px';
+    s.boxShadow   = '0 16px 48px rgba(0,0,0,.25)';
+    s.zIndex      = '11050';
+    s.overflow    = 'auto';                // ブラウザによっては効く（横スクロール保険）
+  };
+
+  // 開いた直後はDOMが落ち着かないので短時間だけ連続適用
+  const nudge = () => {
+    let i = 0;
+    const t = setInterval(() => { ensure(); if (++i > 25) clearInterval(t); }, 30);
+  };
+
+  // ▼「言語を選択」<select> をクリックしたタイミングで実行
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('#google_translate_element select')) nudge();
+  });
+
+  // 画面サイズが変わったら再適用
+  window.addEventListener('resize', ensure);
+
+  // Googleが iframe を作った瞬間も拾う
+  new MutationObserver(() => ensure())
+    .observe(document.body, { childList: true, subtree: true });
+})();
