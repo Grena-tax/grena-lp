@@ -8,47 +8,50 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
+<!-- メインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250929-safe" id="main-css">
 
-<!-- Google Translate: 初期化 → 本体読み込み -->
+<!-- Google Translate（英語UI／言語拡張） -->
 <script>
   window.googleTranslateElementInit = function(){
-    new google.translate.TranslateElement(
-      {
-        pageLanguage: 'ja',
-        autoDisplay: false,
-        includedLanguages: 'ja,en,zh-CN,zh-TW,ko,th,ru,fr,de,es,pt,it,ar,hi,vi'
-      },
-      'google_translate_element'
-    );
+    new google.translate.TranslateElement({
+      pageLanguage: 'ja',
+      autoDisplay: false,
+      includedLanguages: 'ar,bg,bn,ca,cs,da,de,el,en,es,et,fa,fi,fil,fr,he,hi,hr,hu,id,it,ko,ms,nl,no,pl,pt,ro,ru,sk,sl,sr,sv,th,tr,uk,ur,vi,zh-CN,zh-TW'
+    }, 'google_translate_element');
   };
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body>
 
-<!-- ページ最上部アンカー -->
-<div id="page-top" aria-hidden="true"></div>
-
-<!-- 右上：翻訳（地球儀） -->
-<button class="ls-btn" id="ls-btn" aria-controls="ls-dlg" aria-haspopup="dialog" aria-expanded="false" aria-label="言語を選択">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm7.9 9h-3.08a15.7 15.7 0 0 0-1.06-4.39A8.02 8.02 0 0 1 19.9 11ZM15.4 11H8.6a14.3 14.3 0 0 1 1.1-4.74c.7-1.6 1.55-2.26 2.3-2.26s1.6.66 2.3 2.26c.47 1.07.86 2.4 1.1 4.74Zm-8.22 2h9.64a14.6 14.6 0 0 1-1.14 4.82c-.7 1.6-1.53 2.26-2.28 2.26s-1.58-.66-2.28-2.26A14.6 14.6 0 0 1 7.18 13ZM4.1 13h3.1c.2 1.6.6 3.1 1.1 4.39A8.02 8.02 0 0 1 4.1 13Zm12.66 4.39c.5-1.28.88-2.79 1.08-4.39h3.06a8.02 8.02 0 0 1-4.14 4.39Z"/></svg>
+<!-- ▼ 言語切替：地球儀ボタン＋モーダル（英語UI） -->
+<button class="ls-btn" id="ls-btn" aria-label="Change language">
+  <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+    <path fill="currentColor" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.07 6h-3.09a15.7 15.7 0 0 0-1.55-3.91A8.04 8.04 0 0 1 19.07 8zM12 4.06c.83 1.13 1.5 2.7 1.93 3.94H10.1C10.5 6.76 11.17 5.19 12 4.06zM4.93 8a8.04 8.04 0 0 1 4.64-3.91A15.7 15.7 0 0 0 8.02 8H4.93zM4.06 10h3.6c-.08.64-.13 1.31-.13 2s.05 1.36.13 2h-3.6A7.95 7.95 0 0 1 4.06 10zm.87 6h3.09a8.04 8.04 0 0 1-4.64 3.91c.6-1.16 1.2-2.7 1.55-3.91zM12 19.94c-.83-1.13-1.5-2.7-1.93-3.94h3.83c-.43 1.24-1.1 2.81-1.9 3.94zM15.98 16h3.09a8.04 8.04 0 0 1-4.64 3.91c.6-1.16 1.2-2.7 1.55-3.91zM16.34 14H7.66c-.09-.64-.16-1.31-.16-2s.07-1.36.16-2h8.68c.09.64.16 1.31.16 2s-.07 1.36-.16 2z"/>
+  </svg>
 </button>
-<div class="ls-dlg" id="ls-dlg" data-open="0">
+<div class="ls-dlg" id="ls-dlg" data-open="0" aria-hidden="true">
   <div class="ls-back" id="ls-back"></div>
-  <aside class="ls-panel" role="dialog" aria-modal="true" aria-labelledby="ls-title">
+  <aside class="ls-panel" role="dialog" aria-modal="true" aria-label="Select language">
     <div class="ls-head">
-      <strong class="ls-title" id="ls-title">Select language / 言語を選択</strong>
-      <button class="ls-close" id="ls-close" aria-label="閉じる">×</button>
+      <strong>Select language</strong>
+      <button class="ls-close" id="ls-close" aria-label="Close">×</button>
     </div>
     <div class="ls-body">
-      <div id="ls-slot"><!-- Googleの<select>を移植 --></div>
-      <p class="ls-hint">リストから選ぶと即時翻訳されます。/ Select a language and the page will translate.</p>
+      <div id="ls-slot"></div>
+      <p class="ls-hint">Choose a language and the page will translate. 
+        <button id="ls-reset" class="ls-reset" type="button">Original (Reset)</button>
+      </p>
     </div>
   </aside>
 </div>
-<!-- Google純正ウィジェットは画面外に退避（CSSで不可視） -->
+<!-- Googleの本体は画面外に退避（CSSで不可視化） -->
 <div id="google_translate_element" aria-hidden="true"></div>
+<!-- ▲ 言語切替ここまで -->
+
+<!-- ページ最上部アンカー -->
+<div id="page-top" aria-hidden="true"></div>
 
 <!-- 右上ハンバーガー -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
@@ -260,6 +263,7 @@
           </div>
         </details>
 
+        <!-- ★ 追加：オプション-->
         <details>
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
@@ -273,6 +277,7 @@
             <span class="note">※ 価格は時期・条件で変動する場合があります。最新は事前にご確認ください。</span>
           </div>
         </details>
+        <!-- ★ 追加ここまで -->
 
       </div>
     </details>
@@ -535,7 +540,9 @@
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
         <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+
         <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は特定の条件（金利・為替など）に基づいた仮定の計算例であり、将来の運用成果を約束・保証するものではありません。金利、為替レート、税制は変動します。</p>
+
         <table>
           <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
           <tbody>
@@ -546,10 +553,12 @@
             <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889, -</td><td>+約¥569,000</td></tr>
           </tbody>
         </table>
+
         <ul>
           <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
           <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
         </ul>
+
         <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
     </details>
@@ -558,7 +567,9 @@
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
         <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
+
         <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は一定の前提条件に基づく参考例で、将来の結果を保証するものではありません。税・為替・商品条件により実績は異なります。</p>
+
         <table>
           <thead><tr><th>年数</th><th>残高（円）</th><th>倍率</th></tr></thead>
           <tbody>
@@ -571,6 +582,7 @@
             <tr><td>7年</td><td>1,948,717</td><td><strong>1.95倍（約2倍）</strong></td></tr>
           </tbody>
         </table>
+
         <table>
           <thead><tr><th>到達倍率</th><th>目安年数</th><th>残高（円・概算）</th></tr></thead>
           <tbody>
@@ -581,6 +593,7 @@
             <tr><td>100倍</td><td>約49年</td><td>100,000,000</td></tr>
           </tbody>
         </table>
+
         <p class="text-sm muted">※ 上記は単純計算の目安です。税・為替・商品条件により実績は異なります。将来の成果は保証されません。</p>
       </div>
     </details>
@@ -669,6 +682,7 @@
   </div>
 </div>
 
+<!-- JS -->
 <script src="./script.js?v=20250929-safe"></script>
 </body>
 </html>
