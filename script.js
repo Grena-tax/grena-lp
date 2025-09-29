@@ -199,9 +199,7 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* === 追加②：CTAをホームバーの隙間に同期（JSはtransformだけ触る） === */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -277,10 +275,8 @@ langClose?.addEventListener('click', closeLang);
 langBackdrop?.addEventListener('click', closeLang);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
 
-/* メニューと同時開きになったら、どちらかを優先（ここでは最後に開いた方を表示） */
+/* メニューと同時開きを避ける（どちらかを閉じる） */
 document.addEventListener('click', (e)=>{
-  // メニューを開く直前に言語パネルが開いていたら閉じる
   if (e.target.closest('#menuBtn')) closeLang();
-  // 言語パネルを開く直前にメニューが開いていたら閉じる
   if (e.target.closest('#langBtn')) closeMenu();
 });
