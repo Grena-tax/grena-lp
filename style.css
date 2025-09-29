@@ -298,3 +298,10 @@ iframe.goog-te-menu-frame {
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #plans { padding-top:0 !important; margin-top:0 !important; }
 #corp-setup + #plans { margin-top:-12px !important; } /* 端末で少し広ければ -16px までOK */
+/* --- KYC ↔ Plans の間隔を他と統一 --- */
+#corp-setup{ padding-bottom:0 !important; }
+#plans{      padding-top:0  !important; }
+#corp-setup + #plans{ margin-top:12px !important; }
+@media (max-width:480px){
+  #corp-setup + #plans{ margin-top:8px !important; }
+}
