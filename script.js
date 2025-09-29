@@ -280,3 +280,34 @@ document.addEventListener('click', (e)=>{
   if (e.target.closest('#menuBtn')) closeLang();
   if (e.target.closest('#langBtn')) closeMenu();
 });
+// --- Ensure Google Translate language list is usable (scrollable & fixed) ---
+(function ensureTranslateMenuUsable(){
+  const apply = () => {
+    const fr = document.querySelector('iframe.goog-te-menu-frame');
+    if (!fr) return;
+    Object.assign(fr.style, {
+      position: 'fixed',
+      top: `calc(64px + env(safe-area-inset-top, 0px))`,
+      right: `calc(10px + env(safe-area-inset-right, 0px))`,
+      left: 'auto',
+      bottom: 'auto',
+      width: 'min(380px, 92vw)',
+      maxHeight: '70vh',
+      height: 'auto',
+      overflow: 'auto',
+      borderRadius: '12px',
+      boxShadow: '0 16px 40px rgba(0,0,0,.12)',
+      border: '1px solid #e5e7eb',
+      zIndex: '11050'
+    });
+  };
+
+  // メニューを開いた直後は生成タイミングに差があるので短期リトライ
+  const nudge = () => {
+    let i = 0;
+    const t = setInterval(() => { apply(); if (++i >= 10) clearInterval(t); }, 50);
+  };
+
+  document.addEventListener('click', nudge, { passive: true });
+  window.addEventListener('resize', apply);
+})();
