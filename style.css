@@ -277,3 +277,24 @@ html, body{ height: 100%; overflow: hidden; }
 #google_translate_element{ display:block }
 #google_translate_element .goog-te-gadget{ margin:0!important }
 #google_translate_element .goog-te-gadget .goog-te-combo{ margin:0!important }
+/* === Google Translate menu: scrollable & fixed to top-right === */
+iframe.goog-te-menu-frame {
+  position: fixed !important;
+  top: calc(64px + env(safe-area-inset-top, 0px)) !important;
+  right: calc(10px + env(safe-area-inset-right, 0px)) !important;
+  left: auto !important;
+  bottom: auto !important;
+  width: min(380px, 92vw) !important;
+  max-height: 70vh !important;   /* リストが長い時は iframe 内スクロール */
+  height: auto !important;
+  overflow: auto !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,.12) !important;
+  border: 1px solid #e5e7eb !important;
+  z-index: 11050 !important;
+}
+
+/* === KYC と 料金プランの間を他と同じに（縦の空きを詰めるだけ） === */
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans { padding-top:0 !important; margin-top:0 !important; }
+#corp-setup + #plans { margin-top:-12px !important; } /* 端末で少し広ければ -16px までOK */
