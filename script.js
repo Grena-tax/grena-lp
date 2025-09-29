@@ -353,3 +353,49 @@ document.addEventListener('click', (e)=>{
   new MutationObserver(() => ensure())
     .observe(document.body, { childList: true, subtree: true });
 })();
+// === Google Translate の言語メニューを「縦スクロールの固定パネル」に保つ ===
+(function ensureTranslateMenuUsable(){
+  // メニューが開いた直後は Google 側に上書きされやすいので、少しの間だけ連続で補正する
+  const nudge = () => {
+    let i = 0;
+    const t = setInterval(() => {
+      const fr = document.querySelector('iframe.goog-te-menu-frame');
+      if (fr) {
+        const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+        const width  = Math.min(360, Math.floor(vw * 0.92));     // 画面に収まる幅
+        const height = Math.min(Math.floor(window.innerHeight * 0.70), 560);
+
+        Object.assign(fr.style, {
+          position: 'fixed',
+          top: `calc(64px + env(safe-area-inset-top,0px))`,
+          right: `calc(10px + env(safe-area-inset-right,0px))`,
+          left: 'auto',
+          bottom: 'auto',
+          width: width + 'px',
+          height: height + 'px',
+          maxHeight: height + 'px',
+          borderRadius: '12px',
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 16px 40px rgba(0,0,0,.18)',
+          zIndex: '11050',
+          overflow: 'hidden'
+        });
+
+        // 内部ドキュメント（言語リスト）側も縦スクロールになるように保険
+        try {
+          const doc = fr.contentDocument || fr.contentWindow?.document;
+          const root = doc?.documentElement;
+          const body = doc?.body;
+          if (root) root.style.overflowY = 'auto';
+          if (body) body.style.overflowY = 'auto';
+        } catch(_) {}
+      }
+      if (++i > 40) clearInterval(t); // 約 2 秒で終了（競合対策）
+    }, 50);
+  };
+
+  // メニューを開く操作・画面サイズ変更のたびに補正
+  document.addEventListener('click', nudge, true);
+  window.addEventListener('resize', nudge);
+  window.addEventListener('orientationchange', () => setTimeout(nudge, 50));
+})();
