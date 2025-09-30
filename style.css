@@ -331,3 +331,12 @@ iframe.goog-te-menu-frame{
 #corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
 #corp-setup + #plans{ margin-top:8px !important; }
 #plans{ padding-top:0 !important; }
+/* === Hide Google Translate banners/toolbars === */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-te-balloon-frame,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,   /* 新バナー本体 */
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,  /* 右下ツールバー */
+.VIpgJd-yAWNEb-L7lbkb,
+.VIpgJd-yAWNEb-hvhgNd { display:none !important; }
+body { top:0 !important; } /* バナー分の押し下げを戻す */
