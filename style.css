@@ -363,3 +363,14 @@ body { top:0 !important; } /* バナー分の押し下げを戻す */
 @media (max-width:480px){
   #corp-setup > h2{ margin-top: 12px !important; }
 }
+/* 右上の地球儀＋ハンバーガー(48px×2＋余白)を避ける余白を見出しの右側に確保 */
+#corp-setup > h2{
+  padding-right: calc(120px + env(safe-area-inset-right, 0px)) !important;
+}
+
+/* スマホは少し多めに確保 */
+@media (max-width: 480px){
+  #corp-setup > h2{
+    padding-right: calc(140px + env(safe-area-inset-right, 0px)) !important;
+  }
+}
