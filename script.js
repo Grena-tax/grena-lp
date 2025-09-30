@@ -399,3 +399,34 @@ function highlightCurrent(code){
 highlightCurrent('ja');
 
 /* ===== ここまで：カスタム言語リスト ===== */
+/* === Add "Original / 日本語 (Reset)" button & restore original === */
+(function addOriginalReset(){
+  const head = document.querySelector('.lang-head');
+  if (!head || document.getElementById('gtReset')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'gtReset';
+  btn.textContent = 'Original / 日本語 (Reset)';
+  btn.setAttribute('type','button');
+  // 見た目は既存UIに合わせて軽く整える（改変しない範囲のインライン）
+  Object.assign(btn.style, {
+    fontWeight:'700', padding:'8px 10px', borderRadius:'8px',
+    border:'1px solid #e5e7eb', background:'#fff', cursor:'pointer'
+  });
+
+  btn.addEventListener('click', () => {
+    const expire = 'Thu, 01 Jan 1970 00:00:00 GMT';
+    const host = location.hostname.replace(/^www\./,'');
+    // GT が使うクッキーを全パターンで消す
+    document.cookie = 'googtrans=; expires='+expire+'; path=/';
+    document.cookie = 'googtrans=; expires='+expire+'; path=/; domain=.'+host;
+    document.cookie = 'googtrans=; expires='+expire+'; path=/; domain='+host;
+    // まれに URL ハッシュに残る場合があるので除去
+    if (location.hash.includes('googtrans')) {
+      history.replaceState('', document.title, location.pathname + location.search);
+    }
+    location.reload();
+  });
+
+  head.insertBefore(btn, head.firstChild);
+})();
