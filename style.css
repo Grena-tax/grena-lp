@@ -354,3 +354,12 @@ body { top:0 !important; } /* バナー分の押し下げを戻す */
 }
 /* KYC → 料金 の間だけ微調整 */
 #corp-setup + #plans{ margin-top:12px !important; }
+/* 見出しだけ少し下げる（他は触らない） */
+#corp-setup > h2{
+  margin-top: 10px !important;
+}
+
+/* SPは気持ち多めに */
+@media (max-width:480px){
+  #corp-setup > h2{ margin-top: 12px !important; }
+}
