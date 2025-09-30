@@ -340,3 +340,15 @@ iframe.goog-te-banner-frame,
 .VIpgJd-yAWNEb-L7lbkb,
 .VIpgJd-yAWNEb-hvhgNd { display:none !important; }
 body { top:0 !important; } /* バナー分の押し下げを戻す */
+/* === KYC ↔ 料金プラン の間だけ余白を調整（他は不変） === */
+:root{
+  --kp-gap-pc: 14px;   /* PC の見た目 */
+  --kp-gap-sp: 10px;   /* SP の見た目 */
+}
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#corp-setup .accordion > details:last-child{ margin-bottom:0 !important; }
+#corp-setup{ padding-bottom:0 !important; }
+#corp-setup + #plans{ padding-top:0 !important; margin-top:var(--kp-gap-pc) !important; }
+@media (max-width:480px){
+  #corp-setup + #plans{ margin-top:var(--kp-gap-sp) !important; }
+}
