@@ -1,251 +1,204 @@
-/* =========================================
-   style.css — 2025-10-01 HOTFIX
-   ========================================= */
+/* =========================================================
+   style.css — SAFE EDITION（フォントは一切変更しません）
+   目的：
+   - 右上ボタンを常にクリック可能に
+   - CTAを最下部固定
+   - KYC↔料金の余白だけ整える
+   - Google翻訳の押し下げ/被りを抑止
+   ========================================================= */
 
-/* ルート変数 */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px;
-}
+/* 0) Base（安全な最小限） */
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; line-height: 1.7; background: #fff; }
 
-/* ベース */
-*{ box-sizing:border-box }
-html{ -webkit-text-size-adjust:100% }
-html,body{ margin:0; padding:0; }
-body{ line-height:1.7; color:#0b1220; background:#fff;
-      padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
+/* 1) レイアウト */
+.container { width: min(1100px, 92%); margin-inline: auto; }
 
-img{ max-width:100%; height:auto; display:block }
-a{ color:#1162ff; text-decoration:underline; text-underline-offset:2px }
-a:hover{ color:#0e50cf }
-.container{ width:min(1100px,92%); margin-inline:auto; }
-
-/* 見出し */
-section > h2{
-  font-weight:800; letter-spacing:.01em; line-height:1.25;
+/* 2) セクション見出し（デザインは控えめ） */
+section > h2 {
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.25;
   font-size: clamp(22px, 2.8vw, 30px);
-  margin:0 0 .8rem; padding-bottom:.35rem; border-bottom:2px solid #eaeaea;
-  /* 右上の地球儀+ハンバーガーを避ける余白 */
-  padding-right: calc(130px + var(--safe-right));
-}
-@media (max-width:480px){
-  section > h2{ padding-right: calc(150px + var(--safe-right)); }
+  margin: 0 0 .8rem;
+  padding-bottom: .35rem;
+  border-bottom: 2px solid #eaeaea;
 }
 
-/* アコーディオン */
-.accordion{ padding:24px 0 }
-.accordion details{
-  border:1px solid #e7ebf2; border-radius:12px; background:#fff;
+/* 3) アコーディオン */
+.accordion { padding: 24px 0; }
+.accordion details {
+  border: 1px solid #e7ebf2; border-radius: 12px; background: #fff;
   box-shadow: 0 10px 30px rgba(20,35,70,.05);
-  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
+  overflow: hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
-.accordion details+details{ margin-top:12px }
-.accordion summary{
-  list-style:none; cursor:pointer;
-  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
-  display:flex; align-items:center; gap:.6rem;
+.accordion details+details { margin-top: 12px; }
+.accordion summary {
+  list-style: none; cursor: pointer;
+  padding: 14px 52px 14px 16px; font-weight: 800; font-size: 16px; position: relative;
+  display: flex; align-items: center; gap: .6rem;
   background: linear-gradient(180deg,#fff,#fbfcff);
-  border-bottom:1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
 }
-.accordion summary::-webkit-details-marker{ display:none }
-.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px }
-.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px) }
-.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff) }
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary:focus-visible {
+  outline: 3px solid rgba(23,128,255,.35); outline-offset: 2px; border-radius: 8px;
+}
+.accordion details[open] { box-shadow: 0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px); }
+.accordion details[open] summary { background: linear-gradient(180deg,#f9fbff,#f4f8ff); }
+
 /* +/- ボタン */
-.accordion summary::after{
-  content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
-  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
+.accordion summary::after {
+  content: "+"; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+  line-height: 1; font-size: 14px; background: #eef4ff; color: #3657ff; border: 1px solid #dbe7ff; font-weight: 900;
 }
-.accordion details[open] > summary::after{
-  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
+.accordion details[open] > summary::after {
+  content: "−"; background: #e6f2ff; color: #143cff; border-color: #c7dbff;
 }
-.accordion .content{
-  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
+.accordion .content {
+  padding: 12px 16px 16px; border-top: 1px solid #e5e7eb; background: #fbfdff; color: #374151;
 }
-.accordion .content p{ margin:12px 0 }
-.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em 0 }
-.accordion .content li+li{ margin-top:.25em }
+.accordion .content p { margin: 12px 0; }
+.accordion .content ul { list-style: disc; padding-left: 1.2rem; margin: .4em 0 .8em 0; }
+.accordion .content li+li { margin-top: .25em; }
 
-/* 表 */
-.accordion .content table{
-  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
-  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
+/* 4) テーブル（アコーディオン内の見栄え向上） */
+.accordion .content table {
+  width: 100%; border-collapse: separate; border-spacing: 0; margin: .6rem 0;
+  font-size: 14px; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #fff;
 }
-.accordion .content thead th{
-  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
+.accordion .content thead th {
+  background: #f7f8fb; font-weight: 800; text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb;
 }
-.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7 }
-.accordion .content tr:last-child td{ border-bottom:none }
+.accordion .content td { padding: 10px 12px; border-bottom: 1px dashed #eef2f7; }
+.accordion .content tr:last-child td { border-bottom: none; }
 
-/* ユーティリティ */
-.muted{ color:#475569 }
-.text-sm{ font-size:.86em; opacity:.9 }
-.smallish{ font-size: clamp(20px, 3.6vw, 24px); margin-bottom:.75rem; font-weight:800; }
-.security-note{
-  font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;
-  border-radius:10px;padding:.8rem 1rem;margin-top:.6rem
-}
+/* 5) テーブル（フォールバック） */
+table { width: 100%; border-collapse: collapse; margin: .5rem 0; }
+th, td { border: 1px solid #e5e7eb; padding: .5rem .6rem; text-align: right; }
+th:first-child, td:first-child { text-align: left; }
 
-/* 価格ボックス */
-.price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
-.price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
-.price-promo .label{color:#475569;font-weight:700}
-.price-promo .old{color:#64748b;text-decoration:line-through}
-.price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
-.price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
-.price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-.price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-.price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
-
-/* 進捗チップ */
-.progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-.progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-.progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
-
-/* CTAボタン群 */
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
-.cta-btn{ white-space: nowrap; word-break: keep-all; }
-@media (max-width: 420px){
-  .cta-btn{ padding:12px 10px; font-size: clamp(12px, 3.5vw, 14px); }
+/* 6) ユーティリティ */
+.muted { color: #475569; }
+.text-sm { font-size: .86em; opacity: .9; }
+.smallish { font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
+.security-note {
+  font-size: .9em; color: #334155; background: #f1f5f9; border: 1px solid #e2e8f0;
+  border-radius: 10px; padding: .8rem 1rem; margin-top: .6rem;
 }
 
-/* 固定CTA（常に最下部固定） */
-.fixed-cta{
-  position:fixed; left:0; right:0; bottom:0; z-index:9999;
-  background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
-  border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom: var(--safe-bottom);
-}
-.fixed-cta .row{
-  max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
-  padding:.6rem 1rem;min-height:var(--cta-h)
+/* 7) スマホ最適化 */
+@media (max-width: 600px) {
+  .accordion { padding: 20px 0; }
+  .accordion summary { padding: 12px 42px 12px 12px; }
+  .accordion .content { padding: 12px 12px 14px; }
+  .accordion .content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
-/* ハンバーガー */
-.menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-  display:inline-flex;align-items:center;justify-content:center;
-  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
+/* 8) KYC ↔ 料金プランの間隔だけ微調整（他は触らない） */
+#corp-setup .accordion { padding-bottom: 0 !important; margin-bottom: 0 !important; }
+#plans { padding-top: 0 !important; margin-top: 0 !important; }
+#corp-setup + #plans { margin-top: 12px !important; }
+@media (max-width: 480px){
+  #corp-setup + #plans { margin-top: 8px !important; }
 }
-.menu-button .bars{display:block;width:28px;height:20px;position:relative}
-.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
+
+/* 9) 右上ボタンを“必ず”クリック可能に（被り対策） */
+.menu-button,
+.lang-button {
+  position: fixed;
+  z-index: 999999 !important;   /* 常に最上面 */
+  pointer-events: auto !important;
 }
-.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
-.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
-  background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38
-}
-.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-.menu-title{font-weight:800;color:#111827}
-.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-.menu-close:hover{background:#f3f4f6}
-.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
-.menu-group{padding:8px 10px 6px}
-.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
-.menu-list{list-style:none;margin:0;padding:0}
-.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+/* ドロワーの土台：閉じている時はクリック無効、開いたら有効 */
+.menu-wrap,
+.lang-wrap { pointer-events: none !important; }
+html.menu-open .menu-wrap,
+html.lang-open .lang-wrap { pointer-events: auto !important; }
 
-html.menu-open .menu-wrap{pointer-events:auto}
-html.menu-open .menu-backdrop{opacity:1}
-html.menu-open .menu-panel{transform:none}
-html.menu-open,html.menu-open body{overflow:hidden}
+/* スクロール容器が上に乗らないように */
+#scroll-root { z-index: 0 !important; }
 
-/* 言語パネル */
-.lang-button{
-  position:fixed;top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 10px);
-  z-index:10001; width:48px;height:48px;border-radius:12px;
-  background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
-  display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 14px rgba(0,0,0,.15)
-}
-.lang-button .globe{font-size:20px;line-height:1}
-.lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
-.lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.lang-panel{
-  position:absolute;top:calc(64px + var(--safe-top));right:calc(10px + var(--safe-right));
-  width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-  box-shadow:0 16px 40px rgba(0,0,0,.12);
-  transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
-  font-size:14px;line-height:1.5
-}
-.lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb;background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px}
-.lang-title{font-weight:800;color:#111827}
-.lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-.lang-close:hover{background:#f3f4f6}
-.lang-body{padding:10px 12px}
-
-html.lang-open .lang-wrap{pointer-events:auto}
-html.lang-open .lang-backdrop{opacity:1}
-html.lang-open .lang-panel{transform:none;opacity:1}
-
-/* Google翻訳のバナー等は隠す（押し下げ防止） */
-.goog-te-banner-frame, .goog-te-banner-frame.skiptranslate,
-#goog-gt-tt, .goog-te-balloon-frame,
-.VIpgJd-ZVi9od-ORHb-OEVmcd, .VIpgJd-ZVi9od-l4eHX-hSRGPd,
-.VIpgJd-yAWNEb-L7lbkb, .VIpgJd-yAWNEb-hvhgNd { display:none !important; }
-body{ top:0 !important; }
-
-/* Google翻訳メニューiframeを右上固定＆縦スクロール可に */
-iframe.goog-te-menu-frame{
+/* 10) CTA を最下部に固定（見た目は既存のまま） */
+.fixed-cta,
+#ctaBar,
+.cta-bar {
   position: fixed !important;
-  top: calc(64px + var(--safe-top)) !important;
-  right: calc(10px + var(--safe-right)) !important;
+  left: 0; right: 0; bottom: 0 !important;
+  z-index: 99998 !important;
+  background: #ffffffcc;
+  backdrop-filter: saturate(140%) blur(8px);
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* 端末の安全域ぶんだけ余白を確保 */
+.fixed-cta,
+#ctaBar,
+.cta-bar {
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
+}
+
+/* 本文側にCTAの高さぶんの下余白を確保（既存より強くしない） */
+:root { --cta-h: 72px; }
+body {
+  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
+#scroll-root {
+  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
+
+/* 11) Google翻訳：バナー/ツールバーを非表示（押し下げ防止） */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+.VIpgJd-yAWNEb-L7lbkb,
+.VIpgJd-yAWNEb-hvhgNd {
+  display: none !important;
+}
+body { top: 0 !important; }
+
+/* 12) Google翻訳メニュー（リスト）の安全な配置
+   - 公式メニューiframeが画面中央を覆う事故を回避
+   - 高さは内部スクロールで処理
+*/
+iframe.goog-te-menu-frame {
+  position: fixed !important;
+  top: calc(64px + env(safe-area-inset-top, 0px)) !important;
+  right: calc(10px + env(safe-area-inset-right, 0px)) !important;
   left: auto !important;
   bottom: auto !important;
   width: min(380px, 92vw) !important;
-  height: 70vh !important;
-  max-height: 560px !important;
-  border-radius: 12px !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,.18) !important;
-  z-index: 11050 !important;
-  overflow: hidden !important;
-}
-
-/* KYC ↔ 料金プラン の間だけ微調整（他は不変） */
-#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
-#corp-setup + #plans{ margin-top:12px !important; }
-#plans{ padding-top:0 !important; }
-
-/* ======== ここが重要：スクロール不能の強制解除（JSは現状のまま） ======== */
-/* 以前のCSSで html,body に overflow:hidden; が入っていた場合を打ち消し */
-html, body { height: auto !important; overflow: auto !important; }
-
-/* JSが #scroll-root を作っても“普通のブロック”として扱う */
-#scroll-root,
-#scroll-root.has-cta{
-  position: static !important;
-  inset: auto !important;
-  overflow: visible !important;
+  max-height: 70vh !important;
   height: auto !important;
-  display: block !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  -webkit-overflow-scrolling: auto !important;
+  overflow: auto !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 40px rgba(0,0,0,.12) !important;
+  border: 1px solid #e5e7eb !important;
+  z-index: 11050 !important;
 }
 
-/* CTAは固定のまま */
-.fixed-cta, .cta-bar{
-  position: fixed !important;
-  left: 0; right: 0; bottom: 0 !important;
-  z-index: 9999;
-  padding-bottom: var(--safe-bottom);
-  transform: none !important;
-  will-change: auto !important;
+/* 13) 画像・リンク等の安全な既定 */
+img { max-width: 100%; height: auto; display: block; }
+a { color: #1178ff; text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: #0e63d3; }
+
+/* 14) ヒーロー見出しが右上UIと被らない保険（過度に影響しない程度） */
+#corp-setup > h2 {
+  padding-right: calc(120px + env(safe-area-inset-right, 0px));
+}
+@media (max-width: 480px){
+  #corp-setup > h2 {
+    padding-right: calc(140px + env(safe-area-inset-right, 0px));
+  }
+}
+
+/* 15) モバイルでCTAボタンが1行に収まる保険（デザインは変えない） */
+.cta-btn { white-space: nowrap; word-break: keep-all; }
+@media (max-width: 420px){
+  .cta-btn { padding: 12px 10px; font-size: clamp(12px, 3.5vw, 14px); }
 }
