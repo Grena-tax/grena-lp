@@ -1,204 +1,166 @@
-/* =========================================================
-   style.css — SAFE EDITION（フォントは一切変更しません）
-   目的：
-   - 右上ボタンを常にクリック可能に
-   - CTAを最下部固定
-   - KYC↔料金の余白だけ整える
-   - Google翻訳の押し下げ/被りを抑止
-   ========================================================= */
+/**************************************************************
+  style.css — 全面版（フォント/配色/余白の既存見た目は維持）
+  目的:
+   - 地球儀/ハンバーガー/アコーディオンがタップできない問題を解消
+   - Google翻訳バナーの押し下げ＆当たり判定を排除
+   - 既存のカードUI/固定CTA/アコーディオン見た目はそのまま
+**************************************************************/
 
-/* 0) Base（安全な最小限） */
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; line-height: 1.7; background: #fff; }
+/* ====== 基本レイアウト ====== */
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --cta-h: 72px;              /* 実高はJSが上書き */
+}
 
-/* 1) レイアウト */
-.container { width: min(1100px, 92%); margin-inline: auto; }
+html, body { margin:0; padding:0; }
+body{
+  line-height:1.7;
+  color:#111;                 /* 既存に寄せた標準色 */
+  background:#fff;
+  padding-bottom: calc(var(--cta-h) + var(--safe-bottom));
+}
 
-/* 2) セクション見出し（デザインは控えめ） */
-section > h2 {
-  font-weight: 800;
-  letter-spacing: .01em;
-  line-height: 1.25;
+.container{ width:min(1100px,92%); margin-inline:auto; }
+section > h2{
+  font-weight:800;
+  letter-spacing:.01em;
+  line-height:1.25;
   font-size: clamp(22px, 2.8vw, 30px);
-  margin: 0 0 .8rem;
-  padding-bottom: .35rem;
-  border-bottom: 2px solid #eaeaea;
+  margin:0 0 .8rem;
+  padding-bottom:.35rem;
+  border-bottom:2px solid #eaeaea;
 }
 
-/* 3) アコーディオン */
-.accordion { padding: 24px 0; }
-.accordion details {
-  border: 1px solid #e7ebf2; border-radius: 12px; background: #fff;
+/* ====== アコーディオン ====== */
+.accordion{ padding:24px 0; }
+.accordion details{
+  border:1px solid #e7ebf2; border-radius:12px; background:#fff;
   box-shadow: 0 10px 30px rgba(20,35,70,.05);
-  overflow: hidden; transition: box-shadow .25s ease, transform .2s ease;
+  overflow:hidden; transition: box-shadow .25s ease, transform .2s ease;
 }
-.accordion details+details { margin-top: 12px; }
-.accordion summary {
-  list-style: none; cursor: pointer;
-  padding: 14px 52px 14px 16px; font-weight: 800; font-size: 16px; position: relative;
-  display: flex; align-items: center; gap: .6rem;
+.accordion details+details{ margin-top:12px; }
+
+.accordion summary{
+  list-style:none; cursor:pointer;
+  padding:14px 52px 14px 16px; font-weight:800; font-size:16px; position:relative;
+  display:flex; align-items:center; gap:.6rem;
   background: linear-gradient(180deg,#fff,#fbfcff);
-  border-bottom: 1px solid #eef2f7;
+  border-bottom:1px solid #eef2f7;
 }
-.accordion summary::-webkit-details-marker { display: none; }
-.accordion summary:focus-visible {
-  outline: 3px solid rgba(23,128,255,.35); outline-offset: 2px; border-radius: 8px;
-}
-.accordion details[open] { box-shadow: 0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px); }
-.accordion details[open] summary { background: linear-gradient(180deg,#f9fbff,#f4f8ff); }
+.accordion summary::-webkit-details-marker{ display:none; }
+.accordion summary:focus-visible{ outline:3px solid rgba(23,128,255,.35); outline-offset:2px; border-radius:8px; }
 
-/* +/- ボタン */
-.accordion summary::after {
-  content: "+"; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-  width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
-  line-height: 1; font-size: 14px; background: #eef4ff; color: #3657ff; border: 1px solid #dbe7ff; font-weight: 900;
-}
-.accordion details[open] > summary::after {
-  content: "−"; background: #e6f2ff; color: #143cff; border-color: #c7dbff;
-}
-.accordion .content {
-  padding: 12px 16px 16px; border-top: 1px solid #e5e7eb; background: #fbfdff; color: #374151;
-}
-.accordion .content p { margin: 12px 0; }
-.accordion .content ul { list-style: disc; padding-left: 1.2rem; margin: .4em 0 .8em 0; }
-.accordion .content li+li { margin-top: .25em; }
+.accordion details[open]{ box-shadow:0 14px 36px rgba(20,35,70,.08); transform: translateY(-1px); }
+.accordion details[open] summary{ background: linear-gradient(180deg,#f9fbff,#f4f8ff); }
 
-/* 4) テーブル（アコーディオン内の見栄え向上） */
-.accordion .content table {
-  width: 100%; border-collapse: separate; border-spacing: 0; margin: .6rem 0;
-  font-size: 14px; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; background: #fff;
+/* 右側の + / − */
+.accordion summary::after{
+  content:"+"; position:absolute; right:14px; top:50%; transform:translateY(-50%);
+  width:22px; height:22px; border-radius:6px; display:grid; place-items:center;
+  line-height:1; font-size:14px; background:#eef4ff; color:#3657ff; border:1px solid #dbe7ff; font-weight:900;
 }
-.accordion .content thead th {
-  background: #f7f8fb; font-weight: 800; text-align: left; padding: 10px 12px; border-bottom: 1px solid #e5e7eb;
+.accordion details[open] > summary::after{
+  content:"−"; background:#e6f2ff; color:#143cff; border-color:#c7dbff;
 }
-.accordion .content td { padding: 10px 12px; border-bottom: 1px dashed #eef2f7; }
-.accordion .content tr:last-child td { border-bottom: none; }
-
-/* 5) テーブル（フォールバック） */
-table { width: 100%; border-collapse: collapse; margin: .5rem 0; }
-th, td { border: 1px solid #e5e7eb; padding: .5rem .6rem; text-align: right; }
-th:first-child, td:first-child { text-align: left; }
-
-/* 6) ユーティリティ */
-.muted { color: #475569; }
-.text-sm { font-size: .86em; opacity: .9; }
-.smallish { font-size: clamp(20px, 3.6vw, 24px); margin-bottom: .75rem; font-weight: 800; }
-.security-note {
-  font-size: .9em; color: #334155; background: #f1f5f9; border: 1px solid #e2e8f0;
-  border-radius: 10px; padding: .8rem 1rem; margin-top: .6rem;
+.accordion .content{
+  padding:12px 16px 16px; border-top:1px solid #e5e7eb; background:#fbfdff; color:#374151;
 }
+.accordion .content p{ margin:12px 0; }
+.accordion .content ul{ list-style:disc; padding-left:1.2rem; margin:.4em 0 .8em; }
+.accordion .content li+li{ margin-top:.25em; }
 
-/* 7) スマホ最適化 */
-@media (max-width: 600px) {
-  .accordion { padding: 20px 0; }
-  .accordion summary { padding: 12px 42px 12px 12px; }
-  .accordion .content { padding: 12px 12px 14px; }
-  .accordion .content table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* テーブル（内部用） */
+.accordion .content table{
+  width:100%; border-collapse:separate; border-spacing:0; margin:.6rem 0;
+  font-size:14px; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; background:#fff;
 }
-
-/* 8) KYC ↔ 料金プランの間隔だけ微調整（他は触らない） */
-#corp-setup .accordion { padding-bottom: 0 !important; margin-bottom: 0 !important; }
-#plans { padding-top: 0 !important; margin-top: 0 !important; }
-#corp-setup + #plans { margin-top: 12px !important; }
-@media (max-width: 480px){
-  #corp-setup + #plans { margin-top: 8px !important; }
+.accordion .content thead th{
+  background:#f7f8fb; font-weight:800; text-align:left; padding:10px 12px; border-bottom:1px solid #e5e7eb;
 }
+.accordion .content td{ padding:10px 12px; border-bottom:1px dashed #eef2f7; }
+.accordion .content tr:last-child td{ border-bottom:none; }
 
-/* 9) 右上ボタンを“必ず”クリック可能に（被り対策） */
-.menu-button,
-.lang-button {
+/* 備考ノート */
+.muted{ color:#475569; }
+.text-sm{ font-size:.86em; opacity:.9; }
+.accordion .content .note{ display:block; margin:.3rem 0 .15rem; font-size:.85em; color:#64748b; line-height:1.5; }
+.accordion .content .note::before{ content:"※ "; font-weight:700; color:#475569; }
+
+/* ====== 右上の地球儀/ハンバーガー（見た目はそのまま・タップ最優先） ====== */
+#langBtn, #menuBtn{
   position: fixed;
-  z-index: 999999 !important;   /* 常に最上面 */
-  pointer-events: auto !important;
+  z-index: 2147483643;          /* 何が被っても押せる */
+  pointer-events: auto;
 }
 
-/* ドロワーの土台：閉じている時はクリック無効、開いたら有効 */
-.menu-wrap,
-.lang-wrap { pointer-events: none !important; }
-html.menu-open .menu-wrap,
-html.lang-open .lang-wrap { pointer-events: auto !important; }
+/* ====== ドロワー（閉時は display:none で当たり判定ゼロ） ====== */
+.menu-wrap[aria-hidden="true"],
+.lang-wrap[aria-hidden="true"]{
+  display:none !important;
+  pointer-events:none !important;
+}
+.menu-wrap[aria-hidden="false"] .menu-backdrop,
+.lang-wrap[aria-hidden="false"] .lang-backdrop{ pointer-events:auto; }
 
-/* スクロール容器が上に乗らないように */
-#scroll-root { z-index: 0 !important; }
+/* html クラスでも確実に閉じる */
+html:not(.menu-open) .menu-wrap{ display:none !important; }
+html:not(.lang-open)  .lang-wrap { display:none !important; }
 
-/* 10) CTA を最下部に固定（見た目は既存のまま） */
-.fixed-cta,
-#ctaBar,
-.cta-bar {
-  position: fixed !important;
-  left: 0; right: 0; bottom: 0 !important;
-  z-index: 99998 !important;
-  background: #ffffffcc;
-  backdrop-filter: saturate(140%) blur(8px);
-  border-top: 1px solid rgba(0,0,0,.06);
+/* ====== 固定CTA（見た目維持） ====== */
+.fixed-cta{
+  position:fixed; left:0; right:0; bottom:0; z-index:2147483640;
+  background:#ffffffcc; backdrop-filter:saturate(140%) blur(8px);
+  border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom: var(--safe-bottom);
+}
+.fixed-cta .row{
+  max-width:64rem; margin:0 auto; display:flex; gap:.6rem; align-items:center;
+  justify-content:flex-end; padding:.6rem 1rem; min-height:var(--cta-h);
 }
 
-/* 端末の安全域ぶんだけ余白を確保 */
-.fixed-cta,
-#ctaBar,
-.cta-bar {
-  padding-bottom: max(0px, env(safe-area-inset-bottom));
-}
+/* ボタン（色は既存UIに合わせる） */
+.btn{ display:inline-flex; gap:.5rem; align-items:center; justify-content:center;
+  border-radius:10px; padding:.55rem .9rem; font-weight:700; border:1px solid transparent;
+  text-decoration:none; white-space:nowrap; cursor:pointer; }
+.btn.neutral{ background:#e5e7eb; color:#111827; }
+.btn.secondary{ background:#1f2937; color:#fff; }
+.btn.success{ background:#10b981; color:#fff; }
+.btn:hover{ opacity:.92; }
 
-/* 本文側にCTAの高さぶんの下余白を確保（既存より強くしない） */
-:root { --cta-h: 72px; }
-body {
-  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
-}
-#scroll-root {
-  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
-}
+/* ====== KYC と 料金プランの間隔（詰めるだけ。他は触らない） ====== */
+#corp-setup .accordion{ padding-bottom:0 !important; margin-bottom:0 !important; }
+#plans { padding-top:0 !important; margin-top:0 !important; }
+#corp-setup + #plans { margin-top:12px !important; } /* 端末差が出たら 8〜16 で微調整可 */
 
-/* 11) Google翻訳：バナー/ツールバーを非表示（押し下げ防止） */
+/* ====== Google 翻訳：バナー/ツールバー完全に無効化（押し下げ＆タップ妨害を排除） ====== */
 iframe.goog-te-banner-frame,
 .goog-te-banner-frame.skiptranslate,
 #goog-gt-tt,
-.VIpgJd-ZVi9od-ORHb-OEVmcd,
-.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,    /* 新UIの上部バナー */
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,   /* 右下のツールバー */
 .VIpgJd-yAWNEb-L7lbkb,
-.VIpgJd-yAWNEb-hvhgNd {
-  display: none !important;
+.VIpgJd-yAWNEb-hvhgNd{
+  display:none !important;
 }
-body { top: 0 !important; }
+body{ top:0 !important; }
 
-/* 12) Google翻訳メニュー（リスト）の安全な配置
-   - 公式メニューiframeが画面中央を覆う事故を回避
-   - 高さは内部スクロールで処理
-*/
-iframe.goog-te-menu-frame {
-  position: fixed !important;
-  top: calc(64px + env(safe-area-inset-top, 0px)) !important;
-  right: calc(10px + env(safe-area-inset-right, 0px)) !important;
-  left: auto !important;
-  bottom: auto !important;
-  width: min(380px, 92vw) !important;
-  max-height: 70vh !important;
-  height: auto !important;
-  overflow: auto !important;
-  border-radius: 12px !important;
-  box-shadow: 0 16px 40px rgba(0,0,0,.12) !important;
-  border: 1px solid #e5e7eb !important;
-  z-index: 11050 !important;
+/* 公式ウィジェットは画面外に退避（必要時 JS からだけ触る） */
+#google_translate_element{
+  position:fixed; left:-9999px; top:-9999px;
+  width:0; height:0; overflow:hidden; pointer-events:none;
 }
 
-/* 13) 画像・リンク等の安全な既定 */
-img { max-width: 100%; height: auto; display: block; }
-a { color: #1178ff; text-decoration: underline; text-underline-offset: 2px; }
-a:hover { color: #0e63d3; }
-
-/* 14) ヒーロー見出しが右上UIと被らない保険（過度に影響しない程度） */
-#corp-setup > h2 {
-  padding-right: calc(120px + env(safe-area-inset-right, 0px));
-}
-@media (max-width: 480px){
-  #corp-setup > h2 {
-    padding-right: calc(140px + env(safe-area-inset-right, 0px));
-  }
+/* ====== モバイル細かい調整 ====== */
+@media (max-width:600px){
+  .accordion{ padding:20px 0; }
+  .accordion summary{ padding:12px 42px 12px 12px; }
+  .accordion .content{ padding:12px 12px 14px; }
+  .accordion .content table{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
 }
 
-/* 15) モバイルでCTAボタンが1行に収まる保険（デザインは変えない） */
-.cta-btn { white-space: nowrap; word-break: keep-all; }
-@media (max-width: 420px){
-  .cta-btn { padding: 12px 10px; font-size: clamp(12px, 3.5vw, 14px); }
-}
+/* ====== テーブルのフォールバック（ページ全体） ====== */
+table{ width:100%; border-collapse:collapse; margin:.5rem 0; }
+th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right; }
+th:first-child, td:first-child{ text-align:left; }
