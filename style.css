@@ -199,3 +199,54 @@ html, body, button, input, select, textarea{
   font-family: inherit !important;
   font-size: inherit; line-height: inherit;
 }
+/* ====== MINIMAL FIX 画像どおりのレイアウトを保ったまま、タップ不具合だけ解消 ====== */
+
+/* 0) 何もフォント指定しない（UAフォントのまま） */
+html, body, button, input, select, textarea { font-family: inherit !important; }
+
+/* 1) 右上アイコンの位置と最前面（画像と同じ配置） */
+#menuBtn, #langBtn{
+  position: fixed !important;
+  top: 12px !important;
+  width: 44px; height: 44px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  z-index: 2147483647 !important; /* 最前面 */
+  pointer-events: auto !important;
+}
+#menuBtn{ right: 16px !important; }  /* ハンバーガー（右端） */
+#langBtn{ right: 72px !important; }  /* 地球儀（その左） */
+
+/* 2) タイトルとアイコンが被らないように右側だけ余白を確保（見た目はそのまま） */
+#corp-setup > h2{ padding-right: 140px !important; }
+
+/* 3) Google翻訳の公式UI・バナー・ツールバーを画面外へ完全退避（当たり判定ゼロ） */
+#google_translate_element,
+#google_translate_element *{
+  position: fixed !important;
+  left: -9999px !important; top: -9999px !important;
+  width: 0 !important; height: 0 !important;
+  overflow: hidden !important; pointer-events: none !important;
+}
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,   /* 新バナー */
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,  /* 右下ツールバー */
+.VIpgJd-yAWNEb-L7lbkb,
+.VIpgJd-yAWNEb-hvhgNd{
+  display: none !important;
+}
+body{ top: 0 !important; } /* 押し下げ解除 */
+
+/* 4) 言語/メニューのドロワーは閉じている間は完全に無効化
+      → 見えないオーバーレイがタップを奪うのを防止 */
+.lang-wrap[aria-hidden="true"],
+.menu-wrap[aria-hidden="true"],
+html:not(.lang-open)  .lang-wrap,
+html:not(.menu-open) .menu-wrap{
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* 5) アコーディオンは常にタップ可（何かが被っても優先） */
+details > summary{ position: relative; z-index: 1; }
