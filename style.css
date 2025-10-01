@@ -164,3 +164,38 @@ body{ top:0 !important; }
 table{ width:100%; border-collapse:collapse; margin:.5rem 0; }
 th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right; }
 th:first-child, td:first-child{ text-align:left; }
+/* ==== FIX PACK (tap 不可の根本だけ潰す。見た目変更なし) ==== */
+
+/* 1) Google翻訳ウィジェット/バナーを完全退避（当たり判定ゼロ） */
+#google_translate_element,
+#google_translate_element *{
+  position: fixed !important;
+  left: -9999px !important; top: -9999px !important;
+  width: 0 !important; height: 0 !important;
+  overflow: hidden !important; pointer-events: none !important;
+}
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+#goog-gt-tt,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-l4eHX-hSRGPd,
+.VIpgJd-yAWNEb-L7lbkb,
+.VIpgJd-yAWNEb-hvhgNd{
+  display: none !important;
+}
+body{ top:0 !important; } /* 押し下げ解除 */
+
+/* 2) 地球儀/ハンバーガーを最前面＆閉時は当たり判定を消す */
+#langBtn, #menuBtn{ z-index: 2147483643 !important; pointer-events:auto !important; }
+.menu-wrap[aria-hidden="true"],
+.lang-wrap[aria-hidden="true"]{
+  display: none !important; pointer-events: none !important;
+}
+html:not(.menu-open) .menu-wrap{ display:none !important; }
+html:not(.lang-open)  .lang-wrap { display:none !important; }
+
+/* 3) フォントは変えない（UAのまま）— 念のための保険 */
+html, body, button, input, select, textarea{
+  font-family: inherit !important;
+  font-size: inherit; line-height: inherit;
+}
