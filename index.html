@@ -8,10 +8,10 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま） -->
+<!-- 既存のメインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
-<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー＋言語UI（本文は無改変） -->
+<!-- 追加スタイル（UI用。本文レイアウトは不変更） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -54,15 +54,14 @@
 
   @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-  /* ▼ ご指定：KYCと料金の隙間を他とそろえる（詰める） */
+  /* ▼ 指定：KYCと料金の隙間を詰める */
   #corp-setup{padding-bottom:0!important}
   #plans{padding-top:0!important;margin-top:0!important}
 
   /* 右上ハンバーガー */
   .menu-button{
     position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-    display:inline-flex;align-items:center;justify-content:center;
-    width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
     box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
   }
   .menu-button .bars{display:block;width:28px;height:20px;position:relative}
@@ -101,18 +100,18 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
 
-  /* ▼ 言語スイッチ（英語UI・縦スクロールのフルリスト） */
+  /* ▼ 言語スイッチ（縦スクロールのフルリスト） */
   .lang-button{
     position:fixed;top:calc(10px + var(--safe-top));
-    right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの左横 */
-    z-index:10001; width:48px;height:48px;border-radius:12px;
-    background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
+    right:calc(10px + var(--safe-right) + 48px + 10px);
+    z-index:10001; width:48px;height:48px;border-radius:12px;background:#111827; color:#fff;
+    border:1px solid rgba(255,255,255,.08);
     display:inline-flex;align-items:center;justify-content:center;
     box-shadow:0 4px 14px rgba(0,0,0,.15)
   }
@@ -141,24 +140,12 @@
   .goog-te-banner-frame{display:none!important}
   #goog-gt-tt{display:none!important}
   body{top:0!important}
-  /* 公式ウィジェット自体は画面外へ退避（selectはJSから操作） */
-  #google_translate_element{
-    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
-  }
+  #google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
 
-  /* カスタムのフル言語リスト（縦スクロール） */
   .ls-search{display:flex;gap:8px;margin:6px 0 10px}
-  .ls-search input{
-    flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px
-  }
-  .ls-list{
-    display:grid;grid-template-columns:1fr;gap:6px;
-    max-height:min(60vh,520px);overflow:auto;padding:2px
-  }
-  .ls-item{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
-  }
+  .ls-search input{flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px}
+  .ls-list{display:grid;grid-template-columns:1fr;gap:6px;max-height:min(60vh,520px);overflow:auto;padding:2px}
+  .ls-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
   .ls-item:hover{background:#f3f4f6}
   .ls-code{font-size:12px;color:#64748b}
   .ls-active{outline:2px solid #2563eb}
@@ -173,7 +160,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ（ハンバーガー左に固定） -->
+<!-- 言語スイッチ -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -189,7 +176,6 @@
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
@@ -211,9 +197,7 @@
   </aside>
 </nav>
 
-<!-- =========================
-  法人設立セクション
-========================== -->
+<!-- ========================= 法人設立 ========================= -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">
   ジョージア法人設立｜<br>
@@ -224,7 +208,7 @@
     <details>
       <summary>ジョージア法人設立 OECD・PwC準拠｜MoU契約済｜完全オンライン対応</summary>
       <div class="content">
-        <p>OECD／PwC準拠、現地法律事務所とMoU契約済み。ジョージアの再投資型課税モデルで、配当しない限り法人税0％。</p>
+        <p>OECD／PwC準拠、現地法律事務所とMoU契約済み。ジョージアの再投資型課税モデルにより、<strong>再投資中は原則として法人税は発生せず、配当等の分配時に（現地法上15%）課税</strong>されます（例外あり・エストニア型モデルに近い制度）。</p>
         <span class="note">※ OECD＝経済協力開発機構／PwC＝PricewaterhouseCoopers（国際会計事務所）／MoU＝覚書（業務提携の合意文書）</span>
         <p><strong>ジョージアの税制特徴（現地法上の扱い）</strong></p>
         <ul>
@@ -282,7 +266,7 @@
     <details>
       <summary>法人税0％の仕組み（エストニア型モデル）</summary>
       <div class="content">
-        <p>ジョージア現地法上、再投資中の利益には法人税が課税されません（配当時15％）。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
+        <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税されます（例外あり）。エストニア型モデルに近い制度です。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
         <p>出典：</p>
         <ul>
           <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート">PwC税制レポート</a></li>
@@ -358,9 +342,7 @@
   </div>
 </section>
 
-<!-- =========================
-  料金プラン
-========================== -->
+<!-- ========================= 料金プラン ========================= -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
@@ -409,7 +391,6 @@
           </div>
         </details>
 
-        <!-- ★ 追加：オプション-->
         <details>
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
@@ -423,7 +404,6 @@
             <span class="note">※ 価格は時期・条件で変動する場合があります。最新は事前にご確認ください。</span>
           </div>
         </details>
-        <!-- ★ 追加ここまで -->
 
       </div>
     </details>
@@ -451,7 +431,7 @@
             <span class="now">¥250,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="meta">
-            <small>※ 初年度「基本プラン」ご利用でLPやドメイン未整備の方向け追加グッズです。</small>
+            <small>※ 初年度「基本プラン」ご利用でLPやドメイン未整備の方向け追加メニューです。</small>
           </div>
         </div>
 
@@ -477,9 +457,7 @@
   </div>
 </section>
 
-<!-- =========================
-  個人事業主（IE + SBS）
-========================== -->
+<!-- ========================= 個人事業主 ========================= -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
   <div class="space-y-3 accordion">
@@ -601,9 +579,7 @@
   </div>
 </section>
 
-<!-- =========================
-  個人口座開設（銀行）
-========================== -->
+<!-- ========================= 個人口座開設（銀行） ========================= -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
   <div class="space-y-3 accordion">
@@ -777,9 +753,7 @@
   </div>
 </section>
 
-<!-- =========================
-  免責事項・キャンセル（アコーディオン）
-========================== -->
+<!-- ========================= 免責・キャンセル ========================= -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
@@ -819,7 +793,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
+<!-- 画面最下部 固定CTA -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -828,20 +802,18 @@
   </div>
 </div>
 
-<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
+<!-- JS -->
 <script src="./script.js?v=20250912-gt"></script>
 
-<!-- Google翻訳（全言語） -->
+<!-- Google翻訳 -->
 <script>
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'ja',
       autoDisplay: false
-      // includedLanguages を省略 → Googleが対応する全言語を表示
     }, 'google_translate_element');
   }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
-<style>#corp-setup + #plans{margin-top:12px!important}</style>
