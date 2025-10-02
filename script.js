@@ -1,4 +1,4 @@
-/* ===== 申込フォームURL ===== */
+/* ===== 申込フォームURL（先頭で定義） ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
 /* ===== util ===== */
@@ -8,7 +8,7 @@ const slug = (t) => (t || '')
   .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
   .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-/* === 追加①：ページ本体をスクロール容器に移す（HTMLは無改変） === */
+/* === 追加①：ページ本体をスクロール容器に移す === */
 (function mountScrollRoot(){
   if (document.getElementById('scroll-root')) return;
 
@@ -22,11 +22,9 @@ const slug = (t) => (t || '')
   const wrap = document.createElement('div');
   wrap.id = 'scroll-root';
 
-  // CTAより上にスクロール容器を挿入
   if (cta) body.insertBefore(wrap, cta);
   else body.appendChild(wrap);
 
-  // CTA・メニューUI・言語UI以外を全部 #scroll-root に移動
   const keep = new Set([cta, menuBtn, menuDrawer, langBtn, langDrawer, wrap]);
   Array.from([...body.childNodes]).forEach(n => {
     if (!keep.has(n)) wrap.appendChild(n);
@@ -44,7 +42,6 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  // 免責(#disclaimer) だけは自動オープンしない
   if (target.id !== 'disclaimer') {
     const first = target.querySelector('details');
     if (first && !first.open) first.open = true;
@@ -61,7 +58,7 @@ document.getElementById('toTop')?.addEventListener('click', (e)=>{
   }
 });
 
-/* ===== 固定CTAの高さ → 本文余白に反映（※bottomはJSで触らない） ===== */
+/* ===== 固定CTAの高さを本文余白に反映 ===== */
 const adjustCtaPadding = () => {
   const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
   if (!bar) return;
@@ -109,7 +106,7 @@ closeBt?.addEventListener('click', closeMenu);
 overlay?.addEventListener('click', closeMenu);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
-/* ===== メニュー（ハンバーガー内）自動生成 ===== */
+/* ===== メニュー自動生成 ===== */
 const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
 
 function buildMenu(){
@@ -179,7 +176,7 @@ if (groupsRoot) {
   new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
 }
 
-/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer だけに揃える） ===== */
+/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer に集約） ===== */
 function cutOnlyBottomDup() {
   document.getElementById('site-disclaimer')?.remove();
   document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
@@ -199,9 +196,7 @@ function cutOnlyBottomDup() {
 document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
 window.addEventListener('load', cutOnlyBottomDup);
 
-/* ===== ここ重要：CTAの bottom を JS では一切いじらない ===== */
-
-/* === 追加②：保険（UI縮みの追従だけtransformで相殺。bounce中は値を凍結） === */
+/* ===== CTAのbottomはJSで触らない（iOS対策：transformで相殺） ===== */
 (function lockCtaToBottomFreeze(){
   const bar =
     document.querySelector('.fixed-cta') ||
@@ -212,14 +207,10 @@ window.addEventListener('load', cutOnlyBottomDup);
 
   const scroller = document.getElementById('scroll-root') || document.documentElement;
 
-  let stable = 0; // 直近の安定値
+  let stable = 0;
   const apply = () => {
     const vv  = window.visualViewport;
-
-    // 端のUIが出たぶんの隙間（iOSのホームバー等）
     const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-
-    // スクロール量/最大量を #scroll-root（存在時）基準に判定
     const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
 
     let y = 0;
@@ -241,7 +232,6 @@ window.addEventListener('load', cutOnlyBottomDup);
   visualViewport.addEventListener('resize',  apply);
   visualViewport.addEventListener('scroll',  apply);
 
-  // 実際のスクロールイベントも拾う（#scroll-root優先）
   if (scroller && scroller.addEventListener) {
     scroller.addEventListener('scroll', apply, { passive: true });
   } else {
@@ -277,18 +267,13 @@ langClose?.addEventListener('click', closeLang);
 langBackdrop?.addEventListener('click', closeLang);
 document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
 
-/* メニューと同時開きを避ける（最後に開いた方を優先） */
+/* メニューと同時開きを避ける */
 document.addEventListener('click', (e)=>{
   if (e.target.closest('#menuBtn')) closeLang();
   if (e.target.closest('#langBtn')) closeMenu();
 });
 
-/* ====== カスタム：英語名の“縦スクロール言語リスト”で全言語を選択 ======
-   仕組み：Googleの隠し<select.goog-te-combo>に値を入れてchange発火。
-   → 公式UIに依存せず、A〜Zすべて縦にスクロールして選べる。
-====================================================================== */
-
-/* 英語名 & Googleコードの一覧（主要＋全言語） */
+/* ===== 言語リスト（Google Translate連携） ===== */
 const LANGS = [
   ['af','Afrikaans'],['sq','Albanian'],['am','Amharic'],['ar','Arabic'],['hy','Armenian'],['az','Azerbaijani'],
   ['eu','Basque'],['be','Belarusian'],['bn','Bengali'],['bs','Bosnian'],['bg','Bulgarian'],
@@ -313,7 +298,7 @@ const LANGS = [
   ['vi','Vietnamese'],['cy','Welsh'],['xh','Xhosa'],['yi','Yiddish'],['yo','Yoruba'],['zu','Zulu']
 ];
 
-/* 公式<select>取得（ロード後に存在）→ 遅延で掴む */
+/* 公式<select>取得（遅延） */
 let gtSelect = null;
 function grabGoogleSelect(retry = 20){
   gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
@@ -322,7 +307,6 @@ function grabGoogleSelect(retry = 20){
 }
 grabGoogleSelect();
 
-/* 言語リストを描画（英語名でA→Z） */
 const langListEl = document.getElementById('langList');
 const searchEl   = document.getElementById('langSearch');
 
@@ -355,11 +339,9 @@ function renderLangList(filter = ''){
         if (!gtSelect) gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
         if (!gtSelect) return;
 
-        gtSelect.value = code;                // 公式selectに反映
-        gtSelect.dispatchEvent(new Event('change')); // Googleに通知
-        // 選択中ハイライト
+        gtSelect.value = code;
+        gtSelect.dispatchEvent(new Event('change'));
         langListEl.querySelectorAll('.ls-item').forEach(x=>x.classList.toggle('ls-active', x===item));
-        // パネルは開いたまま（必要なら closeLang() に変更可）
       });
 
       frag.appendChild(item);
@@ -367,11 +349,9 @@ function renderLangList(filter = ''){
 
   langListEl.appendChild(frag);
 }
-// 初期描画（全件）
 renderLangList();
 searchEl?.addEventListener('input', (e)=>renderLangList(e.target.value));
 
-/* 現在の言語をハイライト（初期は日本語） */
 function highlightCurrent(code){
   langListEl?.querySelectorAll('.ls-item').forEach(x=>{
     x.classList.toggle('ls-active', x.dataset.code === code);
@@ -379,8 +359,7 @@ function highlightCurrent(code){
 }
 highlightCurrent('ja');
 
-/* ===== ここまで：カスタム言語リスト ===== */
-/* === Add "Original / 日本語 (Reset)" button & restore original === */
+/* === Original / 日本語 (Reset) ボタン === */
 (function addOriginalReset(){
   const head = document.querySelector('.lang-head');
   if (!head || document.getElementById('gtReset')) return;
@@ -397,11 +376,9 @@ highlightCurrent('ja');
   btn.addEventListener('click', () => {
     const expire = 'Thu, 01 Jan 1970 00:00:00 GMT';
     const host = location.hostname.replace(/^www\./,'');
-    // GT が使うクッキーを全パターンで消す
     document.cookie = 'googtrans=; expires='+expire+'; path=/';
     document.cookie = 'googtrans=; expires='+expire+'; path=/; domain=.'+host;
     document.cookie = 'googtrans=; expires='+expire+'; path=/; domain='+host;
-    // URL ハッシュに残る場合があるので除去
     if (location.hash.includes('googtrans')) {
       history.replaceState('', document.title, location.pathname + location.search);
     }
