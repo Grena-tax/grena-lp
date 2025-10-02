@@ -8,10 +8,10 @@
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS -->
+<!-- 既存のメインCSS（そのまま） -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
-<!-- 追加スタイル（UI用。本文レイアウトは不変更） -->
+<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー＋言語UI（本文は無改変） -->
 <style>
   :root{
     --safe-top: env(safe-area-inset-top, 0px);
@@ -54,14 +54,15 @@
 
   @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-  /* ▼ 指定：KYCと料金の隙間を詰める */
+  /* ▼ ご指定：KYCと料金の隙間を他とそろえる（詰める） */
   #corp-setup{padding-bottom:0!important}
   #plans{padding-top:0!important;margin-top:0!important}
 
   /* 右上ハンバーガー */
   .menu-button{
     position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-    display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
     box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
   }
   .menu-button .bars{display:block;width:28px;height:20px;position:relative}
@@ -100,18 +101,18 @@
     backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
   }
   .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
   .btn.neutral{background:#e5e7eb;color:#111827}
   .btn.secondary{background:#1f2937;color:#fff}
   .btn.success{background:#10b981;color:#fff}
   .btn:hover{opacity:.92}
 
-  /* ▼ 言語スイッチ（縦スクロールのフルリスト） */
+  /* ▼ 言語スイッチ（英語UI・縦スクロールのフルリスト） */
   .lang-button{
     position:fixed;top:calc(10px + var(--safe-top));
-    right:calc(10px + var(--safe-right) + 48px + 10px);
-    z-index:10001; width:48px;height:48px;border-radius:12px;background:#111827; color:#fff;
-    border:1px solid rgba(255,255,255,.08);
+    right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの左横 */
+    z-index:10001; width:48px;height:48px;border-radius:12px;
+    background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
     display:inline-flex;align-items:center;justify-content:center;
     box-shadow:0 4px 14px rgba(0,0,0,.15)
   }
@@ -140,12 +141,24 @@
   .goog-te-banner-frame{display:none!important}
   #goog-gt-tt{display:none!important}
   body{top:0!important}
-  #google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
+  /* 公式ウィジェット自体は画面外へ退避（selectはJSから操作） */
+  #google_translate_element{
+    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+  }
 
+  /* カスタムのフル言語リスト（縦スクロール） */
   .ls-search{display:flex;gap:8px;margin:6px 0 10px}
-  .ls-search input{flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px}
-  .ls-list{display:grid;grid-template-columns:1fr;gap:6px;max-height:min(60vh,520px);overflow:auto;padding:2px}
-  .ls-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
+  .ls-search input{
+    flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px
+  }
+  .ls-list{
+    display:grid;grid-template-columns:1fr;gap:6px;
+    max-height:min(60vh,520px);overflow:auto;padding:2px
+  }
+  .ls-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
+  }
   .ls-item:hover{background:#f3f4f6}
   .ls-code{font-size:12px;color:#64748b}
   .ls-active{outline:2px solid #2563eb}
@@ -160,7 +173,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 言語スイッチ -->
+<!-- 右上：言語スイッチ（ハンバーガー左に固定） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -176,6 +189,7 @@
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
+      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
@@ -197,7 +211,9 @@
   </aside>
 </nav>
 
-<!-- ========================= 法人設立 ========================= -->
+<!-- =========================
+  法人設立セクション
+========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">
   ジョージア法人設立｜<br>
@@ -263,10 +279,13 @@
       </div>
     </details>
 
+    <!-- ▼▼ 見出しを安全表現に変更（「法人税0％」→「法人税の課税タイミング」） ▼▼ -->
     <details>
-      <summary>法人税0％の仕組み（エストニア型モデル）</summary>
+      <summary>法人税の課税タイミング（エストニア型モデル）</summary>
       <div class="content">
         <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税されます（例外あり）。エストニア型モデルに近い制度です。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
+        <!-- 追記3：CFCの“合算課税”を明示 -->
+        <p class="text-sm muted">※ 支配要件等を満たす場合、CFCルールにより<strong>留保所得が合算課税</strong>となる可能性があります。</p>
         <p>出典：</p>
         <ul>
           <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener" aria-label="PwC税制レポート">PwC税制レポート</a></li>
@@ -336,13 +355,17 @@
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
         <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
+        <!-- 追記4：反社/AML・CFTに関する明確化 -->
+        <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
 
   </div>
 </section>
 
-<!-- ========================= 料金プラン ========================= -->
+<!-- =========================
+  料金プラン
+========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
@@ -391,6 +414,7 @@
           </div>
         </details>
 
+        <!-- ★ 追加：オプション-->
         <details>
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
@@ -404,6 +428,10 @@
             <span class="note">※ 価格は時期・条件で変動する場合があります。最新は事前にご確認ください。</span>
           </div>
         </details>
+        <!-- ★ 追加ここまで -->
+
+        <!-- 追記5：€建て価格の為替注記 -->
+        <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算します。為替変動により請求額が変動する場合があります。</p>
 
       </div>
     </details>
@@ -457,7 +485,9 @@
   </div>
 </section>
 
-<!-- ========================= 個人事業主 ========================= -->
+<!-- =========================
+  個人事業主（IE + SBS）
+========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
   <div class="space-y-3 accordion">
@@ -557,6 +587,8 @@
           <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
         </ul>
         <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
+        <!-- 追記4（個人側にも同趣旨を付記） -->
+        <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
 
@@ -579,7 +611,9 @@
   </div>
 </section>
 
-<!-- ========================= 個人口座開設（銀行） ========================= -->
+<!-- =========================
+  個人口座開設（銀行）
+========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
   <div class="space-y-3 accordion">
@@ -607,6 +641,8 @@
       <div class="content">
         <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。<br>「預金11.5% → 融資13〜15%」のような構造が成立します。</p>
         <p class="text-sm muted">※ 金利は商品・銀行・時期で変動。将来の利回りは保証されません。</p>
+        <!-- 追記1：金利の時点明記＋日本国内での媒介ではない -->
+        <p class="text-sm muted">※ 記載の金利・条件は<span style="font-weight:700">参考例（2025年10月時点）</span>です。商品/銀行/時点で異なります。当社は日本国内での銀行代理・媒介は行いません。</p>
       </div>
     </details>
 
@@ -618,6 +654,8 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
+        <!-- 追記9：勧誘・斡旋ではない線引き -->
+        <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋する立場ではありません。最終的な選定と契約はお客様と各銀行の直接契約となります。</p>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
@@ -681,6 +719,8 @@
           <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
         </ul>
 
+        <!-- 追記2：シミュレーションは仮定の例示 -->
+        <p class="text-sm muted">※ 本シミュレーションは仮定に基づく例示です。為替・税率・商品条件の変動により結果は大きく異なります。</p>
         <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
     </details>
@@ -753,7 +793,9 @@
   </div>
 </section>
 
-<!-- ========================= 免責・キャンセル ========================= -->
+<!-- =========================
+  免責事項・キャンセル（アコーディオン）
+========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
@@ -771,6 +813,12 @@
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
           <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
         </ul>
+        <!-- 追記6：MoUは保証ではない -->
+        <p class="text-sm muted">※ MoUは業務連携の覚書であり、審査結果や開設成功を保証するものではありません。</p>
+        <!-- 追記7：届出系の可能性 -->
+        <p class="text-sm muted">※ お客様の状況により、国外財産調書・国外送金等調書などの届出義務が生じる場合があります。</p>
+        <!-- 追記8：個人情報の保存期間/第三国移転 -->
+        <p class="text-sm muted">※ 個人情報は業務目的の範囲でのみ利用し、法令上必要な保存期間を超えて保有しません。第三国への移転が必要な場合は適切な保護措置を講じます。</p>
       </div>
     </details>
 
@@ -793,7 +841,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
+<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -802,15 +850,16 @@
   </div>
 </div>
 
-<!-- JS -->
+<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
 <script src="./script.js?v=20250912-gt"></script>
 
-<!-- Google翻訳 -->
+<!-- Google翻訳（全言語） -->
 <script>
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'ja',
       autoDisplay: false
+      // includedLanguages を省略 → Googleが対応する全言語を表示
     }, 'google_translate_element');
   }
 </script>
