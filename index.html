@@ -890,5 +890,76 @@
 </script>
 </body>
 </html>
+<!-- ▼▼ スマホだけ見出しを整える：CSS + JS（そのまま</body>直前に貼り付け） ▼▼ -->
+<style>
+  /* SPだけ強制改行するためのユーティリティ */
+  br.sp-only{ display: none; }
+  @media (max-width: 600px){
+    br.sp-only{ display: inline; } /* SP幅でだけ改行を効かせる */
+    .sp-nowrap{ white-space: nowrap; } /* SP幅でだけ1行固定したいときに付与 */
+  }
+</style>
+
+<script>
+  (function(){
+    'use strict';
+
+    // 安全に innerHTML を差し替えるヘルパー（多重適用防止）
+    function setHTMLOnce(el, html){
+      if(!el || el.dataset.spHandled) return;
+      el.innerHTML = html;
+      el.dataset.spHandled = '1';
+    }
+    function addClass(el, cls){
+      if(el) el.classList.add(cls);
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+
+      /* 1) 「仮想通貨とジョージア法人の相性（重要な注意点）」 → 括弧の前で改行（SPのみ） */
+      // 対象：#corp-setup 配下の details > summary のうち、文言に「仮想通貨」「相性」「重要な注意点」を含む要素
+      var summaries = Array.from(document.querySelectorAll('#corp-setup details > summary, #corp-setup .accordion details > summary, details > summary'));
+      var s1 = summaries.find(s => /仮想通貨/.test(s.textContent) && /相性/.test(s.textContent) && /重要な注意点/.test(s.textContent));
+      if(s1){
+        var t1 = s1.textContent.trim()
+          .replace('（重要な注意点）', '<br class="sp-only">（重要な注意点）');
+        setHTMLOnce(s1, t1);
+      }
+
+      /* 2) 「ジョージア個人事業主｜税率1%（条件あり）／完全オンライン」 → （条件あり）の前で改行（SPのみ） */
+      var hSole = document.querySelector('#sole-setup h2');
+      if(hSole){
+        var t2 = hSole.textContent.trim()
+          .replace('（条件あり）', '<br class="sp-only">（条件あり）');
+        setHTMLOnce(hSole, t2);
+      }
+
+      /* 3) 「ジョージアで、スモールに世界を始める（IE＋Small Business Status）」 → SPは1行固定 */
+      // 対象：#sole-setup 内の summary で上記フレーズを含むもの
+      var s2 = Array.from(document.querySelectorAll('#sole-setup details > summary'))
+        .find(s => /ジョージアで、スモールに世界を始める/.test(s.textContent));
+      if(s2){ addClass(s2, 'sp-nowrap'); }
+
+      /* 4) 「ジョージア銀行｜個人口座開設サポート（非居住者OK）」 → ｜の後で改行（SPのみ） */
+      var hBank = document.querySelector('#personal-account h2');
+      if(hBank){
+        var t3 = hBank.textContent.trim()
+          .replace('｜', '｜<br class="sp-only">');
+        setHTMLOnce(hBank, t3);
+      }
+
+      /* 5) 「リスクと為替の考え方（簡易シミュレーション）」 → 括弧の前で改行（SPのみ） */
+      // 対象：#personal-account 内の summary で「リスクと為替の考え方」「簡易シミュレーション」を含むもの
+      var s3 = Array.from(document.querySelectorAll('#personal-account details > summary, #personal-account .accordion details > summary'))
+        .find(s => /リスクと為替の考え方/.test(s.textContent) && /簡易シミュレーション/.test(s.textContent));
+      if(s3){
+        var t4 = s3.textContent.trim()
+          .replace('（簡易シミュレーション）', '<br class="sp-only">（簡易シミュレーション）');
+        setHTMLOnce(s3, t4);
+      }
+    });
+  })();
+</script>
+<!-- ▲▲ ここまでを</body>直前に貼り付け ▲▲ -->
 </body>
 </html>
