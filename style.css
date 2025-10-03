@@ -317,3 +317,38 @@ iframe.goog-te-menu-frame {
   .site-foot .foot-pc{ display:inline; }
   .site-foot .foot-sp{ display:none; }
 }
+/* =========================
+   Footer（上書き用）
+   ========================= */
+:root{
+  --foot-bg:#0b1220;
+  --foot-fg:#cbd5e1;
+  --foot-border:#1f2937;
+}
+.site-foot{
+  background:var(--foot-bg);
+  color:var(--foot-fg);
+  border-top:1px solid var(--foot-border);
+  text-align:center;
+  padding:14px 16px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  font-size:13px;
+  line-height:1.7;
+}
+.site-foot small{
+  display:block;
+  margin:0 auto;
+  max-width:min(1100px,92%);
+  letter-spacing:.02em;
+}
+.site-foot a{
+  color:#93c5fd;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.site-foot .foot-pc{ display:none; }
+.site-foot .foot-sp{ display:block; }
+@media (min-width:640px){
+  .site-foot .foot-pc{ display:inline; }
+  .site-foot .foot-sp{ display:none; }
+}
