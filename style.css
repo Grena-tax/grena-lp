@@ -241,3 +241,9 @@ html, body{ overscroll-behavior-y: none; }
     padding-right: calc((var(--ui-btn)*2) + (var(--ui-gap)*4) + 8px + env(safe-area-inset-right,0px)) !important;
   }
 }
+/* 見出しの“2文字だけ2行目”回避（対応ブラウザは自動調整） */
+@supports (text-wrap: balance) {
+  .accordion > details > summary { text-wrap: balance; }
+}
+/* JSが末尾をひとかたまりにする時に使うクラス */
+.nowrap-tail { white-space: nowrap; }
