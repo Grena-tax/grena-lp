@@ -247,3 +247,13 @@ html, body{ overscroll-behavior-y: none; }
 }
 /* JSが末尾をひとかたまりにする時に使うクラス */
 .nowrap-tail { white-space: nowrap; }
+/* SPだけ改行させるユーティリティ */
+br.sp-only { display: none; }
+@media (max-width: 600px){
+  br.sp-only { display: block; } /* 表示＝改行になる */
+}
+
+/* （任意）SPだけ1行にしたい時に使う */
+@media (max-width: 600px){
+  .sp-nowrap { white-space: nowrap; }
+}
