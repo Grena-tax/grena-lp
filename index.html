@@ -868,5 +868,27 @@
   <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
+<!-- Google翻訳 … -->
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<footer class="site-foot" role="contentinfo">
+  <!-- ここはあなたのフッター -->
+</footer>
+
+<!-- 👇このパッチをここに貼る（</body>の直前） -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1) フッターを #scroll-root の中へ移動（外にある場合だけ）
+    var wrap = document.getElementById('scroll-root');
+    var foot = document.querySelector('.site-foot');
+    if (wrap && foot && !wrap.contains(foot)) wrap.appendChild(foot);
+
+    // 2) 最初のアコーディオン見出しを短い文言へ差し替え（重複回避）
+    var firstSummary = document.querySelector('#corp-setup details summary');
+    if (firstSummary) firstSummary.textContent = 'サービスの概要（OECD・PwC準拠）';
+  });
+</script>
+</body>
+</html>
 </body>
 </html>
