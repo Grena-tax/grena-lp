@@ -961,5 +961,18 @@
   })();
 </script>
 <!-- ▲▲ ここまでを</body>直前に貼り付け ▲▲ -->
+<!-- 末尾パッチ：フッター移動＋見出し重複の解消（</body>直前に追加） -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1) フッターを #scroll-root の中へ移動（外にある場合だけ）
+    var wrap = document.getElementById('scroll-root');
+    var foot = document.querySelector('.site-foot');
+    if (wrap && foot && !wrap.contains(foot)) wrap.appendChild(foot);
+
+    // 2) 最初のアコーディオン見出しを短い文言へ差し替え（重複回避）
+    var firstSummary = document.querySelector('#corp-setup details summary');
+    if (firstSummary) firstSummary.textContent = 'サービスの概要（OECD・PwC準拠）';
+  });
+</script>
 </body>
 </html>
