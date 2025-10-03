@@ -257,3 +257,13 @@ br.sp-only { display: none; }
 @media (max-width: 600px){
   .sp-nowrap { white-space: nowrap; }
 }
+/* iOSでsummaryの文字間が勝手に空くのを止める */
+.accordion summary{
+  justify-content: flex-start !important; /* 念のため */
+  flex-wrap: wrap;                        /* 折返し許可 */
+  text-align: start !important;           /* 均等割付を無効化 */
+  text-justify: auto !important;
+  letter-spacing: 0 !important;           /* 文字間をリセット */
+  white-space: normal !important;
+  word-break: normal;
+}
