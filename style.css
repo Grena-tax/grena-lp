@@ -221,3 +221,23 @@ html, body{ overscroll-behavior-y: none; }
   .site-foot .foot-pc{ display:inline; }
   .site-foot .foot-sp{ display:none; }
 }
+/* === FIX: 右上ボタン(🌐/≡)と見出しの衝突回避 === */
+:root{
+  --ui-btn: 48px;   /* ボタン1個の幅（変えるならここ） */
+  --ui-gap: 10px;   /* 余白 */
+}
+
+@media (max-width: 768px){
+  /* 右上に2個ボタンがあるので、その分だけ右側に余白を確保 */
+  body #corp-setup > h2{
+    padding-right: calc((var(--ui-btn)*2) + (var(--ui-gap)*3) + env(safe-area-inset-right,0px)) !important;
+    line-height: 1.28;
+  }
+}
+
+/* 極小幅（iPhone SEなど）は少しだけ余裕を増やす */
+@media (max-width: 390px){
+  body #corp-setup > h2{
+    padding-right: calc((var(--ui-btn)*2) + (var(--ui-gap)*4) + 8px + env(safe-area-inset-right,0px)) !important;
+  }
+}
