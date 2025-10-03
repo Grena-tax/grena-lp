@@ -247,3 +247,16 @@ iframe.goog-te-menu-frame {
   word-break:normal !important;
   overflow-wrap:anywhere;
 }
+/* iOS/Safariで<summary>の字間が伸びる不具合の抑止（最小上書き） */
+.accordion summary{
+  text-align: left !important;       /* 両端揃えを無効化 */
+  text-justify: auto !important;     /* 念のため */
+  letter-spacing: normal !important; /* 余計な字間をリセット */
+  word-spacing: normal !important;
+  white-space: normal !important;
+}
+
+/* 行の再配分（“2～3文字だけ2行目”になりにくくする） */
+@supports (text-wrap: balance){
+  .accordion summary{ text-wrap: balance; }
+}
