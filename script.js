@@ -424,3 +424,30 @@ highlightCurrent('ja');
   window.addEventListener('load', apply);
   window.addEventListener('resize', debounce(apply), { passive:true });
 })();
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // 1) サマリー内の全角スペースや連続空白を整形（見た目のズレ防止）
+  document.querySelectorAll('.accordion > details > summary').forEach(function(s){
+    const t = s.textContent.replace(/\u3000/g,' ').replace(/\s{2,}/g,' ').trim();
+    if (t !== s.textContent) s.textContent = t;
+  });
+
+  // 2) 指定の見出しだけ「最初の（ or ( の直前」に SP専用改行を差し込む
+  const targets = [
+    '仮想通貨とジョージア法人の相性',
+    '法人税の課税タイミング',
+    'ジョージアで、スモールに世界を始める',
+    'リスクと為替の考え方'
+  ];
+
+  document.querySelectorAll('.accordion > details > summary').forEach(function(s){
+    const raw = s.textContent.trim();
+    // 該当タイトルだけ処理
+    if (!targets.some(k => raw.includes(k))) return;
+    // 最初の「（」または「(」の直前で改行（SPのみ表示される <br> を注入）
+    const withBreak = raw.replace(/[ 　]*([（(])/, '<br class="sp-only">$1');
+    // タグを壊さないため、該当だけ innerHTML で上書き
+    if (withBreak !== raw) s.innerHTML = withBreak;
+  });
+});
+</script>
