@@ -974,5 +974,14 @@
     if (firstSummary) firstSummary.textContent = 'サービスの概要（OECD・PwC準拠）';
   });
 </script>
+/* iOS/翻訳でsummaryに変な空白が出る対策 */
+.accordion > details > summary{
+  display:block !important;            /* flexをやめる＝空白発生源を断つ */
+  text-align:left !important;
+  letter-spacing: normal !important;
+  word-break: break-word;
+}
+/* 念のため（他所で指定がある場合の打ち消し） */
+.accordion > details > summary{ justify-content:flex-start !important; }
 </body>
 </html>
