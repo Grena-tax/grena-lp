@@ -983,5 +983,21 @@
 }
 /* 念のため（他所で指定がある場合の打ち消し） */
 .accordion > details > summary{ justify-content:flex-start !important; }
+  <!-- （ここまでが既存のJSやフッター） -->
+
+  <!-- ←この位置に貼る -->
+  <style>
+    /* 強制的にスクロールを有効化 */
+    html, body { overflow: auto !important; height: auto !important; }
+
+    /* #scroll-root があっても固定を解除して通常フローへ */
+    #scroll-root { position: static !important; inset: auto !important; overflow: visible !important; }
+
+    /* ついでにCTAの下余白も保つ（壊れない範囲で） */
+    :root { --cta-h: 72px; }
+    body { padding-bottom: calc(var(--cta-h)) !important; }
+  </style>
+</body>
+</html>
 </body>
 </html>
