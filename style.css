@@ -269,3 +269,8 @@ iframe.goog-te-menu-frame {
 }
 /* 念のため（他所で指定がある場合の打ち消し） */
 .accordion > details > summary{ justify-content:flex-start !important; }
+/* SPだけ改行させる行ブレーク */
+br.sp-only { display: none; }
+@media (max-width: 600px){
+  br.sp-only { display: block; } /* SP時のみ改行として出現 */
+}
