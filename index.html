@@ -690,5 +690,79 @@
 
 <!-- メインJS -->
 <script src="./script.js?v=20251006"></script>
+<!-- ▼▼ 強制パッチ：翻訳バー非表示 & CTAを下に固定（</body>直前に追加） ▼▼ -->
+<style>
+  /* Google翻訳の上部バナーを完全に隠す / ページ押し下げを無効化 */
+  .goog-te-banner-frame,
+  .goog-te-banner-frame.skiptranslate,
+  #goog-gt-tt{ display:none !important; }
+  html{ margin-top:0 !important; }
+  body{ top:0 !important; }
+
+  /* CTAのレイヤー最前面＆常時固定（翻訳バーやUIより上） */
+  .fixed-cta, .cta-bar, #ctaBar{
+    position:fixed !important;
+    left:0; right:0; bottom:0 !important;
+    z-index:11050 !important;
+    transform:translateZ(0);
+    will-change:transform;
+  }
+</style>
+
+<script>
+(function(){
+  'use strict';
+
+  /* 1) Google翻訳のバナーをDOMから即除去し続ける（再挿入対策） */
+  function nukeGTBanner(){
+    document.querySelectorAll('iframe.goog-te-banner-frame, .goog-te-banner-frame, #goog-gt-tt')
+      .forEach(el=>{
+        try{
+          if (el.tagName === 'IFRAME') el.remove();
+          else el.style.display = 'none';
+        }catch(_){}
+      });
+    // ページ押し下げを打ち消す
+    document.documentElement.style.marginTop = '0px';
+    document.body.style.top = '0px';
+  }
+  nukeGTBanner();
+  new MutationObserver(nukeGTBanner).observe(document.documentElement, {childList:true,subtree:true});
+  window.addEventListener('resize', nukeGTBanner);
+
+  /* 2) CTAをiOSのUI高さ変動に追従させて“画面の一番下”へ固定 */
+  const bar = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  function pinCTA(){
+    if (!bar || !window.visualViewport) return;
+    const vv = window.visualViewport;
+    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    // iOSバウンド時のズレを安定化
+    const doc = document.scrollingElement || document.documentElement;
+    const maxScroll = Math.max(0, doc.scrollHeight - doc.clientHeight);
+    const y = window.scrollY || doc.scrollTop || 0;
+    pinCTA._stable = (y > maxScroll + 1) ? (pinCTA._stable ?? uiGap) : uiGap;
+    bar.style.transform = `translate3d(0, ${pinCTA._stable}px, 0)`;
+  }
+  if (window.visualViewport){
+    pinCTA();
+    visualViewport.addEventListener('resize', pinCTA);
+    visualViewport.addEventListener('scroll', pinCTA);
+    window.addEventListener('scroll', pinCTA, {passive:true});
+    window.addEventListener('orientationchange', ()=>setTimeout(pinCTA, 60));
+  }
+
+  /* 3) CTA高さをCSS変数に反映（下の余白を常に確保） */
+  function setCtaVar(){
+    const el = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+    if (!el) return;
+    const h = Math.ceil(el.getBoundingClientRect().height);
+    document.documentElement.style.setProperty('--cta-h', h + 'px');
+  }
+  setCtaVar();
+  window.addEventListener('load', setCtaVar, {once:true});
+  window.addEventListener('resize', setCtaVar);
+})();
+</script>
+<!-- ▲▲ ここまで貼ればOK ▲▲ -->
 </body>
 </html>
