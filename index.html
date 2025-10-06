@@ -764,6 +764,56 @@
 })();
 </script>
 <!-- ▲▲ ここまで貼ればOK ▲▲ -->
+<!-- === FIXED CTA（純CSS＋HTML、どこに貼っても固定） === -->
+<style>
+  :root{ --safe-bottom: env(safe-area-inset-bottom, 0px); }
+  /* 本文がボタンに隠れないよう常に下余白を確保 */
+  body{ padding-bottom: calc(76px + var(--safe-bottom)) !important; }
+
+  /* 画面最下部に固定される白い帯（CTAコンテナ） */
+  #fixed-cta{
+    position: fixed !important;
+    left: 0 !important; right: 0 !important; bottom: 0 !important;
+    z-index: 2147483647 !important;
+    background: #fff;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    padding: 12px 12px calc(12px + var(--safe-bottom));
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    backdrop-filter: saturate(180%) blur(8px);
+  }
+
+  /* 3ボタンを横一列に */
+  #fixed-cta .row{
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+
+  /* ボタン体裁（高さ・角丸・太字） */
+  #fixed-cta a{
+    display: inline-block;
+    text-align: center;
+    padding: 12px 10px;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+  }
+  #fixed-cta a.top{ background:#f2f4f7; color:#111; }
+  #fixed-cta a.consult{ background:#0a0f1a; color:#fff; }
+  #fixed-cta a.apply{ background:#10b981; color:#fff; }
+
+  /* iOSでfixedが効かない場合の一時回避（必要時のみコメント解除）
+  html, body{ transform:none !important; filter:none !important; } */
+</style>
+
+<!-- 画面最下部に常時表示される3ボタン（画像と同じ順序・文言） -->
+<div id="fixed-cta" role="region" aria-label="Page actions">
+  <div class="row">
+    <a href="#top" class="top">Top</a>
+    <a href="#consult" class="consult">Consultation here</a>
+    <a href="#apply" class="apply">Apply now</a>
+  </div>
+</div>
 </body>
 </html>
 <!-- FIXED CTA + notranslate (drop-in, anywhere OK) -->
