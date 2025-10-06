@@ -1010,5 +1010,78 @@
   :root { --cta-h: 72px; }
   body { padding-bottom: calc(var(--cta-h)) !important; }
 </style>
+<!-- ▼ ここから：ハンバーガー／地球儀の復旧パッチ（</body>直前） -->
+<style>
+  /* クリックを確実に通す＆最前面へ */
+  .menu-button, .lang-button{ z-index:10050 !important; pointer-events:auto !important; }
+  .menu-wrap, .lang-wrap{ z-index:10040 !important; }
+</style>
+
+<script>
+(function(){
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const html = document.documentElement;
+
+  // ========== MENU ==========
+  const menuBtn = $('#menuBtn');
+  const menuDrawer = $('#menuDrawer');
+  const menuClose = $('#menuClose');
+  const menuBackdrop = $('#menuBackdrop');
+
+  function openMenu(){
+    html.classList.add('menu-open');
+    menuDrawer?.setAttribute('aria-hidden','false');
+    menuBtn?.setAttribute('aria-expanded','true');
+  }
+  function closeMenu(){
+    html.classList.remove('menu-open');
+    menuDrawer?.setAttribute('aria-hidden','true');
+    menuBtn?.setAttribute('aria-expanded','false');
+  }
+  if (menuBtn && !menuBtn.dataset.bound){
+    menuBtn.addEventListener('click', e=>{
+      e.preventDefault();
+      (html.classList.contains('menu-open') ? closeMenu : openMenu)();
+    });
+    menuClose?.addEventListener('click', closeMenu);
+    menuBackdrop?.addEventListener('click', closeMenu);
+    menuBtn.dataset.bound = '1';
+  }
+
+  // ========== LANGUAGE ==========
+  const langBtn = $('#langBtn');
+  const langDrawer = $('#langDrawer');
+  const langClose = $('#langClose');
+  const langBackdrop = $('#langBackdrop');
+
+  function openLang(){
+    html.classList.add('lang-open');
+    langDrawer?.setAttribute('aria-hidden','false');
+    langBtn?.setAttribute('aria-expanded','true');
+  }
+  function closeLang(){
+    html.classList.remove('lang-open');
+    langDrawer?.setAttribute('aria-hidden','true');
+    langBtn?.setAttribute('aria-expanded','false');
+  }
+  if (langBtn && !langBtn.dataset.bound){
+    langBtn.addEventListener('click', e=>{
+      e.preventDefault();
+      (html.classList.contains('lang-open') ? closeLang : openLang)();
+    });
+    langClose?.addEventListener('click', closeLang);
+    langBackdrop?.addEventListener('click', closeLang);
+    langBtn.dataset.bound = '1';
+  }
+
+  // 片方を開く時はもう片方を閉じる
+  document.addEventListener('click', e=>{
+    if (e.target.closest('#menuBtn')) closeLang();
+    if (e.target.closest('#langBtn')) closeMenu();
+  }, {passive:true});
+})();
+</script>
+<!-- ▲ ここまで（</body>直前） -->
 </body>
 </html>
