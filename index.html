@@ -766,3 +766,59 @@
 <!-- ▲▲ ここまで貼ればOK ▲▲ -->
 </body>
 </html>
+<!-- FIXED CTA + notranslate (drop-in, anywhere OK) -->
+<style>
+  :root{ --safe-bottom: env(safe-area-inset-bottom, 0px); }
+  body.has-cta-fixed{ padding-bottom: calc(72px + var(--safe-bottom)); }
+  .cta-fixed-bar{
+    position: fixed; left:0; right:0; bottom:0; z-index:9999;
+    background:#ffffff; border-top:1px solid rgba(0,0,0,0.08);
+    padding:10px 12px calc(10px + var(--safe-bottom));
+    -webkit-backdrop-filter:saturate(180%) blur(8px);
+    backdrop-filter:saturate(180%) blur(8px);
+  }
+  .cta-fixed-bar .cta-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+  .cta-fixed-bar .btn{ display:inline-block; text-align:center; padding:12px 10px; font-weight:600; border-radius:10px; }
+  .cta-fixed-bar .btn-top{ background:#f2f4f7; color:#111; }
+  .cta-fixed-bar .btn-consult{ background:#0a0f1a; color:#fff; }
+  .cta-fixed-bar .btn-apply{ background:#10b981; color:#fff; }
+</style>
+<script>
+  // 1) Google翻訳バーの抑制（可能な範囲）
+  try{
+    document.documentElement.setAttribute('translate','no');
+    document.documentElement.classList.add('notranslate');
+    var m=document.querySelector('meta[name="google"][content="notranslate"]');
+    if(!m){ m=document.createElement('meta'); m.setAttribute('name','google'); m.setAttribute('content','notranslate');
+            document.head.appendChild(m); }
+  }catch(e){}
+
+  // 2) 既存CTAがあっても流れてしまう対策：固定バーを自動生成
+  (function(){
+    // 既に生成済みなら二重作成しない
+    if(document.querySelector('.cta-fixed-bar')) return;
+
+    // 本文が隠れないようbodyにクラス
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('has-cta-fixed');
+    });
+
+    // 固定CTAを作成・挿入（貼る場所に関係なく動作）
+    var wrap=document.createElement('div');
+    wrap.className='cta-fixed-bar';
+    wrap.setAttribute('role','region');
+    wrap.setAttribute('aria-label','Page actions');
+
+    // ★リンク先IDは必要に応じて調整（例：#top, #consult, #apply）
+    wrap.innerHTML =
+      '<div class="cta-row">'
+      + '<a href="#top" class="btn btn-top">Top</a>'
+      + '<a href="#consult" class="btn btn-consult">Consultation here</a>'
+      + '<a href="#apply" class="btn btn-apply">Apply now</a>'
+      + '</div>';
+
+    // bodyがまだ無いタイミング対策
+    function mount(){ if(document.body){ document.body.appendChild(wrap); } else { requestAnimationFrame(mount); } }
+    mount();
+  })();
+</script>
