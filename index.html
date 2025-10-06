@@ -1083,5 +1083,162 @@
 })();
 </script>
 <!-- ▲ ここまで（</body>直前） -->
+<script>
+(function () {
+  'use strict';
+
+  // ===== 言語リストが空なら復旧 =====
+  function ensureLangList(){
+    const list = document.getElementById('langList');
+    if (!list || list.children.length) return; // 既に描画済みなら何もしない
+
+    const LANGS = [
+      ['af','Afrikaans'],['sq','Albanian'],['am','Amharic'],['ar','Arabic'],['hy','Armenian'],['az','Azerbaijani'],
+      ['eu','Basque'],['be','Belarusian'],['bn','Bengali'],['bs','Bosnian'],['bg','Bulgarian'],['my','Burmese'],
+      ['ca','Catalan'],['ceb','Cebuano'],['ny','Chichewa'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
+      ['co','Corsican'],['hr','Croatian'],['cs','Czech'],['da','Danish'],['nl','Dutch'],['en','English'],['eo','Esperanto'],
+      ['et','Estonian'],['tl','Filipino'],['fi','Finnish'],['fr','French'],['fy','Frisian'],['gl','Galician'],['ka','Georgian'],
+      ['de','German'],['el','Greek'],['gu','Gujarati'],['ht','Haitian Creole'],['ha','Hausa'],['haw','Hawaiian'],
+      ['iw','Hebrew'],['hi','Hindi'],['hmn','Hmong'],['hu','Hungarian'],['is','Icelandic'],['ig','Igbo'],['id','Indonesian'],
+      ['ga','Irish'],['it','Italian'],['ja','Japanese'],['jw','Javanese'],['kn','Kannada'],['kk','Kazakh'],['km','Khmer'],
+      ['rw','Kinyarwanda'],['ko','Korean'],['ku','Kurdish'],['ky','Kyrgyz'],['lo','Lao'],['la','Latin'],['lv','Latvian'],
+      ['lt','Lithuanian'],['lb','Luxembourgish'],['mk','Macedonian'],['mg','Malagasy'],['ms','Malay'],['ml','Malayalam'],
+      ['mt','Maltese'],['mi','Maori'],['mr','Marathi'],['mn','Mongolian'],['ne','Nepali'],['no','Norwegian'],['or','Odia'],
+      ['ps','Pashto'],['fa','Persian'],['pl','Polish'],['pt','Portuguese'],['pa','Punjabi'],['ro','Romanian'],['ru','Russian'],
+      ['sm','Samoan'],['gd','Scots Gaelic'],['sr','Serbian'],['st','Sesotho'],['sn','Shona'],['sd','Sindhi'],['si','Sinhala'],
+      ['sk','Slovak'],['sl','Slovenian'],['so','Somali'],['es','Spanish'],['su','Sundanese'],['sw','Swahili'],['sv','Swedish'],
+      ['tg','Tajik'],['ta','Tamil'],['tt','Tatar'],['te','Telugu'],['th','Thai'],['tr','Turkish'],['tk','Turkmen'],
+      ['uk','Ukrainian'],['ur','Urdu'],['ug','Uyghur'],['uz','Uzbek'],['vi','Vietnamese'],['cy','Welsh'],['xh','Xhosa'],
+      ['yi','Yiddish'],['yo','Yoruba'],['zu','Zulu']
+    ];
+
+    const frag = document.createDocumentFragment();
+    LANGS.forEach(([code, name]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ls-item';
+      btn.dataset.code = code;
+      btn.innerHTML = '<span>'+name+'</span><span class="ls-code">'+code+'</span>';
+      btn.addEventListener('click', () => {
+        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (sel) { sel.value = code; sel.dispatchEvent(new Event('change')); }
+        list.querySelectorAll('.ls-item').forEach(x => x.classList.toggle('ls-active', x===btn));
+      });
+      frag.appendChild(btn);
+    });
+    list.appendChild(frag);
+
+    const q = document.getElementById('langSearch');
+    if (q) q.addEventListener('input', e => {
+      const word = (e.target.value || '').toLowerCase();
+      list.querySelectorAll('.ls-item').forEach(el => {
+        el.style.display = el.textContent.toLowerCase().includes(word) ? '' : 'none';
+      });
+    });
+  }
+
+  // ===== 目次（ハンバーガー）中身が空なら復旧 =====
+  function ensureMenu(){
+    const root = document.getElementById('menuGroups');
+    if (!root || root.children.length) return; // 既に描画済みなら何もしない
+
+    const EXCLUDE = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+    const sections = Array.from(document.querySelectorAll('section[id]'));
+    const frag = document.createDocumentFragment();
+    let i = 1;
+
+    sections.forEach(sec => {
+      const details = sec.querySelectorAll('.accordion > details'); // 直下のアコーディオンのみ
+      if (!details.length) return;
+
+      const group = document.createElement('div');
+      group.className = 'menu-group';
+
+      const h2 = sec.querySelector('h2');
+      if (h2 && sec.id !== 'plans') {
+        const h4 = document.createElement('h4');
+        h4.textContent = (h2.textContent || '').trim();
+        group.appendChild(h4);
+      }
+
+      const ul = document.createElement('ul');
+      ul.className = 'menu-list';
+
+      details.forEach(d => {
+        const s = d.querySelector('summary'); if (!s) return;
+        const t = (s.textContent || '').trim();
+        if (EXCLUDE.some(x => t.includes(x))) return;
+
+        if (!d.id) d.id = 'acc-' + (i++) + '-' + t.replace(/\s+/g,'-').replace(/[^\w\u3040-\u30ff\u3400-\u9fff-]/g,'').slice(0,40);
+
+        const li = document.createElement('li');
+        const a  = document.createElement('a');
+        a.href = '#'+d.id; a.textContent = t;
+        a.addEventListener('click', (e)=>{
+          e.preventDefault();
+          document.documentElement.classList.remove('menu-open');
+          document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
+          document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
+          d.open = true;
+          d.scrollIntoView({behavior:'smooth', block:'start'});
+          history.pushState(null,'','#'+d.id);
+        });
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+
+      group.appendChild(ul);
+      frag.appendChild(group);
+    });
+
+    root.textContent = '';
+    root.appendChild(frag);
+  }
+
+  // ===== ボタンの開閉が外れていた場合も付け直す（安全網） =====
+  function ensureTogglers(){
+    const menuBtn = document.getElementById('menuBtn');
+    const menuDrawer = document.getElementById('menuDrawer');
+    const menuClose = document.getElementById('menuClose');
+    const menuBackdrop = document.getElementById('menuBackdrop');
+
+    if (menuBtn && !menuBtn.dataset.bound) {
+      const open = () => { document.documentElement.classList.add('menu-open'); menuDrawer?.setAttribute('aria-hidden','false'); menuBtn.setAttribute('aria-expanded','true'); };
+      const close= () => { document.documentElement.classList.remove('menu-open'); menuDrawer?.setAttribute('aria-hidden','true');  menuBtn.setAttribute('aria-expanded','false'); };
+      menuBtn.addEventListener('click', ()=> document.documentElement.classList.contains('menu-open') ? close() : open());
+      menuClose?.addEventListener('click', close);
+      menuBackdrop?.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      menuBtn.dataset.bound = '1';
+    }
+
+    const langBtn = document.getElementById('langBtn');
+    const langDrawer = document.getElementById('langDrawer');
+    const langClose = document.getElementById('langClose');
+    const langBackdrop = document.getElementById('langBackdrop');
+
+    if (langBtn && !langBtn.dataset.bound) {
+      const open = () => { document.documentElement.classList.add('lang-open');  langDrawer?.setAttribute('aria-hidden','false'); langBtn.setAttribute('aria-expanded','true'); };
+      const close= () => { document.documentElement.classList.remove('lang-open'); langDrawer?.setAttribute('aria-hidden','true');  langBtn.setAttribute('aria-expanded','false'); };
+      langBtn.addEventListener('click', ()=> document.documentElement.classList.contains('lang-open') ? close() : open());
+      langClose?.addEventListener('click', close);
+      langBackdrop?.addEventListener('click', close);
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+      langBtn.dataset.bound = '1';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    ensureTogglers();
+    ensureLangList();
+    ensureMenu();
+  });
+  window.addEventListener('load', function(){
+    // DOM準備が遅延した場合の保険
+    ensureLangList();
+    ensureMenu();
+  });
+})();
+</script>
 </body>
 </html>
