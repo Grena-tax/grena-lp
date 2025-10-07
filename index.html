@@ -890,5 +890,41 @@
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+<!-- Google翻訳の上部バナーを強制的に消す（HTML末尾に追加） -->
+<script>
+(function hardKillGoogleBanner(){
+  // ① まずCSSで強制的に不可視化
+  var css = document.createElement('style');
+  css.textContent = [
+    'html{margin-top:0!important;}',
+    'body{top:0!important;position:static!important;}',
+    'iframe#goog-te-banner-frame,.goog-te-banner-frame,body>.skiptranslate{',
+    '  display:none!important;visibility:hidden!important;height:0!important;',
+    '  max-height:0!important;overflow:hidden!important;',
+    '}'
+  ].join('');
+  document.head.appendChild(css);
+
+  // ② 要素が作られても即座に除去
+  function hide(){
+    try{
+      var f = document.getElementById('goog-te-banner-frame');
+      if (f && f.parentNode) f.parentNode.removeChild(f);
+
+      var s = document.querySelector('body > .skiptranslate');
+      if (s && s.parentNode) s.parentNode.removeChild(s);
+
+      // 念のため余白リセット
+      document.documentElement.style.marginTop = '0px';
+      document.body.style.top = '0px';
+    }catch(e){}
+  }
+  hide();                         // すぐ実行
+  window.addEventListener('load', hide);
+  new MutationObserver(hide).observe(document.documentElement, {
+    childList:true, subtree:true
+  });
+})();
+</script>
 </body>
 </html>
