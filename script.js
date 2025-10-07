@@ -387,11 +387,12 @@ highlightCurrent('ja');
 
   head.insertBefore(btn, head.firstChild);
 })();
-// 見出しの末尾だけが2行目に落ちるのを回避（自動）
+
+/* summaryの末尾だけを包んで改行崩れを抑止（自動） */
 (function(){
   const SEL = '.accordion > details > summary';
   const TAIL_CLASS = 'nowrap-tail';
-  const MIN_LAST = 6; // 末尾でまとめる文字数（4〜8で調整可）
+  const MIN_LAST = 6;
 
   function unwrap(el){
     const t = el.querySelector('.' + TAIL_CLASS);
@@ -400,7 +401,7 @@ highlightCurrent('ja');
   function isOneLine(el){
     const cs = getComputedStyle(el);
     let lh = parseFloat(cs.lineHeight);
-    if (isNaN(lh)) { // line-height: normal のときの目安
+    if (isNaN(lh)) {
       const fs = parseFloat(cs.fontSize) || 16;
       lh = fs * 1.2;
     }
@@ -408,10 +409,10 @@ highlightCurrent('ja');
   }
   function apply(){
     document.querySelectorAll(SEL).forEach(s=>{
-      unwrap(s); // まず元に戻す
+      unwrap(s);
       const text = (s.textContent || '').trim();
-      if (text.length <= MIN_LAST + 2) return; // そもそも短いものは除外
-      if (isOneLine(s)) return;                // 1行なら何もしない
+      if (text.length <= MIN_LAST + 2) return;
+      if (isOneLine(s)) return;
 
       const head = text.slice(0, -MIN_LAST);
       const tail = text.slice(-MIN_LAST);
