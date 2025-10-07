@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="google" content="notranslate">
 <title>ジョージア法人設立LP</title>
+
+<!-- 自動翻訳提案の抑止 -->
+<meta name="google" content="notranslate">
 
 <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
@@ -138,14 +140,10 @@
   html.lang-open .lang-backdrop{opacity:1}
   html.lang-open .lang-panel{transform:none;opacity:1}
 
-  /* Google翻訳のバナー/ツールチップは隠す（押し下げ防止を強化） */
-  iframe.goog-te-banner-frame,
+  /* Google翻訳のバナー等は隠す（押し下げ防止） */
   .goog-te-banner-frame{display:none!important}
-  #goog-gt-tt,
-  .goog-tooltip,
-  .goog-te-balloon-frame{display:none!important}
+  #goog-gt-tt{display:none!important}
   body{top:0!important}
-
   /* 公式ウィジェット自体は画面外へ退避（selectはJSから操作） */
   #google_translate_element{
     position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
@@ -172,6 +170,23 @@
     .lang-button{transform:scale(.92);transform-origin:top right}
   }
 </style>
+
+<!-- ★ 英語固定対策（googtransを日本語に初期化＆ハッシュ除去） -->
+<script>
+  (function(){
+    try{
+      if (location.hash && /googtrans/.test(location.hash)) {
+        history.replaceState('', document.title, location.pathname + location.search);
+      }
+      var host = location.hostname.replace(/^www\./,'');
+      var exp  = new Date(); exp.setFullYear(exp.getFullYear()+1);
+      var cval = '/ja/ja';
+      document.cookie = 'googtrans=' + cval + '; expires=' + exp.toUTCString() + '; path=/';
+      document.cookie = 'googtrans=' + cval + '; expires=' + exp.toUTCString() + '; path=/; domain=' + host;
+      document.cookie = 'googtrans=' + cval + '; expires=' + exp.toUTCString() + '; path=/; domain=.' + host;
+    }catch(e){}
+  })();
+</script>
 </head>
 <body>
 
@@ -289,6 +304,7 @@
       <summary>法人税の課税タイミング（エストニア型モデル）</summary>
       <div class="content">
         <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税されます（例外あり）。エストニア型モデルに近い制度です。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
+        <!-- 追記3：CFCの“合算課税”を明示 -->
         <p class="text-sm muted">※ 支配要件等を満たす場合、CFCルールにより<strong>留保所得が合算課税</strong>となる可能性があります。</p>
         <p>出典：</p>
         <ul>
@@ -359,6 +375,7 @@
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
         <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
+        <!-- 追記4：反社/AML・CFTに関する明確化 -->
         <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
@@ -433,6 +450,7 @@
         </details>
         <!-- ★ 追加ここまで -->
 
+        <!-- 追記5：€建て価格の為替注記 -->
         <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算します。為替変動により請求額が変動する場合があります。</p>
 
       </div>
@@ -589,6 +607,7 @@
           <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
         </ul>
         <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
+        <!-- 追記4（個人側にも同趣旨を付記） -->
         <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
@@ -642,6 +661,7 @@
       <div class="content">
         <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。<br>「預金11.5% → 融資13〜15%」のような構造が成立します。</p>
         <p class="text-sm muted">※ 金利は商品・銀行・時期で変動。将来の利回りは保証されません。</p>
+        <!-- 追記1：金利の時点明記＋日本国内での媒介ではない -->
         <p class="text-sm muted">※ 記載の金利・条件は<span style="font-weight:700">参考例（2025年10月時点）</span>です。商品/銀行/時点で異なります。当社は日本国内での銀行代理・媒介は行いません。</p>
       </div>
     </details>
@@ -654,6 +674,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
+        <!-- 追記9：勧誘・斡旋ではない線引き -->
         <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋する立場ではありません。最終的な選定と契約はお客様と各銀行の直接契約となります。</p>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
@@ -718,6 +739,7 @@
           <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
         </ul>
 
+        <!-- 追記2：シミュレーションは仮定の例示 -->
         <p class="text-sm muted">※ 本シミュレーションは仮定に基づく例示です。為替・税率・商品条件の変動により結果は大きく異なります。</p>
         <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
@@ -811,8 +833,11 @@
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
           <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
         </ul>
+        <!-- 追記6：MoUは保証ではない -->
         <p class="text-sm muted">※ MoUは業務連携の覚書であり、審査結果や開設成功を保証するものではありません。</p>
+        <!-- 追記7：届出系の可能性 -->
         <p class="text-sm muted">※ お客様の状況により、国外財産調書・国外送金等調書などの届出義務が生じる場合があります。</p>
+        <!-- 追記8：個人情報の保存期間/第三国移転 -->
         <p class="text-sm muted">※ 個人情報は業務目的の範囲でのみ利用し、法令上必要な保存期間を超えて保有しません。第三国への移転が必要な場合は適切な保護措置を講じます。</p>
       </div>
     </details>
@@ -845,10 +870,15 @@
   </div>
 </div>
 
+<footer class="site-foot" role="contentinfo">
+  <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
+  <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
+</footer>
+
 <!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
 <script src="./script.js?v=20250912-gt"></script>
 
-<!-- Google翻訳（全言語） -->
+<!-- Google翻訳（全言語）※1本だけ -->
 <script>
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
@@ -856,30 +886,9 @@
       autoDisplay: false
       // includedLanguages を省略 → Googleが対応する全言語を表示
     }, 'google_translate_element');
-
-    // カスタムUIが確実にselectを掴めるよう、初期化直後に再試行（最大40回）
-    if (typeof grabGoogleSelect === 'function') grabGoogleSelect(40);
   }
 </script>
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
-  <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
-</footer>
-
-<!-- 👇このパッチをここに貼る（</body>の直前） -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // 1) フッターを #scroll-root の中へ移動（外にある場合だけ）
-    var wrap = document.getElementById('scroll-root');
-    var foot = document.querySelector('.site-foot');
-    if (wrap && foot && !wrap.contains(foot)) wrap.appendChild(foot);
-
-    // 2) 最初のアコーディオン見出しを短い文言へ差し替え（重複回避）
-    var firstSummary = document.querySelector('#corp-setup details summary');
-    if (firstSummary) firstSummary.textContent = 'サービスの概要（OECD・PwC準拠）';
-  });
-</script>
 </body>
 </html>
