@@ -926,5 +926,80 @@
   });
 })();
 </script>
+<!-- 10/3 パッチ：英語切替の強制 + Googleバナー完全排除（末尾に追加） -->
+<script>
+(function GTFix(){
+  /* ========== 1) 上部バナーを即時/恒久的に消す ========== */
+  var css = document.createElement('style');
+  css.textContent = [
+    'html{margin-top:0!important;}',
+    'body{top:0!important;position:static!important;}',
+    'iframe#goog-te-banner-frame,.goog-te-banner-frame{display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important;}',
+    '#goog-gt-tt{display:none!important;visibility:hidden!important;}'
+  ].join('');
+  document.head.appendChild(css);
+
+  function kill(){
+    try{
+      var b = document.getElementById('goog-te-banner-frame');
+      if (b && b.parentNode) b.parentNode.removeChild(b);
+      var tt = document.getElementById('goog-gt-tt');
+      if (tt && tt.parentNode) tt.parentNode.removeChild(tt);
+      document.documentElement.style.marginTop = '0px';
+      document.body.style.top = '0px';
+    }catch(e){}
+  }
+  kill();
+  window.addEventListener('load', kill, {once:true});
+  new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
+
+  /* ========== 2) 言語切替をクッキーで強制（確実に動く） ========== */
+  function setCookie(name, value, days){
+    var d = new Date(); d.setDate(d.getDate() + (days||365));
+    var base = name + '=' + encodeURIComponent(value) + '; expires=' + d.toUTCString() + '; path=/';
+    var host = location.hostname.replace(/^www\./,'');
+    document.cookie = base;
+    document.cookie = base + '; domain=.' + host;
+    document.cookie = base + '; domain=' + host;
+  }
+  function clearCookie(name){
+    var exp = 'Thu, 01 Jan 1970 00:00:00 GMT';
+    var host = location.hostname.replace(/^www\./,'');
+    document.cookie = name + '=; expires=' + exp + '; path=/';
+    document.cookie = name + '=; expires=' + exp + '; path=/; domain=.' + host;
+    document.cookie = name + '=; expires=' + exp + '; path=/; domain=' + host;
+  }
+  function forceTranslate(lang){ // 'en','ja','ko' など
+    if (!lang || lang === 'ja'){
+      clearCookie('googtrans');
+      location.reload();
+      return;
+    }
+    setCookie('googtrans','/ja/' + lang,365);
+    location.reload();
+  }
+  // どこからでも使えるように公開
+  window.__forceTranslate = forceTranslate;
+
+  /* ========== 3) あなたの言語リスト（.ls-item）にフック ========== */
+  document.addEventListener('click', function(ev){
+    var el = ev.target.closest('.ls-item,[data-code]');
+    if (!el) return;
+    var code = el.dataset.code;
+    if (!code) return;
+    ev.preventDefault();
+    forceTranslate(code);           // ← これで必ず切り替わります
+  }, true);
+
+  /* ========== 4) 公式<select>がある時はそれも動かす（保険） ========== */
+  function trySelect(lang){
+    var sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel) return false;
+    sel.value = lang;
+    sel.dispatchEvent(new Event('change'));
+    return true;
+  }
+})();
+</script>
 </body>
 </html>
