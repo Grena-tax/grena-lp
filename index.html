@@ -1627,5 +1627,114 @@
   // setGT('/ja/en'); drive('en');
 })();
 </script>
+<!-- 🔧 FINAL ONE-PASTE FIX: 英語切替が効かない根本原因(.skiptranslate削除)を無効化＋バナーだけ隠す -->
+<script>
+(function(){
+  'use strict';
+  if (window.__GT_SUPERFIX__) return; window.__GT_SUPERFIX__=1;
+
+  /* 0) 既存スクリプトが .skiptranslate を remove しても無効化するガード */
+  (function guardSkipTranslate(){
+    function isSkip(el){ try{ return el && el.classList && el.classList.contains('skiptranslate'); }catch(_){ return false; } }
+    var _removeChild = Node.prototype.removeChild;
+    Node.prototype.removeChild = function(child){
+      if (isSkip(child)) return child;                 // 削除させない
+      return _removeChild.call(this, child);
+    };
+    var _remove = Element.prototype.remove;
+    Element.prototype.remove = function(){
+      if (isSkip(this)) return;                        // 削除させない
+      return _remove.apply(this, arguments);
+    };
+  })();
+
+  /* 1) 上部バナーだけ確実に非表示（.skiptranslate は消さない） */
+  (function hideBannerOnly(){
+    var st=document.createElement('style');
+    st.textContent='html{margin-top:0!important}body{top:0!important;position:static!important}'
+                 +'#goog-gt-tt,iframe#goog-te-banner-frame,.goog-te-banner-frame{display:none!important;visibility:hidden!important;height:0!important;overflow:hidden!important}';
+    (document.head||document.documentElement).appendChild(st);
+  })();
+
+  /* 2) Google翻訳ライブラリを必ず用意（httpsでロード） */
+  function ensureGTE(cb){
+    if (window.google && google.translate && google.translate.TranslateElement){ cb(); return; }
+    var cbName='__gt_ready_'+Date.now();
+    window[cbName]=function(){ try{ cb(); } finally{ delete window[cbName]; } };
+    var s=document.createElement('script');
+    s.src='https://translate.google.com/translate_a/element.js?cb='+cbName;
+    s.async=true; document.head.appendChild(s);
+  }
+
+  /* 3) 隠しホストを確保して公式<select>を出す */
+  function ensureHostAndInit(){
+    var host=document.getElementById('google_translate_element');
+    if(!host){
+      host=document.createElement('div');
+      host.id='google_translate_element';
+      host.style.cssText='position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;';
+      document.body.appendChild(host);
+    }
+    if (!window.__GT_INITED__){
+      try{
+        new google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element');
+        window.__GT_INITED__=1;
+      }catch(_){}
+    }
+  }
+
+  /* 4) Cookie操作（リロードなしで/ja/jaを上書き） */
+  var HOST=location.hostname.replace(/^www\./,'');
+  function setGT(val){
+    var d=new Date(); d.setFullYear(d.getFullYear()+1);
+    var base='googtrans='+encodeURIComponent(val)+'; expires='+d.toUTCString()+'; path=/';
+    document.cookie=base;
+    try{ document.cookie=base+'; domain=.'+HOST; document.cookie=base+'; domain='+HOST; }catch(_){}
+  }
+  function clearGT(){
+    var exp='Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie='googtrans=; expires='+exp+'; path=/';
+    try{ document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+HOST; document.cookie='googtrans=; expires='+exp+'; path=/; domain='+HOST; }catch(_){}
+  }
+
+  /* 5) 公式<select>を直接ドライブ（リロードなし・確定まで連打） */
+  function apply(lang){
+    ensureGTE(function(){
+      ensureHostAndInit();
+      var tries=0, iv=setInterval(function(){
+        tries++;
+        var sel=document.querySelector('#google_translate_element select.goog-te-combo');
+        if (sel){
+          try{
+            if (lang==='ja'){ clearGT(); sel.value='ja'; }
+            else{ setGT('/ja/'+lang); sel.value=lang; }
+            ['change','input','blur'].forEach(function(t){ sel.dispatchEvent(new Event(t,{bubbles:true})); });
+          }catch(_){}
+          if (tries>1){ clearInterval(iv); }           // 2回投げて確定
+          setTimeout(function(){
+            var b=document.getElementById('goog-gt-tt'), f=document.getElementById('goog-te-banner-frame');
+            if(b&&b.remove) b.remove(); if(f&&f.remove) f.remove();
+          },80);
+        }
+        if (tries>60) clearInterval(iv);               // ~9秒で打ち切り
+      },150);
+    });
+  }
+
+  /* 6) あなたの「English/日本語」クリックを横取りして即適用（data-code / data-lang / テキスト） */
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('.ls-item,[data-code],[data-lang],button,a');
+    if(!t) return;
+    var code=t.getAttribute('data-code')||t.getAttribute('data-lang')||'';
+    var label=(t.textContent||'').trim().toLowerCase();
+    if (code==='en' || label==='english'){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); apply('en'); }
+    else if (code==='ja' || label==='日本語'){ e.preventDefault(); e.stopPropagation(); if(e.stopImmediatePropagation) e.stopImmediatePropagation(); apply('ja'); }
+  }, true);
+
+  /* 7) 手動用ヘルパ（必要ならコンソールで実行） */
+  window.__gt_apply_en=function(){ apply('en'); };
+  window.__gt_apply_ja=function(){ apply('ja'); };
+})();
+</script>
 </body>
 </html>
