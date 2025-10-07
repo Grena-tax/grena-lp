@@ -189,9 +189,9 @@ html, body{ overscroll-behavior-y: none; }
 
 /* ========== 13) Footer（このファイルの末尾。最優先で上書き） ========== */
 :root{
-  --foot-bg:#0b1220;        /* 背景 */
-  --foot-fg:#cbd5e1;        /* 文字色 */
-  --foot-border:#1f2937;    /* 上ボーダー */
+  --foot-bg:#0b1220;
+  --foot-fg:#cbd5e1;
+  --foot-border:#1f2937;
 }
 .site-foot{
   background:var(--foot-bg);
@@ -223,47 +223,37 @@ html, body{ overscroll-behavior-y: none; }
 }
 /* === FIX: 右上ボタン(🌐/≡)と見出しの衝突回避 === */
 :root{
-  --ui-btn: 48px;   /* ボタン1個の幅（変えるならここ） */
-  --ui-gap: 10px;   /* 余白 */
+  --ui-btn: 48px;
+  --ui-gap: 10px;
 }
-
 @media (max-width: 768px){
-  /* 右上に2個ボタンがあるので、その分だけ右側に余白を確保 */
   body #corp-setup > h2{
     padding-right: calc((var(--ui-btn)*2) + (var(--ui-gap)*3) + env(safe-area-inset-right,0px)) !important;
     line-height: 1.28;
   }
 }
-
-/* 極小幅（iPhone SEなど）は少しだけ余裕を増やす */
 @media (max-width: 390px){
   body #corp-setup > h2{
     padding-right: calc((var(--ui-btn)*2) + (var(--ui-gap)*4) + 8px + env(safe-area-inset-right,0px)) !important;
   }
 }
-/* 見出しの“2文字だけ2行目”回避（対応ブラウザは自動調整） */
 @supports (text-wrap: balance) {
   .accordion > details > summary { text-wrap: balance; }
 }
-/* JSが末尾をひとかたまりにする時に使うクラス */
 .nowrap-tail { white-space: nowrap; }
-/* SPだけ改行させるユーティリティ */
 br.sp-only { display: none; }
 @media (max-width: 600px){
-  br.sp-only { display: block; } /* 表示＝改行になる */
+  br.sp-only { display: block; }
 }
-
-/* （任意）SPだけ1行にしたい時に使う */
 @media (max-width: 600px){
   .sp-nowrap { white-space: nowrap; }
 }
-/* iOSでsummaryの文字間が勝手に空くのを止める */
 .accordion summary{
-  justify-content: flex-start !important; /* 念のため */
-  flex-wrap: wrap;                        /* 折返し許可 */
-  text-align: start !important;           /* 均等割付を無効化 */
+  justify-content: flex-start !important;
+  flex-wrap: wrap;
+  text-align: start !important;
   text-justify: auto !important;
-  letter-spacing: 0 !important;           /* 文字間をリセット */
+  letter-spacing: 0 !important;
   white-space: normal !important;
   word-break: normal;
 }
