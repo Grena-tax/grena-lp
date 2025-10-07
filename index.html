@@ -1375,5 +1375,147 @@
   window.__gt={apply:applyLang};
 })();
 </script>
+<!-- ✅ FINAL ONE-BLOCK PATCH: 英語へ確実切替 + 上部Googleバナー完全非表示（</body>直前） -->
+<script>
+(function(){
+  'use strict';
+
+  /* 1) 上部バナー/吹き出し/押し下げを常時抑止 */
+  const sty = document.createElement('style');
+  sty.textContent = `
+    html{margin-top:0!important}
+    body{top:0!important;position:static!important}
+    #goog-gt-tt,.goog-tooltip,.goog-tooltip:hover{display:none!important;visibility:hidden!important}
+    .skiptranslate{display:none!important}
+    iframe#goog-te-banner-frame,.goog-te-banner-frame{
+      display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
+    }
+  `;
+  (document.head||document.documentElement).appendChild(sty);
+  const nuke = () => {
+    ['goog-gt-tt','goog-te-banner-frame'].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el && el.remove) el.remove();
+    });
+    document.querySelectorAll('body > .skiptranslate').forEach(el=>el.remove());
+    document.documentElement.style.marginTop='0px';
+    document.body.style.top='0px';
+  };
+  nuke();
+  window.addEventListener('load', nuke, {once:true});
+  new MutationObserver(nuke).observe(document.documentElement,{childList:true,subtree:true});
+
+  /* 2) Google翻訳ライブラリの確実な用意（未読込なら自前で読む） */
+  function ensureGTE(cb){
+    if (window.google && google.translate && google.translate.TranslateElement){ cb(); return; }
+    const cbName = '__gt_cb_' + Date.now();
+    window[cbName] = () => { try{ cb(); } finally { delete window[cbName]; } };
+    const s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=' + cbName;
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  /* 3) 隠しウィジェットを一時生成して<select>に直接命令 → 失敗しないやり方 */
+  function forceTranslate(lang){            // 例: 'en'
+    if (!lang || lang === 'ja'){ resetToJA(); return; }
+    // クッキーも書いておく（保険）
+    setGT('/ja/' + lang);
+
+    ensureGTE(() => {
+      // 既存のウィジェットが無くてもOK。自分で隠しウィジェットを作る。
+      let holder = document.getElementById('__gt_helper');
+      if (!holder){
+        holder = document.createElement('div');
+        holder.id = '__gt_helper';
+        holder.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;pointer-events:none;';
+        document.body.appendChild(holder);
+        try{
+          new google.translate.TranslateElement({
+            pageLanguage:'ja', autoDisplay:false,
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+          }, holder.id);
+        }catch(_){}
+      }
+      // 自分が作った or 既存どちらでも、とにかく<select>を掴んで変える
+      let tries = 0;
+      const tick = setInterval(() => {
+        tries++;
+        const sel = document.querySelector('select.goog-te-combo');
+        if (sel){
+          try {
+            sel.value = lang;
+            // いろんなイベントを念のため全部投げる
+            ['change','input','blur'].forEach(type=>{
+              sel.dispatchEvent(new Event(type, {bubbles:true}));
+            });
+          } catch(_){}
+          clearInterval(tick);
+        } else if (tries > 60){ // 約9秒で打切り
+          clearInterval(tick);
+        }
+      }, 150);
+    });
+  }
+
+  function resetToJA(){
+    clearGT();
+    // 既存のハッシュを消す
+    try{ if(/#googtrans/.test(location.hash)) history.replaceState('',document.title,location.pathname+location.search); }catch(_){}
+    // 日本語はリロードで確定
+    location.reload();
+  }
+
+  /* 4) googtrans クッキーの扱い（localhostでも効くように） */
+  const HOST = location.hostname.replace(/^www\./,'');
+  function setGT(val){
+    const d=new Date(); d.setFullYear(d.getFullYear()+1);
+    const base='googtrans='+encodeURIComponent(val)+'; expires='+d.toUTCString()+'; path=/';
+    // localhost対策：domain なし版を最優先にしつつ、両方も書く
+    document.cookie = base;
+    try{ document.cookie = base + '; domain=.'+HOST; document.cookie = base + '; domain='+HOST; }catch(_){}
+  }
+  function clearGT(){
+    const exp='Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie='googtrans=; expires='+exp+'; path=/';
+    try{ document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+HOST; document.cookie='googtrans=; expires='+exp+'; path=/; domain='+HOST; }catch(_){}
+  }
+
+  /* 5) あなたの「English」クリックを最優先でフック（テキスト＆data-code 両対応） */
+  document.addEventListener('click', function(e){
+    const t = e.target.closest('.ls-item,[data-code],[data-lang],button,a,[role="option"]');
+    if (!t) return;
+
+    // data-code / data-lang を最優先
+    const code = t.getAttribute('data-code') || t.getAttribute('data-lang');
+    const label = (t.textContent || '').trim().toLowerCase();
+
+    if (code === 'en' || label === 'english'){
+      e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      forceTranslate('en');
+    } else if (code === 'ja' || label === '日本語'){
+      e.preventDefault(); e.stopPropagation(); if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+      resetToJA();
+    }
+  }, true);
+
+  /* 6) リロードで日本語に戻される対策：読み込み完了後にも英語を確定させる */
+  document.addEventListener('DOMContentLoaded', () => {
+    // 直前操作で英語にしたい痕跡があれば、もう一度確定させる
+    const want = (document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '';
+    if (decodeURIComponent(want).endsWith('/en')){
+      ensureGTE(()=> {
+        // 既存selectがなければ自前のhelperを作って適用
+        const sel = document.querySelector('select.goog-te-combo');
+        if (!sel) forceTranslate('en');
+        else {
+          sel.value='en';
+          ['change','input','blur'].forEach(t=>sel.dispatchEvent(new Event(t,{bubbles:true})));
+        }
+      });
+    }
+  });
+})();
+</script>
 </body>
 </html>
