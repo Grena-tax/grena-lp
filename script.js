@@ -387,12 +387,11 @@ highlightCurrent('ja');
 
   head.insertBefore(btn, head.firstChild);
 })();
-
-/* summaryの末尾だけを包んで改行崩れを抑止（自動） */
+// 見出しの末尾だけが2行目に落ちるのを回避（自動）
 (function(){
   const SEL = '.accordion > details > summary';
   const TAIL_CLASS = 'nowrap-tail';
-  const MIN_LAST = 6;
+  const MIN_LAST = 6; // 末尾でまとめる文字数（4〜8で調整可）
 
   function unwrap(el){
     const t = el.querySelector('.' + TAIL_CLASS);
@@ -401,7 +400,7 @@ highlightCurrent('ja');
   function isOneLine(el){
     const cs = getComputedStyle(el);
     let lh = parseFloat(cs.lineHeight);
-    if (isNaN(lh)) {
+    if (isNaN(lh)) { // line-height: normal のときの目安
       const fs = parseFloat(cs.fontSize) || 16;
       lh = fs * 1.2;
     }
@@ -409,10 +408,10 @@ highlightCurrent('ja');
   }
   function apply(){
     document.querySelectorAll(SEL).forEach(s=>{
-      unwrap(s);
+      unwrap(s); // まず元に戻す
       const text = (s.textContent || '').trim();
-      if (text.length <= MIN_LAST + 2) return;
-      if (isOneLine(s)) return;
+      if (text.length <= MIN_LAST + 2) return; // そもそも短いものは除外
+      if (isOneLine(s)) return;                // 1行なら何もしない
 
       const head = text.slice(0, -MIN_LAST);
       const tail = text.slice(-MIN_LAST);
@@ -424,4 +423,19 @@ highlightCurrent('ja');
   document.addEventListener('DOMContentLoaded', apply);
   window.addEventListener('load', apply);
   window.addEventListener('resize', debounce(apply), { passive:true });
+})();
+
+/* === バナー抑止の保険（DOMに出てきたら即非表示） === */
+(function killGoogleBanner(){
+  const hide = () => {
+    try{
+      const f = document.querySelector('iframe.goog-te-banner-frame');
+      if (f && f.style.display !== 'none') f.style.display = 'none';
+      const tt = document.getElementById('goog-gt-tt'); if (tt) tt.style.display = 'none';
+      document.body.style.top = '0px';
+    }catch(e){}
+  };
+  hide();
+  const mo = new MutationObserver(hide);
+  mo.observe(document.documentElement, {childList:true, subtree:true});
 })();
