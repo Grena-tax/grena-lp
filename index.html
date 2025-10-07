@@ -1262,5 +1262,118 @@
   nukeBanner();   // 念押し
 })();
 </script>
+<!-- ✅ FINAL FIX: 英語に確実切替 + 上部バナー完全非表示（</body>直前に1回だけ） -->
+<script>
+(function(){
+  'use strict';
+
+  /* 1) 上部バナー/吹き出し/押し下げを徹底的に消す */
+  const sty = document.createElement('style');
+  sty.textContent = `
+    html{margin-top:0!important}
+    body{top:0!important;position:static!important}
+    #goog-gt-tt,.goog-tooltip,.goog-tooltip:hover{display:none!important;visibility:hidden!important}
+    .skiptranslate{display:none!important}
+    iframe#goog-te-banner-frame,.goog-te-banner-frame{
+      display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
+    }
+  `;
+  (document.head||document.documentElement).appendChild(sty);
+  function nuke(){
+    try{
+      ['goog-te-banner-frame','goog-gt-tt'].forEach(id=>{
+        const el=document.getElementById(id); if(el&&el.remove) el.remove();
+      });
+      document.querySelectorAll('body > .skiptranslate').forEach(el=>el.remove());
+      document.documentElement.style.marginTop='0px';
+      document.body.style.top='0px';
+    }catch(_){}
+  }
+  nuke();
+  window.addEventListener('load', nuke, {once:true});
+  new MutationObserver(nuke).observe(document.documentElement,{childList:true,subtree:true});
+
+  /* 2) 言語適用（まず<select>、無理ならリロードで強制） */
+  const HOST = location.hostname.replace(/^www\./,'');
+  function setGT(val){
+    const d=new Date(); d.setFullYear(d.getFullYear()+1);
+    const base='googtrans='+encodeURIComponent(val)+'; expires='+d.toUTCString()+'; path=/';
+    document.cookie=base;
+    document.cookie=base+'; domain=.'+HOST;
+    document.cookie=base+'; domain='+HOST;
+  }
+  function clearGT(){
+    const exp='Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie='googtrans=; expires='+exp+'; path=/';
+    document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+HOST;
+    document.cookie='googtrans=; expires='+exp+'; path=/; domain='+HOST;
+  }
+  function applyViaSelect(lang){
+    const sel=document.querySelector('#google_translate_element select.goog-te-combo');
+    if(!sel) return false;
+    sel.value=lang;
+    sel.dispatchEvent(new Event('change', {bubbles:true}));
+    return true;
+  }
+
+  function applyLang(lang){
+    if(!lang || lang==='ja'){
+      clearGT();
+      try{ if(/#googtrans/.test(location.hash)) history.replaceState('',document.title,location.pathname+location.search); }catch(_){}
+      location.reload();
+      return;
+    }
+
+    // 目標言語を記録（リロード後の最終確定に使う）
+    sessionStorage.setItem('__gt_after', lang);
+
+    // クッキー先書き
+    setGT('/ja/'+lang);
+
+    // まずは即時に<select>で適用（最速）
+    if (applyViaSelect(lang)) return;
+
+    // 1.5秒待って出なければ、ハッシュ付与→リロードで確実適用
+    const t0=Date.now();
+    const id=setInterval(()=>{
+      if (applyViaSelect(lang)) { clearInterval(id); return; }
+      if (Date.now()-t0>1500){
+        clearInterval(id);
+        try{ location.hash='googtrans(ja|'+lang+')'; }catch(_){}
+        location.reload();
+      }
+    },150);
+  }
+
+  // リロード後に<select>が現れたら最終確定（HEAD側の/ja/ja上書き対策）
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const lang=sessionStorage.getItem('__gt_after');
+    if(!lang) return;
+    let tries=0;
+    const id=setInterval(()=>{
+      tries++;
+      if (applyViaSelect(lang) || tries>80){ // ~12秒
+        clearInterval(id);
+        sessionStorage.removeItem('__gt_after');
+      }
+    },150);
+  });
+
+  /* 3) あなたの言語リストのクリックを最優先でフック（既存より先に実行） */
+  document.addEventListener('click', function(e){
+    const t=e.target.closest('.ls-item,[data-code],[data-lang]');
+    if(!t) return;
+    const code=t.getAttribute('data-code')||t.getAttribute('data-lang');
+    if(!code) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if(e.stopImmediatePropagation) e.stopImmediatePropagation();
+    applyLang(code);               // 例：'en'
+  }, true);
+
+  // デバッグ用
+  window.__gt={apply:applyLang};
+})();
+</script>
 </body>
 </html>
