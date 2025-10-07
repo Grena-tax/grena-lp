@@ -1,21 +1,37 @@
-/* ===== 設定 ===== */
+/* ===== 申込フォームURL（先頭で定義） ===== */
 const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdixKlGsWRMucxH9jMms4mthfKb0XbEuIioTGKuh-2q5qIzDA/viewform?usp=header';
 
-/* ===== ユーティリティ ===== */
-const $ = (s, r = document) => r.querySelector(s);
-const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+/* ===== util ===== */
+const slug = (t) => (t || '')
+  .toLowerCase()
+  .replace(/[（）()\[\]【】]/g, ' ')
+  .replace(/[^\w\u3040-\u30ff\u3400-\u9fff]+/g, '-')
+  .replace(/-+/g, '-').replace(/^-|-$/g, '');
 
-/* ===== CTA高さをCSS変数へ反映 ===== */
-function adjustCtaPadding(){
-  const bar = $('.fixed-cta, .cta-bar, #ctaBar');
-  if(!bar) return;
-  const h = Math.ceil(bar.getBoundingClientRect().height);
-  document.documentElement.style.setProperty('--cta-h', h + 'px');
-}
-addEventListener('load', adjustCtaPadding, { once:true });
-addEventListener('resize', adjustCtaPadding);
+/* === 追加①：ページ本体をスクロール容器に移す === */
+(function mountScrollRoot(){
+  if (document.getElementById('scroll-root')) return;
 
-/* ===== アンカー：スムーススクロール + 最初のdetailsオープン ===== */
+  const body = document.body;
+  const cta  = document.querySelector('.fixed-cta, .cta-bar, #ctaBar');
+  const menuBtn = document.getElementById('menuBtn');
+  const menuDrawer = document.getElementById('menuDrawer');
+  const langBtn = document.getElementById('langBtn');
+  const langDrawer = document.getElementById('langDrawer');
+
+  const wrap = document.createElement('div');
+  wrap.id = 'scroll-root';
+
+  if (cta) body.insertBefore(wrap, cta);
+  else body.appendChild(wrap);
+
+  const keep = new Set([cta, menuBtn, menuDrawer, langBtn, langDrawer, wrap]);
+  Array.from([...body.childNodes]).forEach(n => {
+    if (!keep.has(n)) wrap.appendChild(n);
+  });
+})();
+
+/* ===== ページ内リンク（スムーススクロール） ===== */
 document.addEventListener('click', (e) => {
   const a = e.target.closest('a[href^="#"]');
   if (!a) return;
@@ -26,91 +42,102 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   target.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-  const first = target.querySelector('details');
-  if (first && !first.open) first.open = true;
-
+  if (target.id !== 'disclaimer') {
+    const first = target.querySelector('details');
+    if (first && !first.open) first.open = true;
+  }
   history.pushState(null, '', id);
 });
-$('#toTop')?.addEventListener('click', (e)=>{
-  // ページトップが存在しない（編集時の保険）
-  if (!$('#page-top')) {
+
+/* ===== 「トップへ」 ===== */
+document.getElementById('toTop')?.addEventListener('click', (e)=>{
+  if (!document.querySelector('#page-top')) {
     e.preventDefault();
-    scrollTo({ top: 0, behavior: 'smooth' });
+    const scroller = document.getElementById('scroll-root') || window;
+    if (scroller.scrollTo) scroller.scrollTo({ top: 0, behavior: 'smooth' });
   }
 });
 
+/* ===== 固定CTAの高さを本文余白に反映 ===== */
+const adjustCtaPadding = () => {
+  const bar = document.querySelector('.cta-bar') || document.getElementById('ctaBar') || document.querySelector('.fixed-cta');
+  if (!bar) return;
+  const h = Math.ceil(bar.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--cta-h', h + 'px');
+
+  const scroller = document.getElementById('scroll-root');
+  if (scroller) scroller.classList.add('has-cta');
+  else document.body.classList.add('has-cta');
+};
+addEventListener('load', adjustCtaPadding);
+addEventListener('resize', adjustCtaPadding);
+
 /* ===== 申込ボタン ===== */
-$('#applyNow')?.addEventListener('click', (e) => {
+document.getElementById('applyNow')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (!FORM_URL) { alert('フォームURLが未設定です'); return; }
   window.open(FORM_URL, '_blank', 'noopener');
 });
 
-/* ===== ハンバーガー ===== */
-(function menu(){
-  const html = document.documentElement;
-  const btn = $('#menuBtn');
-  const drawer = $('#menuDrawer');
-  const closeBt = $('#menuClose');
-  const overlay = $('#menuBackdrop');
+/* ===== ハンバーガー開閉 ===== */
+const btn        = document.getElementById('menuBtn');
+const drawer     = document.getElementById('menuDrawer');
+const closeBt    = document.getElementById('menuClose');
+const overlay    = document.getElementById('menuBackdrop');
+const groupsRoot = document.getElementById('menuGroups');
 
-  function open(){
-    html.classList.add('menu-open');
-    drawer?.setAttribute('aria-hidden','false');
-    btn?.setAttribute('aria-expanded','true');
-    setTimeout(()=>closeBt?.focus(), 0);
-  }
-  function close(){
-    html.classList.remove('menu-open');
-    drawer?.setAttribute('aria-hidden','true');
-    btn?.setAttribute('aria-expanded','false');
-    btn?.focus();
-  }
+const openMenu  = () => {
+  document.documentElement.classList.add('menu-open');
+  drawer?.setAttribute('aria-hidden','false');
+  btn?.setAttribute('aria-expanded','true');
+  setTimeout(() => closeBt?.focus(), 0);
+};
+const closeMenu = () => {
+  document.documentElement.classList.remove('menu-open');
+  drawer?.setAttribute('aria-hidden','true');
+  btn?.setAttribute('aria-expanded','false');
+  btn?.focus();
+};
 
-  btn?.addEventListener('click', (e)=>{
-    e.preventDefault();
-    html.classList.contains('menu-open') ? close() : open();
-  });
-  closeBt?.addEventListener('click', close);
-  overlay?.addEventListener('click', close);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
-
-  // 片方を開く時はもう片方を閉じる
-  document.addEventListener('click', e=>{
-    if (e.target.closest('#langBtn')) close();
-  }, {passive:true});
-})();
+btn?.addEventListener('click', () => {
+  document.documentElement.classList.contains('menu-open') ? closeMenu() : openMenu();
+});
+closeBt?.addEventListener('click', closeMenu);
+overlay?.addEventListener('click', closeMenu);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeMenu(); });
 
 /* ===== メニュー自動生成 ===== */
-(function buildMenu(){
-  const root = $('#menuGroups');
-  if (!root) return;
-  const EXCLUDE = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+const excludeTitles = ['基本プラン','設立＋LPパック','設立+LPパック','フルサポートパック'];
+
+function buildMenu(){
+  const sections = Array.from(document.querySelectorAll('section[id]'));
   const frag = document.createDocumentFragment();
   let i = 1;
 
-  $$('section[id]').forEach(sec=>{
-    const ds = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
-    if (!ds.length) return;
+  sections.forEach(sec=>{
+    const details = sec.querySelectorAll(':scope > .accordion > details, :scope > details');
+    if (!details.length) return;
 
     const wrap = document.createElement('div');
     wrap.className = 'menu-group';
 
-    const h2 = $('h2', sec);
+    const h2 = sec.querySelector('h2');
     if (h2 && sec.id !== 'plans') {
       const h4 = document.createElement('h4');
       h4.textContent = (h2.textContent || '').trim();
       wrap.appendChild(h4);
+    } else {
+      wrap.classList.add('no-title');
     }
 
     const ul = document.createElement('ul');
     ul.className = 'menu-list';
 
-    ds.forEach(d=>{
-      const s = $('summary', d);
+    details.forEach(d=>{
+      const s = d.querySelector('summary');
       const t = s?.textContent?.trim() || '項目';
-      if (EXCLUDE.some(x => t.includes(x))) return;
-      if (!d.id) d.id = `acc-${i++}-${t.replace(/\s+/g,'-').replace(/[^\w\u3040-\u30ff\u3400-\u9fff-]/g,'').slice(0,40)}`;
+      if (excludeTitles.some(x => t.includes(x))) return;
+      if (!d.id) d.id = `acc-${i++}-${slug(t) || 'item'}`;
 
       const li = document.createElement('li');
       const a  = document.createElement('a');
@@ -118,9 +145,7 @@ $('#applyNow')?.addEventListener('click', (e) => {
       a.textContent = t;
       a.addEventListener('click',(e)=>{
         e.preventDefault();
-        document.documentElement.classList.remove('menu-open');
-        $('#menuDrawer')?.setAttribute('aria-hidden','true');
-        $('#menuBtn')?.setAttribute('aria-expanded','false');
+        closeMenu();
         d.open = true;
         d.scrollIntoView({behavior:'smooth', block:'start'});
         history.pushState(null,'',`#${d.id}`);
@@ -133,89 +158,222 @@ $('#applyNow')?.addEventListener('click', (e) => {
     frag.appendChild(wrap);
   });
 
-  root.textContent = '';
-  root.appendChild(frag);
-})();
+  if (!groupsRoot) return;
+  groupsRoot.textContent = '';
+  groupsRoot.appendChild(frag);
+  killPlansHeading();
+}
 
-/* ===== 言語ドロワー ===== */
-(function language(){
-  const html = document.documentElement;
-  const langBtn = $('#langBtn');
-  const drawer  = $('#langDrawer');
-  const closeBt = $('#langClose');
-  const backdrop= $('#langBackdrop');
-
-  function open(){
-    html.classList.add('lang-open');
-    drawer?.setAttribute('aria-hidden','false');
-    langBtn?.setAttribute('aria-expanded','true');
-    setTimeout(()=>closeBt?.focus(), 0);
-  }
-  function close(){
-    html.classList.remove('lang-open');
-    drawer?.setAttribute('aria-hidden','true');
-    langBtn?.setAttribute('aria-expanded','false');
-    langBtn?.focus();
-  }
-
-  langBtn?.addEventListener('click', (e)=>{
-    e.preventDefault();
-    html.classList.contains('lang-open') ? close() : open();
+function killPlansHeading(){
+  if (!groupsRoot) return;
+  groupsRoot.querySelectorAll('.menu-group h4').forEach(h=>{
+    if (h.textContent.trim().toLowerCase() === 'plans') h.remove();
   });
-  closeBt?.addEventListener('click', close);
-  backdrop?.addEventListener('click', close);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
+}
+addEventListener('DOMContentLoaded', buildMenu);
+addEventListener('load', killPlansHeading);
+if (groupsRoot) {
+  new MutationObserver(killPlansHeading).observe(groupsRoot, { childList:true, subtree:true });
+}
 
-  // 片方を開く時はもう片方を閉じる
-  document.addEventListener('click', e=>{
-    if (e.target.closest('#menuBtn')) close();
-  }, {passive:true});
+/* ===== 重複ブロック除去（免責/キャンセルを #disclaimer に集約） ===== */
+function cutOnlyBottomDup() {
+  document.getElementById('site-disclaimer')?.remove();
+  document.querySelectorAll('details.disclaimer').forEach(d => d.remove());
+  document.querySelectorAll('details').forEach(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    if (/免責事項/.test(t) && !d.closest('#disclaimer')) d.remove();
+  });
+  const cancels = Array.from(document.querySelectorAll('details')).filter(d=>{
+    const t = d.querySelector('summary')?.textContent?.trim() || '';
+    return /キャンセルポリシー/.test(t);
+  });
+  if (cancels.length > 1) {
+    const keep = cancels.find(d => d.closest('#disclaimer')) || cancels[0];
+    cancels.forEach(d => { if (d !== keep) d.remove(); });
+  }
+}
+document.addEventListener('DOMContentLoaded', cutOnlyBottomDup);
+window.addEventListener('load', cutOnlyBottomDup);
+
+/* ===== CTAのbottomはJSで触らない（iOS対策：transformで相殺） ===== */
+(function lockCtaToBottomFreeze(){
+  const bar =
+    document.querySelector('.fixed-cta') ||
+    document.querySelector('.cta-bar')   ||
+    document.getElementById('ctaBar');
+
+  if (!bar || !window.visualViewport) return;
+
+  const scroller = document.getElementById('scroll-root') || document.documentElement;
+
+  let stable = 0;
+  const apply = () => {
+    const vv  = window.visualViewport;
+    const uiGap = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    const maxScroll = Math.max(0, (scroller.scrollHeight || 0) - (scroller.clientHeight || 0));
+
+    let y = 0;
+    if (scroller === document.documentElement || scroller === document.body) {
+      y = window.scrollY || document.documentElement.scrollTop || 0;
+    } else {
+      y = scroller.scrollTop || 0;
+    }
+
+    const isBouncingBottom = y > maxScroll + 1;
+    if (!isBouncingBottom) stable = uiGap;
+
+    const use = isBouncingBottom ? stable : uiGap;
+    const tx = `translate3d(0, ${use}px, 0)`;
+    if (bar.style.transform !== tx) bar.style.transform = tx;
+  };
+
+  apply();
+  visualViewport.addEventListener('resize',  apply);
+  visualViewport.addEventListener('scroll',  apply);
+
+  if (scroller && scroller.addEventListener) {
+    scroller.addEventListener('scroll', apply, { passive: true });
+  } else {
+    window.addEventListener('scroll', apply, { passive: true });
+  }
+
+  window.addEventListener('orientationchange', () => setTimeout(apply, 50));
 })();
 
-/* ===== 言語リスト（Google Translate 公式<select>へ反映） ===== */
-(function initLangList(){
-  const LANGS = [
-    // 主要どころ＋必要に応じて拡張可（全言語を入れたい場合はここに追加）
-    ['en','English'],['ja','Japanese'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
-    ['fr','French'],['de','German'],['es','Spanish'],['it','Italian'],['ko','Korean'],['ru','Russian'],
-    ['pt','Portuguese'],['ar','Arabic'],['hi','Hindi'],['id','Indonesian'],['vi','Vietnamese'],['th','Thai'],
-    ['tr','Turkish'],['uk','Ukrainian'],['fa','Persian'],['pl','Polish']
-  ];
+/* ===== 言語スイッチ（開閉） ===== */
+const langBtn     = document.getElementById('langBtn');
+const langDrawer  = document.getElementById('langDrawer');
+const langClose   = document.getElementById('langClose');
+const langBackdrop= document.getElementById('langBackdrop');
 
-  const list = $('#langList');
-  const q = $('#langSearch');
-  if (!list) return;
+const openLang = () => {
+  document.documentElement.classList.add('lang-open');
+  langDrawer?.setAttribute('aria-hidden','false');
+  langBtn?.setAttribute('aria-expanded','true');
+  setTimeout(() => langClose?.focus(), 0);
+};
+const closeLang = () => {
+  document.documentElement.classList.remove('lang-open');
+  langDrawer?.setAttribute('aria-hidden','true');
+  langBtn?.setAttribute('aria-expanded','false');
+  langBtn?.focus();
+};
 
-  function render(filter = ''){
-    const word = (filter || '').toLowerCase();
-    list.textContent = '';
-    const frag = document.createDocumentFragment();
+langBtn?.addEventListener('click', ()=>{
+  document.documentElement.classList.contains('lang-open') ? closeLang() : openLang();
+});
+langClose?.addEventListener('click', closeLang);
+langBackdrop?.addEventListener('click', closeLang);
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLang(); });
 
-    LANGS.filter(([code,name]) => !word || name.toLowerCase().includes(word) || code.toLowerCase().includes(word))
-      .forEach(([code,name])=>{
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'ls-item';
-        btn.dataset.code = code;
-        btn.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
-        btn.addEventListener('click', ()=>{
-          const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-          if (!sel) return; // まだ読み込み中の可能性
-          sel.value = code;
-          sel.dispatchEvent(new Event('change'));
-          list.querySelectorAll('.ls-item').forEach(x => x.classList.toggle('ls-active', x===btn));
-        });
-        frag.appendChild(btn);
+/* メニューと同時開きを避ける */
+document.addEventListener('click', (e)=>{
+  if (e.target.closest('#menuBtn')) closeLang();
+  if (e.target.closest('#langBtn')) closeMenu();
+});
+
+/* ===== 言語リスト（Google Translate連携） ===== */
+const LANGS = [
+  ['af','Afrikaans'],['sq','Albanian'],['am','Amharic'],['ar','Arabic'],['hy','Armenian'],['az','Azerbaijani'],
+  ['eu','Basque'],['be','Belarusian'],['bn','Bengali'],['bs','Bosnian'],['bg','Bulgarian'],
+  ['my','Burmese'],['ca','Catalan'],['ceb','Cebuano'],['ny','Chichewa'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
+  ['co','Corsican'],['hr','Croatian'],['cs','Czech'],
+  ['da','Danish'],['nl','Dutch'],
+  ['en','English'],['eo','Esperanto'],['et','Estonian'],
+  ['tl','Filipino'],['fi','Finnish'],['fr','French'],['fy','Frisian'],
+  ['gl','Galician'],['ka','Georgian'],['de','German'],['el','Greek'],['gu','Gujarati'],
+  ['ht','Haitian Creole'],['ha','Hausa'],['haw','Hawaiian'],['iw','Hebrew'],['hi','Hindi'],['hmn','Hmong'],['hu','Hungarian'],
+  ['is','Icelandic'],['ig','Igbo'],['id','Indonesian'],['ga','Irish'],['it','Italian'],
+  ['ja','Japanese'],['jw','Javanese'],
+  ['kn','Kannada'],['kk','Kazakh'],['km','Khmer'],['rw','Kinyarwanda'],['ko','Korean'],['ku','Kurdish'],['ky','Kyrgyz'],
+  ['lo','Lao'],['la','Latin'],['lv','Latvian'],['lt','Lithuanian'],['lb','Luxembourgish'],
+  ['mk','Macedonian'],['mg','Malagasy'],['ms','Malay'],['ml','Malayalam'],['mt','Maltese'],['mi','Maori'],['mr','Marathi'],['mn','Mongolian'],
+  ['ne','Nepali'],['no','Norwegian'],['or','Odia'],['ps','Pashto'],['fa','Persian'],['pl','Polish'],['pt','Portuguese'],
+  ['pa','Punjabi'],['ro','Romanian'],['ru','Russian'],
+  ['sm','Samoan'],['gd','Scots Gaelic'],['sr','Serbian'],['st','Sesotho'],['sn','Shona'],['sd','Sindhi'],['si','Sinhala'],
+  ['sk','Slovak'],['sl','Slovenian'],['so','Somali'],['es','Spanish'],['su','Sundanese'],['sw','Swahili'],['sv','Swedish'],
+  ['tg','Tajik'],['ta','Tamil'],['tt','Tatar'],['te','Telugu'],['th','Thai'],['tr','Turkish'],['tk','Turkmen'],
+  ['uk','Ukrainian'],['ur','Urdu'],['ug','Uyghur'],['uz','Uzbek'],
+  ['vi','Vietnamese'],['cy','Welsh'],['xh','Xhosa'],['yi','Yiddish'],['yo','Yoruba'],['zu','Zulu']
+];
+
+/* 公式<select>取得（遅延） */
+let gtSelect = null;
+function grabGoogleSelect(retry = 20){
+  gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
+  if (gtSelect) return;
+  if (retry>0) setTimeout(()=>grabGoogleSelect(retry-1), 250);
+}
+grabGoogleSelect();
+
+const langListEl = document.getElementById('langList');
+const searchEl   = document.getElementById('langSearch');
+
+function renderLangList(filter = ''){
+  if (!langListEl) return;
+  const q = (filter || '').trim().toLowerCase();
+  langListEl.textContent = '';
+
+  const frag = document.createDocumentFragment();
+  LANGS
+    .filter(([code,name]) => !q || name.toLowerCase().includes(q) || code.toLowerCase().includes(q))
+    .forEach(([code,name])=>{
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'ls-item';
+      item.setAttribute('role','option');
+      item.dataset.code = code;
+
+      const label = document.createElement('span');
+      label.textContent = name;
+
+      const codeEl = document.createElement('span');
+      codeEl.className = 'ls-code';
+      codeEl.textContent = code;
+
+      item.appendChild(label);
+      item.appendChild(codeEl);
+
+      item.addEventListener('click', () => {
+        if (!gtSelect) gtSelect = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!gtSelect) return;
+
+        gtSelect.value = code;
+        gtSelect.dispatchEvent(new Event('change'));
+        langListEl.querySelectorAll('.ls-item').forEach(x=>x.classList.toggle('ls-active', x===item));
       });
 
-    list.appendChild(frag);
-  }
+      frag.appendChild(item);
+    });
 
-  render();
-  q?.addEventListener('input', e=>render(e.target.value));
+  langListEl.appendChild(frag);
+}
+renderLangList();
+searchEl?.addEventListener('input', (e)=>renderLangList(e.target.value));
 
-  // Reset（Original / 日本語）
-  $('#gtReset')?.addEventListener('click', ()=>{
+function highlightCurrent(code){
+  langListEl?.querySelectorAll('.ls-item').forEach(x=>{
+    x.classList.toggle('ls-active', x.dataset.code === code);
+  });
+}
+highlightCurrent('ja');
+
+/* === Original / 日本語 (Reset) ボタン === */
+(function addOriginalReset(){
+  const head = document.querySelector('.lang-head');
+  if (!head || document.getElementById('gtReset')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'gtReset';
+  btn.textContent = 'Original / 日本語 (Reset)';
+  btn.setAttribute('type','button');
+  Object.assign(btn.style, {
+    fontWeight:'700', padding:'8px 10px', borderRadius:'8px',
+    border:'1px solid #e5e7eb', background:'#fff', cursor:'pointer'
+  });
+
+  btn.addEventListener('click', () => {
     const expire = 'Thu, 01 Jan 1970 00:00:00 GMT';
     const host = location.hostname.replace(/^www\./,'');
     document.cookie = 'googtrans=; expires='+expire+'; path=/';
@@ -226,29 +384,43 @@ $('#applyNow')?.addEventListener('click', (e) => {
     }
     location.reload();
   });
+
+  head.insertBefore(btn, head.firstChild);
 })();
+// 見出しの末尾だけが2行目に落ちるのを回避（自動）
+(function(){
+  const SEL = '.accordion > details > summary';
+  const TAIL_CLASS = 'nowrap-tail';
+  const MIN_LAST = 6; // 末尾でまとめる文字数（4〜8で調整可）
 
-/* ===== スマホだけ改行（見出しの可読性） ===== */
-document.addEventListener('DOMContentLoaded', ()=>{
-  const setOnce=(el,html)=>{ if(!el || el.dataset.spHandled) return; el.innerHTML = html; el.dataset.spHandled='1'; };
+  function unwrap(el){
+    const t = el.querySelector('.' + TAIL_CLASS);
+    if (t) t.replaceWith(t.textContent);
+  }
+  function isOneLine(el){
+    const cs = getComputedStyle(el);
+    let lh = parseFloat(cs.lineHeight);
+    if (isNaN(lh)) { // line-height: normal のときの目安
+      const fs = parseFloat(cs.fontSize) || 16;
+      lh = fs * 1.2;
+    }
+    return el.scrollHeight <= lh * 1.5;
+  }
+  function apply(){
+    document.querySelectorAll(SEL).forEach(s=>{
+      unwrap(s); // まず元に戻す
+      const text = (s.textContent || '').trim();
+      if (text.length <= MIN_LAST + 2) return; // そもそも短いものは除外
+      if (isOneLine(s)) return;                // 1行なら何もしない
 
-  // 1) 「仮想通貨とジョージア法人の相性（重要な注意点）」 → 括弧の前で改行
-  const s1 = $$('#corp-setup details > summary').find(s=>/仮想通貨/.test(s.textContent)&&/相性/.test(s.textContent)&&/重要な注意点/.test(s.textContent));
-  if (s1) setOnce(s1, s1.textContent.trim().replace('（重要な注意点）','<br class="sp-only">（重要な注意点）'));
+      const head = text.slice(0, -MIN_LAST);
+      const tail = text.slice(-MIN_LAST);
+      s.innerHTML = head + '<span class="'+TAIL_CLASS+'">' + tail + '</span>';
+    });
+  }
+  const debounce = (fn, ms=180)=>{ let id; return ()=>{ clearTimeout(id); id=setTimeout(fn, ms); }; };
 
-  // 2) 個人事業主H2 → （条件あり）の前で改行
-  const hSole = $('#sole-setup h2');
-  if (hSole) setOnce(hSole, hSole.textContent.trim().replace('（条件あり）','<br class="sp-only">（条件あり）'));
-
-  // 3) summaryを1行固定したいケース（任意）
-  const s2 = $$('#sole-setup details > summary').find(s=>/ジョージアで、スモールに世界を始める/.test(s.textContent));
-  if (s2) s2.classList.add('sp-nowrap');
-
-  // 4) 銀行H2 → ｜の後で改行
-  const hBank = $('#personal-account h2');
-  if (hBank) setOnce(hBank, hBank.textContent.trim().replace('｜','｜<br class="sp-only">'));
-
-  // 5) 為替シミュレーション → 括弧の前で改行
-  const s3 = $$('#personal-account details > summary').find(s=>/リスクと為替の考え方/.test(s.textContent)&&/簡易シミュレーション/.test(s.textContent));
-  if (s3) setOnce(s3, s3.textContent.trim().replace('（簡易シミュレーション）','<br class="sp-only">（簡易シミュレーション）'));
-});
+  document.addEventListener('DOMContentLoaded', apply);
+  window.addEventListener('load', apply);
+  window.addEventListener('resize', debounce(apply), { passive:true });
+})();
