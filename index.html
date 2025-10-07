@@ -994,5 +994,83 @@
   }, true);
 })();
 </script>
+<!-- ✅ GT CLEAN PATCH: 全言語を公式<select>から複製／クリックで即適用／上部バナー常時排除 -->
+<script>
+(function(){
+  'use strict';
+
+  /* 1) Google上部バナーを常時消す（押し下げもリセット） */
+  function killBanner(){
+    try{
+      document.documentElement.style.marginTop = '0px';
+      document.body.style.top = '0px';
+      ['goog-te-banner-frame','goog-gt-tt'].forEach(id=>{
+        var el = document.getElementById(id);
+        if (el && el.remove) el.remove();
+      });
+    }catch(_){}
+  }
+  new MutationObserver(killBanner).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('load', killBanner);
+
+  /* 2) 公式<select>が出たら、そこから全言語を複製してあなたのリストに流し込む */
+  var listEl   = document.getElementById('langList');
+  var searchEl = document.getElementById('langSearch');
+
+  function buildList(){
+    var sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel) return false;
+    var cookie = (document.cookie.match(/(?:^|;\\s*)googtrans=([^;]+)/)||[])[1] || '';
+    var cur = decodeURIComponent(cookie);
+    var html = [];
+    for (var i=0; i<sel.options.length; i++){
+      var o = sel.options[i];
+      if (!o.value || o.value === 'auto') continue;
+      var active = cur.endsWith('/'+o.value) ? ' ls-active' : '';
+      html.push(
+        '<div class="ls-item'+active+'" role="option" data-code="'+o.value+'">'+
+          '<span>'+o.textContent+'</span><span class="ls-code">'+o.value+'</span>'+
+        '</div>'
+      );
+    }
+    listEl.innerHTML = html.join('');
+    return true;
+  }
+
+  var tries=0, iv=setInterval(function(){
+    if (buildList()){ clearInterval(iv); }
+    else if (++tries > 80){ clearInterval(iv); } // ~10秒で打ち切り
+  },125);
+
+  /* 3) クリックで公式<select>に指示→即翻訳（リロード不要） */
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.ls-item[data-code]');
+    if (!t) return;
+    e.preventDefault(); e.stopPropagation();
+    var code = t.dataset.code;
+    var sel  = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel) return;
+    sel.value = code;
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+    killBanner();
+    // ドロワー閉じる
+    document.documentElement.classList.remove('lang-open');
+    var drawer=document.getElementById('langDrawer'); if (drawer) drawer.setAttribute('aria-hidden','true');
+    // アクティブ表示更新
+    listEl.querySelectorAll('.ls-item').forEach(function(el){ el.classList.toggle('ls-active', el===t); });
+  }, true);
+
+  /* 4) 検索（英語名/コード含むテキストに前方一致でなく部分一致） */
+  if (searchEl){
+    searchEl.addEventListener('input', function(){
+      var q = this.value.trim().toLowerCase();
+      listEl.querySelectorAll('.ls-item').forEach(function(li){
+        var txt = (li.textContent||'').toLowerCase();
+        li.style.display = txt.indexOf(q) !== -1 ? '' : 'none';
+      });
+    });
+  }
+})();
+</script>
 </body>
 </html>
