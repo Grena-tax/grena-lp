@@ -1072,5 +1072,102 @@
   }
 })();
 </script>
+<!-- ✅ GT STABLE PATCH: 全言語リストを公式<select>から複製 / クリック即反映 / 青バー常時非表示 -->
+<script>
+(function(){
+  'use strict';
+
+  /* 1) Google上部バーを常時隠す（.skiptranslate は消さない） */
+  var css = document.createElement('style');
+  css.textContent = [
+    'html{margin-top:0!important}',
+    'body{top:0!important;position:static!important}',
+    'iframe#goog-te-banner-frame,.goog-te-banner-frame{',
+    '  display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important',
+    '}',
+    '#goog-gt-tt{display:none!important;visibility:hidden!important}'
+  ].join('');
+  document.head.appendChild(css);
+  function killBanner(){
+    try{
+      var f=document.getElementById('goog-te-banner-frame'); if(f&&f.remove) f.remove();
+      var tt=document.getElementById('goog-gt-tt'); if(tt&&tt.remove) tt.remove();
+      document.documentElement.style.marginTop='0px';
+      document.body.style.top='0px';
+    }catch(_){}
+  }
+  killBanner();
+  new MutationObserver(killBanner).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('load', killBanner, {once:true});
+
+  /* 2) 公式<select>から全言語を複製してカスタムリストに流し込む */
+  var listEl   = document.getElementById('langList');
+  var searchEl = document.getElementById('langSearch');
+  var host     = document.getElementById('google_translate_element');
+
+  function findSelect(){
+    return document.querySelector('#google_translate_element select.goog-te-combo');
+  }
+  function rebuild(){
+    var sel=findSelect(); if(!sel || !listEl) return;
+    var cookie=(document.cookie.match(/(?:^|;\\s*)googtrans=([^;]+)/)||[])[1]||'';
+    var cur=decodeURIComponent(cookie||'');
+    var html=[];
+    for (var i=0;i<sel.options.length;i++){
+      var o=sel.options[i];
+      if(!o.value || o.value==='auto') continue;
+      var active = cur.endsWith('/'+o.value) ? ' ls-active' : '';
+      html.push(
+        '<div class="ls-item'+active+'" role="option" data-code="'+o.value+'">'+
+          '<span>'+o.textContent+'</span><span class="ls-code">'+o.value+'</span>'+
+        '</div>'
+      );
+    }
+    if (html.length) listEl.innerHTML = html.join('');
+  }
+
+  // 初回＆ロード後に試行
+  window.addEventListener('load', rebuild);
+  document.addEventListener('DOMContentLoaded', rebuild);
+
+  // 公式ウィジェットの中身が挿入/更新されたら即再構築（タイムアウト無し）
+  if (host){
+    new MutationObserver(function(){ rebuild(); })
+      .observe(host, {childList:true, subtree:true});
+  }
+
+  // 言語ドロワーを開いたタイミングでも再確認
+  document.addEventListener('click', function(ev){
+    if (ev.target.closest('#langBtn')) setTimeout(rebuild,150);
+  });
+
+  /* 3) クリックで公式<select>に命令して即翻訳（リロード不要） */
+  document.addEventListener('click', function(e){
+    var t=e.target.closest('.ls-item[data-code]'); if(!t) return;
+    e.preventDefault(); e.stopPropagation();
+    var code=t.getAttribute('data-code');
+    var sel=findSelect(); if(!sel) return;
+    sel.value=code;
+    sel.dispatchEvent(new Event('change',{bubbles:true}));
+    killBanner();
+    // アクティブ表示更新
+    listEl.querySelectorAll('.ls-item').forEach(function(el){ el.classList.toggle('ls-active', el===t); });
+    // ドロワー閉じる
+    document.documentElement.classList.remove('lang-open');
+    var drawer=document.getElementById('langDrawer'); if (drawer) drawer.setAttribute('aria-hidden','true');
+  }, true);
+
+  /* 4) 検索（部分一致） */
+  if (searchEl){
+    searchEl.addEventListener('input', function(){
+      var q=this.value.trim().toLowerCase();
+      Array.prototype.forEach.call(listEl.children, function(li){
+        var txt=(li.textContent||'').toLowerCase();
+        li.style.display = (txt.indexOf(q) !== -1) ? '' : 'none';
+      });
+    });
+  }
+})();
+</script>
 </body>
 </html>
