@@ -1,16 +1,18 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ジョージア法人設立LP</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>ジョージア法人設立LP</title>
 
-<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
-<style>html{border-top:8px solid #ff0077!important}</style>
+  <!-- 自動翻訳提案の抑止（ブラウザ用・見た目は変わりません） -->
+  <meta name="google" content="notranslate">
 
-<!-- 外部CSS -->
-<link rel="stylesheet" href="./style.css">
+  <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
+  <style>html{border-top:8px solid #ff0077!important}</style>
+
+  <!-- 既存のメインCSS -->
+  <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 </head>
 <body>
 
@@ -688,16 +690,10 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
 
-<!-- あなたのUI用スクリプト -->
-<script src="./script.js"></script>
+<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
+<script src="./script.js?v=20250912-gt"></script>
 
-<!-- Google翻訳 公式ウィジェット（1本に統一） ※</body>直前 -->
-<script>
-  function googleTranslateElementInit(){
-    new google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element');
-  }
-</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
-
+<!-- ===== Google翻訳（公式） ※script.js内で googleTranslateElementInit を定義 ===== -->
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 </body>
 </html>
