@@ -1,18 +1,172 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>ジョージア法人設立LP</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ジョージア法人設立LP</title>
 
-  <!-- 自動翻訳提案の抑止（ブラウザ用・見た目は変わりません） -->
-  <meta name="google" content="notranslate">
+<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
+<style>html{border-top:8px solid #ff0077!important}</style>
 
-  <!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
-  <style>html{border-top:8px solid #ff0077!important}</style>
+<!-- 既存のメインCSS（そのまま） -->
+<link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
-  <!-- 既存のメインCSS -->
-  <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
+<!-- 追加スタイル：スマホ最適化＋CTA＋ハンバーガー＋言語UI（本文は無改変） -->
+<style>
+  :root{
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --cta-h: 72px;
+  }
+  html,body{margin:0;padding:0}
+  body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
+
+  /* アコーディオン（既存と同等） */
+  details summary{
+    padding:1rem 1.2rem;cursor:pointer;list-style:none;
+    border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
+  }
+  details[open] summary{background:#f8fafc;border-bottom-left-radius:0;border-bottom-right-radius:0}
+  details .content{
+    border:1px solid #e5e7eb;border-top:0;border-bottom-left-radius:10px;border-bottom-right-radius:10px;
+    padding:1rem 1.2rem .9rem;background:#fff
+  }
+  .accordion>details{margin:.55rem 0!important}
+  .text-sm{font-size:.86em;opacity:.9}.muted{color:#475569}.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
+  .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
+  .security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+  .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+  .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+  .price-promo .label{color:#475569;font-weight:700}
+  .price-promo .old{color:#64748b;text-decoration:line-through}
+  .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+  .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+  .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+  .price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+  .price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+  .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
+  .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
+  .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+  table{width:100%;border-collapse:collapse;margin:.5rem 0}
+  th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
+  th:first-child,td:first-child{text-align:left}
+
+  @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
+
+  /* ▼ ご指定：KYCと料金の隙間を他とそろえる（詰める） */
+  #corp-setup{padding-bottom:0!important}
+  #plans{padding-top:0!important;margin-top:0!important}
+
+  /* 右上ハンバーガー */
+  .menu-button{
+    position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
+  }
+  .menu-button .bars{display:block;width:28px;height:20px;position:relative}
+  .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
+    content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
+  }
+  .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
+
+  .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
+  .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
+  .menu-panel{
+    position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
+    background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
+    box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
+    font-size:14px;line-height:1.38
+  }
+  .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
+  .menu-title{font-weight:800;color:#111827}
+  .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+  .menu-close:hover{background:#f3f4f6}
+  .menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
+  .menu-group{padding:8px 10px 6px}
+  .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
+  .menu-list{list-style:none;margin:0;padding:0}
+  .menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
+  .menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+
+  html.menu-open .menu-wrap{pointer-events:auto}
+  html.menu-open .menu-backdrop{opacity:1}
+  html.menu-open .menu-panel{transform:none}
+  html.menu-open,html.menu-open body{overflow:hidden}
+
+  /* 画面最下部 固定CTA（既存の fixed-cta を残す） */
+  .fixed-cta{
+    position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
+    backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
+  }
+  .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
+  .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+  .btn.neutral{background:#e5e7eb;color:#111827}
+  .btn.secondary{background:#1f2937;color:#fff}
+  .btn.success{background:#10b981;color:#fff}
+  .btn:hover{opacity:.92}
+
+  /* ▼ 言語スイッチ（英語UI・縦スクロールのフルリスト） */
+  .lang-button{
+    position:fixed;top:calc(10px + var(--safe-top));
+    right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの左横 */
+    z-index:10001; width:48px;height:48px;border-radius:12px;
+    background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
+    display:inline-flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,.15)
+  }
+  .lang-button .globe{font-size:20px;line-height:1}
+
+  .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
+  .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
+  .lang-panel{
+    position:absolute;top:calc(64px + var(--safe-top));right:calc(10px + var(--safe-right));
+    width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+    box-shadow:0 16px 40px rgba(0,0,0,.12);
+    transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
+    font-size:14px;line-height:1.5
+  }
+  .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb;background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px}
+  .lang-title{font-weight:800;color:#111827}
+  .lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
+  .lang-close:hover{background:#f3f4f6}
+  .lang-body{padding:10px 12px}
+
+  html.lang-open .lang-wrap{pointer-events:auto}
+  html.lang-open .lang-backdrop{opacity:1}
+  html.lang-open .lang-panel{transform:none;opacity:1}
+
+  /* Google翻訳のバナー等は隠す（押し下げ防止） */
+  .goog-te-banner-frame{display:none!important}
+  #goog-gt-tt{display:none!important}
+  body{top:0!important}
+  /* 公式ウィジェット自体は画面外へ退避（selectはJSから操作） */
+  #google_translate_element{
+    position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+  }
+
+  /* カスタムのフル言語リスト（縦スクロール） */
+  .ls-search{display:flex;gap:8px;margin:6px 0 10px}
+  .ls-search input{
+    flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px
+  }
+  .ls-list{
+    display:grid;grid-template-columns:1fr;gap:6px;
+    max-height:min(60vh,520px);overflow:auto;padding:2px
+  }
+  .ls-item{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
+  }
+  .ls-item:hover{background:#f3f4f6}
+  .ls-code{font-size:12px;color:#64748b}
+  .ls-active{outline:2px solid #2563eb}
+
+  @media (max-width:480px){
+    .lang-button{transform:scale(.92);transform-origin:top right}
+  }
+</style>
 </head>
 <body>
 
@@ -34,9 +188,7 @@
       <div class="ls-search">
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
-      <!-- ★ リストはJSで全言語を自動生成（ここは空でOK） -->
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-
       <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
@@ -127,10 +279,12 @@
       </div>
     </details>
 
+    <!-- ▼▼ 見出しを安全表現に変更（「法人税0％」→「法人税の課税タイミング」） ▼▼ -->
     <details>
       <summary>法人税の課税タイミング（エストニア型モデル）</summary>
       <div class="content">
         <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税されます（例外あり）。エストニア型モデルに近い制度です。<br><span class="text-sm muted">※ 日本居住者はCFCルール等の適用可能性あり。税理士に要確認。</span></p>
+        <!-- 追記3：CFCの“合算課税”を明示 -->
         <p class="text-sm muted">※ 支配要件等を満たす場合、CFCルールにより<strong>留保所得が合算課税</strong>となる可能性があります。</p>
         <p>出典：</p>
         <ul>
@@ -201,6 +355,7 @@
           <li>Q. 提出書類はいつ？ → A. FMSから要請があった時のみ。</li>
         </ul>
         <p>✅ 不安な方はLINEで事前確認可能（<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE相談</a>）。</p>
+        <!-- 追記4：反社/AML・CFTに関する明確化 -->
         <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
@@ -259,6 +414,7 @@
           </div>
         </details>
 
+        <!-- ★ 追加：オプション-->
         <details>
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
@@ -272,7 +428,9 @@
             <span class="note">※ 価格は時期・条件で変動する場合があります。最新は事前にご確認ください。</span>
           </div>
         </details>
+        <!-- ★ 追加ここまで -->
 
+        <!-- 追記5：€建て価格の為替注記 -->
         <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算します。為替変動により請求額が変動する場合があります。</p>
 
       </div>
@@ -429,6 +587,7 @@
           <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
         </ul>
         <span class="note">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service</span>
+        <!-- 追記4（個人側にも同趣旨を付記） -->
         <p class="text-sm muted">※ 反社会的勢力に該当・関与する場合、またはAML/CFT上の合理的な疑いがある場合、支援はお断りします。</p>
       </div>
     </details>
@@ -482,6 +641,7 @@
       <div class="content">
         <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。<br>「預金11.5% → 融資13〜15%」のような構造が成立します。</p>
         <p class="text-sm muted">※ 金利は商品・銀行・時期で変動。将来の利回りは保証されません。</p>
+        <!-- 追記1：金利の時点明記＋日本国内での媒介ではない -->
         <p class="text-sm muted">※ 記載の金利・条件は<span style="font-weight:700">参考例（2025年10月時点）</span>です。商品/銀行/時点で異なります。当社は日本国内での銀行代理・媒介は行いません。</p>
       </div>
     </details>
@@ -494,6 +654,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
+        <!-- 追記9：勧誘・斡旋ではない線引き -->
         <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋する立場ではありません。最終的な選定と契約はお客様と各銀行の直接契約となります。</p>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
@@ -558,6 +719,7 @@
           <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（※条件に基づく試算であり、結果を保証しません）</strong>。</li>
         </ul>
 
+        <!-- 追記2：シミュレーションは仮定の例示 -->
         <p class="text-sm muted">※ 本シミュレーションは仮定に基づく例示です。為替・税率・商品条件の変動により結果は大きく異なります。</p>
         <p class="text-sm muted">※ 上表は概算です。金利・税率・為替で結果は変動します。</p>
       </div>
@@ -651,8 +813,11 @@
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
           <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
         </ul>
+        <!-- 追記6：MoUは保証ではない -->
         <p class="text-sm muted">※ MoUは業務連携の覚書であり、審査結果や開設成功を保証するものではありません。</p>
+        <!-- 追記7：届出系の可能性 -->
         <p class="text-sm muted">※ お客様の状況により、国外財産調書・国外送金等調書などの届出義務が生じる場合があります。</p>
+        <!-- 追記8：個人情報の保存期間/第三国移転 -->
         <p class="text-sm muted">※ 個人情報は業務目的の範囲でのみ利用し、法令上必要な保存期間を超えて保有しません。第三国への移転が必要な場合は適切な保護措置を講じます。</p>
       </div>
     </details>
@@ -676,7 +841,7 @@
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
+<!-- 画面最下部 固定CTA（既存の fixed-cta を残す） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -685,15 +850,45 @@
   </div>
 </div>
 
+<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
+<script src="./script.js?v=20250912-gt"></script>
+
+<!-- Google翻訳（全言語） -->
+<script>
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'ja',
+      autoDisplay: false
+      // includedLanguages を省略 → Googleが対応する全言語を表示
+    }, 'google_translate_element');
+  }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <footer class="site-foot" role="contentinfo">
   <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
+<!-- Google翻訳 … -->
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- ===== 外部JS（本文は変更せず／操作だけ） ===== -->
-<script src="./script.js?v=20250912-gt"></script>
+<footer class="site-foot" role="contentinfo">
+  <!-- ここはあなたのフッター -->
+</footer>
 
-<!-- ===== Google翻訳（公式） ※script.js内で googleTranslateElementInit を定義 ===== -->
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
+<!-- 👇このパッチをここに貼る（</body>の直前） -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 1) フッターを #scroll-root の中へ移動（外にある場合だけ）
+    var wrap = document.getElementById('scroll-root');
+    var foot = document.querySelector('.site-foot');
+    if (wrap && foot && !wrap.contains(foot)) wrap.appendChild(foot);
+
+    // 2) 最初のアコーディオン見出しを短い文言へ差し替え（重複回避）
+    var firstSummary = document.querySelector('#corp-setup details summary');
+    if (firstSummary) firstSummary.textContent = 'サービスの概要（OECD・PwC準拠）';
+  });
+</script>
+</body>
+</html>
 </body>
 </html>
