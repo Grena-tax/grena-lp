@@ -1,3 +1,14 @@
+/* ===== Google翻訳の自動適用を無効化（cookieリセット） ===== */
+(function resetGoogleTranslateCookie(){
+  try{
+    var past = 'Thu, 01 Jan 1970 00:00:00 GMT';
+    var host = location.hostname.replace(/^www\./,'');
+    document.cookie = 'googtrans=; expires='+past+'; path=/';
+    document.cookie = 'googtrans=; expires='+past+'; domain='+host+'; path=/';
+    document.cookie = 'googtrans=; expires='+past+'; domain=.'+host+'; path=/';
+  }catch(e){}
+})();
+
 /* ===== 最小限のUI操作JS（メニュー・言語ドロワー・目次） ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
@@ -65,7 +76,7 @@
     g.appendChild(h); g.appendChild(ul); groups.appendChild(g);
   }
 
-  // 言語検索（英語名でフィルタ）
+  // 言語検索（英語名でフィルタ）—（リスト項目は未使用でもOK）
   const langSearch = $('#langSearch'), list = $('#langList');
   if (langSearch && list){
     langSearch.addEventListener('input', ()=>{
