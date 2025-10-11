@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!doctype html>
 <html lang="ja">
 <head>
@@ -5,17 +6,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 自動翻訳提案の抑止 -->
-<meta name="google" content="notranslate">
+<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
+<style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま維持） -->
-<link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
-
-<!-- 追加UI/CSS（本回答で分離したCSS） -->
-<link rel="stylesheet" href="./custom-ui.css">
-
-<!-- アプリJS（deferで先に用意：GTコールバック定義＆初期化など） -->
-<script src="./app.js" defer></script>
+<!-- 外部CSS -->
+<link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
@@ -37,7 +32,7 @@
       <div class="ls-search">
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
-      <!-- 全言語リストはJSが自動生成 -->
+      <!-- ★ リストはJSで全言語を自動生成（ここは空でOK） -->
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
 
       <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
@@ -650,7 +645,7 @@
           <li>当社がお客様から頂戴する料金は<strong>紹介料・サポート料等のサービス提供料金</strong>であり、銀行に支払う手数料や預入金とは一切関係ありません。</li>
           <li>税務・法務の<strong>助言</strong>は行いません。税務効果は居住国・個別事情により異なるため、<strong>税理士・弁護士へ必ずご相談</strong>ください。</li>
           <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件を保証できません</strong>。</li>
-          <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果は保証しません</strong>。</li>
+          <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
           <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
         </ul>
@@ -693,7 +688,16 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
 
-<!-- ▼ Google翻訳 公式スクリプト（UI英語）。app.jsで定義したコールバックを呼び出す -->
+<!-- あなたのUI用スクリプト -->
+<script src="./script.js"></script>
+
+<!-- Google翻訳 公式ウィジェット（1本に統一） ※</body>直前 -->
+<script>
+  function googleTranslateElementInit(){
+    new google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element');
+  }
+</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
+
 </body>
 </html>
