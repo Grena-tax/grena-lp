@@ -17,7 +17,6 @@
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100%; }
 html,body{
-  /* ← ここは height:auto と通常スクロールに戻す */
   height:auto;
   font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
                "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
@@ -152,10 +151,16 @@ body.has-cta{
   padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
 }
 
-/* ========== 10) ← ここを通常スクロールに戻す ========== */
-/* 以前の「#scroll-root 方式」は削除 */
-/* 必要最低限：ブラウザ標準スクロール */
-html, body{ overflow:auto; }
+/* ========== 10) スクロール容器（#scroll-root 方式） ========== */
+/* ※ 元CSSでは overflow:hidden を掛けていたが、末尾で解除する */
+html, body{ height: 100%; overflow: hidden; }
+#scroll-root{
+  position: fixed; inset: 0; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: inherit;
+}
+#scroll-root.has-cta{
+  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
+}
 
 /* ========== 11) Google Translate メニューの整形 ========== */
 #google_translate_element{ display:block }
@@ -182,36 +187,29 @@ iframe.goog-te-menu-frame {
 @media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
 html, body{ overscroll-behavior-y: none; }
 
-/* ========== 13) Footer（このファイルの末尾。最優先で上書き） ========== */
+/* ========== 13) Footer（末尾） ========== */
 :root{
-  --foot-bg:#0b1220;
-  --foot-fg:#cbd5e1;
-  --foot-border:#1f2937;
+  --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937;
 }
 .site-foot{
-  background:var(--foot-bg);
-  color:var(--foot-fg);
-  border-top:1px solid var(--foot-border);
-  text-align:center;
-  padding:14px 16px;
-  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  font-size:13px;
-  line-height:1.7;
+  background:var(--foot-bg); color:var(--foot-fg); border-top:1px solid var(--foot-border);
+  text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  font-size:13px; line-height:1.7;
 }
-.site-foot small{
-  display:block;
-  margin:0 auto;
-  max-width:min(1100px,92%);
-  letter-spacing:.02em;
-}
-.site-foot a{
-  color:#93c5fd;
-  text-decoration:underline;
-  text-underline-offset:2px;
-}
+.site-foot small{ display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em; }
+.site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; }
 .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){
   .site-foot .foot-pc{ display:inline; }
   .site-foot .foot-sp{ display:none; }
 }
+
+/* === 末尾オーバーライド（スクロール復活＆安全）===================== */
+html, body{ height:auto !important; overflow:visible !important; }
+#scroll-root{
+  position: static !important; inset:auto !important; overflow:visible !important; padding:0 !important;
+}
+.goog-te-banner-frame{ display:none !important; }
+#goog-gt-tt{ display:none !important; }
+body{ top:0 !important; }
