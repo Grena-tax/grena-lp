@@ -17,6 +17,7 @@
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100%; }
 html,body{
+  /* ← ここは height:auto と通常スクロールに戻す */
   height:auto;
   font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
                "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
@@ -151,21 +152,15 @@ body.has-cta{
   padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
 }
 
-/* ========== 10) スクロール容器（#scroll-root 方式） ========== */
-html, body{ height: 100%; overflow: hidden; }
-#scroll-root{
-  position: fixed; inset: 0; overflow-y: auto;
-  -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: inherit;
-}
-#scroll-root.has-cta{
-  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
-}
+/* ========== 10) ← ここを通常スクロールに戻す ========== */
+/* 以前の「#scroll-root 方式」は削除 */
+/* 必要最低限：ブラウザ標準スクロール */
+html, body{ overflow:auto; }
 
 /* ========== 11) Google Translate メニューの整形 ========== */
 #google_translate_element{ display:block }
 #google_translate_element .goog-te-gadget{ margin:0!important }
 #google_translate_element .goog-te-gadget .goog-te-combo{ margin:0!important }
-/* メニューのフレームを右上に・スクロール可能に */
 iframe.goog-te-menu-frame {
   position: fixed !important;
   top: calc(64px + env(safe-area-inset-top, 0px)) !important;
@@ -189,9 +184,9 @@ html, body{ overscroll-behavior-y: none; }
 
 /* ========== 13) Footer（このファイルの末尾。最優先で上書き） ========== */
 :root{
-  --foot-bg:#0b1220;        /* 背景 */
-  --foot-fg:#cbd5e1;        /* 文字色 */
-  --foot-border:#1f2937;    /* 上ボーダー */
+  --foot-bg:#0b1220;
+  --foot-fg:#cbd5e1;
+  --foot-border:#1f2937;
 }
 .site-foot{
   background:var(--foot-bg);
@@ -214,7 +209,6 @@ html, body{ overscroll-behavior-y: none; }
   text-decoration:underline;
   text-underline-offset:2px;
 }
-/* 表示切替：PCは長文、SPは短文 */
 .site-foot .foot-pc{ display:none; }
 .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){
