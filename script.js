@@ -88,3 +88,79 @@
     });
   }
 })();
+/* ===== Google翻訳：全言語リストを英語名で表示し、クリックで適用 ===== */
+(function initLangList(){
+  'use strict';
+  var listEl = document.getElementById('langList');
+  var hostEl = document.getElementById('google_translate_element');
+  if (!listEl || !hostEl) return;
+
+  var dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
+
+  function buildList(){
+    var sel = hostEl.querySelector('select.goog-te-combo');
+    if(!sel){ setTimeout(buildList, 150); return; }
+
+    var cookie = (document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '';
+    var cur = decodeURIComponent(cookie||'');
+
+    var frag = document.createDocumentFragment();
+    for(var i=0;i<sel.options.length;i++){
+      var o = sel.options[i];
+      var code = (o.value||'').trim();
+      if(!code || code==='auto') continue;
+
+      var name = (dn ? (dn.of(code)||'') : '') || (o.textContent||'').trim() || code;
+
+      var item = document.createElement('div');
+      item.className = 'ls-item' + (cur.endsWith('/'+code) ? ' ls-active' : '');
+      item.setAttribute('role','option');
+      item.dataset.code = code;
+      item.innerHTML = '<span class="ls-name">'+name+'</span><span class="ls-code">'+code+'</span>';
+      frag.appendChild(item);
+    }
+    listEl.innerHTML = '';
+    listEl.appendChild(frag);
+  }
+
+  // クリックで公式<select>をドライブ
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('.ls-item[data-code]');
+    if(!t) return;
+    var code = t.dataset.code;
+    var sel  = hostEl.querySelector('select.goog-te-combo');
+    if(!sel) return;
+
+    sel.value = code;
+    sel.dispatchEvent(new Event('change', {bubbles:true}));
+
+    // アクティブ表示更新
+    listEl.querySelectorAll('.ls-item').forEach(function(el){
+      el.classList.toggle('ls-active', el === t);
+    });
+
+    // ドロワーを閉じる
+    document.documentElement.classList.remove('lang-open');
+    var drawer = document.getElementById('langDrawer'); if (drawer) drawer.setAttribute('aria-hidden','true');
+    var btn = document.getElementById('langBtn'); if (btn) btn.setAttribute('aria-expanded','false');
+  }, true);
+
+  // 青いバナーは常時殺す（DOMは残ってもOK）
+  function killBanner(){
+    try{
+      document.documentElement.style.marginTop='0px';
+      document.body.style.top='0px';
+      ['goog-te-banner-frame','goog-gt-tt'].forEach(function(id){
+        var el=document.getElementById(id);
+        if(el){ if(el.remove) el.remove(); else { el.style.display='none'; el.style.visibility='hidden'; } }
+      });
+    }catch(_){}
+  }
+  new MutationObserver(killBanner).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('load', killBanner, {once:true});
+  killBanner();
+
+  // リスト構築（公式UIの挿入タイミングに対応）
+  buildList();
+  new MutationObserver(buildList).observe(hostEl, {childList:true, subtree:true});
+})();
