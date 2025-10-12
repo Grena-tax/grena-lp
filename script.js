@@ -293,3 +293,78 @@
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 })();
+/* ===== Language panel: auto-fill from Google Translate ===== */
+(function () {
+  const $ = s => document.querySelector(s);
+  const on = (el, ev, fn) => el && el.addEventListener(ev, fn, { passive:true });
+
+  const btn   = $('#langBtn');
+  const wrap  = $('#langDrawer');
+  const close = $('#langClose');
+  const list  = $('#langList');
+  const search= $('#langSearch');
+
+  // 1) パネル開閉（既存IDを前提。無ければスキップ）
+  on(btn, 'click', () => { document.documentElement.classList.add('lang-open'); wrap?.setAttribute('aria-hidden','false'); });
+  on(close, 'click', () => { document.documentElement.classList.remove('lang-open'); wrap?.setAttribute('aria-hidden','true'); });
+  on($('#langBackdrop'), 'click', () => { document.documentElement.classList.remove('lang-open'); wrap?.setAttribute('aria-hidden','true'); });
+
+  // 2) Googleの隠しセレクトが出るのを待って → リストを生成
+  function fillListFromGoogle() {
+    const sel = document.querySelector('.goog-te-combo');
+    if (!sel || !list) return false;
+
+    // 既存をクリア
+    list.innerHTML = '';
+
+    // optionをコピーして自作リストに流し込む
+    const items = [];
+    for (const opt of sel.options) {
+      if (!opt.value) continue; // 先頭の「Select」等はスキップ
+      items.push({ code: opt.value, label: opt.text });
+    }
+
+    // 英語名でソート（Google既定がバラつく時のため）
+    items.sort((a,b)=> a.label.localeCompare(b.label));
+
+    // DOM化
+    const frag = document.createDocumentFragment();
+    items.forEach(it => {
+      const li = document.createElement('button');
+      li.type = 'button';
+      li.className = 'ls-item';
+      li.setAttribute('role','option');
+      li.innerHTML = `<span>${it.label}</span><span class="ls-code">${it.code}</span>`;
+      li.addEventListener('click', () => {
+        // Googleのセレクトに反映して change を発火
+        sel.value = it.code;
+        sel.dispatchEvent(new Event('change'));
+        // パネルを閉じる
+        document.documentElement.classList.remove('lang-open');
+        wrap?.setAttribute('aria-hidden','true');
+      });
+      frag.appendChild(li);
+    });
+    list.appendChild(frag);
+
+    // 検索フィルタ
+    if (search) {
+      search.value = '';
+      search.oninput = () => {
+        const q = search.value.trim().toLowerCase();
+        for (const el of list.querySelectorAll('.ls-item')) {
+          const txt = el.textContent.toLowerCase();
+          el.style.display = txt.includes(q) ? '' : 'none';
+        }
+      };
+    }
+    return true;
+  }
+
+  // 3) .goog-te-combo が現れるまで監視して一度だけ実行
+  const tryFill = () => fillListFromGoogle();
+  if (!tryFill()) {
+    const obs = new MutationObserver(() => { if (tryFill()) obs.disconnect(); });
+    obs.observe(document.documentElement, { childList:true, subtree:true });
+  }
+})();
