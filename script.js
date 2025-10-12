@@ -266,3 +266,30 @@
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 })();
+/* === ハンバーガー開閉（再タップで閉じる）=== */
+(function(){
+  const html     = document.documentElement;
+  const btn      = document.getElementById('menuBtn');
+  const drawer   = document.getElementById('menuDrawer');
+  const backdrop = document.getElementById('menuBackdrop');
+  const closeBtn = document.getElementById('menuClose');
+
+  function setMenu(open){
+    html.classList.toggle('menu-open', open);
+    if (drawer) drawer.setAttribute('aria-hidden', String(!open));
+    if (btn)    btn.setAttribute('aria-expanded', String(open));
+  }
+  function toggleMenu(e){
+    if (e) e.preventDefault();
+    setMenu(!html.classList.contains('menu-open'));
+  }
+  function closeMenu(){ setMenu(false); }
+
+  if (btn){
+    btn.addEventListener('click', toggleMenu, {passive:false});
+    btn.addEventListener('touchstart', toggleMenu, {passive:false});
+  }
+  if (backdrop) backdrop.addEventListener('click', closeMenu);
+  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
+})();
