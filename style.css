@@ -314,3 +314,20 @@ button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a{
   font-family: var(--font-jp) !important;
 }
+/* === フォントを“元の和文スタック”に固定（最小差分） === */
+:root{
+  --font-jp: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+             "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+             Roboto,Helvetica,Arial,sans-serif;
+}
+html,body{ font-family: var(--font-jp) !important; }
+
+/* UI要素も同じ書体で統一（翻訳UI・メニュー含む） */
+button,input,select,textarea,summary,details,
+.menu-panel,.menu-list,.lang-panel,nav,a{
+  font-family: var(--font-jp) !important;
+}
+
+/* （任意の最終手段）まだ一部だけ違う場合は下1行を有効化
+* { font-family: var(--font-jp) !important; }
+*/
