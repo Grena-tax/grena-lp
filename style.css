@@ -331,3 +331,5 @@ button,input,select,textarea,summary,details,
 /* （任意の最終手段）まだ一部だけ違う場合は下1行を有効化
 * { font-family: var(--font-jp) !important; }
 */
+/* 言語パネルの中身だけ縦スクロール可能にする（他は無変更） */
+.lang-body{ max-height:min(70vh,520px); overflow:auto; }
