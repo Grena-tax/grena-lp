@@ -1,7 +1,7 @@
 /* =========================================
-   style.css — v2.6 (all-in-one + Footer)
+   style.css — v2.7  （scroll-lock解除版）
    ========================================= */
-:root{ --_ver:"CSS v2.6"; }
+:root{ --_ver:"CSS v2.7"; }
 
 /* デバッグバッジ（不要なら削除OK） */
 .css-debug-banner{
@@ -17,7 +17,8 @@
 *{ box-sizing:border-box }
 html{ -webkit-text-size-adjust:100%; }
 html,body{
-  height:auto;
+  height:auto;           /* ★ ここをautoに戻す */
+  overflow:visible;      /* ★ スクロール禁止を解除 */
   font-family: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
                "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
                Roboto,Helvetica,Arial,sans-serif !important;
@@ -123,7 +124,7 @@ section > h2{
 /* ========== 7) Tables (fallback) ========== */
 table{ width:100%; border-collapse:collapse; margin:.5rem 0 }
 th,td{ border:1px solid #e5e7eb; padding:.5rem .6rem; text-align:right }
-th:first-child, td:first-child{ text-align:left }
+th:first-child, td:first-child{ text_align:left }
 
 /* ========== 8) Responsive ========== */
 @media (max-width:600px){
@@ -151,23 +152,15 @@ body.has-cta{
   padding-bottom: calc(var(--cta-h) + var(--cta-gap) + env(safe-area-inset-bottom)) !important;
 }
 
-/* ========== 10) スクロール容器（#scroll-root 方式） ========== */
-html, body{ height: 100%; overflow: hidden; }
-#scroll-root{
-  position: fixed; inset: 0; overflow-y: auto;
-  -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: inherit;
-}
-#scroll-root.has-cta{
-  padding-bottom: calc(var(--cta-h) + env(safe-area-inset-bottom)) !important;
-}
+/* ========== 10) スクロール容器（scroll-root方式は使わない） ========== */
+/* ★ 旧仕様（固定スクロール）の指定は削除。正常にブラウザ本体がスクロールします。 */
 
-/* ========== 11) Google Translate メニューとバナーの制御 ========== */
-/* 公式ウィジェットの押し下げバナーを非表示（翻訳は使える） */
-.goog-te-banner-frame{ display:none !important; }
+/* ========== 11) Google Translate（ページ内バナーだけを消す） ========== */
+.goog-te-banner-frame{ display:none !important; }  /* ページ押し下げバナー非表示 */
 #goog-gt-tt{ display:none !important; }
 body{ top:0 !important; }
 
-/* メニューのフレームを右上に・スクロール可能に */
+/* メニューのフレーム体裁（言語リストが右上に開く場合の見た目調整だけ） */
 #google_translate_element{ display:block }
 #google_translate_element .goog-te-gadget{ margin:0!important }
 #google_translate_element .goog-te-gadget .goog-te-combo{ margin:0!important }
@@ -192,34 +185,21 @@ iframe.goog-te-menu-frame {
 @media (max-width:480px){ .menu-group.no-title{ margin-top:-8px !important; } }
 html, body{ overscroll-behavior-y: none; }
 
-/* ========== 13) Footer（このファイルの末尾。最優先で上書き） ========== */
+/* ========== 13) Footer ========== */
 :root{
-  --foot-bg:#0b1220;        /* 背景 */
-  --foot-fg:#cbd5e1;        /* 文字色 */
-  --foot-border:#1f2937;    /* 上ボーダー */
+  --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937;
 }
 .site-foot{
-  background:var(--foot-bg);
-  color:var(--foot-fg);
+  background:var(--foot-bg); color:var(--foot-fg);
   border-top:1px solid var(--foot-border);
-  text-align:center;
-  padding:14px 16px;
+  text-align:center; padding:14px 16px;
   padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  font-size:13px;
-  line-height:1.7;
+  font-size:13px; line-height:1.7;
 }
 .site-foot small{
-  display:block;
-  margin:0 auto;
-  max-width:min(1100px,92%);
-  letter-spacing:.02em;
+  display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em;
 }
-.site-foot a{
-  color:#93c5fd;
-  text-decoration:underline;
-  text-underline-offset:2px;
-}
-/* 表示切替：PCは長文、SPは短文 */
+.site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; }
 .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){
