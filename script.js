@@ -145,3 +145,103 @@
   };
 
 })();
+/* ===== Hamburger menu: include ALL <summary> (top-level + nested) in each section ===== */
+(function(){
+  const groups = document.getElementById('menuGroups');
+  if (!groups) return;
+
+  // セクションの順序と見出し（本文は変更しない）
+  const sections = [
+    ['corp-setup',       '法人設立'],
+    ['plans',            '料金プラン'],
+    ['sole-setup',       '個人事業主（IE/SBS）'],
+    ['personal-account', '個人口座開設（銀行）'],
+    ['disclaimer',       '免責事項・キャンセル']
+  ];
+
+  const sanitize = s => (s || '').trim().replace(/\s+/g,' ').slice(0,120);
+  const mkId = base => base.toLowerCase()
+    .replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+
+  function closeMenu(){
+    document.documentElement.classList.remove('menu-open');
+    const drawer = document.getElementById('menuDrawer');
+    const btn    = document.getElementById('menuBtn');
+    if (drawer) drawer.setAttribute('aria-hidden','true');
+    if (btn)    btn.setAttribute('aria-expanded','false');
+  }
+
+  function ensureId(detailsEl, secId, label, idx){
+    if (detailsEl.id) return detailsEl.id;
+    const base = mkId(`${secId}-${label || 'item'}-${idx+1}`) || `${secId}-d-${idx+1}`;
+    let id = base, n = 2;
+    while (document.getElementById(id)) id = `${base}-${n++}`;
+    detailsEl.id = id;
+    return id;
+  }
+
+  function openAncestors(el){
+    let cur = el && el.parentElement;
+    while (cur){
+      if (cur.tagName && cur.tagName.toLowerCase() === 'details') cur.open = true;
+      cur = cur.parentElement;
+    }
+  }
+
+  groups.innerHTML = '';
+
+  sections.forEach(([secId, secLabel])=>{
+    const sec = document.getElementById(secId);
+    if (!sec) return;
+
+    const group = document.createElement('div');
+    group.className = 'menu-group';
+
+    const h4 = document.createElement('h4');
+    h4.textContent = secLabel;
+
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    // セクションのトップ
+    const liTop = document.createElement('li');
+    const aTop  = document.createElement('a');
+    aTop.href = `#${secId}`;
+    aTop.textContent = `${secLabel}（トップ）`;
+    aTop.addEventListener('click', closeMenu);
+    liTop.appendChild(aTop);
+    ul.appendChild(liTop);
+
+    // そのセクション内の **全て** の <summary>（ネスト分も含む）
+    const summaries = sec.querySelectorAll('.accordion summary');
+    summaries.forEach((sum, idx)=>{
+      const det = sum.closest('details');
+      if (!det) return;
+
+      const label = sanitize(sum.textContent);
+      const id = ensureId(det, secId, label, idx);
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = label; // 文言はそのまま
+
+      a.addEventListener('click', ()=>{
+        const target = document.getElementById(id);
+        if (target){
+          openAncestors(target);   // 親<details>も開く（ネスト対応）
+          setTimeout(closeMenu, 0);
+        } else {
+          closeMenu();
+        }
+      });
+
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    group.appendChild(h4);
+    group.appendChild(ul);
+    groups.appendChild(group);
+  });
+})();
