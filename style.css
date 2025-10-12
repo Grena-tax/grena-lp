@@ -186,3 +186,118 @@ body { top: 0 !important; }
 
 /* それでもバーが出て“被る”端末向けに、検知したら上に余白を自動付与 */
 html.gtbar body { padding-top: 44px; } /* だいたいの高さ分だけ確保 */
+/* ===== menu build, language drawer & google bar buffer (patch) ===== */
+(function () {
+  // ---------- ハンバーガー開閉 ----------
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+  const html = document.documentElement;
+
+  const menuBtn = $('#menuBtn');
+  const menuDrawer = $('#menuDrawer');
+  const menuClose = $('#menuClose');
+  const menuBackdrop = $('#menuBackdrop');
+
+  function openMenu() { html.classList.add('menu-open'); menuDrawer?.setAttribute('aria-hidden','false'); }
+  function closeMenu(){ html.classList.remove('menu-open'); menuDrawer?.setAttribute('aria-hidden','true'); }
+
+  menuBtn?.addEventListener('click', () => {
+    const exp = menuBtn.getAttribute('aria-expanded') === 'true';
+    menuBtn.setAttribute('aria-expanded', String(!exp));
+    !exp ? openMenu() : closeMenu();
+  });
+  menuClose?.addEventListener('click', closeMenu);
+  menuBackdrop?.addEventListener('click', closeMenu);
+
+  // ---------- 目次（ハンバーガー）自動生成：ページ内の <section id> を全部載せる ----------
+  (function buildMenu() {
+    const wrap = $('#menuGroups');
+    if (!wrap) return;
+    wrap.innerHTML = '';
+    const group = document.createElement('div');
+    group.className = 'menu-group';
+    const h4 = document.createElement('h4');
+    h4.textContent = 'セクション';
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    $$('section[id]').forEach(sec => {
+      const h2 = sec.querySelector('h2');
+      const text = (h2?.textContent || sec.id).trim().replace(/\s+/g,' ');
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = `#${sec.id}`;
+      a.textContent = text;
+      a.addEventListener('click', () => closeMenu());
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    group.appendChild(h4);
+    group.appendChild(ul);
+    wrap.appendChild(group);
+  })();
+
+  // ---------- 言語ドロワー開閉 ----------
+  const langBtn = $('#langBtn');
+  const langDrawer = $('#langDrawer');
+  const langClose = $('#langClose');
+  const langBackdrop = $('#langBackdrop');
+
+  function openLang() { html.classList.add('lang-open'); langDrawer?.setAttribute('aria-hidden','false'); }
+  function closeLang(){ html.classList.remove('lang-open'); langDrawer?.setAttribute('aria-hidden','true'); }
+
+  langBtn?.addEventListener('click', () => {
+    const exp = langBtn.getAttribute('aria-expanded') === 'true';
+    langBtn.setAttribute('aria-expanded', String(!exp));
+    !exp ? openLang() : closeLang();
+  });
+  langClose?.addEventListener('click', closeLang);
+  langBackdrop?.addEventListener('click', closeLang);
+
+  // ---------- Google翻訳セレクトを読み取り → アルファベット順で“自前リスト”を生成 ----------
+  const langList = $('#langList');
+  const langSearch = $('#langSearch');
+
+  function buildLangListFromGoogle() {
+    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel) { setTimeout(buildLangListFromGoogle, 400); return; }
+
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== '')
+      .map(o => ({ code: o.value, name: o.text.trim() }))
+      .sort((a,b) => a.name.localeCompare(b.name, 'en', { sensitivity: 'base' }));
+
+    function render(filter='') {
+      if (!langList) return;
+      langList.innerHTML = '';
+      const f = filter.trim().toLowerCase();
+      items.forEach(({code, name}) => {
+        if (f && !name.toLowerCase().includes(f)) return;
+        const div = document.createElement('div');
+        div.className = 'ls-item';
+        div.setAttribute('role','option');
+        div.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
+        div.addEventListener('click', () => {
+          sel.value = code;
+          sel.dispatchEvent(new Event('change'));
+          closeLang();
+        });
+        langList.appendChild(div);
+      });
+    }
+    render();
+    langSearch?.addEventListener('input', (e) => render(e.target.value || ''));
+  }
+  // Googleのウィジェット初期化後に実行されるよう少し待つ
+  setTimeout(buildLangListFromGoogle, 800);
+
+  // ---------- Googleのバナー検知 → かぶり回避の上余白を自動で付ける ----------
+  function detectGoogleBar() {
+    const bar = document.querySelector('iframe.goog-te-banner-frame');
+    const showing = bar && bar.offsetHeight > 0;
+    html.classList.toggle('gtbar', !!showing);
+  }
+  setInterval(detectGoogleBar, 1200);
+
+})();
