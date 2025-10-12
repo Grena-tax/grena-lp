@@ -149,3 +149,40 @@ body > .skiptranslate{display:none!important}
 .site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
+
+/* ===== revert font, scroll, drawers & google bar buffer (patch) ===== */
+
+/* あなたのCSSで font-family を指定していても “元の端末フォント” に戻す */
+html, body, input, button, select, textarea {
+  font-family: inherit !important;
+}
+
+/* 以前の「overflow:hidden;」等でスクロール不能になっていた場合を解除 */
+html, body {
+  height: auto !important;
+  overflow: auto !important;
+}
+
+/* 言語パネルを縦にスクロールできるように（iOS慣性スクロール含む） */
+.lang-panel {
+  max-height: calc(100dvh - 80px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.lang-body {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ハンバーガー：中身が長くても全部見れるように */
+.menu-panel { overflow: hidden; }
+.menu-groups { height: calc(100% - 60px); overflow: auto; -webkit-overflow-scrolling: touch; }
+
+/* 公式Google翻訳バナーを可能な限り非表示（旧来の対策） */
+.goog-te-banner-frame { display: none !important; }
+#goog-gt-tt { display: none !important; }
+body { top: 0 !important; }
+
+/* それでもバーが出て“被る”端末向けに、検知したら上に余白を自動付与 */
+html.gtbar body { padding-top: 44px; } /* だいたいの高さ分だけ確保 */
