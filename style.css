@@ -301,3 +301,16 @@ html.gtbar body { padding-top: 44px; } /* だいたいの高さ分だけ確保 *
   setInterval(detectGoogleBar, 1200);
 
 })();
+/* === Revert font to original stack, site-wide === */
+:root{
+  --font-jp: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
+             "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
+             Roboto,Helvetica,Arial,sans-serif;
+}
+html, body{ font-family: var(--font-jp) !important; }
+
+/* フォームやUI要素も強制継承（翻訳UI/メニューで崩れないように） */
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a{
+  font-family: var(--font-jp) !important;
+}
