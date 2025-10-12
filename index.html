@@ -8,13 +8,13 @@
 <!-- 自動翻訳の誘導を抑止（ウィジェットは動作します） -->
 <meta name="google" content="notranslate">
 
-<!-- 既存：差し替え確認用ピンクバー -->
+<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS -->
+<!-- 既存のメインCSS（そのまま） -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
-<!-- 追加（この回答で出す追補CSS） -->
+<!-- 追補CSS（今回の修正のみ。本文デザインは無改変） -->
 <link rel="stylesheet" href="./patch.css?v=20251012">
 
 <!-- ▼ 初期状態が英語化しないための“事前”クッキー掃除（/ja/ja以外なら消す） -->
@@ -299,6 +299,8 @@
         </details>
 
         <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算します。為替変動により請求額が変動する場合があります。</p>
+        <!-- ★ リーガル追記（最小）：金融商品勧誘・媒介ではない旨を価格ブロック直下に再掲 -->
+        <p class="text-sm muted" style="margin-top:6px;">※ 本サイトの記載は情報提供であり、金融商品取引法上の勧誘・媒介・代理、銀行代理業・資金移動業・預り業のいずれにも該当しません。各種契約はお客様と各機関の直接契約です。</p>
 
       </div>
     </details>
@@ -366,7 +368,7 @@
         <ul>
           <li>登録対象：IE（個人事業主）＋SBS</li>
           <li>所要期間：7〜10営業日（2025年実績 平均8.2日）</li>
-          <li>言語対応：日本語／英語／ジョージア語／全言語（翻訳士対応）</li>
+          <li>言語対応：日本語／英語／<strong>ジョージア語</strong>／全言語（翻訳士対応）</li>
           <li>申請はすべてオンライン、渡航不要</li>
           <li>MoU提携：TREX LEGAL（2025/5/28）</li>
         </ul>
@@ -390,7 +392,7 @@
       <summary>サポート内容と料金</summary>
       <div class="content">
         <ul>
-          <li>登録一式（IE＋SBS）／登録証明（英語・喬語）／納税ID発行</li>
+          <li>登録一式（IE＋SBS）／登録証明（英語・ジョージア語）／納税ID発行</li>
           <li>RS.ge（税務ポータル）初期セットアップ</li>
           <li>書類テンプレート一式・提出サポート（完全オンライン）</li>
         </ul>
@@ -407,7 +409,7 @@
           <div class="proof">
             <span>MoU：TREX LEGAL</span>
             <span>オンライン完結</span>
-            <span>日英喬／全言語 対応</span>
+            <span>日英・ジョージア語・全言語 対応</span>
           </div>
         </div>
 
@@ -467,7 +469,7 @@
         </ul>
         <div class="price-promo" aria-label="IE登録者限定割引">
           <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（税込）</span></div>
-        <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着10社</span></div>
+          <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着10社</span></div>
           <div class="meta"><small>※ IE（個人事業主）登録完了の方のみ対象。予告なく終了する場合があります。</small></div>
         </div>
         <span class="note">※ IE＝Individual Entrepreneur</span>
@@ -521,6 +523,7 @@
         </ul>
         <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋する立場ではありません。最終的な選定と契約はお客様と各銀行の直接契約となります。</p>
         <div class="security-note">※ 当社はお客様の銀行口座情報（口座番号・パスワード等）を一切預かりません。銀行口座の開設自体は現地の正規パートナーが、委任状・現地法・各銀行の規程に基づき実施します。</div>
+        <p class="text-sm muted">※ 金融商品取引法上の勧誘・媒介・代理に該当する行為は行いません。</p>
         <span class="note">※ SWIFT＝国際銀行間通信協会（国際送金網）／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
@@ -719,9 +722,6 @@
 <script src="./script.js?v=20251012" defer></script>
 
 <!-- ===== Google翻訳 公式ウィジェット（読み込みは1回だけ） ※</body>直前 ===== -->
-<script>
-  // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
-</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
