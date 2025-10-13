@@ -1,227 +1,268 @@
-// ===== 0) Google 翻訳バナー抑止（表示ずれ防止） =====
+/* =========================================================
+   script.js — ES5互換・DOM準備後に初期化（1ファイル完結）
+   余計なUI/文言変更なし。Google翻訳は機能維持しつつバナー抑止。
+   ハンバーガー/地球儀は再タップ/×/背景/ESCで閉じる。
+   ハンバーガーからのジャンプ時に該当<details>を自動open。
+   ========================================================= */
+
 (function(){
-  function kill(){
+  'use strict';
+
+  /* ===== 0) Google 翻訳バナー抑止（表示ずれ防止） ===== */
+  function killGtBanner(){
     try{
       document.documentElement.style.marginTop='0px';
       document.body.style.top='0px';
-      ['goog-te-banner-frame','goog-gt-tt'].forEach(id=>{
-        const el = document.getElementById(id);
-        if (!el) return;
+      var ids = ['goog-te-banner-frame','goog-gt-tt'];
+      for (var i=0;i<ids.length;i++){
+        var el = document.getElementById(ids[i]);
+        if (!el) continue;
         if (el.remove) el.remove();
-        else { el.style.display='none'; el.style.visibility='hidden'; el.style.height='0'; }
-      });
+        else {
+          el.style.display='none';
+          el.style.visibility='hidden';
+          el.style.height='0';
+        }
+      }
     }catch(_){}
   }
-  new MutationObserver(kill).observe(document.documentElement,{childList:true,subtree:true});
-  window.addEventListener('load', kill, {once:true});
-  kill();
-})();
+  try{
+    new MutationObserver(killGtBanner).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(_){}
+  window.addEventListener('load', killGtBanner, false);
+  killGtBanner();
 
-// ===== 1) ハンバーガー開閉（再タップで閉じる/ESC/背景クリック対応） =====
-(function(){
-  const html     = document.documentElement;
-  const btn      = document.getElementById('menuBtn');
-  const drawer   = document.getElementById('menuDrawer');
-  const backdrop = document.getElementById('menuBackdrop');
-  const closeBtn = document.getElementById('menuClose');
-
-  function setMenu(open){
-    html.classList.toggle('menu-open', open);
-    drawer?.setAttribute('aria-hidden', String(!open));
-    btn?.setAttribute('aria-expanded', String(open));
+  /* ===== 1) DOM 準備後に初期化 ===== */
+  function ready(fn){
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', fn, false);
+    } else { fn(); }
   }
-  function toggle(e){ if(e) e.preventDefault(); setMenu(!html.classList.contains('menu-open')); }
-  function close(){ setMenu(false); }
 
-  btn?.addEventListener('click', toggle, {passive:false});
-  btn?.addEventListener('touchstart', toggle, {passive:false});
-  backdrop?.addEventListener('click', close);
-  closeBtn?.addEventListener('click', close);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
-})();
+  ready(function(){
 
-// ===== 2) 言語ドロワー（開閉のみ） =====
-(function () {
-  const html  = document.documentElement;
-  const btn   = document.getElementById('langBtn');
-  const wrap  = document.getElementById('langDrawer');
-  const close = document.getElementById('langClose');
-  const back  = document.getElementById('langBackdrop');
-  btn?.addEventListener('click', ()=>{ html.classList.add('lang-open'); wrap?.setAttribute('aria-hidden','false'); });
-  close?.addEventListener('click', ()=>{ html.classList.remove('lang-open'); wrap?.setAttribute('aria-hidden','true'); });
-  back?.addEventListener('click',  ()=>{ html.classList.remove('lang-open'); wrap?.setAttribute('aria-hidden','true'); });
-})();
+    /* ユーティリティ */
+    function $(sel, root){ return (root||document).querySelector(sel); }
+    function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+    function on(el, ev, fn, opts){ if(el) el.addEventListener(ev, fn, opts||false); }
+    function setAttr(el, k, v){ if(el) el.setAttribute(k, v); }
+    function hasClass(el, c){ return el && (' '+el.className+' ').indexOf(' '+c+' ') > -1; }
+    function addClass(el, c){ if(el && !hasClass(el,c)) el.className = (el.className?el.className+' ':'') + c; }
+    function removeClass(el, c){ if(!el) return; el.className = (' '+el.className+' ').replace(' '+c+' ',' ').trim(); }
 
-// ===== 3) Google翻訳：公式ウィジェットから英語名でリスト複製 =====
-(function(){
-  const list   = document.getElementById('langList');
-  const search = document.getElementById('langSearch');
-  const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
+    var html = document.documentElement;
 
-  function build(){
-    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (!sel || !list) { setTimeout(build, 200); return; }
+    /* ===== 2) ハンバーガー開閉（再タップ/×/背景/ESC対応） ===== */
+    var menuBtn      = $('#menuBtn');
+    var menuDrawer   = $('#menuDrawer');
+    var menuBackdrop = $('#menuBackdrop');
+    var menuClose    = $('#menuClose');
 
-    const frag = document.createDocumentFragment();
-    const items = [];
-    for (const o of sel.options){
-      const code=(o.value||'').trim();
-      if (!code || code==='auto') continue;
-      const name = (dn ? (dn.of(code)||'') : '') || (o.textContent||'').trim() || code;
-      items.push({code,name});
+    function setMenu(open){
+      if (open){ addClass(html,'menu-open'); setAttr(menuDrawer,'aria-hidden','false'); setAttr(menuBtn,'aria-expanded','true'); }
+      else { removeClass(html,'menu-open'); setAttr(menuDrawer,'aria-hidden','true'); setAttr(menuBtn,'aria-expanded','false'); }
     }
-    items.sort((a,b)=>a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+    function toggleMenu(e){ if(e){e.preventDefault();} setMenu(!hasClass(html,'menu-open')); }
+    function closeMenu(){ setMenu(false); }
 
-    list.innerHTML='';
-    items.forEach(({code,name})=>{
-      const div=document.createElement('div');
-      div.className='ls-item';
-      div.setAttribute('role','option');
-      div.dataset.code=code;
-      div.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
-      div.addEventListener('click',()=>{
-        sel.value=code;
-        sel.dispatchEvent(new Event('change',{bubbles:true}));
-        document.documentElement.classList.remove('lang-open');
-        document.getElementById('langDrawer')?.setAttribute('aria-hidden','true');
-        document.getElementById('langBtn')?.setAttribute('aria-expanded','false');
-      });
-      frag.appendChild(div);
-    });
-    list.appendChild(frag);
+    on(menuBtn, 'click', toggleMenu, false);
+    on(menuBackdrop, 'click', closeMenu, false);
+    on(menuClose, 'click', closeMenu, false);
+    on(document, 'keydown', function(e){ if(e.key==='Escape'){ closeMenu(); }}, false);
 
-    if (search){
-      search.value='';
-      search.oninput=()=>{
-        const q=(search.value||'').trim().toLowerCase();
-        list.querySelectorAll('.ls-item').forEach(el=>{
-          el.style.display = !q || (el.textContent||'').toLowerCase().includes(q) ? '' : 'none';
-        });
-      };
+    /* ===== 3) 言語ドロワー開閉（開閉のみ） ===== */
+    var langBtn   = $('#langBtn');
+    var langWrap  = $('#langDrawer');
+    var langClose = $('#langClose');
+    var langBack  = $('#langBackdrop');
+
+    function setLang(open){
+      if (open){ addClass(html,'lang-open'); setAttr(langWrap,'aria-hidden','false'); setAttr(langBtn,'aria-expanded','true'); }
+      else { removeClass(html,'lang-open'); setAttr(langWrap,'aria-hidden','true'); setAttr(langBtn,'aria-expanded','false'); }
     }
-  }
-  setTimeout(build, 600); // 公式初期化を少し待つ
-})();
-window.googleTranslateElementInit = function(){
-  try{ new google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element'); }catch(_){}
-};
+    on(langBtn, 'click', function(){ setLang(true); }, false);
+    on(langClose,'click', function(){ setLang(false); }, false);
+    on(langBack, 'click', function(){ setLang(false); }, false);
 
-// ===== 4) ハンバーガーのメニュー生成（“料金プラン”見出し/トップを出さず、指定4項目だけ） =====
-(function(){
-  const groups = document.getElementById('menuGroups');
-  if (!groups) return;
+    /* ===== 4) Google翻訳：英語名リストを複製（機能維持） ===== */
+    var langList   = $('#langList');
+    var langSearch = $('#langSearch');
+    var displayNames = (window.Intl && window.Intl.DisplayNames) ? new window.Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-  const mkId = base => base.toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-  function ensureId(det, secId, label, idx){
-    if (det.id) return det.id;
-    const base = mkId(`${secId}-${label||'item'}-${idx+1}`) || `${secId}-d-${idx+1}`;
-    let id=base, n=2;
-    while (document.getElementById(id)) id=`${base}-${n++}`;
-    det.id = id;
-    return id;
-  }
-  function openAndJump(id){
-    const html = document.documentElement;
-    const target = document.getElementById(id);
-    if (!target) return;
+    function buildLangList(){
+      var selHost = $('#google_translate_element');
+      var sel = selHost ? selHost.querySelector('select.goog-te-combo') : null;
+      if (!sel || !langList){ setTimeout(buildLangList, 300); return; }
 
-    if (target.tagName.toLowerCase()==='details') target.open = true;
-    let p = target.parentElement;
-    while (p){
-      if (p.tagName && p.tagName.toLowerCase()==='details') p.open = true;
-      p = p.parentElement;
+      var items = [];
+      for (var i=0;i<sel.options.length;i++){
+        var o = sel.options[i];
+        var code = (o.value||'').trim();
+        if (!code || code==='auto') continue;
+        var name = (displayNames ? (displayNames.of(code)||'') : '') || (o.textContent||'').trim() || code;
+        items.push({code:code, name:name});
+      }
+      items.sort(function(a,b){ return a.name.toLowerCase()<b.name.toLowerCase()? -1 : a.name.toLowerCase()>b.name.toLowerCase()? 1 : 0; });
+
+      langList.innerHTML = '';
+      var frag = document.createDocumentFragment();
+      for (var j=0;j<items.length;j++){
+        (function(it){
+          var div = document.createElement('div');
+          div.className = 'ls-item';
+          div.setAttribute('role','option');
+          div.setAttribute('data-code', it.code);
+          div.innerHTML = '<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
+          on(div,'click', function(){
+            sel.value = it.code;
+            sel.dispatchEvent(new Event('change', {bubbles:true}));
+            setLang(false);
+            killGtBanner();
+          }, false);
+          frag.appendChild(div);
+        })(items[j]);
+      }
+      langList.appendChild(frag);
+
+      if (langSearch){
+        langSearch.value = '';
+        on(langSearch,'input', function(){
+          var q = (langSearch.value||'').trim().toLowerCase();
+          var nodes = $all('.ls-item', langList);
+          for (var k=0;k<nodes.length;k++){
+            var t = (nodes[k].textContent||'').toLowerCase();
+            nodes[k].style.display = (!q || t.indexOf(q)>-1) ? '' : 'none';
+          }
+        }, false);
+      }
     }
-    requestAnimationFrame(()=>{
-      target.scrollIntoView({behavior:'smooth', block:'start'});
-      html.classList.remove('menu-open');
-      document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
-      document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
-    });
-  }
+    setTimeout(buildLangList, 700);
 
-  groups.innerHTML='';
+    /* ===== 5) ハンバーガー：ジャンプ時に対象<details>をopenして着地 ===== */
+    function mkId(base){
+      return (base||'').toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+    }
+    function ensureId(det, secId, label, idx){
+      if (det.id) return det.id;
+      var base = mkId(secId+'-'+(label||'item')+'-'+(idx+1)) || (secId+'-d-'+(idx+1));
+      var id = base, n = 2;
+      while (document.getElementById(id)) { id = base+'-'+(n++); }
+      det.id = id; return id;
+    }
+    function openAncestors(el){
+      var p = el ? el.parentElement : null;
+      while (p){
+        if (p.tagName && p.tagName.toLowerCase()==='details') p.open = true;
+        p = p.parentElement;
+      }
+    }
+    function openAndJump(id){
+      var target = document.getElementById(id);
+      if (!target) return;
+      if (target.tagName && target.tagName.toLowerCase()==='details') target.open = true;
+      openAncestors(target);
+      setTimeout(function(){
+        try{ target.scrollIntoView({behavior:'smooth', block:'start'}); }catch(_){ target.scrollIntoView(true); }
+        closeMenu();
+      }, 0);
+    }
 
-  // 通常セクション（見出し+トップ+全summary）
-  [
-    ['corp-setup','法人設立'],
-    ['sole-setup','個人事業主（IE/SBS）'],
-    ['personal-account','個人口座開設（銀行）'],
-    ['disclaimer','免責事項・キャンセル']
-  ].forEach(([secId, label])=>{
-    const sec = document.getElementById(secId);
-    if (!sec) return;
+    /* ===== 6) メニュー生成：通常セクション（トップ+全summary） ===== */
+    var menuGroups = $('#menuGroups');
+    if (menuGroups){
+      menuGroups.innerHTML = '';
 
-    const group = document.createElement('div');
-    group.className='menu-group';
+      var normalSections = [
+        ['corp-setup','法人設立'],
+        ['sole-setup','個人事業主（IE/SBS）'],
+        ['personal-account','個人口座開設（銀行）'],
+        ['disclaimer','免責事項・キャンセル']
+      ];
 
-    const h4 = document.createElement('h4');
-    h4.textContent = label;
+      for (var s=0;s<normalSections.length;s++){
+        var secId = normalSections[s][0], secLabel = normalSections[s][1];
+        var sec = document.getElementById(secId);
+        if (!sec) continue;
 
-    const ul = document.createElement('ul');
-    ul.className='menu-list';
+        var group = document.createElement('div'); group.className='menu-group';
+        var h4 = document.createElement('h4'); h4.textContent = secLabel;
+        var ul = document.createElement('ul'); ul.className='menu-list';
 
-    const liTop = document.createElement('li');
-    const aTop  = document.createElement('a');
-    aTop.href = `#${secId}`;
-    aTop.textContent = `${label}（トップ）`;
-    aTop.addEventListener('click', (e)=>{ e.preventDefault(); openAndJump(secId); });
-    liTop.appendChild(aTop);
-    ul.appendChild(liTop);
+        // セクションのトップ
+        (function(){
+          var li = document.createElement('li');
+          var a  = document.createElement('a'); a.href = '#'+secId; a.textContent = secLabel+'（トップ）';
+          on(a,'click', function(e){ e.preventDefault(); openAndJump(secId); }, false);
+          li.appendChild(a); ul.appendChild(li);
+        })();
 
-    sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
-      const det = sum.closest('details'); if (!det) return;
-      const text = (sum.textContent||'').trim().replace(/\s+/g,' ');
-      const id   = ensureId(det, secId, text, idx);
+        // セクション内の全summary
+        var sums = $all('.accordion summary', sec);
+        for (var i=0;i<sums.length;i++){
+          var sum = sums[i];
+          var det = sum.closest ? sum.closest('details') : (function(n){ while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; } return n; })(sum);
+          if (!det) continue;
+          var label = (sum.textContent||'').trim().replace(/\s+/g,' ');
+          var id = ensureId(det, secId, label, i);
 
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href = `#${id}`;
-      a.textContent = text;
-      a.addEventListener('click', (e)=>{ e.preventDefault(); openAndJump(id); });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
+          (function(label,id){
+            var li = document.createElement('li');
+            var a  = document.createElement('a'); a.href='#'+id; a.textContent = label;
+            on(a, 'click', function(e){ e.preventDefault(); openAndJump(id); }, false);
+            li.appendChild(a); ul.appendChild(li);
+          })(label,id);
+        }
 
-    group.appendChild(h4);
-    group.appendChild(ul);
-    groups.appendChild(group);
-  });
+        group.appendChild(h4);
+        group.appendChild(ul);
+        menuGroups.appendChild(group);
+      }
 
-  // 料金プランは見出し/トップ無しで4項目のみ
-  (function(){
-    const secId = 'plans';
-    const sec = document.getElementById(secId);
-    if (!sec) return;
+      /* ===== 7) メニュー生成：#plans は指定4項目のみ（見出し/トップ無し） ===== */
+      (function(){
+        var secId = 'plans';
+        var sec = document.getElementById(secId);
+        if (!sec) return;
 
-    const keep = new Set([
-      '料金プラン（3つのプランから選択）',
-      '追加オプション',
-      '2年目以降の維持・サポート',
-      'よくある質問（2年目以降）'
-    ]);
+        var keep = {
+          '料金プラン（3つのプランから選択）':1,
+          '追加オプション':1,
+          '2年目以降の維持・サポート':1,
+          'よくある質問（2年目以降）':1
+        };
 
-    const group = document.createElement('div');
-    group.className='menu-group';
-    const ul = document.createElement('ul');
-    ul.className='menu-list';
+        var group = document.createElement('div'); group.className='menu-group';
+        var ul = document.createElement('ul'); ul.className='menu-list';
 
-    sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
-      const label = (sum.textContent||'').trim().replace(/\s+/g,' ');
-      if (!keep.has(label)) return;
+        var sums = $all('.accordion summary', sec);
+        for (var i=0;i<sums.length;i++){
+          var sum = sums[i];
+          var label = (sum.textContent||'').trim().replace(/\s+/g,' ');
+          if (!keep[label]) continue;
+          var det = sum.closest ? sum.closest('details') : (function(n){ while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; } return n; })(sum);
+          if (!det) continue;
+          var id = ensureId(det, secId, label, i);
 
-      const det = sum.closest('details'); if (!det) return;
-      const id  = ensureId(det, secId, label, idx);
+          (function(label,id){
+            var li = document.createElement('li');
+            var a  = document.createElement('a'); a.href='#'+id; a.textContent = label;
+            on(a, 'click', function(e){ e.preventDefault(); openAndJump(id); }, false);
+            li.appendChild(a); ul.appendChild(li);
+          })(label,id);
+        }
 
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href = `#${id}`;
-      a.textContent = label;
-      a.addEventListener('click', (e)=>{ e.preventDefault(); openAndJump(id); });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
+        group.appendChild(ul); // 見出しは付けない＝余計な余白を出さない
+        menuGroups.appendChild(group);
+      })();
+    }
 
-    group.appendChild(ul); // 見出しは付けない＝余白も出ない
-    groups.appendChild(group);
-  })();
-})();
+  }); // ready
+
+  /* ===== 8) Google 翻訳 初期化フック（グローバル関数） ===== */
+  window.googleTranslateElementInit = function(){
+    try {
+      new window.google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
+    } catch(_){}
+  };
+
+})(); 
