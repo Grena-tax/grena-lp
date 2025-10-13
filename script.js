@@ -1,4 +1,3 @@
-<script>
 // ===== 0) Google 翻訳バナー抑止（表示ずれ防止） =====
 (function(){
   function kill(){
@@ -41,7 +40,7 @@
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); });
 })();
 
-// ===== 2) 言語ドロワー（開閉のみ。本文は触らない） =====
+// ===== 2) 言語ドロワー（開閉のみ） =====
 (function () {
   const html  = document.documentElement;
   const btn   = document.getElementById('langBtn');
@@ -101,21 +100,17 @@
       };
     }
   }
-  // 公式初期化を待つ
-  setTimeout(build, 600);
+  setTimeout(build, 600); // 公式初期化を少し待つ
 })();
 window.googleTranslateElementInit = function(){
   try{ new google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element'); }catch(_){}
 };
 
-// ===== 4) ハンバーガーのメニュー生成（要件反映版） =====
+// ===== 4) ハンバーガーのメニュー生成（“料金プラン”見出し/トップを出さず、指定4項目だけ） =====
 (function(){
   const groups = document.getElementById('menuGroups');
   if (!groups) return;
 
-  const $ = (s, r=document) => r.querySelector(s);
-
-  // Summaryテキストから安全なIDを払い出し（details側に付与）
   const mkId = base => base.toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
   function ensureId(det, secId, label, idx){
     if (det.id) return det.id;
@@ -125,22 +120,17 @@ window.googleTranslateElementInit = function(){
     det.id = id;
     return id;
   }
-
-  // クリック時：対象detailsを開く（親階層もすべてopen）→ スクロール → メニューを閉じる
   function openAndJump(id){
     const html = document.documentElement;
     const target = document.getElementById(id);
     if (!target) return;
 
-    // 自分と祖先detailsをすべてopen
     if (target.tagName.toLowerCase()==='details') target.open = true;
     let p = target.parentElement;
     while (p){
       if (p.tagName && p.tagName.toLowerCase()==='details') p.open = true;
       p = p.parentElement;
     }
-
-    // スクロール後にハンバーガーを閉じる
     requestAnimationFrame(()=>{
       target.scrollIntoView({behavior:'smooth', block:'start'});
       html.classList.remove('menu-open');
@@ -149,18 +139,15 @@ window.googleTranslateElementInit = function(){
     });
   }
 
-  // 生成開始
   groups.innerHTML='';
 
-  // 4-1) 法人設立・個人事業主・個人口座・免責 は従来どおり（見出し＋各summary）
-  const normalSections = [
+  // 通常セクション（見出し+トップ+全summary）
+  [
     ['corp-setup','法人設立'],
     ['sole-setup','個人事業主（IE/SBS）'],
     ['personal-account','個人口座開設（銀行）'],
     ['disclaimer','免責事項・キャンセル']
-  ];
-
-  normalSections.forEach(([secId, label])=>{
+  ].forEach(([secId, label])=>{
     const sec = document.getElementById(secId);
     if (!sec) return;
 
@@ -173,7 +160,6 @@ window.googleTranslateElementInit = function(){
     const ul = document.createElement('ul');
     ul.className='menu-list';
 
-    // セクションのトップ
     const liTop = document.createElement('li');
     const aTop  = document.createElement('a');
     aTop.href = `#${secId}`;
@@ -182,7 +168,6 @@ window.googleTranslateElementInit = function(){
     liTop.appendChild(aTop);
     ul.appendChild(liTop);
 
-    // そのセクションのsummary → すべて載せる
     sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
       const det = sum.closest('details'); if (!det) return;
       const text = (sum.textContent||'').trim().replace(/\s+/g,' ');
@@ -202,13 +187,12 @@ window.googleTranslateElementInit = function(){
     groups.appendChild(group);
   });
 
-  // 4-2) 料金プランセクションは「見出し/トップを出さず」指定の4項目だけ載せる
+  // 料金プランは見出し/トップ無しで4項目のみ
   (function(){
     const secId = 'plans';
     const sec = document.getElementById(secId);
     if (!sec) return;
 
-    // 残す4つ（完全一致で判定）
     const keep = new Set([
       '料金プラン（3つのプランから選択）',
       '追加オプション',
@@ -218,13 +202,12 @@ window.googleTranslateElementInit = function(){
 
     const group = document.createElement('div');
     group.className='menu-group';
-
     const ul = document.createElement('ul');
     ul.className='menu-list';
 
     sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
       const label = (sum.textContent||'').trim().replace(/\s+/g,' ');
-      if (!keep.has(label)) return; // 指定以外は出さない
+      if (!keep.has(label)) return;
 
       const det = sum.closest('details'); if (!det) return;
       const id  = ensureId(det, secId, label, idx);
@@ -238,9 +221,7 @@ window.googleTranslateElementInit = function(){
       ul.appendChild(li);
     });
 
-    // 見出し（h4）は入れない＝余白も出さない
-    group.appendChild(ul);
+    group.appendChild(ul); // 見出しは付けない＝余白も出ない
     groups.appendChild(group);
   })();
 })();
-</script>
