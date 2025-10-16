@@ -52,7 +52,7 @@
 
     var html = document.documentElement;
 
-    /* ===== 2) ハンバーガー開閉（再タップ/×/背景/ESC対応） ===== */
+    /* ===== 2) ハンバーガー開閉 ===== */
     var menuBtn      = $('#menuBtn');
     var menuDrawer   = $('#menuDrawer');
     var menuBackdrop = $('#menuBackdrop');
@@ -70,7 +70,7 @@
     on(menuClose, 'click', closeMenu, false);
     on(document, 'keydown', function(e){ if(e.key==='Escape'){ closeMenu(); }}, false);
 
-    /* ===== 3) 言語ドロワー開閉（開閉のみ） ===== */
+    /* ===== 3) 言語ドロワー開閉 ===== */
     var langBtn   = $('#langBtn');
     var langWrap  = $('#langDrawer');
     var langClose = $('#langClose');
@@ -84,10 +84,26 @@
     on(langClose,'click', function(){ setLang(false); }, false);
     on(langBack, 'click', function(){ setLang(false); }, false);
 
-    /* ===== 4) Google翻訳：英語名リストを複製（機能維持） ===== */
+    /* ===== 4) Google翻訳：英語名リストを複製 ===== */
     var langList   = $('#langList');
     var langSearch = $('#langSearch');
     var displayNames = (window.Intl && window.Intl.DisplayNames) ? new window.Intl.DisplayNames(['en'], {type:'language'}) : null;
+
+    // ★共通：googtrans クッキーを確実に設定（全言語・何度でも）
+    function setGoogTransCookie(code){
+      try{
+        var host = location.hostname.replace(/^www\./,'');
+        var val  = encodeURIComponent('/ja/'+code); // ページ言語は ja 固定
+        var exp  = new Date(); exp.setFullYear(exp.getFullYear()+1);
+        var eStr = exp.toUTCString();
+        document.cookie = 'googtrans='+val+'; expires='+eStr+'; path=/';
+        document.cookie = 'googtrans='+val+'; expires='+eStr+'; path=/; domain=.'+host;
+        document.cookie = 'googtrans='+val+'; expires='+eStr+'; path=/; domain='+host;
+        if (/#googtrans/i.test(location.hash)) {
+          history.replaceState('', document.title, location.pathname + location.search);
+        }
+      }catch(_){}
+    }
 
     function buildLangList(){
       var selHost = $('#google_translate_element');
@@ -113,12 +129,24 @@
           div.setAttribute('role','option');
           div.setAttribute('data-code', it.code);
           div.innerHTML = '<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
+
           on(div,'click', function(){
+            // ★FIX（汎用化）: どの言語でも毎回確実に反映
+            setGoogTransCookie(it.code);            // 1) クッキーを /ja/{code} に更新
+            var ev1 = document.createEvent('HTMLEvents'); // 2) 公式 select を確実に変更
             sel.value = it.code;
-            sel.dispatchEvent(new Event('change', {bubbles:true}));
+            ev1.initEvent('change', true, true);
+            sel.dispatchEvent(ev1);
+            // 3) 念のためダブルトリガー（端末・回線で失敗する場合へのリトライ）
+            setTimeout(function(){
+              try{ sel.dispatchEvent(new Event('change', {bubbles:true})); }catch(_){}
+              killGtBanner();
+            }, 120);
+
             setLang(false);
             killGtBanner();
           }, false);
+
           frag.appendChild(div);
         })(items[j]);
       }
@@ -167,7 +195,7 @@
       }, 0);
     }
 
-    /* ===== 6) メニュー生成：通常セクション（トップ+全summary） ===== */
+    /* ===== 6) メニュー生成：通常セクション ===== */
     var menuGroups = $('#menuGroups');
     if (menuGroups){
       menuGroups.innerHTML = '';
@@ -218,18 +246,21 @@
         menuGroups.appendChild(group);
       }
 
-      /* ===== 7) メニュー生成：#plans は指定4項目のみ（見出し/トップ無し） ===== */
+      /* ===== 7) メニュー生成：#plans は4項目（トップ無し） ===== */
       (function(){
         var secId = 'plans';
         var sec = document.getElementById(secId);
         if (!sec) return;
 
-        var keep = {
-          '料金プラン（3つのプランから選択）':1,
-          '追加オプション':1,
-          '2年目以降の維持・サポート':1,
-          'よくある質問（2年目以降）':1
-        };
+        function keepLabel(label){
+          var t = (label||'').replace(/\s+/g,'');
+          return (
+            t.indexOf('料金プラン') > -1 ||
+            t.indexOf('2年目以降の維持・サポート') > -1 ||
+            t.indexOf('よくある質問（2年目以降）') > -1 ||
+            t.indexOf('追加オプション') > -1
+          );
+        }
 
         var group = document.createElement('div'); group.className='menu-group';
         var ul = document.createElement('ul'); ul.className='menu-list';
@@ -238,7 +269,7 @@
         for (var i=0;i<sums.length;i++){
           var sum = sums[i];
           var label = (sum.textContent||'').trim().replace(/\s+/g,' ');
-          if (!keep[label]) continue;
+          if (!keepLabel(label)) continue;
           var det = sum.closest ? sum.closest('details') : (function(n){ while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; } return n; })(sum);
           if (!det) continue;
           var id = ensureId(det, secId, label, i);
@@ -251,18 +282,18 @@
           })(label,id);
         }
 
-        group.appendChild(ul); // 見出しは付けない＝余計な余白を出さない
+        group.appendChild(ul);
         menuGroups.appendChild(group);
       })();
     }
 
   }); // ready
 
-  /* ===== 8) Google 翻訳 初期化フック（グローバル関数） ===== */
+  /* ===== 8) Google 翻訳 初期化フック ===== */
   window.googleTranslateElementInit = function(){
     try {
       new window.google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     } catch(_){}
   };
 
-})(); 
+})();
