@@ -52,7 +52,7 @@
 
     var html = document.documentElement;
 
-    /* ===== 2) ハンバーガー開閉 ===== */
+    /* ===== 2) ハンバーガー開閉（再タップ/×/背景/ESC対応） ===== */
     var menuBtn      = $('#menuBtn');
     var menuDrawer   = $('#menuDrawer');
     var menuBackdrop = $('#menuBackdrop');
@@ -70,7 +70,7 @@
     on(menuClose, 'click', closeMenu, false);
     on(document, 'keydown', function(e){ if(e.key==='Escape'){ closeMenu(); }}, false);
 
-    /* ===== 3) 言語ドロワー開閉 ===== */
+    /* ===== 3) 言語ドロワー開閉（開閉のみ） ===== */
     var langBtn   = $('#langBtn');
     var langWrap  = $('#langDrawer');
     var langClose = $('#langClose');
@@ -84,12 +84,12 @@
     on(langClose,'click', function(){ setLang(false); }, false);
     on(langBack, 'click', function(){ setLang(false); }, false);
 
-    /* ===== 4) Google翻訳：英語名リストを複製 ===== */
+    /* ===== 4) Google翻訳：英語名リストを複製（機能維持） ===== */
     var langList   = $('#langList');
     var langSearch = $('#langSearch');
     var displayNames = (window.Intl && window.Intl.DisplayNames) ? new window.Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-    // ★共通：googtrans クッキーを確実に設定（全言語・何度でも）
+    // 共通：googtrans クッキーを確実に設定（全言語・何度でも）
     function setGoogTransCookie(code){
       try{
         var host = location.hostname.replace(/^www\./,'');
@@ -131,13 +131,13 @@
           div.innerHTML = '<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
 
           on(div,'click', function(){
-            // ★FIX（汎用化）: どの言語でも毎回確実に反映
-            setGoogTransCookie(it.code);            // 1) クッキーを /ja/{code} に更新
-            var ev1 = document.createEvent('HTMLEvents'); // 2) 公式 select を確実に変更
+            // どの言語でも毎回確実に反映（翻訳→再翻訳→復帰に対応）
+            setGoogTransCookie(it.code);                 // 1) クッキー更新
+            var ev = document.createEvent('HTMLEvents'); // 2) 公式 select を確実に変更
             sel.value = it.code;
-            ev1.initEvent('change', true, true);
-            sel.dispatchEvent(ev1);
-            // 3) 念のためダブルトリガー（端末・回線で失敗する場合へのリトライ）
+            ev.initEvent('change', true, true);
+            sel.dispatchEvent(ev);
+            // 3) 念のためリトライ（端末差異対策）
             setTimeout(function(){
               try{ sel.dispatchEvent(new Event('change', {bubbles:true})); }catch(_){}
               killGtBanner();
@@ -195,7 +195,7 @@
       }, 0);
     }
 
-    /* ===== 6) メニュー生成：通常セクション ===== */
+    /* ===== 6) メニュー生成：通常セクション（トップ+全summary） ===== */
     var menuGroups = $('#menuGroups');
     if (menuGroups){
       menuGroups.innerHTML = '';
@@ -246,50 +246,65 @@
         menuGroups.appendChild(group);
       }
 
-      /* ===== 7) メニュー生成：#plans は4項目（トップ無し） ===== */
+      /* ===== 7) メニュー生成：#plans は “最上位 details の先頭3件のみ”（トップ見出しなし） ===== */
       (function(){
         var secId = 'plans';
         var sec = document.getElementById(secId);
         if (!sec) return;
 
-        function keepLabel(label){
-          var t = (label||'').replace(/\s+/g,'');
-          return (
-            t.indexOf('料金プラン') > -1 ||
-            t.indexOf('2年目以降の維持・サポート') > -1 ||
-            t.indexOf('よくある質問（2年目以降）') > -1 ||
-            t.indexOf('追加オプション') > -1
-          );
-        }
+        // 最上位 details の summary だけを取得（ネストされた details は除外）
+        var topSummaries = (function(){
+          var list = [];
+          try {
+            list = Array.prototype.slice.call(
+              sec.querySelectorAll(':scope > .accordion > details > summary')
+            );
+          } catch(_){
+            // :scope 非対応ブラウザ向けフォールバック
+            var all = sec.querySelectorAll('.accordion > details > summary');
+            list = Array.prototype.slice.call(all);
+          }
+          return list;
+        })();
+
+        // 0=料金プラン / 1=2年目以降の維持・サポート / 2=よくある質問（2年目以降）
+        var picks = [0,1,2];
 
         var group = document.createElement('div'); group.className='menu-group';
         var ul = document.createElement('ul'); ul.className='menu-list';
 
-        var sums = $all('.accordion summary', sec);
-        for (var i=0;i<sums.length;i++){
-          var sum = sums[i];
-          var label = (sum.textContent||'').trim().replace(/\s+/g,' ');
-          if (!keepLabel(label)) continue;
-          var det = sum.closest ? sum.closest('details') : (function(n){ while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; } return n; })(sum);
+        for (var i=0;i<picks.length;i++){
+          var sum = topSummaries[picks[i]];
+          if (!sum) continue;
+
+          var label = (sum.textContent || '').trim().replace(/\s+/g,' ');
+          var det = sum.closest ? sum.closest('details') : (function(n){
+            while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; }
+            return n;
+          })(sum);
           if (!det) continue;
+
           var id = ensureId(det, secId, label, i);
 
-          (function(label,id){
+          (function(labelText, anchorId){
             var li = document.createElement('li');
-            var a  = document.createElement('a'); a.href='#'+id; a.textContent = label;
-            on(a, 'click', function(e){ e.preventDefault(); openAndJump(id); }, false);
-            li.appendChild(a); ul.appendChild(li);
-          })(label,id);
+            var a  = document.createElement('a');
+            a.href = '#'+anchorId;
+            a.textContent = labelText;
+            on(a,'click', function(e){ e.preventDefault(); openAndJump(anchorId); }, false);
+            li.appendChild(a);
+            ul.appendChild(li);
+          })(label, id);
         }
 
-        group.appendChild(ul);
+        group.appendChild(ul); // 見出しは付けない
         menuGroups.appendChild(group);
       })();
     }
 
   }); // ready
 
-  /* ===== 8) Google 翻訳 初期化フック ===== */
+  /* ===== 8) Google 翻訳 初期化フック（グローバル関数） ===== */
   window.googleTranslateElementInit = function(){
     try {
       new window.google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
