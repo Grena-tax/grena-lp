@@ -88,7 +88,13 @@ th:first-child,td:first-child{text-align:left}
 .menu-title{font-weight:800;color:#111827}
 .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .menu-close:hover{background:#f3f4f6}
-.menu-groups{overflow:auto;height:calc(100% - 60px);padding:10px 0}
+.menu-groups{
+  overflow:auto;height:calc(100% - 60px);padding:10px 0;
+  /* ▼ iOSでの縦スクロールを確実化（追記3行） */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
 .menu-list{list-style:none;margin:0;padding:0}
@@ -159,7 +165,7 @@ html.lang-open .lang-panel{transform:none;opacity:1}
 @media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
 /* 5) Google翻訳の上部バナーだけ非表示（押し下げ防止） */
-#goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
+#goog-gt-tt, iframe#goog-te-banner-frame, .goog-те-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 /* 公式UIのルートはDOMに残す（消さない） */
