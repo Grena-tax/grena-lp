@@ -1,7 +1,7 @@
 /* =========================================================
    script.js — 最小修正版（2点のみ）
-   ① #plans の3項目を必ずメニューに追加（翻訳に非依存）
-   ② 言語リストを必ず表示＆何度でも切替反映
+   ① #plans の3項目を必ずメニュー最上段に追加（翻訳に非依存）
+   ② 言語リストを必ず表示＆何度でも切替反映（既存維持）
    ========================================================= */
 
 (function(){
@@ -76,7 +76,7 @@
       try{
         var host=location.hostname.replace(/^www\./,'');
         var val=encodeURIComponent('/ja/'+code);
-        if(code==='ja'){ val=encodeURIComponent('/ja/ja'); } // 明示的に日本語へ
+        if(code==='ja'){ val=encodeURIComponent('/ja/ja'); }
         var exp=new Date(); exp.setFullYear(exp.getFullYear()+1);
         var eStr=exp.toUTCString();
         document.cookie='googtrans='+val+'; expires='+eStr+'; path=/';
@@ -91,14 +91,12 @@
     function buildLangListOnce(){
       var selHost=$('#google_translate_element');
       var sel= selHost ? selHost.querySelector('select.goog-te-combo') : null;
-      if(!sel || !langList) return false; // まだ未生成
-
+      if(!sel || !langList) return false;
       if(langList.getAttribute('data-ready')==='1') return true;
 
       var items=[], opts=sel.options;
       for(var i=0;i<opts.length;i++){
-        var o=opts[i];
-        var code=(o.value||'').trim();
+        var o=opts[i]; var code=(o.value||'').trim();
         if(!code || code==='auto') continue;
         var name=(displayNames?(displayNames.of(code)||''):'') || (o.textContent||'').trim() || code;
         items.push({code:code,name:name});
@@ -225,41 +223,22 @@
         menuGroups.appendChild(group);
       }
 
-      /* ===== 7) メニュー生成：#plans は“最上位 details の先頭3件のみ”を必ず追加（見出しなし） ===== */
+      /* ===== 7) #plans の最上位 <details> 先頭3件を“必ず”メニューの最上段に追加 ===== */
       (function(){
         var secId='plans';
         var sec=document.getElementById(secId);
         if(!sec) return;
 
-        function topLevelSummaries(){
-          var result=[];
-          var acc=null;
-          for(var i=0;i<sec.children.length;i++){
-            var ch=sec.children[i];
-            if(ch.classList && ch.classList.contains('accordion')){ acc=ch; break; }
-          }
-          if(!acc) return result;
-          for(var j=0;j<acc.children.length;j++){
-            var el=acc.children[j];
-            if(!el || el.tagName!=='DETAILS') continue;
-            for(var k=0;k<el.children.length;k++){
-              if(el.children[k].tagName==='SUMMARY'){ result.push(el.children[k]); break; }
-            }
-          }
-          return result;
-        }
-
-        var sumsTop=topLevelSummaries();        // 期待：3件（料金プラン／2年目以降／よくある質問）
-        var picks=[0,1,2];
-
+        // 直下の .accordion > details > summary を厳密取得（翻訳文言・ネストに非依存）
+        var sumsTop = sec.querySelectorAll('.accordion > details > summary');
         var group=document.createElement('div'); group.className='menu-group';
         var ul=document.createElement('ul'); ul.className='menu-list';
 
-        for(var i=0;i<picks.length;i++){
-          var sum=sumsTop[picks[i]];
+        for(var i=0;i<3;i++){
+          var sum=sumsTop[i];
           if(!sum) continue;
-          var label=(sum.textContent||'').trim().replace(/\s+/g,' ');
           var det=sum.parentElement;
+          var label=(sum.textContent||'').trim().replace(/\s+/g,' ');
           var id=ensureId(det,secId,label,i);
 
           (function(labelText,anchorId){
@@ -274,7 +253,11 @@
         }
 
         group.appendChild(ul);
-        menuGroups.appendChild(group);
+
+        // ★ 最上段に挿入（必ず目に入る位置）
+        var first = menuGroups.firstElementChild;
+        if(first){ menuGroups.insertBefore(group, first); }
+        else{ menuGroups.appendChild(group); }
       })();
     }
 
