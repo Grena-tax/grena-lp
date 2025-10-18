@@ -1,7 +1,7 @@
 /* =========================================================
    script.js — 最小修正版（2点のみ）
    ① #plans の3項目を必ずメニューに追加（翻訳に非依存）
-   ② 言語リストが常に表示され、何度でも切替反映
+   ② 言語リストを必ず表示＆何度でも切替反映
    ========================================================= */
 
 (function(){
@@ -17,7 +17,7 @@
         var el=document.getElementById(ids[i]);
         if(!el) continue;
         if(el.remove) el.remove();
-        else{ el.style.display='none'; el.style.visibility='hidden'; el.style.height='0'; }
+        else { el.style.display='none'; el.style.visibility='hidden'; el.style.height='0'; }
       }
     }catch(_){}
   }
@@ -67,17 +67,16 @@
     on(langClose,'click',function(){ setLang(false); },false);
     on(langBack,'click',function(){ setLang(false); },false);
 
-    /* ===== 4) Google翻訳：リスト生成（確実に出す＆確実に反映） ===== */
+    /* ===== 4) Google翻訳：リスト生成（必ず出す＆確実反映） ===== */
     var langList=$('#langList');
     var langSearch=$('#langSearch');
     var displayNames=(window.Intl && window.Intl.DisplayNames)? new window.Intl.DisplayNames(['en'],{type:'language'}) : null;
 
-    // クッキーを毎回上書き（jaに戻す時は/ja/ja）
     function setGoogTransCookie(code){
       try{
         var host=location.hostname.replace(/^www\./,'');
         var val=encodeURIComponent('/ja/'+code);
-        if(code==='ja'){ val=encodeURIComponent('/ja/ja'); } // 明示的に日本語へ戻す
+        if(code==='ja'){ val=encodeURIComponent('/ja/ja'); } // 明示的に日本語へ
         var exp=new Date(); exp.setFullYear(exp.getFullYear()+1);
         var eStr=exp.toUTCString();
         document.cookie='googtrans='+val+'; expires='+eStr+'; path=/';
@@ -89,18 +88,18 @@
       }catch(_){}
     }
 
-    // リストを1回以上必ず構築：selectが現れるまで監視＋再試行
-    function buildLangList(){
+    // 実構築
+    function buildLangListOnce(){
       var selHost=$('#google_translate_element');
       var sel= selHost ? selHost.querySelector('select.goog-te-combo') : null;
-      if(!sel || !langList){ return false; }
+      if(!sel || !langList) return false; // まだウィジェット未生成
 
-      // すでに構築済みならスキップ
+      // 既に構築済みなら終了
       if(langList.getAttribute('data-ready')==='1') return true;
 
-      var items=[];
-      for(var i=0;i<sel.options.length;i++){
-        var o=sel.options[i];
+      var items=[], opts=sel.options;
+      for(var i=0;i<opts.length;i++){
+        var o=opts[i];
         var code=(o.value||'').trim();
         if(!code || code==='auto') continue;
         var name=(displayNames?(displayNames.of(code)||''):'') || (o.textContent||'').trim() || code;
@@ -108,10 +107,7 @@
       }
       if(!items.length) return false;
 
-      items.sort(function(a,b){
-        var A=a.name.toLowerCase(), B=b.name.toLowerCase();
-        return A<B? -1 : A>B? 1 : 0;
-      });
+      items.sort(function(a,b){ var A=a.name.toLowerCase(),B=b.name.toLowerCase(); return A<B?-1:A>B?1:0; });
 
       langList.innerHTML='';
       var frag=document.createDocumentFragment();
@@ -122,12 +118,10 @@
           div.setAttribute('role','option');
           div.setAttribute('data-code',it.code);
           div.innerHTML='<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
-          on(div,'click',function(){
+          div.addEventListener('click',function(){
             setGoogTransCookie(it.code);
             sel.value=it.code;
-            try{
-              var ev=document.createEvent('HTMLEvents'); ev.initEvent('change',true,true); sel.dispatchEvent(ev);
-            }catch(_){}
+            try{ var ev=document.createEvent('HTMLEvents'); ev.initEvent('change',true,true); sel.dispatchEvent(ev);}catch(_){}
             setTimeout(function(){ try{ sel.dispatchEvent(new Event('change',{bubbles:true})); }catch(_){} killGtBanner(); },120);
             setLang(false); killGtBanner();
           },false);
@@ -137,9 +131,10 @@
       langList.appendChild(frag);
       langList.setAttribute('data-ready','1');
 
-      if(langSearch){
+      if(langSearch && !langSearch.getAttribute('data-bound')){
         langSearch.value='';
-        on(langSearch,'input',function(){
+        langSearch.setAttribute('data-bound','1');
+        langSearch.addEventListener('input',function(){
           var q=(langSearch.value||'').trim().toLowerCase();
           var nodes=$all('.ls-item',langList);
           for(var k=0;k<nodes.length;k++){
@@ -151,19 +146,14 @@
       return true;
     }
 
-    // 監視：select が出た瞬間に buildLangList を実行
-    (function watchTranslateSelect(){
+    // 公式ウィジェットの select 出現を監視＋ポーリング（どちらかで確実に実行）
+    (function ensureLangList(){
       var host=$('#google_translate_element');
       try{
-        var obs=new MutationObserver(function(){
-          if(buildLangList()){ obs.disconnect(); }
-        });
+        var obs=new MutationObserver(function(){ if(buildLangListOnce()){ obs.disconnect(); } });
         if(host) obs.observe(host,{childList:true,subtree:true});
       }catch(_){}
-      // 念のための再試行タイマー
-      var tries=0, timer=setInterval(function(){
-        if(buildLangList() || ++tries>40){ clearInterval(timer); } // 最大 ~20秒
-      },500);
+      var tries=0, timer=setInterval(function(){ if(buildLangListOnce() || ++tries>40){ clearInterval(timer); } },500);
     })();
 
     /* ===== 5) スクロール補助 ===== */
@@ -210,13 +200,15 @@
         var h4=document.createElement('h4'); h4.textContent=secLabel;
         var ul=document.createElement('ul'); ul.className='menu-list';
 
+        // トップ
         (function(){
           var li=document.createElement('li');
           var a=document.createElement('a'); a.href='#'+secId; a.textContent=secLabel+'（トップ）';
-          on(a,'click',function(e){ e.preventDefault(); openAndJump(secId); },false);
+          a.addEventListener('click',function(e){ e.preventDefault(); openAndJump(secId); },false);
           li.appendChild(a); ul.appendChild(li);
         })();
 
+        // セクション内の全summary
         var sums=$all('.accordion summary',sec);
         for(var i=0;i<sums.length;i++){
           var sum=sums[i];
@@ -228,7 +220,7 @@
           (function(label,id){
             var li=document.createElement('li');
             var a=document.createElement('a'); a.href='#'+id; a.textContent=label;
-            on(a,'click',function(e){ e.preventDefault(); openAndJump(id); },false);
+            a.addEventListener('click',function(e){ e.preventDefault(); openAndJump(id); },false);
             li.appendChild(a); ul.appendChild(li);
           })(label,id);
         }
@@ -238,7 +230,7 @@
         menuGroups.appendChild(group);
       }
 
-      /* ===== 7) メニュー生成：#plans は“最上位 details の先頭3件のみ”を必ず追加 ===== */
+      /* ===== 7) メニュー生成：#plans は“最上位 details の先頭3件のみ”を必ず追加（見出しなし） ===== */
       (function(){
         var secId='plans';
         var sec=document.getElementById(secId);
@@ -281,13 +273,13 @@
             var a=document.createElement('a');
             a.href='#'+anchorId;
             a.textContent=labelText;
-            on(a,'click',function(e){ e.preventDefault(); openAndJump(anchorId); },false);
+            a.addEventListener('click',function(e){ e.preventDefault(); openAndJump(anchorId); },false);
             li.appendChild(a);
             ul.appendChild(li);
           })(label,id);
         }
 
-        group.appendChild(ul);                 // 見出しなし（既存仕様）
+        group.appendChild(ul); // 見出しは付けない
         menuGroups.appendChild(group);
       })();
     }
@@ -299,19 +291,8 @@
     try{
       new window.google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false},'google_translate_element');
     }catch(_){}
-    // 初期化後、セレクトが現れたらリストを構築（安全策）
-    try{
-      var host=document.getElementById('google_translate_element');
-      var safeObs=new MutationObserver(function(){
-        var sel=host && host.querySelector('select.goog-te-combo');
-        if(sel){
-          // ready() 内の監視でも構築するが、ここからも保険で構築
-          var evt=document.createEvent('HTMLEvents'); evt.initEvent('dummy',true,true);
-          // no-op：単にDOM触って再描画させる
-        }
-      });
-      if(host) safeObs.observe(host,{childList:true,subtree:true});
-    }catch(_){}
+    // 念のため：初期化直後にもビルド試行
+    try{ setTimeout(function(){ var evt=new Event('build-lang'); window.dispatchEvent(evt); },0); }catch(_){}
   };
 
 })();
