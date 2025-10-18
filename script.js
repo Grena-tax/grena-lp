@@ -1,7 +1,7 @@
 /* =========================================================
    script.js — 最小修正版（2点のみ）
-   ① #plans の3項目を必ずメニュー最上段に追加（翻訳に非依存）
-   ② 言語リストを必ず表示＆何度でも切替反映（既存維持）
+   ① #plans の最上位3件を「法人設立」リストの末尾（KYCの下）に必ず追加
+   ② 翻訳切替は何度でも確実に反映（既存ロジック維持）
    ========================================================= */
 
 (function(){
@@ -12,7 +12,7 @@
     try{
       document.documentElement.style.marginTop='0px';
       document.body.style.top='0px';
-      var ids=['goog-te-banner-frame','goog-gt-tt'];
+      var ids=['goog-gt-tt','goog-te-banner-frame'];
       for(var i=0;i<ids.length;i++){
         var el=document.getElementById(ids[i]);
         if(!el) continue;
@@ -67,16 +67,14 @@
     on(langClose,'click',function(){ setLang(false); },false);
     on(langBack,'click',function(){ setLang(false); },false);
 
-    /* ===== 4) Google翻訳：リスト生成（必ず出す＆確実反映） ===== */
-    var langList=$('#langList');
-    var langSearch=$('#langSearch');
+    /* ===== 4) Google翻訳：リスト生成（確実表示＆反映） ===== */
+    var langList=$('#langList'), langSearch=$('#langSearch');
     var displayNames=(window.Intl && window.Intl.DisplayNames)? new window.Intl.DisplayNames(['en'],{type:'language'}) : null;
 
     function setGoogTransCookie(code){
       try{
         var host=location.hostname.replace(/^www\./,'');
-        var val=encodeURIComponent('/ja/'+code);
-        if(code==='ja'){ val=encodeURIComponent('/ja/ja'); }
+        var val=encodeURIComponent('/ja/'+code); if(code==='ja') val=encodeURIComponent('/ja/ja');
         var exp=new Date(); exp.setFullYear(exp.getFullYear()+1);
         var eStr=exp.toUTCString();
         document.cookie='googtrans='+val+'; expires='+eStr+'; path=/';
@@ -151,7 +149,7 @@
       var tries=0, timer=setInterval(function(){ if(buildLangListOnce() || ++tries>40){ clearInterval(timer); } },500);
     })();
 
-    /* ===== 5) スクロール補助 ===== */
+    /* ===== 5) 共通：openしてスクロール ===== */
     function mkId(base){ return (base||'').toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,''); }
     function ensureId(det,secId,label,idx){
       if(det.id) return det.id;
@@ -174,8 +172,9 @@
       },0);
     }
 
-    /* ===== 6) メニュー生成：通常セクション（トップ+全summary） ===== */
+    /* ===== 6) メニュー生成：通常セクション ===== */
     var menuGroups=$('#menuGroups');
+    var corpUlRef=null; // ← 「法人設立」UL を保持
     if(menuGroups){
       menuGroups.innerHTML='';
 
@@ -221,22 +220,19 @@
         group.appendChild(h4);
         group.appendChild(ul);
         menuGroups.appendChild(group);
+
+        if(secId==='corp-setup'){ corpUlRef=ul; } // ← ここを記録
       }
 
-      /* ===== 7) #plans の最上位 <details> 先頭3件を“必ず”メニューの最上段に追加 ===== */
+      /* ===== 7) #plans の先頭3件を「法人設立」ULの末尾（KYCの下）に必ず追加 ===== */
       (function(){
         var secId='plans';
         var sec=document.getElementById(secId);
-        if(!sec) return;
+        if(!sec || !corpUlRef) return;
 
-        // 直下の .accordion > details > summary を厳密取得（翻訳文言・ネストに非依存）
-        var sumsTop = sec.querySelectorAll('.accordion > details > summary');
-        var group=document.createElement('div'); group.className='menu-group';
-        var ul=document.createElement('ul'); ul.className='menu-list';
-
+        var sumsTop=sec.querySelectorAll('.accordion > details > summary'); // 最上位のみ
         for(var i=0;i<3;i++){
-          var sum=sumsTop[i];
-          if(!sum) continue;
+          var sum=sumsTop[i]; if(!sum) continue;
           var det=sum.parentElement;
           var label=(sum.textContent||'').trim().replace(/\s+/g,' ');
           var id=ensureId(det,secId,label,i);
@@ -248,16 +244,9 @@
             a.textContent=labelText;
             a.addEventListener('click',function(e){ e.preventDefault(); openAndJump(anchorId); },false);
             li.appendChild(a);
-            ul.appendChild(li);
+            corpUlRef.appendChild(li); // ← 「法人設立」リストの末尾に差し込む
           })(label,id);
         }
-
-        group.appendChild(ul);
-
-        // ★ 最上段に挿入（必ず目に入る位置）
-        var first = menuGroups.firstElementChild;
-        if(first){ menuGroups.insertBefore(group, first); }
-        else{ menuGroups.appendChild(group); }
       })();
     }
 
