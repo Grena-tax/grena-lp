@@ -88,13 +88,11 @@
       }catch(_){}
     }
 
-    // 実構築
     function buildLangListOnce(){
       var selHost=$('#google_translate_element');
       var sel= selHost ? selHost.querySelector('select.goog-te-combo') : null;
-      if(!sel || !langList) return false; // まだウィジェット未生成
+      if(!sel || !langList) return false; // まだ未生成
 
-      // 既に構築済みなら終了
       if(langList.getAttribute('data-ready')==='1') return true;
 
       var items=[], opts=sel.options;
@@ -146,7 +144,6 @@
       return true;
     }
 
-    // 公式ウィジェットの select 出現を監視＋ポーリング（どちらかで確実に実行）
     (function ensureLangList(){
       var host=$('#google_translate_element');
       try{
@@ -200,7 +197,6 @@
         var h4=document.createElement('h4'); h4.textContent=secLabel;
         var ul=document.createElement('ul'); ul.className='menu-list';
 
-        // トップ
         (function(){
           var li=document.createElement('li');
           var a=document.createElement('a'); a.href='#'+secId; a.textContent=secLabel+'（トップ）';
@@ -208,7 +204,6 @@
           li.appendChild(a); ul.appendChild(li);
         })();
 
-        // セクション内の全summary
         var sums=$all('.accordion summary',sec);
         for(var i=0;i<sums.length;i++){
           var sum=sums[i];
@@ -236,7 +231,6 @@
         var sec=document.getElementById(secId);
         if(!sec) return;
 
-        // .accordion 直下の最上位 <details> の <summary> を厳密取得（翻訳テキストに依存しない）
         function topLevelSummaries(){
           var result=[];
           var acc=null;
@@ -265,7 +259,7 @@
           var sum=sumsTop[picks[i]];
           if(!sum) continue;
           var label=(sum.textContent||'').trim().replace(/\s+/g,' ');
-          var det=sum.parentElement;           // summary の直親は details
+          var det=sum.parentElement;
           var id=ensureId(det,secId,label,i);
 
           (function(labelText,anchorId){
@@ -279,7 +273,7 @@
           })(label,id);
         }
 
-        group.appendChild(ul); // 見出しは付けない
+        group.appendChild(ul);
         menuGroups.appendChild(group);
       })();
     }
@@ -291,8 +285,6 @@
     try{
       new window.google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false},'google_translate_element');
     }catch(_){}
-    // 念のため：初期化直後にもビルド試行
-    try{ setTimeout(function(){ var evt=new Event('build-lang'); window.dispatchEvent(evt); },0); }catch(_){}
   };
 
 })();
