@@ -1,14 +1,13 @@
 /* =========================================================
-   script.js — ES5互換・DOM準備後に初期化（1ファイル完結）
-   余計なUI/文言変更なし。Google翻訳は機能維持しつつバナー抑止。
-   ハンバーガー/地球儀は再タップ/×/背景/ESCで閉じる。
-   ハンバーガーからのジャンプ時に該当<details>を自動open。
+   script.js — ES5互換・DOM準備後に初期化（2点のみ修正）
+   ① #plans の3項目を “最上位detailsの先頭3件” から確実に生成
+   ② すべての言語で何度でも翻訳が確実に反映
    ========================================================= */
 
 (function(){
   'use strict';
 
-  /* ===== 0) Google 翻訳バナー抑止（表示ずれ防止） ===== */
+  /* ===== 0) Google 翻訳バナー抑止 ===== */
   function killGtBanner(){
     try{
       document.documentElement.style.marginTop='0px';
@@ -18,25 +17,18 @@
         var el = document.getElementById(ids[i]);
         if (!el) continue;
         if (el.remove) el.remove();
-        else {
-          el.style.display='none';
-          el.style.visibility='hidden';
-          el.style.height='0';
-        }
+        else { el.style.display='none'; el.style.visibility='hidden'; el.style.height='0'; }
       }
     }catch(_){}
   }
-  try{
-    new MutationObserver(killGtBanner).observe(document.documentElement,{childList:true,subtree:true});
-  }catch(_){}
+  try{ new MutationObserver(killGtBanner).observe(document.documentElement,{childList:true,subtree:true}); }catch(_){}
   window.addEventListener('load', killGtBanner, false);
   killGtBanner();
 
-  /* ===== 1) DOM 準備後に初期化 ===== */
+  /* ===== 1) DOM 準備 ===== */
   function ready(fn){
-    if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', fn, false);
-    } else { fn(); }
+    if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', fn, false); }
+    else { fn(); }
   }
 
   ready(function(){
@@ -70,7 +62,7 @@
     on(menuClose, 'click', closeMenu, false);
     on(document, 'keydown', function(e){ if(e.key==='Escape'){ closeMenu(); }}, false);
 
-    /* ===== 3) 言語ドロワー開閉（開閉のみ） ===== */
+    /* ===== 3) 言語ドロワー開閉 ===== */
     var langBtn   = $('#langBtn');
     var langWrap  = $('#langDrawer');
     var langClose = $('#langClose');
@@ -84,16 +76,16 @@
     on(langClose,'click', function(){ setLang(false); }, false);
     on(langBack, 'click', function(){ setLang(false); }, false);
 
-    /* ===== 4) Google翻訳：英語名リストを複製（機能維持） ===== */
+    /* ===== 4) Google翻訳：リスト生成（何度でも反映する切替） ===== */
     var langList   = $('#langList');
     var langSearch = $('#langSearch');
     var displayNames = (window.Intl && window.Intl.DisplayNames) ? new window.Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-    // 共通：googtrans クッキーを確実に設定（全言語・何度でも）
+    // ② 確実反映：googtrans クッキーを毎回上書き + 公式selectに2段階 change
     function setGoogTransCookie(code){
       try{
         var host = location.hostname.replace(/^www\./,'');
-        var val  = encodeURIComponent('/ja/'+code); // ページ言語は ja 固定
+        var val  = encodeURIComponent('/ja/'+code); // 原文 ja 固定
         var exp  = new Date(); exp.setFullYear(exp.getFullYear()+1);
         var eStr = exp.toUTCString();
         document.cookie = 'googtrans='+val+'; expires='+eStr+'; path=/';
@@ -131,13 +123,14 @@
           div.innerHTML = '<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
 
           on(div,'click', function(){
-            // どの言語でも毎回確実に反映（翻訳→再翻訳→復帰に対応）
-            setGoogTransCookie(it.code);                 // 1) クッキー更新
-            var ev = document.createEvent('HTMLEvents'); // 2) 公式 select を確実に変更
-            sel.value = it.code;
-            ev.initEvent('change', true, true);
-            sel.dispatchEvent(ev);
-            // 3) 念のためリトライ（端末差異対策）
+            setGoogTransCookie(it.code);                 // クッキー更新
+            sel.value = it.code;                         // 公式select更新
+            try{
+              var ev = document.createEvent('HTMLEvents');
+              ev.initEvent('change', true, true);
+              sel.dispatchEvent(ev);
+            }catch(_){}
+            // 端末・回線での取りこぼし対策リトライ
             setTimeout(function(){
               try{ sel.dispatchEvent(new Event('change', {bubbles:true})); }catch(_){}
               killGtBanner();
@@ -166,23 +159,17 @@
     }
     setTimeout(buildLangList, 700);
 
-    /* ===== 5) ハンバーガー：ジャンプ時に対象<details>をopenして着地 ===== */
-    function mkId(base){
-      return (base||'').toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-    }
+    /* ===== 5) スクロール補助 ===== */
+    function mkId(base){ return (base||'').toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,''); }
     function ensureId(det, secId, label, idx){
       if (det.id) return det.id;
       var base = mkId(secId+'-'+(label||'item')+'-'+(idx+1)) || (secId+'-d-'+(idx+1));
-      var id = base, n = 2;
-      while (document.getElementById(id)) { id = base+'-'+(n++); }
+      var id = base, n = 2; while (document.getElementById(id)) { id = base+'-'+(n++); }
       det.id = id; return id;
     }
     function openAncestors(el){
       var p = el ? el.parentElement : null;
-      while (p){
-        if (p.tagName && p.tagName.toLowerCase()==='details') p.open = true;
-        p = p.parentElement;
-      }
+      while (p){ if (p.tagName && p.tagName.toLowerCase()==='details') p.open = true; p = p.parentElement; }
     }
     function openAndJump(id){
       var target = document.getElementById(id);
@@ -216,7 +203,7 @@
         var h4 = document.createElement('h4'); h4.textContent = secLabel;
         var ul = document.createElement('ul'); ul.className='menu-list';
 
-        // セクションのトップ
+        // トップ
         (function(){
           var li = document.createElement('li');
           var a  = document.createElement('a'); a.href = '#'+secId; a.textContent = secLabel+'（トップ）';
@@ -246,44 +233,43 @@
         menuGroups.appendChild(group);
       }
 
-      /* ===== 7) メニュー生成：#plans は “最上位 details の先頭3件のみ”（トップ見出しなし） ===== */
+      /* ===== 7) メニュー生成：#plans は“最上位detailsの先頭3件のみ” ===== */
       (function(){
         var secId = 'plans';
         var sec = document.getElementById(secId);
         if (!sec) return;
 
-        // 最上位 details の summary だけを取得（ネストされた details は除外）
-        var topSummaries = (function(){
-          var list = [];
-          try {
-            list = Array.prototype.slice.call(
-              sec.querySelectorAll(':scope > .accordion > details > summary')
-            );
-          } catch(_){
-            // :scope 非対応ブラウザ向けフォールバック
-            var all = sec.querySelectorAll('.accordion > details > summary');
-            list = Array.prototype.slice.call(all);
+        // 子ノード走査で .accordion 直下の最上位 <details> の <summary> を厳密取得（:scope非依存・翻訳文言に非依存）
+        function topLevelSummaries(){
+          var result = [];
+          var acc = null;
+          for (var i=0;i<sec.children.length;i++){
+            var ch = sec.children[i];
+            if (ch.classList && ch.classList.contains('accordion')) { acc = ch; break; }
           }
-          return list;
-        })();
+          if (!acc) return result;
+          for (var j=0;j<acc.children.length;j++){
+            var el = acc.children[j];
+            if (!el || el.tagName !== 'DETAILS') continue;
+            for (var k=0;k<el.children.length;k++){
+              if (el.children[k].tagName === 'SUMMARY'){ result.push(el.children[k]); break; }
+            }
+          }
+          return result;
+        }
 
-        // 0=料金プラン / 1=2年目以降の維持・サポート / 2=よくある質問（2年目以降）
+        var sumsTop = topLevelSummaries(); // 期待：3件（料金プラン／2年目以降／よくある質問）
         var picks = [0,1,2];
 
         var group = document.createElement('div'); group.className='menu-group';
         var ul = document.createElement('ul'); ul.className='menu-list';
 
         for (var i=0;i<picks.length;i++){
-          var sum = topSummaries[picks[i]];
+          var sum = sumsTop[picks[i]];
           if (!sum) continue;
 
           var label = (sum.textContent || '').trim().replace(/\s+/g,' ');
-          var det = sum.closest ? sum.closest('details') : (function(n){
-            while(n && n.tagName && n.tagName.toLowerCase()!=='details'){ n=n.parentElement; }
-            return n;
-          })(sum);
-          if (!det) continue;
-
+          var det = sum.parentElement; // summary の直親は details
           var id = ensureId(det, secId, label, i);
 
           (function(labelText, anchorId){
@@ -297,14 +283,14 @@
           })(label, id);
         }
 
-        group.appendChild(ul); // 見出しは付けない
+        group.appendChild(ul); // 見出しは付けない（既存仕様）
         menuGroups.appendChild(group);
       })();
     }
 
   }); // ready
 
-  /* ===== 8) Google 翻訳 初期化フック（グローバル関数） ===== */
+  /* ===== 8) Google 翻訳 初期化フック ===== */
   window.googleTranslateElementInit = function(){
     try {
       new window.google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
