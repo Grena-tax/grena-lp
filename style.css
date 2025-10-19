@@ -189,3 +189,10 @@ html.gtbar body{ padding-top:44px; }
 .site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
+/* ハンバーガー内の各グループ「トップ」だけを非表示（他はそのまま） */
+#menuDrawer .menu-list a[href="#corp-setup"],
+#menuDrawer .menu-list a[href="#sole-setup"],
+#menuDrawer .menu-list a[href="#personal-account"],
+#menuDrawer .menu-list a[href="#disclaimer"] {
+  display: none !important;
+}
