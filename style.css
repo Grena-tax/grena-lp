@@ -202,3 +202,9 @@ html.gtbar body{ padding-top:44px; }
     width: 50vw !important;  /* 半分 */
   }
 }
+/* スマホだけ：右上の固定ボタンに本文が被らないよう上部余白を確保 */
+@media (max-width: 640px){
+  html:not(.gtbar) body{
+    padding-top: calc(72px + var(--safe-top)); /* 48pxボタン + 余白(約24px) + セーフエリア */
+  }
+}
