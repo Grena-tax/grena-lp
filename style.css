@@ -208,3 +208,16 @@ html.gtbar body{ padding-top:44px; }
     padding-top: calc(72px + var(--safe-top)); /* 48pxボタン + 余白(約24px) + セーフエリア */
   }
 }
+/* ハンバーガー展開中：メニューを最前面にして重なり解消 */
+html.menu-open .menu-wrap,
+html.menu-open #menuDrawer,
+html.menu-open #menuDrawer .menu-panel{
+  z-index: 12050 !important; /* 地球儀/ハンバーガーより前面 */
+}
+
+/* 展開中は右上アイコンを背面＆誤タップ防止 */
+html.menu-open .lang-button,
+html.menu-open .menu-button{
+  z-index: 8000 !important;
+  pointer-events: none;
+}
