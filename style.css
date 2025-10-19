@@ -208,3 +208,13 @@ html.menu-open .menu-button,
 html.menu-open .lang-button{
   right: calc(var(--safe-right) + var(--menu-w) + 10px);
 }
+/* スマホ時：右上アイコンと本文の“重なり”を防止（PCは無変更） */
+@media (max-width:480px){
+  /* 48px(ボタン高さ) + 10px(上マージン) + 8px(ゆとり) ≒ 66px */
+  body{ padding-top: 66px; }
+}
+
+/* Google翻訳バナー表示時は 44px を上乗せ（既存 .gtbar 対応） */
+@media (max-width:480px){
+  html.gtbar body{ padding-top: calc(66px + 44px); }
+}
