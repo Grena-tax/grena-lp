@@ -196,3 +196,9 @@ html.gtbar body{ padding-top:44px; }
 #menuDrawer .menu-list a[href="#disclaimer"] {
   display: none !important;
 }
+/* スマホだけ：ハンバーガーを画面の約50%幅にする（PCは現状維持） */
+@media (max-width: 640px){
+  #menuDrawer .menu-panel{
+    width: 50vw !important;  /* 半分 */
+  }
+}
