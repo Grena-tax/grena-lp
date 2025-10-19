@@ -1,18 +1,19 @@
 /* =========================================================
    script.js — ES5互換・DOM準備後に初期化（1ファイル完結）
+
    対応内容：
-   - ハンバーガー：各セクション自動見出し生成
+   - ハンバーガー：各セクション自動見出し生成（※ トップ項目は生成しない）
    - 「料金プラン／2年目以降の維持・サポート／よくある質問（2年目以降）」を
      #plans の最上位 <details> から取得し、「法人設立」グループの末尾に追記
-   - 開いた直後に必ず先頭（＝法人設立見出し）が見えるよう scrollTop を確実リセット
-   - Google翻訳：公式セレクトをプログラム操作（英⇄日ほかの再翻訳安定）
+   - メニューを開いた直後に必ず先頭へスクロール（iOS対策込み）
+   - Google翻訳：公式セレクトをプログラム操作（英⇄日ほか何度でも安定）
    - Google翻訳バナー抑止
    ========================================================= */
 
 (function(){
   'use strict';
 
-  /* ===== 0) Google 翻訳バナー抑止（表示ずれ防止） ===== */
+  /* ===== 0) Google 翻訳バナー抑止 ===== */
   function killGtBanner(){
     try{
       document.documentElement.style.marginTop='0px';
@@ -36,7 +37,7 @@
   window.addEventListener('load', killGtBanner, false);
   killGtBanner();
 
-  /* ===== 1) DOM 準備後に初期化 ===== */
+  /* ===== 1) DOM ready ===== */
   function ready(fn){
     if (document.readyState === 'loading'){
       document.addEventListener('DOMContentLoaded', fn, false);
@@ -45,7 +46,7 @@
 
   ready(function(){
 
-    /* ユーティリティ */
+    /* utils */
     function $(sel, root){ return (root||document).querySelector(sel); }
     function $all(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
     function on(el, ev, fn, opts){ if(el) el.addEventListener(ev, fn, opts||false); }
@@ -56,7 +57,7 @@
 
     var html = document.documentElement;
 
-    /* ===== 2) ハンバーガー開閉（再タップ/×/背景/ESC対応） ===== */
+    /* ===== 2) ハンバーガー開閉 ===== */
     var menuBtn      = $('#menuBtn');
     var menuDrawer   = $('#menuDrawer');
     var menuBackdrop = $('#menuBackdrop');
@@ -68,14 +69,14 @@
         setAttr(menuDrawer,'aria-hidden','false');
         setAttr(menuBtn,'aria-expanded','true');
 
-        // --- 追加：開いた直後にメニューを“必ず”最上部へ（iOS対策を含む三段リセット）
+        // 開いた直後に必ず先頭へ（iOS対策込み）
         var mg = document.getElementById('menuGroups');
         if (mg){
           var reset = function(){ mg.scrollTop = 0; };
-          mg.scrollTop = 1; // iOSの0へ戻らない癖を踏む
-          reset();                  // 直ちに
-          setTimeout(reset, 0);     // レイアウト確定後
-          setTimeout(reset, 240);   // .menu-panel の transition(.22s)終了後
+          mg.scrollTop = 1;   // iOSの0へ戻らない癖を踏む
+          reset();
+          if (window.requestAnimationFrame) requestAnimationFrame(reset);
+          setTimeout(reset, 240); // .menu-panel transition(.22s)後
         }
       } else {
         removeClass(html,'menu-open');
@@ -91,7 +92,7 @@
     on(menuClose, 'click', closeMenu, false);
     on(document, 'keydown', function(e){ if(e.key==='Escape'){ closeMenu(); }}, false);
 
-    /* ===== 3) 言語ドロワー開閉（開閉のみ） ===== */
+    /* ===== 3) 言語ドロワー開閉 ===== */
     var langBtn   = $('#langBtn');
     var langWrap  = $('#langDrawer');
     var langClose = $('#langClose');
@@ -105,7 +106,7 @@
     on(langClose,'click', function(){ setLang(false); }, false);
     on(langBack, 'click', function(){ setLang(false); }, false);
 
-    /* ===== 4) Google翻訳：英語名リストを複製（機能維持） ===== */
+    /* ===== 4) Google翻訳：英語名リストを複製 ===== */
     var langList   = $('#langList');
     var langSearch = $('#langSearch');
     var displayNames = (window.Intl && window.Intl.DisplayNames) ? new window.Intl.DisplayNames(['en'], {type:'language'}) : null;
@@ -135,12 +136,10 @@
           div.setAttribute('data-code', it.code);
           div.innerHTML = '<span>'+it.name+'</span><span class="ls-code">'+it.code+'</span>';
           on(div,'click', function(){
-            // 公式セレクトへ値を入れて change を発火（全言語→何度でも安定）
             sel.value = it.code;
             try { sel.dispatchEvent(new Event('change', {bubbles:true})); } catch(_){
               var ev = document.createEvent('HTMLEvents'); ev.initEvent('change', true, true); sel.dispatchEvent(ev);
             }
-            // URLハッシュの #googtrans を除去（戻すときに残留すると崩れるケース対策）
             try{
               if (/#googtrans/.test(location.hash)) {
                 history.replaceState('', document.title, location.pathname + location.search);
@@ -168,7 +167,7 @@
     }
     setTimeout(buildLangList, 700);
 
-    /* ===== 5) ハンバーガー：ジャンプ時に対象<details>をopenして着地 ===== */
+    /* ===== 5) アンカー着地処理 ===== */
     function mkId(base){
       return (base||'').toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
     }
@@ -197,9 +196,9 @@
       }, 0);
     }
 
-    /* ===== 6) メニュー生成：通常セクション（トップ+全summary） ===== */
+    /* ===== 6) メニュー生成 ===== */
     var menuGroups = $('#menuGroups');
-    var corpUlRef = null; // 「法人設立」グループの <ul> を保持（後で#plans分を追記）
+    var corpUlRef = null; // 「法人設立」グループの <ul> 参照
 
     if (menuGroups){
       menuGroups.innerHTML = '';
@@ -220,13 +219,7 @@
         var h4 = document.createElement('h4'); h4.textContent = secLabel;
         var ul = document.createElement('ul'); ul.className='menu-list';
 
-        // セクションのトップ
-        (function(){
-          var li = document.createElement('li');
-          var a  = document.createElement('a'); a.href = '#'+secId; a.textContent = secLabel+'（トップ）';
-          on(a,'click', function(e){ e.preventDefault(); openAndJump(secId); }, false);
-          li.appendChild(a); ul.appendChild(li);
-        })();
+        // （※ ご要望により「トップ」リンクは生成しない）
 
         // セクション内の全summary
         var sums = $all('.accordion summary', sec);
@@ -252,12 +245,11 @@
         if (secId === 'corp-setup'){ corpUlRef = ul; }
       }
 
-      /* ===== 7) #plans の“最上位 <details>（先頭3件）”を法人設立グループ末尾に追記 ===== */
+      /* ===== 7) #plans の最上位 <details> 先頭3件を「法人設立」末尾へ追記 ===== */
       (function(){
         var plansSec = document.getElementById('plans');
         if (!plansSec || !corpUlRef) return;
 
-        // .accordion 直下にある「最上位 details」の summary だけを厳密取得（ネスト無視）
         function getTopSummaries(){
           var acc = plansSec.querySelector('.accordion');
           if (!acc) return [];
@@ -265,7 +257,6 @@
           for (var i=0;i<acc.children.length;i++){
             var d = acc.children[i];
             if (!d || d.tagName !== 'DETAILS') continue;
-            // 先頭の <summary> を取り出す
             for (var j=0;j<d.children.length;j++){
               var ch = d.children[j];
               if (ch && ch.tagName === 'SUMMARY'){ out.push(ch); break; }
@@ -288,7 +279,7 @@
             a.textContent = labelText;
             on(a, 'click', function(e){ e.preventDefault(); openAndJump(anchorId); }, false);
             li.appendChild(a);
-            corpUlRef.appendChild(li); // 「法人設立」グループの末尾へ追記
+            corpUlRef.appendChild(li); // 「法人設立」グループの末尾へ
           })(label, id);
         }
       })();
@@ -296,7 +287,7 @@
 
   }); // ready
 
-  /* ===== 8) Google 翻訳 初期化フック（グローバル関数） ===== */
+  /* ===== 8) Google 翻訳 初期化フック ===== */
   window.googleTranslateElementInit = function(){
     try {
       new window.google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
