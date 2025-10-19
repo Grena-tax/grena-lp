@@ -190,3 +190,21 @@ html.gtbar body{ padding-top:44px; }
 .site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
+/* === icons がドロワーに隠れないように：共通変数＆退避 === */
+
+/* ドロワー幅を変数化（PC: min(420px, 92vw) / SP: 58vw） */
+:root{ --menu-w: min(420px, 92vw); }
+@media (max-width:480px){ :root{ --menu-w: 58vw; } }
+
+/* ドロワーに合わせて実幅も変数を使う（既存指定を上書き） */
+.menu-panel{ width: var(--menu-w); }
+
+/* ボタンを最前面に引き上げる（確実に見えるよう高めの z-index） */
+.menu-button,
+.lang-button{ z-index: 2147483000; }
+
+/* ドロワーを開いたら、その幅ぶんだけ左に退避して隠れないようにする */
+html.menu-open .menu-button,
+html.menu-open .lang-button{
+  right: calc(var(--safe-right) + var(--menu-w) + 10px);
+}
