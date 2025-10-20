@@ -230,3 +230,15 @@ html.menu-open .lang-button{
   /* 3) H1の行間をやや締める（FV見出しがスッキリ） */
   h1{ line-height: 1.18; }
 }
+/* ===== 直前の微調整をリセット（スマホのみ） ===== */
+@media (max-width:480px){
+  /* 1) ハンバーガー幅：元の見え方に戻す（約半幅） */
+  .menu-panel{ width:58vw !important; }
+
+  /* 2) 上部余白：被りなしの状態に戻す */
+  body{ padding-top:66px !important; }
+  html.gtbar body{ padding-top: calc(66px + 44px) !important; }
+
+  /* 3) H1の行間：デフォルトに戻す（テーマ側に委ねる） */
+  h1{ line-height: normal !important; }
+}
