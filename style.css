@@ -244,3 +244,18 @@ html.menu-open .lang-button{
 }
 /* ハンバーガーがメニューより前に出ないようにする（重なり順の修正） */
 .menu-wrap{ z-index: 10020 !important; }
+/* ▼ ハンバーガーメニュー：ヘッダーとリストの被り解消（固定高を撤廃） */
+.menu-panel{
+  display: flex;              /* 縦に分割 */
+  flex-direction: column;
+}
+
+.menu-head{
+  flex: 0 0 auto;             /* 高さは中身に合わせる */
+}
+
+.menu-groups{
+  flex: 1 1 auto;             /* 残り全体をリストに割当ててスクロール */
+  height: auto !important;    /* 旧: calc(100% - 60px) を無効化 */
+  overflow: auto;
+}
