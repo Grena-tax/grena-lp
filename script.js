@@ -295,3 +295,20 @@
   };
 
 })();
+(function(){
+  var head = document.querySelector('.menu-head');
+  var groups = document.querySelector('.menu-groups');
+  if (!head || !groups) return;
+
+  function applyPad(){
+    var h = head.getBoundingClientRect().height || 0;
+    groups.style.paddingTop = (h + 8) + 'px';
+    groups.style.scrollPaddingTop = (h + 8) + 'px';
+  }
+  applyPad();
+  window.addEventListener('resize', applyPad);
+  // Webフォント読み込み後の再計算（iOSで高さが変わる場合に備えて）
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(applyPad).catch(function(){});
+  }
+})();
