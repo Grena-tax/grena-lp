@@ -11,13 +11,15 @@ html.lang-open body { overflow: hidden !important; }
              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
              Roboto,Helvetica,Arial,sans-serif;
 }
-html,body{ font-family: var(--font-jp) !important; }
+html,body{
+  font-family: var(--font-jp) !important;
+}
 button,input,select,textarea,summary,details,
 .menu-panel,.menu-list,.lang-panel,nav,a{
   font-family: var(--font-jp) !important;
 }
 
-/* 3) 既存UI（本文は無改変） */
+/* 3) 既存UI（あなたのCSSと同等・本文は無改変） */
 :root{
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
@@ -80,21 +82,21 @@ th:first-child,td:first-child{text-align:left}
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38
-}
-/* スマホでは“画面の約半分”にする */
-@media (max-width: 480px){
-  .menu-panel{ width:58vw; }
+  font-size:14px;line-height:1.38;
+  /* ▼ ここだけ追加：ヘッダーと本文を縦分割（被り解消の土台） */
+  display:flex;flex-direction:column;
 }
 .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-.menu-title{font-weight:800;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.menu-title{font-weight:800;color:#111827}
 .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .menu-close:hover{background:#f3f4f6}
-/* ← 先頭が確実に見えるよう余白＋scroll-padding を付与 */
+/* ▼ ここを置き換え：固定高を廃止し、上に余白＋scroll-padding で被りゼロに */
 .menu-groups{
-  overflow:auto;height:calc(100% - 60px);
-  padding:14px 0 10px;
-  scroll-padding-top:14px;
+  flex:1 1 auto;
+  overflow:auto;
+  height:auto !important;           /* 旧：calc(100% - 60px) を無効化 */
+  padding:14px 0 10px;              /* 見出しの直下に余白 */
+  scroll-padding-top:14px;          /* scrollIntoView の停止位置も安全に */
 }
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -190,84 +192,11 @@ html.gtbar body{ padding-top:44px; }
 .site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
-/* === icons がドロワーに隠れないように：共通変数＆退避 === */
 
-/* ドロワー幅を変数化（PC: min(420px, 92vw) / SP: 58vw） */
-:root{ --menu-w: min(420px, 92vw); }
-@media (max-width:480px){ :root{ --menu-w: 58vw; } }
-
-/* ドロワーに合わせて実幅も変数を使う（既存指定を上書き） */
-.menu-panel{ width: var(--menu-w); }
-
-/* ボタンを最前面に引き上げる（確実に見えるよう高めの z-index） */
-.menu-button,
-.lang-button{ z-index: 2147483000; }
-
-/* ドロワーを開いたら、その幅ぶんだけ左に退避して隠れないようにする */
-html.menu-open .menu-button,
-html.menu-open .lang-button{
-  right: calc(var(--safe-right) + var(--menu-w) + 10px);
-}
-/* スマホ時：右上アイコンと本文の“重なり”を防止（PCは無変更） */
-@media (max-width:480px){
-  /* 48px(ボタン高さ) + 10px(上マージン) + 8px(ゆとり) ≒ 66px */
-  body{ padding-top: 66px; }
-}
-
-/* Google翻訳バナー表示時は 44px を上乗せ（既存 .gtbar 対応） */
-@media (max-width:480px){
+/* スマホでは“画面の約半分”にする（ご指定済み仕様の維持） */
+@media (max-width: 480px){
+  .menu-panel{ width:58vw; }
+  /* 右上アイコンと本文の重なり回避（採用済の安全幅） */
+  body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
-}
-/* ===== 微調整（スマホのみ）- 3点 ===== */
-@media (max-width:480px){
-  /* 1) ハンバーガー幅：58vw → 60vw（可読性UP） */
-  :root{ --menu-w: 60vw; }           /* 既存 .menu-panel { width: var(--menu-w); } が追従します */
-
-  /* 2) 上部余白：66px → 58px（被りなしのまま情報密度UP） */
-  body{ padding-top: 58px; }
-  html.gtbar body{ padding-top: calc(58px + 44px); }  /* Google翻訳バー出現時の上乗せ */
-
-  /* 3) H1の行間をやや締める（FV見出しがスッキリ） */
-  h1{ line-height: 1.18; }
-}
-/* ===== 直前の微調整をリセット（スマホのみ） ===== */
-@media (max-width:480px){
-  /* 1) ハンバーガー幅：元の見え方に戻す（約半幅） */
-  .menu-panel{ width:58vw !important; }
-
-  /* 2) 上部余白：被りなしの状態に戻す */
-  body{ padding-top:66px !important; }
-  html.gtbar body{ padding-top: calc(66px + 44px) !important; }
-
-  /* 3) H1の行間：デフォルトに戻す（テーマ側に委ねる） */
-  h1{ line-height: normal !important; }
-}
-/* ハンバーガーがメニューより前に出ないようにする（重なり順の修正） */
-.menu-wrap{ z-index: 10020 !important; }
-/* ▼ ハンバーガーメニュー：ヘッダーとリストの被り解消（固定高を撤廃） */
-.menu-panel{
-  display: flex;              /* 縦に分割 */
-  flex-direction: column;
-}
-
-.menu-head{
-  flex: 0 0 auto;             /* 高さは中身に合わせる */
-}
-
-.menu-groups{
-  flex: 1 1 auto;             /* 残り全体をリストに割当ててスクロール */
-  height: auto !important;    /* 旧: calc(100% - 60px) を無効化 */
-  overflow: auto;
-}
-/* ▼ ハンバーガー：ヘッダー直下で見出しが隠れないように上側に余白を確保 */
-.menu-head{ position: sticky; top: 0; }         /* 現状維持の明示 */
-.menu-groups{
-  padding-top: 10px;                             /* ヘッダー分の逃げ */
-  scroll-padding-top: 10px;                      /* JSのscrollIntoViewでも被らないよう保険 */
-}
-/* ハンバーガー内：ヘッダーに被らないよう余白を確保 */
-.menu-head{ position: sticky; top: 0; z-index: 10; } /* 既存でもOK、明示しておく */
-.menu-groups{
-  padding-top: 14px !important;   /* ← これが効けば被り解消 */
-  scroll-padding-top: 14px;        /* scrollIntoView 用の保険 */
 }
