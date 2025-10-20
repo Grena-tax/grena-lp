@@ -218,3 +218,15 @@ html.menu-open .lang-button{
 @media (max-width:480px){
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
+/* ===== 微調整（スマホのみ）- 3点 ===== */
+@media (max-width:480px){
+  /* 1) ハンバーガー幅：58vw → 60vw（可読性UP） */
+  :root{ --menu-w: 60vw; }           /* 既存 .menu-panel { width: var(--menu-w); } が追従します */
+
+  /* 2) 上部余白：66px → 58px（被りなしのまま情報密度UP） */
+  body{ padding-top: 58px; }
+  html.gtbar body{ padding-top: calc(58px + 44px); }  /* Google翻訳バー出現時の上乗せ */
+
+  /* 3) H1の行間をやや締める（FV見出しがスッキリ） */
+  h1{ line-height: 1.18; }
+}
