@@ -175,3 +175,70 @@
 
 })();
 </script>
+<!-- script.js の末尾に追記（ES5 / クリック復旧パッチ） -->
+<script>
+(function(){
+  'use strict';
+  // 安全なユーティリティ（ES5）
+  function $(id){ return document.getElementById(id); }
+  function on(el, ev, fn){ if(el && el.addEventListener){ el.addEventListener(ev, fn, false); } }
+
+  var html = document.documentElement;
+
+  /* ========== ハンバーガー開閉（ES5） ========== */
+  var menuBtn      = $('menuBtn');      // 右上ハンバーガー
+  var menuDrawer   = $('menuDrawer');   // <nav id="menuDrawer" class="menu-wrap">
+  var menuBackdrop = $('menuBackdrop'); // .menu-backdrop
+  var menuClose    = $('menuClose');    // .menu-close（×ボタン）
+
+  function hasClass(el, c){ return el && (' '+el.className+' ').indexOf(' '+c+' ') > -1; }
+  function addClass(el, c){ if(el && !hasClass(el,c)){ el.className = (el.className?el.className+' ':'') + c; } }
+  function removeClass(el, c){ if(!el) return; el.className = (' '+el.className+' ').replace(' '+c+' ',' ').trim(); }
+
+  function setMenu(open){
+    if (open){
+      addClass(html,'menu-open');
+      if (menuDrawer){ menuDrawer.setAttribute('aria-hidden','false'); }
+      if (menuBtn){ menuBtn.setAttribute('aria-expanded','true'); }
+    } else {
+      removeClass(html,'menu-open');
+      if (menuDrawer){ menuDrawer.setAttribute('aria-hidden','true'); }
+      if (menuBtn){ menuBtn.setAttribute('aria-expanded','false'); }
+    }
+  }
+  function toggleMenu(e){ if(e){ e.preventDefault(); } setMenu(!hasClass(html,'menu-open')); }
+
+  on(menuBtn,      'click',  toggleMenu);
+  on(menuBackdrop, 'click',  function(){ setMenu(false); });
+  on(menuClose,    'click',  function(){ setMenu(false); });
+  on(document,     'keydown', function(e){
+    var key = e.key || e.keyCode;
+    if (key === 'Escape' || key === 27){ setMenu(false); setLang(false); }
+  });
+
+  /* ========== 言語ドロワー開閉（ES5） ========== */
+  var langBtn   = $('langBtn');     // 右上の地球儀
+  var langWrap  = $('langDrawer');  // .lang-wrap のルート
+  var langClose = $('langClose');   // .lang-close（×）
+  var langBack  = $('langBackdrop');// .lang-backdrop
+
+  function setLang(open){
+    if (open){
+      addClass(html,'lang-open');
+      if (langWrap){ langWrap.setAttribute('aria-hidden','false'); }
+      if (langBtn){  langBtn.setAttribute('aria-expanded','true'); }
+    } else {
+      removeClass(html,'lang-open');
+      if (langWrap){ langWrap.setAttribute('aria-hidden','true'); }
+      if (langBtn){  langBtn.setAttribute('aria-expanded','false'); }
+    }
+  }
+
+  on(langBtn,  'click', function(e){ e.preventDefault(); setLang(true);  });
+  on(langClose,'click', function(){ setLang(false); });
+  on(langBack, 'click', function(){ setLang(false); });
+
+  // 既に他のスクリプトがあっても、ここは ES5 なので文法エラーで止まりません。
+  // クリック不能だった環境でも、これで最低限の開閉が動きます。
+})();
+</script>
