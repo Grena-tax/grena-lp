@@ -265,3 +265,9 @@ html.menu-open .lang-button{
   padding-top: 10px;                             /* ヘッダー分の逃げ */
   scroll-padding-top: 10px;                      /* JSのscrollIntoViewでも被らないよう保険 */
 }
+/* ハンバーガー内：ヘッダーに被らないよう余白を確保 */
+.menu-head{ position: sticky; top: 0; z-index: 10; } /* 既存でもOK、明示しておく */
+.menu-groups{
+  padding-top: 14px !important;   /* ← これが効けば被り解消 */
+  scroll-padding-top: 14px;        /* scrollIntoView 用の保険 */
+}
