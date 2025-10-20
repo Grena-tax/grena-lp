@@ -1,10 +1,10 @@
 /* =========================================================
    script.js — ES5互換・DOM準備後に初期化（1ファイル完結）
 
-   対応内容：
-   - ハンバーガー：各セクション自動見出し生成（※ トップ項目は生成しない）
+   対応内容（既存仕様を維持）：
+   - ハンバーガー：各セクション自動見出し生成（※「（トップ）」は生成しない）
    - 「料金プラン／2年目以降の維持・サポート／よくある質問（2年目以降）」を
-     #plans の最上位 <details> から取得し、「法人設立」グループの末尾に追記
+     #plans の最上位 <details> 先頭3件から取得し、「法人設立」グループ末尾に追記
    - メニューを開いた直後に必ず先頭へスクロール（iOS対策込み）
    - Google翻訳：公式セレクトをプログラム操作（英⇄日ほか何度でも安定）
    - Google翻訳バナー抑止
@@ -219,7 +219,7 @@
         var h4 = document.createElement('h4'); h4.textContent = secLabel;
         var ul = document.createElement('ul'); ul.className='menu-list';
 
-        // （※ ご要望により「トップ」リンクは生成しない）
+        // （※ ご要望により「（トップ）」リンクは生成しない）
 
         // セクション内の全summary
         var sums = $all('.accordion summary', sec);
@@ -294,21 +294,4 @@
     } catch(_){}
   };
 
-})();
-(function(){
-  var head = document.querySelector('.menu-head');
-  var groups = document.querySelector('.menu-groups');
-  if (!head || !groups) return;
-
-  function applyPad(){
-    var h = head.getBoundingClientRect().height || 0;
-    groups.style.paddingTop = (h + 8) + 'px';
-    groups.style.scrollPaddingTop = (h + 8) + 'px';
-  }
-  applyPad();
-  window.addEventListener('resize', applyPad);
-  // Webフォント読み込み後の再計算（iOSで高さが変わる場合に備えて）
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(applyPad).catch(function(){});
-  }
 })();
