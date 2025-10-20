@@ -259,3 +259,9 @@ html.menu-open .lang-button{
   height: auto !important;    /* 旧: calc(100% - 60px) を無効化 */
   overflow: auto;
 }
+/* ▼ ハンバーガー：ヘッダー直下で見出しが隠れないように上側に余白を確保 */
+.menu-head{ position: sticky; top: 0; }         /* 現状維持の明示 */
+.menu-groups{
+  padding-top: 10px;                             /* ヘッダー分の逃げ */
+  scroll-padding-top: 10px;                      /* JSのscrollIntoViewでも被らないよう保険 */
+}
