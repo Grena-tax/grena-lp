@@ -242,3 +242,5 @@ html.menu-open .lang-button{
   /* 3) H1の行間：デフォルトに戻す（テーマ側に委ねる） */
   h1{ line-height: normal !important; }
 }
+/* ハンバーガーがメニューより前に出ないようにする（重なり順の修正） */
+.menu-wrap{ z-index: 10020 !important; }
