@@ -146,3 +146,99 @@
 
 })();
 </script>
+<script>
+/* ==== CLICK-SAFE PATCH (append only) ==== */
+(function(){
+  // DOM準備を待つ（head読み込みでも確実に動く）
+  function ready(fn){
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, {once:true});
+    } else { fn(); }
+  }
+
+  ready(function(){
+    const html = document.documentElement;
+
+    // 実際のマークアップに幅広く対応（クラス名ズレても拾う）
+    const MENU_SELECTORS = ['.menu-button', '#menuButton', '.menu-btn', '.hamburger', '[data-menu]'];
+    const LANG_SELECTORS = ['.lang-button', '#langButton', '.globe-button', '.globe', '[data-lang]', '#google_translate_button'];
+
+    const qAny = (list)=> {
+      for (const s of list) {
+        const el = document.querySelector(s);
+        if (el) return el;
+      }
+      return null;
+    };
+
+    function openMenu(){ html.classList.add('menu-open'); html.classList.remove('lang-open'); document.body.style.overflow='hidden'; }
+    function closeMenu(){ html.classList.remove('menu-open'); if (!html.classList.contains('lang-open')) document.body.style.overflow=''; }
+    function toggleMenu(){ html.classList.contains('menu-open') ? closeMenu() : openMenu(); }
+
+    function openLang(){ html.classList.add('lang-open'); html.classList.remove('menu-open'); document.body.style.overflow='hidden'; }
+    function closeLang(){ html.classList.remove('lang-open'); if (!html.classList.contains('menu-open')) document.body.style.overflow=''; }
+    function toggleLang(){ html.classList.contains('lang-open') ? closeLang() : openLang(); }
+
+    // 直接バインド（見つかったもの全部）
+    function bindDirect(){
+      const mb = qAny(MENU_SELECTORS);
+      const lb = qAny(LANG_SELECTORS);
+      if (mb && !mb.__boundMenu){
+        ['click','touchstart'].forEach(evt=>{
+          mb.addEventListener(evt, function(e){ e.preventDefault(); e.stopPropagation(); toggleMenu(); }, {passive:false});
+        });
+        mb.__boundMenu = true;
+        // 最前面＆クリック可を強制（上書きされていても勝つ）
+        Object.assign(mb.style, {position:'fixed', zIndex:'2147483647', pointerEvents:'auto'});
+      }
+      if (lb && !lb.__boundLang){
+        ['click','touchstart'].forEach(evt=>{
+          lb.addEventListener(evt, function(e){ e.preventDefault(); e.stopPropagation(); toggleLang(); }, {passive:false});
+        });
+        lb.__boundLang = true;
+        Object.assign(lb.style, {position:'fixed', zIndex:'2147483647', pointerEvents:'auto'});
+      }
+    }
+    bindDirect();
+
+    // デリゲーション（万一DOM差し替えがあっても拾う）
+    document.addEventListener('click', function(e){
+      const t = e.target.closest(MENU_SELECTORS.join(','));
+      if (t){ e.preventDefault(); e.stopPropagation(); toggleMenu(); return; }
+      const g = e.target.closest(LANG_SELECTORS.join(','));
+      if (g){ e.preventDefault(); e.stopPropagation(); toggleLang(); return; }
+    }, true); // captureで先取り
+
+    // MutationObserverで後から出現しても再バインド
+    const mo = new MutationObserver(()=> bindDirect());
+    mo.observe(document.documentElement, {subtree:true, childList:true, attributes:true});
+
+    // バックドロップ/パネルからは閉じる（クラス名が違っても拾う）
+    document.addEventListener('click', function(e){
+      if (html.classList.contains('menu-open') &&
+          e.target.closest('.menu-close, .menu-backdrop')) { e.preventDefault(); closeMenu(); }
+      if (html.classList.contains('lang-open') &&
+          e.target.closest('.lang-close, .lang-backdrop')) { e.preventDefault(); closeLang(); }
+    });
+
+    // Escapeでも閉じる
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){
+        if (html.classList.contains('lang-open')) closeLang();
+        else if (html.classList.contains('menu-open')) closeMenu();
+      }
+    });
+
+    // 念のためのZ軸整列（他CSSに負けない“非常ボタン”）
+    function bringToFront(){
+      const mb = qAny(MENU_SELECTORS);
+      const lb = qAny(LANG_SELECTORS);
+      if (mb){ mb.style.zIndex = '2147483647'; mb.style.pointerEvents='auto'; }
+      if (lb){ lb.style.zIndex = '2147483647'; lb.style.pointerEvents='auto'; }
+    }
+    bringToFront();
+    window.addEventListener('resize', bringToFront);
+    window.addEventListener('orientationchange', bringToFront);
+  });
+})();
+</script>
