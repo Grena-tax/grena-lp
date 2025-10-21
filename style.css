@@ -65,10 +65,11 @@ th:first-child,td:first-child{text-align:left}
 
 /* 右上ハンバーガー */
 .menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
+  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10020;
   display:inline-flex;align-items:center;justify-content:center;
   width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
+  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08);
+  pointer-events:auto;
 }
 .menu-button .bars{display:block;width:28px;height:20px;position:relative}
 .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
@@ -76,27 +77,22 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
+.menu-wrap{position:fixed;inset:0;z-index:10000;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
   font-size:14px;line-height:1.38;
-  /* ▼ ここだけ追加：ヘッダーと本文を縦分割（被り解消の土台） */
-  display:flex;flex-direction:column;
+  display:flex;flex-direction:column; /* ヘッダー固定＋本文スクロール */
 }
 .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
 .menu-title{font-weight:800;color:#111827}
 .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .menu-close:hover{background:#f3f4f6}
-/* ▼ ここを置き換え：固定高を廃止し、上に余白＋scroll-padding で被りゼロに */
 .menu-groups{
-  flex:1 1 auto;
-  overflow:auto;
-  height:auto !important;           /* 旧：calc(100% - 60px) を無効化 */
-  padding:14px 0 10px;              /* 見出しの直下に余白 */
-  scroll-padding-top:14px;          /* scrollIntoView の停止位置も安全に */
+  flex:1 1 auto; overflow:auto; height:auto !important;
+  padding:14px 0 10px; scroll-padding-top:14px;
 }
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -124,10 +120,11 @@ html.menu-open .menu-panel{transform:none}
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
-  z-index:10001; width:48px;height:48px;border-radius:12px;
+  z-index:10021; width:48px;height:48px;border-radius:12px;
   background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
   display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 14px rgba(0,0,0,.15)
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
+  pointer-events:auto;
 }
 .lang-button .globe{font-size:20px;line-height:1}
 .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
