@@ -269,3 +269,38 @@
   };
 
 })();
+<script>
+(function(){
+  // 「（トップ）」や「(Top)」で終わるラベルのみ判定（末尾一致）
+  function isTopAnchorLabel(txt){
+    if(!txt) return false;
+    const s = txt.replace(/\s+/g,'');          // 全角半角空白を除去して厳密化
+    return /（トップ）$/.test(s)               // 全角（トップ）
+        || /\(Top\)$/.test(txt)                // 英語 (Top)
+        || /\(TopPage\)$/i.test(txt);          // 念のため
+  }
+
+  // #menuGroups 内だけを後処理でクリーンアップ（本文は触らない）
+  function pruneTopAnchors(){
+    var root = document.getElementById('menuGroups');
+    if(!root) return;
+    root.querySelectorAll('.menu-list li').forEach(function(li){
+      var t = (li.textContent || '').trim();
+      if (isTopAnchorLabel(t)) li.remove();
+    });
+  }
+
+  // 初回実行
+  pruneTopAnchors();
+
+  // メニュー内容が差し替わっても自動で再実行（監視）
+  var root = document.getElementById('menuGroups');
+  if (root) {
+    new MutationObserver(pruneTopAnchors).observe(root, {childList:true, subtree:true});
+  }
+
+  // メニューを開いた直後にも再実行（保険）
+  var mb = document.querySelector('.menu-button');
+  if (mb) mb.addEventListener('click', function(){ setTimeout(pruneTopAnchors, 0); }, true);
+})();
+</script>
