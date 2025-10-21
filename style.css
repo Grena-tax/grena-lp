@@ -1,34 +1,20 @@
-/* ===== 追補CSS（最小差分：スクロール/翻訳/フォント/ドロワー） ===== */
+/* ===== 追補CSS（スクロール/フォント/ドロワー/翻訳 一式） ===== */
 
-/* 1) 既定はスクロール可。ドロワー開時のみロック */
-html, body { overflow: auto; height: auto; }
-html.menu-open body,
-html.lang-open body { overflow: hidden !important; }
-
-/* 2) 和文フォントを“元のスタック”で固定（見た目は従来のまま） */
+/* 0) ベース */
 :root{
   --font-jp: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
              Roboto,Helvetica,Arial,sans-serif;
-}
-html,body{
-  font-family: var(--font-jp) !important;
-}
-button,input,select,textarea,summary,details,
-.menu-panel,.menu-list,.lang-panel,nav,a{
-  font-family: var(--font-jp) !important;
-}
-
-/* 3) 既存UI（あなたのCSSと同等・本文は無改変） */
-:root{
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
 }
-html,body{margin:0;padding:0}
-body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
+html, body{ margin:0; padding:0; overflow:auto; height:auto; font-family:var(--font-jp) !important; }
+button,input,select,textarea,summary,details,.menu-panel,.menu-list,.lang-panel,nav,a{ font-family:var(--font-jp) !important; }
+body{ padding-bottom:calc(var(--cta-h) + var(--safe-bottom)); }
 
+/* details 見た目（本文側） */
 details summary{
   padding:1rem 1.2rem;cursor:pointer;list-style:none;
   border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
@@ -59,17 +45,16 @@ th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
 @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-/* ご指定：KYCと料金の隙間を詰める */
+/* ご指定：KYCと料金の隙間を詰める（本文側セクションIDがある場合） */
 #corp-setup{padding-bottom:0!important}
 #plans{padding-top:0!important;margin-top:0!important}
 
-/* 右上ハンバーガー */
+/* 1) 右上ハンバーガー／地球儀 */
 .menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10020;
+  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
   display:inline-flex;align-items:center;justify-content:center;
   width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08);
-  pointer-events:auto;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
 }
 .menu-button .bars{display:block;width:28px;height:20px;position:relative}
 .menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
@@ -77,22 +62,38 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-.menu-wrap{position:fixed;inset:0;z-index:10000;pointer-events:none}
+.lang-button{
+  position:fixed;top:calc(10px + var(--safe-top));
+  right:calc(10px + var(--safe-right) + 48px + 10px);
+  z-index:10001; width:48px;height:48px;border-radius:12px;
+  background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
+  display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.15)
+}
+.lang-button .globe{font-size:20px;line-height:1}
+
+/* 2) ドロワー */
+.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
   font-size:14px;line-height:1.38;
-  display:flex;flex-direction:column; /* ヘッダー固定＋本文スクロール */
+  display:flex;flex-direction:column;
 }
 .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
 .menu-title{font-weight:800;color:#111827}
 .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .menu-close:hover{background:#f3f4f6}
+
+/* ← ここが被り対策の要：ヘッダー分の上余白を可変に */
 .menu-groups{
-  flex:1 1 auto; overflow:auto; height:auto !important;
-  padding:14px 0 10px; scroll-padding-top:14px;
+  flex:1 1 auto;
+  overflow:auto;
+  height:auto !important;
+  padding: var(--menu-top-gap,56px) 0 10px;
+  scroll-padding-top: var(--menu-top-gap,56px);
 }
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -100,33 +101,12 @@ th:first-child,td:first-child{text-align:left}
 .menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
 .menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
 
+html.menu-open body{ overflow:hidden !important; }
 html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 
-/* 画面最下部 固定CTA */
-.fixed-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
-}
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
-
-/* 4) 言語スイッチ（英語UI・縦スクロールのフルリスト） */
-.lang-button{
-  position:fixed;top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 10px);
-  z-index:10021; width:48px;height:48px;border-radius:12px;
-  background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
-  display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);
-  pointer-events:auto;
-}
-.lang-button .globe{font-size:20px;line-height:1}
+/* 3) 言語パネル */
 .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
 .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .lang-panel{
@@ -143,42 +123,21 @@ html.menu-open .menu-panel{transform:none}
 .lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .lang-close:hover{background:#f3f4f6}
 .lang-body{padding:10px 12px;overflow:auto;-webkit-overflow-scrolling:touch}
-.ls-search{display:flex;gap:8px;margin:6px 0 10px}
-.ls-search input{
-  flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px
-}
-.ls-list{
-  display:grid;grid-template-columns:1fr;gap:6px;
-  max-height:min(60vh,520px);overflow:auto;padding:2px
-}
-.ls-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer
-}
-.ls-item:hover{background:#f3f4f6}
-.ls-code{font-size:12px;color:#64748b}
-.ls-active{outline:2px solid #2563eb}
 
 html.lang-open .lang-wrap{pointer-events:auto}
 html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
-@media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* 5) Google翻訳の上部バナーだけ非表示（押し下げ防止） */
+/* 4) Google 翻訳の押し下げ防止 */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
-/* 公式UIのルートはDOMに残す（消さない） */
 body > .skiptranslate{display:none!important}
-/* 公式ウィジェットは画面外へ退避（selectはJSから操作） */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
 }
 
-/* 6) Googleバーが出た場合の緩衝余白（自動検知で html に .gtbar が付く） */
-html.gtbar body{ padding-top:44px; }
-
-/* 7) フッター（既存踏襲） */
+/* 5) 固定フッター */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
   background:var(--foot-bg); color:var(--foot-fg); border-top:1px solid var(--foot-border);
@@ -190,27 +149,8 @@ html.gtbar body{ padding-top:44px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* スマホでは“画面の約半分”にする（ご指定済み仕様の維持） */
+/* 6) スマホ：ドロワー幅と上の安全幅 */
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
-  /* 右上アイコンと本文の重なり回避（採用済の安全幅） */
-  body{ padding-top:66px; }
-  html.gtbar body{ padding-top: calc(66px + 44px); }
-}
-/* ==== CLICK-SAFE PATCH (append only) ==== */
-.menu-button, .lang-button{
-  position: fixed !important;
-  z-index: 2147483647 !important; /* どんなオーバーレイより上 */
-  pointer-events: auto !important;
-}
-
-/* ドロワー/言語パネルを閉じている時は裏のレイヤーを必ず無効化 */
-html:not(.menu-open) .menu-wrap,
-html:not(.lang-open)  .lang-wrap{
-  pointer-events: none !important;
-}
-
-/* もしヘッダーなどが覆っていた場合の保険（透明でも拾わない） */
-.header-overlay, .cover, .mask, .backdrop {
-  pointer-events: none !important;
+  body{ padding-top:66px; }                 /* 右上アイコンの安全幅 */
 }
