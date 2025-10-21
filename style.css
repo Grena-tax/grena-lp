@@ -197,3 +197,20 @@ html.gtbar body{ padding-top:44px; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
+/* ==== CLICK-SAFE PATCH (append only) ==== */
+.menu-button, .lang-button{
+  position: fixed !important;
+  z-index: 2147483647 !important; /* どんなオーバーレイより上 */
+  pointer-events: auto !important;
+}
+
+/* ドロワー/言語パネルを閉じている時は裏のレイヤーを必ず無効化 */
+html:not(.menu-open) .menu-wrap,
+html:not(.lang-open)  .lang-wrap{
+  pointer-events: none !important;
+}
+
+/* もしヘッダーなどが覆っていた場合の保険（透明でも拾わない） */
+.header-overlay, .cover, .mask, .backdrop {
+  pointer-events: none !important;
+}
