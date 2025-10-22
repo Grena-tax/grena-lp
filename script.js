@@ -205,3 +205,13 @@
     if ((h.textContent || '').trim() === '料金プラン') h.remove();
   });
 })();
+/* ==== remove only "（トップ）" items in hamburger ==== */
+(function () {
+  const isTop = /（トップ）\s*$/; // 全角カッコの「（トップ）」で終わる
+  document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
+    const a = li.querySelector('a');
+    if (!a) return;
+    const label = (a.textContent || '').trim();
+    if (isTop.test(label)) li.remove();
+  });
+})();
