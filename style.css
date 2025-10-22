@@ -201,3 +201,12 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
     font-family: inherit !important;
   }
 }
+/* ==== revert fonts: fall back to the site's original stack ==== */
+/* 以前の「--font-jp を強制」より後ろで、元の指定に戻す */
+:root { --font-jp: initial; } /* 念のため無効化 */
+
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
+}
