@@ -224,3 +224,12 @@ button, input, select, textarea, summary, details,
   button, input, select, textarea, summary, details,
   .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
 }
+/* === revert to original JP/OS font stack (override only) === */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a, .menu-panel, .menu-list, .lang-panel {
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", Meiryo, "Noto Sans JP",
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
