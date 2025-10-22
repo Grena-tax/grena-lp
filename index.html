@@ -8,13 +8,13 @@
 <!-- 自動翻訳の誘導を抑止（ウィジェットは動作します） -->
 <meta name="google" content="notranslate">
 
-<!-- 差し替え確認用ピンクバー（不要なら削除OK） -->
+<!-- 既存：差し替え確認用ピンクバー -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS（そのまま） -->
+<!-- 既存のメインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 
-<!-- 追補CSS（今回の修正のみ。本文デザインは無改変） -->
+<!-- 追加（この回答で出す追補CSS） -->
 <link rel="stylesheet" href="./patch.css?v=20251012">
 
 <!-- ▼ 初期状態が英語化しないための“事前”クッキー掃除（/ja/ja以外なら消す） -->
@@ -299,8 +299,6 @@
         </details>
 
         <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算します。為替変動により請求額が変動する場合があります。</p>
-        <!-- ★ リーガル追記（最小）：金融商品勧誘・媒介ではない旨を価格ブロック直下に再掲 -->
-        <p class="text-sm muted" style="margin-top:6px;">※ 本サイトの記載は情報提供であり、金融商品取引法上の勧誘・媒介・代理、銀行代理業・資金移動業・預り業のいずれにも該当しません。各種契約はお客様と各機関の直接契約です。</p>
 
       </div>
     </details>
@@ -368,7 +366,7 @@
         <ul>
           <li>登録対象：IE（個人事業主）＋SBS</li>
           <li>所要期間：7〜10営業日（2025年実績 平均8.2日）</li>
-          <li>言語対応：日本語／英語／<strong>ジョージア語</strong>／全言語（翻訳士対応）</li>
+          <li>言語対応：日本語／英語／ジョージア語／全言語（翻訳士対応）</li>
           <li>申請はすべてオンライン、渡航不要</li>
           <li>MoU提携：TREX LEGAL（2025/5/28）</li>
         </ul>
@@ -722,6 +720,9 @@
 <script src="./script.js?v=20251012" defer></script>
 
 <!-- ===== Google翻訳 公式ウィジェット（読み込みは1回だけ） ※</body>直前 ===== -->
+<script>
+  // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
+</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
