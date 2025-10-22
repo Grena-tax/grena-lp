@@ -296,3 +296,27 @@
     a.textContent = a.textContent.replace(/（トップ）/g, '');
   });
 })();
+/* === hamburger cleanup: remove "(トップ)" and duplicated group-title items === */
+(function () {
+  const groups = document.querySelectorAll('#menuGroups .menu-group');
+
+  groups.forEach(g => {
+    const title = (g.querySelector('h4')?.textContent || '')
+                    .trim().replace(/\s+/g, ' ');
+    const links = g.querySelectorAll('.menu-list a');
+
+    links.forEach(a => {
+      const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
+      // 末尾が（トップ）/ (トップ) の項目、または見出しと同じ文言の項目を削除
+      if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
+        a.closest('li')?.remove();
+      }
+    });
+  });
+
+  // 保険：h4 が「料金プラン」の見出しは非表示（既に実施済みでもOK）
+  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+    const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+    if (t === '料金プラン') h.remove();
+  });
+})();
