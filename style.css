@@ -210,3 +210,17 @@ button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
   font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
 }
+/* === REVERT: フォントは元の style.css に戻す（こちらの強制指定を無効化） === */
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* 既存の style.css の指定に戻す */
+}
+
+/* iOS が古くて revert 非対応な場合の保険（ほぼ使われません） */
+@supports not (font-family: revert) {
+  html { font-family: inherit !important; }
+  body { font-family: inherit !important; }
+  button, input, select, textarea, summary, details,
+  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
+}
