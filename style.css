@@ -1,26 +1,18 @@
-/* ===== 追補CSS（10/12ベース／翻訳とバナー抑止強化＋既存デザイン維持） ===== */
+/* ===== patch.css (10/12基準・完全置換) ===== */
 
-/* スクロール：通常可／ドロワー開時だけロック */
-html, body { overflow: auto !important; height: auto !important; }
-html.menu-open, html.menu-open body,
-html.lang-open,  html.lang-open body { overflow: hidden !important; }
-
-/* 基本トークン＋フォント（10/12通り） */
+/* --- スクロール/安全域/CTA高さ --- */
 :root{
-  --font-jp: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
-             "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
-             Roboto,Helvetica,Arial,sans-serif;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
+  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
 }
-html,body{margin:0;padding:0;font-family:var(--font-jp)!important}
-button,input,select,textarea,summary,details,
-.menu-panel,.menu-list,.lang-panel,nav,a{font-family:var(--font-jp)!important}
+html,body{margin:0;padding:0}
+html, body { overflow:auto !important; height:auto !important; }
+body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
 
-/* 本文デザイン（10/12踏襲） */
-body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
+/* --- アコーディオン（既存） --- */
 details summary{
   padding:1rem 1.2rem;cursor:pointer;list-style:none;
   border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
@@ -49,13 +41,15 @@ details .content{
 table{width:100%;border-collapse:collapse;margin:.5rem 0}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
-@media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
+@media (max-width:480px){
+  h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
+}
 
-/* KYCと料金の隙間 */
+/* ご指定：KYCと料金の隙間を詰める（既存） */
 #corp-setup{padding-bottom:0!important}
 #plans{padding-top:0!important;margin-top:0!important}
 
-/* 右上ハンバーガー（10/12ベース） */
+/* --- 右上ハンバーガー（アイコン） --- */
 .menu-button{
   position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
   display:inline-flex;align-items:center;justify-content:center;
@@ -68,6 +62,7 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
+/* --- ハンバーガー本体（被り根絶・縦分割） --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
@@ -77,18 +72,24 @@ th:first-child,td:first-child{text-align:left}
   font-size:14px;line-height:1.38;
   display:flex;flex-direction:column;
 }
-.menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
-.menu-title{font-weight:800;color:#111827}
-.menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:inherit}
-.menu-close:hover{background:#f3f4f6}
-
-/* ←被り回避（上余白＋scroll-padding） */
-.menu-groups{
-  flex:1 1 auto; overflow:auto; height:auto!important;
-  padding:20px 0 10px;
-  scroll-padding-top:20px;
+.menu-head{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;
+  position:sticky;top:0;z-index:2;min-height:var(--menu-head-h)
 }
-.menu-groups::before{content:"";display:block;height:4px;}
+.menu-title{font-weight:800;color:#111827}
+.menu-close{
+  width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
+}
+.menu-close:hover{background:#f3f4f6}
+/* ←固定高をやめ、上に十分な余白＋scroll-padding-top を確保 */
+.menu-groups{
+  flex:1 1 auto; overflow:auto; height:auto !important;
+  padding: calc(var(--menu-head-h) + 10px) 0 12px;
+  scroll-padding-top: calc(var(--menu-head-h) + 8px);
+  -webkit-overflow-scrolling: touch;
+}
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
 .menu-list{list-style:none;margin:0;padding:0}
@@ -98,14 +99,13 @@ th:first-child,td:first-child{text-align:left}
 html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
+html.menu-open,html.menu-open body{overflow:hidden}
 
-/* アンカー停止位置の安全幅 */
-details, section[id]{ scroll-margin-top: 76px; }
-
-/* 固定CTA（10/12踏襲） */
+/* --- 画面最下部 固定CTA（既存） --- */
 .fixed-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
+  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:var(--safe-bottom)
 }
 .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
 .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
@@ -114,7 +114,7 @@ details, section[id]{ scroll-margin-top: 76px; }
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* 言語ドロワー（表示は英語名／全言語） */
+/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
@@ -131,13 +131,12 @@ details, section[id]{ scroll-margin-top: 76px; }
   width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
   box-shadow:0 16px 40px rgba(0,0,0,.12);
   transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
-  font-size:14px;line-height:1.5;
-  max-height: calc(100dvh - 80px);
+  font-size:14px;line-height:1.5; max-height: calc(100dvh - 80px);
   display:flex;flex-direction:column;overflow:hidden;
 }
 .lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb;background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px}
 .lang-title{font-weight:800;color:#111827}
-.lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:inherit}
+.lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
 .lang-close:hover{background:#f3f4f6}
 .lang-body{padding:10px 12px;overflow:auto;-webkit-overflow-scrolling:touch}
 .ls-search{display:flex;gap:8px;margin:6px 0 10px}
@@ -151,32 +150,38 @@ details, section[id]{ scroll-margin-top: 76px; }
 html.lang-open .lang-wrap{pointer-events:auto}
 html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
+@media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* スマホでメニュー幅は約半分 */
-@media (max-width:480px){
-  .lang-button{transform:scale(.92);transform-origin:top right}
-  .menu-panel{ width:58vw; }
-  body{ padding-top:66px; }
-  html.gtbar body{ padding-top: calc(66px + 44px); }
+/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
+#goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
+  display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
-
-/* Google翻訳バナーを完全抑止（選択後も出させない） */
-#goog-gt-tt,
-iframe#goog-te-banner-frame,
-.goog-te-banner-frame{
-  display:none !important;
-  visibility:hidden !important;
-  height:0 !important; max-height:0 !important; overflow:hidden !important;
-}
-body { top: 0 !important; }           /* Googleが付けるtop補正を無効化 */
 body > .skiptranslate{display:none!important}
+/* 公式ウィジェット自体は画面外へ退避（JSが操作する） */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
 }
+/* 青バーが出た端末向けのバッファ */
+html.gtbar body{ padding-top:44px; }
 
-/* フッター色を黒で固定（白化防止） */
+/* --- フッターは常に黒（翻訳で白化しない） --- */
+:root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
-  background:#0b1220 !important;
-  color:#cbd5e1 !important;
-  border-top:1px solid #1f2937 !important;
+  background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
+  text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  font-size:13px; line-height:1.7;
+}
+.site-foot small{ display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em; }
+.site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
+.site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
+@media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
+
+/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
+section[id], details[id]{ scroll-margin-top: 70px; }
+
+/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避・据置仕様） --- */
+@media (max-width: 480px){
+  .menu-panel{ width:58vw; }
+  body{ padding-top:66px; }
+  html.gtbar body{ padding-top: calc(66px + 44px); }
 }
