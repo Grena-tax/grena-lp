@@ -199,3 +199,9 @@
   };
 
 })();
+/* ---- Hamburger: 非クリックの見出し「料金プラン」だけを削除（append-only） ---- */
+(function () {
+  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+    if ((h.textContent || '').trim() === '料金プラン') h.remove();
+  });
+})();
