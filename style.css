@@ -185,3 +185,19 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
+/* ===== revert font to site default (append-only) ===== */
+/* これだけで、以前の font-family 指定に戻します。他への影響なし。 */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a, .menu-panel, .menu-list, .lang-panel {
+  font-family: revert !important;
+}
+
+/* Safari 等で 'revert' が効かない場合のフォールバック */
+@supports not (font-family: revert) {
+  html, body,
+  button, input, select, textarea, summary, details,
+  nav, a, .menu-panel, .menu-list, .lang-panel {
+    font-family: inherit !important;
+  }
+}
