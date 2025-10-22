@@ -1,11 +1,11 @@
-/* ===== 追補CSS（10/12ベース／余計な改変なし） ===== */
+/* ===== 追補CSS（10/12ベース／翻訳とバナー抑止強化＋既存デザイン維持） ===== */
 
-/* 1) スクロール可（ドロワー開時のみロックはJSで制御） */
+/* スクロール：通常可／ドロワー開時だけロック */
 html, body { overflow: auto !important; height: auto !important; }
 html.menu-open, html.menu-open body,
 html.lang-open,  html.lang-open body { overflow: hidden !important; }
 
-/* 2) 和文フォントは“元のスタック”で固定（見た目は既存どおり） */
+/* 基本トークン＋フォント（10/12通り） */
 :root{
   --font-jp: "Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans",
              "Yu Gothic",Meiryo,system-ui,-apple-system,"Segoe UI",
@@ -19,7 +19,7 @@ html,body{margin:0;padding:0;font-family:var(--font-jp)!important}
 button,input,select,textarea,summary,details,
 .menu-panel,.menu-list,.lang-panel,nav,a{font-family:var(--font-jp)!important}
 
-/* 3) 既存UI（本文デザインは無改変） */
+/* 本文デザイン（10/12踏襲） */
 body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom))}
 details summary{
   padding:1rem 1.2rem;cursor:pointer;list-style:none;
@@ -51,11 +51,11 @@ th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
 @media (max-width:480px){ h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem} }
 
-/* ご指定：KYCと料金の隙間を詰める（元のまま） */
+/* KYCと料金の隙間 */
 #corp-setup{padding-bottom:0!important}
 #plans{padding-top:0!important;margin-top:0!important}
 
-/* 右上ハンバーガー（元スタイル尊重） */
+/* 右上ハンバーガー（10/12ベース） */
 .menu-button{
   position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
   display:inline-flex;align-items:center;justify-content:center;
@@ -75,19 +75,20 @@ th:first-child,td:first-child{text-align:left}
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
   font-size:14px;line-height:1.38;
-  display:flex;flex-direction:column; /* ヘッダーと本文を縦分割 */
+  display:flex;flex-direction:column;
 }
 .menu-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:2}
 .menu-title{font-weight:800;color:#111827}
-/* ×ボタンの見た目は既存CSSに委ねる（色を上書きしない） */
 .menu-close{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:inherit}
 .menu-close:hover{background:#f3f4f6}
 
-/* コンテンツ部はオーバーフロー可。sticky見出しと被らない余白を確保 */
+/* ←被り回避（上余白＋scroll-padding） */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto!important;
-  padding:14px 0 10px; scroll-padding-top:14px;
+  padding:20px 0 10px;
+  scroll-padding-top:20px;
 }
+.menu-groups::before{content:"";display:block;height:4px;}
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
 .menu-list{list-style:none;margin:0;padding:0}
@@ -98,7 +99,10 @@ html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 
-/* 画面最下部 固定CTA */
+/* アンカー停止位置の安全幅 */
+details, section[id]{ scroll-margin-top: 76px; }
+
+/* 固定CTA（10/12踏襲） */
 .fixed-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
   backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);padding-bottom:var(--safe-bottom)
@@ -110,7 +114,7 @@ html.menu-open .menu-panel{transform:none}
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* 言語スイッチ（英語UI・縦スクロール） */
+/* 言語ドロワー（表示は英語名／全言語） */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
@@ -147,21 +151,32 @@ html.menu-open .menu-panel{transform:none}
 html.lang-open .lang-wrap{pointer-events:auto}
 html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
+
+/* スマホでメニュー幅は約半分 */
 @media (max-width:480px){
   .lang-button{transform:scale(.92);transform-origin:top right}
-  /* スマホでは“画面の約半分”にする（ご要望どおり） */
   .menu-panel{ width:58vw; }
-  /* 右上アイコンと本文の重なり回避のための上マージン（Googleバー考慮前提） */
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 
-/* 5) Google翻訳の上部バナーだけ非表示（押し下げ防止） */
-#goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
-  display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
+/* Google翻訳バナーを完全抑止（選択後も出させない） */
+#goog-gt-tt,
+iframe#goog-te-banner-frame,
+.goog-te-banner-frame{
+  display:none !important;
+  visibility:hidden !important;
+  height:0 !important; max-height:0 !important; overflow:hidden !important;
 }
+body { top: 0 !important; }           /* Googleが付けるtop補正を無効化 */
 body > .skiptranslate{display:none!important}
-#google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
+#google_translate_element{
+  position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+}
 
-/* Googleバーが出た場合の緩衝余白（自動検知で html に .gtbar が付く） */
-html.gtbar body{ padding-top:44px; }
+/* フッター色を黒で固定（白化防止） */
+.site-foot{
+  background:#0b1220 !important;
+  color:#cbd5e1 !important;
+  border-top:1px solid #1f2937 !important;
+}
