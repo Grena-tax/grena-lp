@@ -329,3 +329,9 @@
     a.rel = cur.join(' ');
   });
 })();
+/* 重要なお知らせを「免責事項」内へ自動移動（もう入っていれば何もしない） */
+(function(){
+  var note = document.getElementById('legal-safety-note');
+  var dest = document.querySelector('#disclaimer details:first-of-type .content');
+  if (note && dest && !dest.contains(note)) dest.appendChild(note);
+})();
