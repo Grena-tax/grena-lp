@@ -424,3 +424,90 @@
       }
     });
 })();
+/* ==== HOTFIX: 言語モーダルが空になる時の復旧（append-only） ==== */
+(function () {
+  const list   = document.getElementById('langList');
+  const search = document.getElementById('langSearch');
+  const btn    = document.getElementById('langBtn');
+  if (!list || !btn) return;
+
+  const dn = (window.Intl && Intl.DisplayNames)
+    ? new Intl.DisplayNames(['en'], { type: 'language' })
+    : null;
+
+  // フォールバック（主要言語／Google対応コード）
+  const FALLBACK = [
+    'en','ja','zh-CN','zh-TW','ko','es','fr','de','it','pt','ru','ar','th','id','vi','hi','tr','uk','pl','nl','sv','fi','no','da','cs','sk','sl','hu','ro','bg','el','he','ur','fa','ms','bn','ta','te','ml','mr','gu','pa','ne','si','km','lo','my','az','kk','uz','mn','ka','hy','am','sq','bs','mk','hr','lt','lv','et','is','ga','mt','af','sw','fil'
+  ];
+
+  function codeToName(code, fallbackText) {
+    try { return (dn && dn.of(code.replace('_','-'))) || fallbackText || code; }
+    catch (_) { return fallbackText || code; }
+  }
+
+  function render(items) {
+    list.innerHTML = '';
+    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
+    items
+      .filter(x => x && x.code)
+      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}))
+      .forEach(({code,name})=>{
+        const el = document.createElement('div');
+        el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
+        el.setAttribute('role','option');
+        el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
+        el.addEventListener('click', ()=>{
+          const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+          if (sel) {
+            sel.value = code;
+            sel.dispatchEvent(new Event('change', {bubbles:true}));
+          }
+          document.documentElement.classList.remove('lang-open');
+        });
+        list.appendChild(el);
+      });
+
+    if (search) {
+      search.oninput = () => {
+        const q = search.value.trim().toLowerCase();
+        list.querySelectorAll('.ls-item').forEach(el=>{
+          const txt = (el.textContent||'').toLowerCase();
+          el.style.display = (!q || txt.includes(q)) ? '' : 'none';
+        });
+      };
+    }
+  }
+
+  function fromSelect() {
+    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel || sel.options.length < 2) return false;
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== 'auto')
+      .map(o => {
+        const code = o.value.trim();
+        const name = codeToName(code, (o.textContent||code).trim());
+        return { code, name };
+      });
+    render(items);
+    return true;
+  }
+
+  function fallback() {
+    render(FALLBACK.map(code => ({ code, name: codeToName(code) })));
+  }
+
+  function tryRebuildWithRetry() {
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      if (fromSelect()) { clearInterval(timer); return; }
+      if (tries >= 10) { fallback(); clearInterval(timer); }
+    }, 300);
+  }
+
+  // モーダルを開いた時に毎回リビルド（既存の開閉処理はそのまま）
+  btn.addEventListener('click', () => setTimeout(tryRebuildWithRetry, 50));
+
+  // 念のため：初回ロード後もし空なら自動復旧
+  setTimeout(() => { if (!fromSelect()) fallback(); }, 2000);
+})();
