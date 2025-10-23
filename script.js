@@ -335,3 +335,44 @@
   var dest = document.querySelector('#disclaimer details:first-of-type .content');
   if (note && dest && !dest.contains(note)) dest.appendChild(note);
 })();
+/* ▼「重要なお知らせ」ブロックを必ず #disclaimer 内へ移動（id無しでもOK） */
+(function () {
+  const dest = document.querySelector('#disclaimer details:first-of-type .content');
+  if (!dest) return;
+
+  // 1) まず id=legal-safety-note を探す
+  let block = document.getElementById('legal-safety-note');
+
+  // 2) なければテキストで推定して拾う（見出しや周辺の箱を優先）
+  if (!block) {
+    const hasNoteText = el => /重要なお知らせ/.test((el.textContent || '').replace(/\s+/g,' '));
+    // 先に「見出しを含む箱」を探す
+    block = Array.from(document.querySelectorAll('section,article,aside,div'))
+      .find(el => hasNoteText(el) && (el.querySelector('ul,ol,li') || el.querySelector('p')));
+    // 見つからない場合は見出し行→親箱
+    if (!block) {
+      const heading = Array.from(document.querySelectorAll('h1,h2,h3,strong,p,div'))
+        .find(el => hasNoteText(el));
+      if (heading) block = heading.closest('section,article,aside,div') || heading.parentElement;
+    }
+    // さらに最後の保険：箇条書きそのものを拾って包む
+    if (!block) {
+      const list = Array.from(document.querySelectorAll('ul,ol'))
+        .find(el => hasNoteText(el.previousElementSibling || {textContent:''}) || hasNoteText(el));
+      if (list) {
+        const wrap = document.createElement('div');
+        wrap.id = 'legal-safety-note';
+        wrap.className = list.className || 'security-note';
+        // 見出し行が直前にあれば一緒に移す
+        const prev = list.previousElementSibling;
+        if (prev && hasNoteText(prev)) wrap.appendChild(prev);
+        list.parentNode.insertBefore(wrap, list);
+        wrap.appendChild(list);
+        block = wrap;
+      }
+    }
+  }
+
+  // 3) 見つかったら #disclaimer の最初のdetails内へ移動
+  if (block && !dest.contains(block)) dest.appendChild(block);
+})();
