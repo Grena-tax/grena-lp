@@ -376,3 +376,51 @@
   // 3) 見つかったら #disclaimer の最初のdetails内へ移動
   if (block && !dest.contains(block)) dest.appendChild(block);
 })();
+/* === 重要なお知らせ：内容が違う2ブロックを1つのアコーディオンに集約（append-only） === */
+(() => {
+  const sec = document.getElementById('disclaimer');
+  if (!sec) return;
+
+  // 既存の候補を収集（id/class または見出しテキストで検出）
+  const sources = new Set();
+  document.querySelectorAll('#legal-safety-note, .legal-safety-note, .legal-important-note')
+    .forEach(n => sources.add(n));
+  document.querySelectorAll('h1,h2,h3,h4,strong,b').forEach(h => {
+    if (/重要なお知らせ/.test((h.textContent || ''))) {
+      const box = h.closest('section,article,div');
+      if (box) sources.add(box);
+    }
+  });
+  if (sources.size === 0) return;
+
+  // 免責セクション内のアコーディオン（無ければ作る）
+  let acc = sec.querySelector('.accordion');
+  if (!acc) { acc = document.createElement('div'); acc.className = 'accordion'; sec.appendChild(acc); }
+
+  // すでに作成済みならそこへ追加入れ、それ以外は新規で作成
+  let details = sec.querySelector('details[data-legal-note]');
+  if (!details) {
+    details = document.createElement('details');
+    details.setAttribute('data-legal-note', '');
+    const sum = document.createElement('summary');
+    sum.textContent = '重要なお知らせ（要点・注意喚起）';
+    const content = document.createElement('div');
+    content.className = 'content';
+    details.appendChild(sum);
+    details.appendChild(content);
+    acc.appendChild(details);
+  }
+  const content = details.querySelector('.content');
+
+  // 収集したブロックを中へ移動（両方とも残す／重複作成はしない）
+  [...sources].forEach(node => { if (!content.contains(node)) content.appendChild(node); });
+
+  // まとめ終わったら、変に2箇所に残らないように、免責セクション外のダブりを掃除
+  document.querySelectorAll('body > section, body > div, body > article, body > aside')
+    .forEach(el => {
+      if (el !== sec && el.querySelector && /重要なお知らせ/.test(el.textContent||'')) {
+        // 中身は移動済みなので空の入れ物だけ消す
+        if (!el.contains(details)) el.remove();
+      }
+    });
+})();
