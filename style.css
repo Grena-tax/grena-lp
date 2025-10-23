@@ -233,3 +233,8 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
                "Yu Gothic", Meiryo, "Noto Sans JP",
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
+/* === Top余白を約1行ぶんだけ詰める（スマホだけ）=== */
+@media (max-width: 600px){
+  /* 1行 ≒ 0.9em くらい上に詰める。ほかには影響なし */
+  #corp-setup{ margin-top: -0.9em !important; }
+}
