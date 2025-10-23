@@ -275,3 +275,13 @@ html{
     padding-right: calc(18px + env(safe-area-inset-right, 0px)) !important;
   }
 }
+/* ==== Mobile: 1セクション目の上余白を1行ぶんだけ圧縮 ==== */
+@media (max-width: 640px){
+  /* ここだけ触る。他のセクションはそのまま */
+  #corp-setup{
+    padding-top: 10px !important;  /* ←好みで 8〜14px に微調整OK */
+  }
+  #corp-setup > h2{
+    margin-top: 0 !important;      /* 念のための保険（既に0でも壊さない） */
+  }
+}
