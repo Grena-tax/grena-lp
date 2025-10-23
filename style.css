@@ -261,3 +261,17 @@ html{
 @media (min-width: 768px){
   .accordion > details > summary{ font-size: 19px; }
 }
+/* ==== Mobile: セクション左右にガターを追加（はみ出し防止） ==== */
+@media (max-width: 640px){
+  #corp-setup,
+  #plans,
+  #sole-setup,
+  #personal-account,
+  #disclaimer{
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+    /* iPhoneのセーフエリアも考慮 */
+    padding-left: calc(18px + env(safe-area-inset-left, 0px)) !important;
+    padding-right: calc(18px + env(safe-area-inset-right, 0px)) !important;
+  }
+}
