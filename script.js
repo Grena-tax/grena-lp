@@ -320,3 +320,12 @@
     if (t === '料金プラン') h.remove();
   });
 })();
+/* セーフティ追記：target="_blank" には安全属性を必ず付与 */
+(function(){
+  document.querySelectorAll('a[target="_blank"]').forEach(a=>{
+    const need = ['noopener','noreferrer'];
+    const cur  = (a.rel||'').split(/\s+/).filter(Boolean);
+    need.forEach(t => { if (!cur.includes(t)) cur.push(t); });
+    a.rel = cur.join(' ');
+  });
+})();
