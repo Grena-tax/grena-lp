@@ -511,3 +511,36 @@
   // 念のため：初回ロード後もし空なら自動復旧
   setTimeout(() => { if (!fromSelect()) fallback(); }, 2000);
 })();
+/* ==== FX簡易シミュレーション表：対象検出＆ラップ（append-only） ==== */
+(function () {
+  // 「リスクと為替の考え方」を見つけ、その中の最初の table を装飾対象にする
+  const sum = Array.from(document.querySelectorAll('#disclaimer .accordion summary'))
+    .find(s => /リスクと為替の考え方/.test((s.textContent || '')));
+  if (!sum) return;
+
+  const details = sum.closest('details');
+  if (!details) return;
+
+  const table = details.querySelector('table');
+  if (!table) return;
+
+  // ラップを作って横スクロール対応＋クラス付与
+  if (!table.classList.contains('fx-sim-table')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-sim-scroll';
+    table.parentElement.insertBefore(wrap, table);
+    wrap.appendChild(table);
+    table.classList.add('fx-sim-table');
+  }
+
+  // 損益列の＋/▲を見て色クラスを付与（表示テキストは変更しない）
+  const lastColIndex = table.tHead ? table.tHead.rows[0].cells.length - 1
+                                   : (table.rows[0]?.cells.length || 1) - 1;
+  Array.from(table.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[lastColIndex];
+    if (!td) return;
+    const t = (td.textContent || '').trim();
+    if (/^[＋+]/.test(t)) td.classList.add('fx-pos');
+    if (/▲|−|-/.test(t) && !/^[＋+]/.test(t)) td.classList.add('fx-neg');
+  });
+})();
