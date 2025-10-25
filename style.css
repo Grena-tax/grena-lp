@@ -438,3 +438,40 @@ table.fx-sim-table td:last-child * {
   color: inherit !important;
   border-bottom: 0 !important;
 }
+/* === FX簡易シミュレーション表：縦罫線OFF＋損益列の下線ゼロ（上書き専用） === */
+/* 縦線を消して、行区切りだけ残す */
+table.fx-sim-table th,
+table.fx-sim-table td{
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* 外枠はラッパに任せる（見切れ防止もそのまま） */
+.fx-sim-scroll{
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 12px;
+  padding-bottom: 2px;
+}
+
+/* 損益列は1行固定。もし前に inline-block を当てていたら元に戻す */
+table.fx-sim-table td:last-child{
+  white-space: nowrap !important;
+  display: table-cell !important;
+  text-decoration: none !important;
+}
+
+/* iOSの自動リンク/下線の完全無効化（保険） */
+table.fx-sim-table td:last-child *{ 
+  text-decoration: none !important; 
+  background-image: none !important; 
+  box-shadow: none !important;
+}
+table.fx-sim-table a[x-apple-data-detectors]{
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: 0 !important;
+}
