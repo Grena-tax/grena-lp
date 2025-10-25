@@ -421,3 +421,20 @@ table.fx-sim-table td:last-child{
   color: inherit;
   border-bottom: 0 !important;
 }
+/* ==== 損益列の“文字下線”を完全に無効化（保険） ==== */
+.sim-noline td:last-child,
+.sim-noline td:last-child *,
+table.fx-sim-table td:last-child,
+table.fx-sim-table td:last-child * {
+  text-decoration: none !important;
+  -webkit-text-decoration-skip: none !important;
+  text-decoration-skip-ink: none !important;
+  background-image: none !important; /* CSS擬似下線対策 */
+  box-shadow: none !important;
+}
+/* iOSの自動リンク誤検出にも対応 */
+.sim-noline a[x-apple-data-detectors] {
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: 0 !important;
+}
