@@ -475,3 +475,24 @@ table.fx-sim-table a[x-apple-data-detectors]{
   color: inherit !important;
   border-bottom: 0 !important;
 }
+/* ==== FX表：横線が途中で切れないように（行全幅で描画） ==== */
+/* いったんセルの下線を無効化し、行のインセット影で1本線を引く */
+table.fx-sim-table th,
+table.fx-sim-table td{
+  border-bottom: 0 !important;   /* 既存の下線を無効化 */
+}
+
+/* 見出し行の下に太めの1本線 */
+table.fx-sim-table thead tr{
+  box-shadow: inset 0 -1px #d1d5db !important;
+}
+
+/* 各データ行の下に細めの1本線（行全幅で途切れない） */
+table.fx-sim-table tbody tr{
+  box-shadow: inset 0 -1px #e5e7eb !important;
+}
+
+/* 最終行はラッパーの外枠に任せる */
+table.fx-sim-table tbody tr:last-child{
+  box-shadow: none !important;
+}
