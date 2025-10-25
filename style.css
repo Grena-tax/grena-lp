@@ -186,7 +186,6 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 /* ===== revert font to site default (append-only) ===== */
-/* これだけで、以前の font-family 指定に戻します。他への影響なし。 */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
@@ -202,7 +201,6 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
   }
 }
 /* ==== revert fonts: fall back to the site's original stack ==== */
-/* 以前の「--font-jp を強制」より後ろで、元の指定に戻す */
 :root { --font-jp: initial; } /* 念のため無効化 */
 
 html, body,
@@ -235,26 +233,20 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 }
 /* === Top余白を約1行ぶんだけ詰める（スマホだけ）=== */
 @media (max-width: 600px){
-  /* 1行 ≒ 0.9em くらい上に詰める。ほかには影響なし */
   #corp-setup{ margin-top: -0.9em !important; }
 }
 /* ==== Accordion summary: 大きさを固定 & 1行表示（省略記号） ==== */
-/* iOSの自動文字縮小を停止 */
 html{
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
-
-/* アコーディオン見出し（基本1行に収まるサイズに固定） */
 .accordion > details > summary{
-  font-size: 17px;          /* SPで読みやすい固定値 */
+  font-size: 17px;
   line-height: 1.35;
-  white-space: nowrap;      /* 1行にする */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;  /* はみ出したら … 表示 */
+  text-overflow: ellipsis;
 }
-
-/* 画面が広い時は少しだけ大きく */
 @media (min-width: 480px){
   .accordion > details > summary{ font-size: 18px; }
 }
@@ -270,19 +262,17 @@ html{
   #disclaimer{
     padding-left: 18px !important;
     padding-right: 18px !important;
-    /* iPhoneのセーフエリアも考慮 */
     padding-left: calc(18px + env(safe-area-inset-left, 0px)) !important;
     padding-right: calc(18px + env(safe-area-inset-right, 0px)) !important;
   }
 }
 /* ==== Mobile: 1セクション目の上余白を1行ぶんだけ圧縮 ==== */
 @media (max-width: 640px){
-  /* ここだけ触る。他のセクションはそのまま */
   #corp-setup{
-    padding-top: 10px !important;  /* ←好みで 8〜14px に微調整OK */
+    padding-top: 10px !important;
   }
   #corp-setup > h2{
-    margin-top: 0 !important;      /* 念のための保険（既に0でも壊さない） */
+    margin-top: 0 !important;
   }
 }
 /* ==== FX簡易シミュレーション表（限定） ==== */
@@ -293,14 +283,12 @@ html{
   border-radius: 12px;
   background: #fff;
 }
-
 #disclaimer table.fx-sim-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-variant-numeric: tabular-nums;
 }
-
 #disclaimer table.fx-sim-table th,
 #disclaimer table.fx-sim-table td {
   padding: 12px 14px;
@@ -308,7 +296,6 @@ html{
   line-height: 1.45;
   font-size: 16px;
 }
-
 #disclaimer table.fx-sim-table thead th {
   position: sticky;
   top: 0;
@@ -317,16 +304,13 @@ html{
   font-weight: 700;
   border-bottom: 1px solid #d1d5db;
 }
-
 #disclaimer table.fx-sim-table tbody tr:nth-child(even) { background: #fafafa; }
 #disclaimer table.fx-sim-table tbody tr:hover { background: #f5f7fa; }
-
 /* 整列と幅 */
 #disclaimer table.fx-sim-table th:first-child,
 #disclaimer table.fx-sim-table td:first-child { text-align: left; white-space: nowrap; }
 #disclaimer table.fx-sim-table th:not(:first-child),
 #disclaimer table.fx-sim-table td:not(:first-child) { text-align: right; }
-
 #disclaimer table.fx-sim-table th:nth-child(1),
 #disclaimer table.fx-sim-table td:nth-child(1) { width: 36%; }
 #disclaimer table.fx-sim-table th:nth-child(2),
@@ -337,16 +321,15 @@ html{
 #disclaimer table.fx-sim-table td:nth-child(4) { width: 20%; }
 #disclaimer table.fx-sim-table th:nth-child(5),
 #disclaimer table.fx-sim-table td:nth-child(5) { width: 12%; }
-
 /* 損益の色づけ（▲などのマイナスを赤、＋を濃いめの緑） */
 #disclaimer table.fx-sim-table td.fx-neg { color: #b91c1c; font-weight: 600; }
 #disclaimer table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
-
 /* モバイル調整 */
 @media (max-width: 480px) {
   #disclaimer table.fx-sim-table th,
   #disclaimer table.fx-sim-table td { padding: 12px; font-size: 15px; }
 }
+
 /* ==== FX簡易シミュレーション表（場所を限定しない版） ==== */
 .fx-sim-scroll {
   overflow-x: auto;
@@ -355,14 +338,12 @@ html{
   border-radius: 12px;
   background: #fff;
 }
-
 table.fx-sim-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-variant-numeric: tabular-nums;
 }
-
 table.fx-sim-table th,
 table.fx-sim-table td {
   padding: 12px 14px;
@@ -370,7 +351,6 @@ table.fx-sim-table td {
   line-height: 1.45;
   font-size: 16px;
 }
-
 table.fx-sim-table thead th {
   position: sticky;
   top: 0;
@@ -379,16 +359,13 @@ table.fx-sim-table thead th {
   font-weight: 700;
   border-bottom: 1px solid #d1d5db;
 }
-
 table.fx-sim-table tbody tr:nth-child(even) { background: #fafafa; }
 table.fx-sim-table tbody tr:hover { background: #f5f7fa; }
-
 /* 整列と幅 */
 table.fx-sim-table th:first-child,
 table.fx-sim-table td:first-child { text-align: left; white-space: nowrap; }
 table.fx-sim-table th:not(:first-child),
 table.fx-sim-table td:not(:first-child) { text-align: right; }
-
 table.fx-sim-table th:nth-child(1),
 table.fx-sim-table td:nth-child(1) { width: 36%; }
 table.fx-sim-table th:nth-child(2),
@@ -399,36 +376,35 @@ table.fx-sim-table th:nth-child(4),
 table.fx-sim-table td:nth-child(4) { width: 20%; }
 table.fx-sim-table th:nth-child(5),
 table.fx-sim-table td:nth-child(5) { width: 12%; }
-
 /* 損益の色づけ */
 table.fx-sim-table td.fx-neg { color: #b91c1c; font-weight: 600; }
 table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
-
 /* モバイル微調整 */
 @media (max-width: 480px) {
   table.fx-sim-table th,
   table.fx-sim-table td { padding: 12px; font-size: 15px; }
 }
+
 /* ==== FX簡易シミュレーション：損益列を常に1行に ==== */
 table.fx-sim-table td:last-child,
 table.fx-sim-table th:last-child{
-  white-space: nowrap;           /* 改行禁止 */
+  white-space: nowrap;
 }
 table.fx-sim-table td:last-child{
-  display: inline-block;         /* 余計な折返しを抑制 */
+  display: inline-block;
 }
+
 /* ==== FX簡易シミュレーション：横端の見切れ対策（スクロール余白） ==== */
 .fx-sim-scroll {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding-right: 12px;   /* 右端に少しだけ余白を作る→罫線が切れて見えない */
-  padding-bottom: 2px;   /* iOSでの罫線欠け防止の保険 */
+  padding-right: 12px;
+  padding-bottom: 2px;
+}
+.fx-sim-scroll > table.fx-sim-table {
+  width: max-content;
 }
 
-/* 既存のテーブルクラスはそのまま。幅は内容に合わせて広がる */
-.fx-sim-scroll > table.fx-sim-table {
-  width: max-content;    /* 必要幅だけ。ページ全体のレイアウトに影響しない */
-}
 /* ==== リスク&為替シミュレーション表：損益列の不要な下線を無効化 ==== */
 .sim-noline td:last-child,
 .sim-noline td:last-child * {
@@ -439,7 +415,6 @@ table.fx-sim-table td:last-child{
   box-shadow: none !important;
   background-image: none !important;
 }
-
 /* iOS の自動リンク対策（電話等と誤検出された場合の下線） */
 .sim-noline a[x-apple-data-detectors] {
   text-decoration: none !important;
