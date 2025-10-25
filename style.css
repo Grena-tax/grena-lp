@@ -409,3 +409,11 @@ table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
   table.fx-sim-table th,
   table.fx-sim-table td { padding: 12px; font-size: 15px; }
 }
+/* ==== FX簡易シミュレーション：損益列を常に1行に ==== */
+table.fx-sim-table td:last-child,
+table.fx-sim-table th:last-child{
+  white-space: nowrap;           /* 改行禁止 */
+}
+table.fx-sim-table td:last-child{
+  display: inline-block;         /* 余計な折返しを抑制 */
+}
