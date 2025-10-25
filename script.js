@@ -632,3 +632,14 @@
     td.style.whiteSpace = 'nowrap';
   });
 })();
+/* ==== FX簡易シミュレーション：スクロール用ラッパを自動付与（append-only） ==== */
+(function () {
+  const t = document.querySelector('table.fx-sim-table');
+  if (!t) return;
+  if (t.parentElement && t.parentElement.classList.contains('fx-sim-scroll')) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'fx-sim-scroll';
+  t.parentNode.insertBefore(wrap, t);
+  wrap.appendChild(t);
+})();
