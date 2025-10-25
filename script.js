@@ -643,3 +643,20 @@
   t.parentNode.insertBefore(wrap, t);
   wrap.appendChild(t);
 })();
+
+/* ==== ★追加：損益列の“下線”を確実に無効化するクラスを付与（append-only） ==== */
+(function () {
+  function addNoLine() {
+    // まず fx-sim-table を優先、なければ見出し語で推定
+    var tbl = document.querySelector('table.fx-sim-table') ||
+      Array.from(document.querySelectorAll('table')).find(function(t){
+        var txt = (t.tHead ? t.tHead.textContent : t.textContent) || '';
+        return /円換算額/.test(txt) && /損益/.test(txt);
+      });
+    if (tbl) tbl.classList.add('sim-noline');
+  }
+  addNoLine();
+  // details を開いた直後や遅延描画にも対応
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') setTimeout(addNoLine, 0); }, true);
+  setTimeout(addNoLine, 800);
+})();
