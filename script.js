@@ -770,3 +770,59 @@
   const host = document.getElementById('disclaimer') || document.body;
   new MutationObserver(run).observe(host, { childList: true, subtree: true });
 })();
+/* 円換算額の末尾「, - / , − / , － …」を「,000」に統一（他は触らない） */
+(function () {
+  // 「,」(半角/全角) のあとに各種ハイフンが来て行末で終わるパターン
+  const TRAIL = /([,\uFF0C])\s*[‐-‒–—\-−－]\s*$/u;
+
+  function normalizeCell(td) {
+    if (!td || td.dataset.fxFixed) return;
+
+    // <br>はスペースに統一（表示だけ整える）
+    td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+    const before = (td.textContent || '').trim();
+    if (TRAIL.test(before)) {
+      td.textContent = before.replace(TRAIL, '$1000'); // 例: "¥1,547, -" → "¥1,547,000"
+      td.dataset.fxFixed = '1';
+    }
+  }
+
+  function targetColIndex(tbl) {
+    // thead か 先頭行の th から「円換算額」列を探す
+    const heads = tbl.querySelectorAll('thead th, tr:first-child th');
+    for (let i = 0; i < heads.length; i++) {
+      const t = (heads[i].textContent || '').replace(/\s+/g,'');
+      if (t.includes('円換算額')) return i;
+    }
+    // 保険：1行目のセルを見て「¥… ,(スペース)ハイフン行末」を含む列を推定
+    const r0 = tbl.tBodies[0]?.rows?.[0];
+    if (r0) {
+      for (let i = 0; i < r0.cells.length; i++) {
+        const txt = (r0.cells[i].textContent || '').trim();
+        if (/^¥/.test(txt) && TRAIL.test(txt)) return i;
+      }
+    }
+    return -1;
+  }
+
+  function fixTable(tbl) {
+    const col = targetColIndex(tbl);
+    if (col < 0) return;
+    Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => normalizeCell(tr.cells[col]));
+  }
+
+  function run() {
+    // 見出しに「円換算額」がある表だけを対象
+    document.querySelectorAll('table').forEach(tbl => {
+      const headTxt = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '');
+      if (/円換算額/.test(headTxt)) fixTable(tbl);
+    });
+  }
+
+  // 即時＋遅延描画/開閉に備えた再実行
+  run();
+  let n = 0; const tm = setInterval(() => { run(); if (++n > 10) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS' && e.target.open) run(); }, true);
+  new MutationObserver(run).observe(document.getElementById('disclaimer') || document.body, { childList:true, subtree:true });
+})();
