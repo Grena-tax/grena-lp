@@ -660,3 +660,39 @@
   document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') setTimeout(addNoLine, 0); }, true);
   setTimeout(addNoLine, 800);
 })();
+/* ==== FX簡易シミュレーション：損益列の下線を強制的に除去（append-only） ==== */
+(function () {
+  function stripProfitUnderline() {
+    var tbl = document.querySelector('table.fx-sim-table');
+    if (!tbl) return;
+
+    var last = (tbl.tHead ? tbl.tHead.rows[0].cells.length
+                          : (tbl.rows[0] ? tbl.rows[0].cells.length : 0)) - 1;
+    if (last < 0) return;
+
+    Array.from(tbl.tBodies[0] ? tbl.tBodies[0].rows : []).forEach(function (tr) {
+      var td = tr.cells[last];
+      if (!td) return;
+
+      // 1) 中の <a>/<u>/<ins> などを丸ごと“テキストだけ”にする
+      var text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+      td.textContent = text;  // クラス fx-pos/fx-neg は td 側に残るので色は維持
+
+      // 2) 念のため style で下線を完全無効化
+      td.style.setProperty('text-decoration', 'none', 'important');
+      td.style.setProperty('-webkit-text-decoration-skip', 'none', 'important');
+      td.style.whiteSpace = 'nowrap';
+      td.style.display = 'inline-block'; // 余計な折り返し防止
+    });
+
+    // 表全体にも識別クラス（CSS側の保険）
+    tbl.classList.add('sim-noline');
+  }
+
+  // 初回・遅延描画・details 開閉の各タイミングで実行
+  stripProfitUnderline();
+  setTimeout(stripProfitUnderline, 500);
+  document.addEventListener('toggle', function (e) {
+    if (e.target && e.target.tagName === 'DETAILS') setTimeout(stripProfitUnderline, 0);
+  }, true);
+})();
