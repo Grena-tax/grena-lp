@@ -716,3 +716,57 @@
     td.textContent = (td.textContent || '').replace(/,\s*-\s*$/, ',000');
   });
 })();
+/* 円換算額の「,-」を「,000」に正規化（表示だけ／他は触らない） */
+(function () {
+  const PAT = /,\s*[−-]\s*$/u; // 末尾「,-」「, −」など（全角マイナス含む）
+
+  function fixOneTable(tbl) {
+    // ヘッダから「円換算額」列のインデックスを推定
+    let col = -1;
+    const headRow =
+      (tbl.tHead && tbl.tHead.rows[0]) ||
+      Array.from(tbl.rows).find(r => r.querySelector('th'));
+    if (headRow) {
+      const cells = Array.from(headRow.cells);
+      col = cells.findIndex(th =>
+        /円換算額/.test((th.textContent || '').replace(/\s+/g, ' '))
+      );
+    }
+    if (col < 0) col = 2; // 保険（3列目）
+
+    // 対象列だけ置換。既に「,000」なら何もしない
+    Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => {
+      const td = tr.cells[col];
+      if (!td) return;
+
+      // 余計な改行があればスペースへ
+      td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+      const txt = (td.textContent || '').trim();
+      if (PAT.test(txt)) {
+        td.textContent = txt.replace(PAT, ',000');
+      }
+    });
+  }
+
+  function run() {
+    // ヘッダに「円換算額」を含む表だけを対象
+    document.querySelectorAll('table').forEach(tbl => {
+      const headerTxt =
+        (tbl.tHead ? tbl.tHead.textContent : tbl.rows[0]?.textContent) || '';
+      if (/円換算額/.test(headerTxt)) fixOneTable(tbl);
+    });
+  }
+
+  // 即時実行＋遅延描画対策（数回リトライ）＋detailsオープン時
+  run();
+  let tries = 0;
+  const tm = setInterval(() => { run(); if (++tries > 10) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e => {
+    if (e.target.tagName === 'DETAILS' && e.target.open) run();
+  }, true);
+
+  // 免責セクション内でDOMが後から差し替わっても再実行
+  const host = document.getElementById('disclaimer') || document.body;
+  new MutationObserver(run).observe(host, { childList: true, subtree: true });
+})();
