@@ -429,3 +429,20 @@ table.fx-sim-table td:last-child{
 .fx-sim-scroll > table.fx-sim-table {
   width: max-content;    /* 必要幅だけ。ページ全体のレイアウトに影響しない */
 }
+/* ==== リスク&為替シミュレーション表：損益列の不要な下線を無効化 ==== */
+.sim-noline td:last-child,
+.sim-noline td:last-child * {
+  text-decoration: none !important;
+  text-decoration-skip-ink: none !important;
+  -webkit-text-decoration-skip: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+
+/* iOS の自動リンク対策（電話等と誤検出された場合の下線） */
+.sim-noline a[x-apple-data-detectors] {
+  text-decoration: none !important;
+  color: inherit;
+  border-bottom: 0 !important;
+}
