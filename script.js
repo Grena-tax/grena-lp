@@ -608,3 +608,27 @@
     if (e.target.tagName === 'DETAILS') run();
   }, true);
 })();
+/* ==== FX簡易シミュレーション：損益セルの改行を除去（1行化） ==== */
+(function () {
+  const tbl = document.querySelector('table.fx-sim-table');
+  if (!tbl) return;
+
+  const lastCol = (tbl.tHead ? tbl.tHead.rows[0].cells.length
+                              : tbl.rows[0]?.cells.length) - 1;
+  if (lastCol < 0) return;
+
+  Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[lastCol];
+    if (!td) return;
+
+    // <br> をスペースに置換
+    td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+    // 余分な改行/連続空白を整理して1行に
+    const text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+    td.textContent = text; // 文字だけ戻す（色付けはtdのクラスfx-pos/fx-negで維持）
+
+    // 念のため：もう一度改行禁止
+    td.style.whiteSpace = 'nowrap';
+  });
+})();
