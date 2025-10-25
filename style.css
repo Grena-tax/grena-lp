@@ -285,3 +285,65 @@ html{
     margin-top: 0 !important;      /* 念のための保険（既に0でも壊さない） */
   }
 }
+/* ==== FX簡易シミュレーション表（限定） ==== */
+#disclaimer .fx-sim-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+
+#disclaimer table.fx-sim-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+#disclaimer table.fx-sim-table th,
+#disclaimer table.fx-sim-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.45;
+  font-size: 16px;
+}
+
+#disclaimer table.fx-sim-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f9fafb;
+  font-weight: 700;
+  border-bottom: 1px solid #d1d5db;
+}
+
+#disclaimer table.fx-sim-table tbody tr:nth-child(even) { background: #fafafa; }
+#disclaimer table.fx-sim-table tbody tr:hover { background: #f5f7fa; }
+
+/* 整列と幅 */
+#disclaimer table.fx-sim-table th:first-child,
+#disclaimer table.fx-sim-table td:first-child { text-align: left; white-space: nowrap; }
+#disclaimer table.fx-sim-table th:not(:first-child),
+#disclaimer table.fx-sim-table td:not(:first-child) { text-align: right; }
+
+#disclaimer table.fx-sim-table th:nth-child(1),
+#disclaimer table.fx-sim-table td:nth-child(1) { width: 36%; }
+#disclaimer table.fx-sim-table th:nth-child(2),
+#disclaimer table.fx-sim-table td:nth-child(2) { width: 14%; }
+#disclaimer table.fx-sim-table th:nth-child(3),
+#disclaimer table.fx-sim-table td:nth-child(3) { width: 18%; }
+#disclaimer table.fx-sim-table th:nth-child(4),
+#disclaimer table.fx-sim-table td:nth-child(4) { width: 20%; }
+#disclaimer table.fx-sim-table th:nth-child(5),
+#disclaimer table.fx-sim-table td:nth-child(5) { width: 12%; }
+
+/* 損益の色づけ（▲などのマイナスを赤、＋を濃いめの緑） */
+#disclaimer table.fx-sim-table td.fx-neg { color: #b91c1c; font-weight: 600; }
+#disclaimer table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
+
+/* モバイル調整 */
+@media (max-width: 480px) {
+  #disclaimer table.fx-sim-table th,
+  #disclaimer table.fx-sim-table td { padding: 12px; font-size: 15px; }
+}
