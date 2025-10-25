@@ -826,3 +826,49 @@
   document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS' && e.target.open) run(); }, true);
   new MutationObserver(run).observe(document.getElementById('disclaimer') || document.body, { childList:true, subtree:true });
 })();
+/* ==== FX表：円換算額の「, -」を「,000」に正規化（この表だけ） ==== */
+(function () {
+  // 「円換算額」ヘッダを持つテーブルだけを対象にする
+  function isTargetTable(tbl) {
+    const headTxt = ((tbl.tHead && tbl.tHead.textContent) || (tbl.rows[0] && tbl.rows[0].textContent) || '')
+      .replace(/\s+/g, '');
+    return headTxt.includes('円換算額') && (headTxt.includes('損益') || headTxt.includes('満期残高'));
+  }
+
+  // ヘッダから「円換算額」列の位置を特定
+  function getYenCol(tbl) {
+    const cells = Array.from((tbl.tHead && tbl.tHead.rows[0].cells) || (tbl.rows[0] && tbl.rows[0].cells) || []);
+    return cells.findIndex(th => /円換算額/.test((th.textContent || '').replace(/\s+/g, '')));
+  }
+
+  // 「¥1,547, -」/「¥1,547,−」/「¥1,547, 」→「¥1,547,000」
+  const DASH = '[-\\u2212\\uFF0D\\u2012\\u2013\\u2014]'; // 半角/全角/各種ダッシュ
+  const RE_BAD = new RegExp('^¥\\s*([0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:' + DASH + ')?\\s*$');
+
+  function fixTable(tbl) {
+    const col = getYenCol(tbl);
+    if (col < 0) return;
+
+    const rows = (tbl.tBodies && tbl.tBodies[0] && tbl.tBodies[0].rows) ? Array.from(tbl.tBodies[0].rows)
+                 : Array.from(tbl.rows).slice(1);
+
+    rows.forEach(tr => {
+      const td = tr.cells[col];
+      if (!td) return;
+      const txt = (td.textContent || '').trim();
+      const m = txt.match(RE_BAD);
+      if (m) td.textContent = `¥${m[1]}000`;
+    });
+  }
+
+  function run() {
+    document.querySelectorAll('table').forEach(tbl => { if (isTargetTable(tbl)) fixTable(tbl); });
+  }
+
+  // 即時実行＋遅延レンダリング/アコーディオン開閉にも対応
+  run();
+  let tries = 0;
+  const timer = setInterval(() => { run(); if (++tries > 12) clearInterval(timer); }, 300);
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') run(); }, true);
+  new MutationObserver(() => run()).observe(document.body, { childList: true, subtree: true });
+})();
