@@ -696,3 +696,23 @@
     if (e.target && e.target.tagName === 'DETAILS') setTimeout(stripProfitUnderline, 0);
   }, true);
 })();
+/* 円換算額の「,-」を「,000」に統一（FX表だけ・他は触らない） */
+(function () {
+  const tbl = document.querySelector('table.fx-sim-table');
+  if (!tbl) return;
+
+  // 見出しから「円換算額」列の位置を取得（なければ3列目を仮定）
+  let col = -1;
+  const heads = (tbl.tHead ? tbl.tHead.rows[0].cells : tbl.rows[0]?.cells) || [];
+  [...heads].forEach((th, i) => {
+    if (/円換算額/.test((th.textContent || '').trim())) col = i;
+  });
+  if (col < 0) col = 2; // 保険：3列目（0始まり）
+
+  // 末尾が ",-" だけを ",000" に置換
+  (tbl.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[col];
+    if (!td) return;
+    td.textContent = (td.textContent || '').replace(/,\s*-\s*$/, ',000');
+  });
+})();
