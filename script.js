@@ -544,3 +544,67 @@
     if (/▲|−|-/.test(t) && !/^[＋+]/.test(t)) td.classList.add('fx-neg');
   });
 })();
+/* ==== FX簡易シミュレーション表：場所を問わず検出して装飾（append-only） ==== */
+(function () {
+  if (window.__fxSimDecorated) return; // 多重実行ガード
+
+  function findFxTable() {
+    // ①「リスクと為替の考え方」summary配下を優先
+    const targetSummary = Array.from(document.querySelectorAll('summary'))
+      .find(s => /リスクと為替の考え方|簡易シミュレーション/.test((s.textContent || '')));
+    if (targetSummary) {
+      const details = targetSummary.closest('details');
+      const t1 = details && details.querySelector('table');
+      if (t1) return t1;
+    }
+    // ② フォールバック：ヘッダー語を手掛かりに全テーブルから特定
+    return Array.from(document.querySelectorAll('table')).find(tbl => {
+      const headTxt = (tbl.tHead ? tbl.tHead.textContent : tbl.rows[0]?.textContent) || '';
+      return /為替|シナリオ/.test(headTxt) && /損益/.test(headTxt);
+    });
+  }
+
+  function decorate(table) {
+    if (!table || table.classList.contains('fx-sim-table')) return;
+
+    // 横スクロール用のラッパー
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-sim-scroll';
+    table.parentElement.insertBefore(wrap, table);
+    wrap.appendChild(table);
+
+    // 目印クラス
+    table.classList.add('fx-sim-table');
+
+    // 最終列（損益）に色クラス付与（表示テキストは変更しない）
+    const lastColIndex = (table.tHead ? table.tHead.rows[0].cells.length
+                                      : table.rows[0]?.cells.length) - 1;
+    if (lastColIndex >= 0) {
+      Array.from(table.tBodies[0]?.rows || []).forEach(tr => {
+        const td = tr.cells[lastColIndex];
+        if (!td) return;
+        const t = (td.textContent || '').trim();
+        if (/^[＋+]/.test(t)) td.classList.add('fx-pos');
+        else if (/▲|−|-/.test(t)) td.classList.add('fx-neg');
+      });
+    }
+  }
+
+  function run() {
+    const tbl = findFxTable();
+    if (tbl) {
+      decorate(tbl);
+      window.__fxSimDecorated = true;
+    }
+  }
+
+  // 初回＆少しリトライ（遅延レンダリング対策）
+  run();
+  let n = 0;
+  const tm = setInterval(() => { if (++n > 10 || window.__fxSimDecorated) return clearInterval(tm); run(); }, 300);
+
+  // 対象 details を開いたタイミングでも実行
+  document.addEventListener('toggle', e => {
+    if (e.target.tagName === 'DETAILS') run();
+  }, true);
+})();
