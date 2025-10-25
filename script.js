@@ -872,3 +872,67 @@
   document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') run(); }, true);
   new MutationObserver(() => run()).observe(document.body, { childList: true, subtree: true });
 })();
+<!-- FX表：円換算額「¥1,547, -」→「¥1,547,000」確実版（この表だけ） -->
+<script>
+(function(){
+  // 1) 対象テーブル判定（見出しに「円換算額」「損益」がある表のみ）
+  function isFxTable(tbl){
+    const head = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '')
+      .replace(/\s+/g,'');
+    return head.includes('円換算額') && head.includes('損益');
+  }
+
+  // 2) 「円換算額」列のインデックス
+  function yenColIndex(tbl){
+    const row = (tbl.tHead?.rows[0] || tbl.rows[0]);
+    if(!row) return -1;
+    const cells = Array.from(row.cells||[]);
+    return cells.findIndex(c => /円換算額/.test((c.textContent||'').replace(/\s+/g,'')));
+  }
+
+  // 3) セル内のテキストノードだけを安全に置換（装飾は壊さない）
+  const YEN  = '[¥￥]';               // 半角/全角どちらも
+  const DASH = '[-−―ー–—]';           // 各種ダッシュ・長音
+  const RE_NODE = new RegExp(`(${YEN}\\s*[0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:${DASH})?\\s*$`);
+  const RE_FULL = new RegExp(`^(${YEN}\\s*[0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:${DASH})?\\s*$`);
+
+  function fixCell(td){
+    // テキストノードを走査して末尾の「, -」系を「000」に
+    const walker = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    let replaced = false;
+    nodes.forEach(n=>{
+      const s = n.nodeValue;
+      if (RE_NODE.test(s)) { n.nodeValue = s.replace(RE_NODE, (_,a)=> a+'000'); replaced = true; }
+    });
+    // フォールバック：セル全体で一致したら一括で文字列化
+    if (!replaced){
+      const full = (td.textContent||'').trim();
+      const m = full.match(RE_FULL);
+      if (m) td.textContent = m[1] + '000';
+    }
+  }
+
+  function run(){
+    document.querySelectorAll('table').forEach(tbl=>{
+      if(!isFxTable(tbl)) return;
+      const col = yenColIndex(tbl);
+      if(col < 0) return;
+      const bodyRows = tbl.tBodies[0]?.rows || [];
+      const rows = bodyRows.length ? Array.from(bodyRows) : Array.from(tbl.rows).slice(1); // thead無い場合
+      rows.forEach(tr => {
+        const td = tr.cells[col];
+        if (td) fixCell(td);
+      });
+    });
+  }
+
+  // 初回 & 遅延描画/翻訳/アコーディオン開閉にも追従
+  run();
+  let n=0; const tm=setInterval(()=>{ run(); if(++n>12) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e=>{ if(e.target.tagName==='DETAILS') run(); }, true);
+  new MutationObserver(m=>{ for(const r of m){ if(r.addedNodes.length){ run(); break; } }})
+    .observe(document.body,{childList:true,subtree:true});
+})();
+</script>
