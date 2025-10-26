@@ -57,8 +57,9 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   z-index:2147483647 !important;   /* 何が被っても最前面 */
   pointer-events:auto !important;
 }
-.menu-button{ right:calc(10px + var(--safe-right)); }
-.lang-button{ right:calc(10px + var(--safe-right) + 48px + 10px); }
+.menu-button{ right:calc(10px + var(--safe-right)); width:48px; height:48px; }
+.lang-button{ right:calc(10px + var(--safe-right) + 48px + 10px); width:48px; height:48px; }
+.lang-button .globe{ font-size:20px; line-height:1; } /* 地球儀は見た目20px */
 
 /* --- ハンバーガー本体 --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
