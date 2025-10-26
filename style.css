@@ -1,22 +1,21 @@
-/* ===== patch.css (一発Fix版・全置換) ===== */
+/* ===== patch.css (10/12基準・完全置換) ===== */
 
-/* --- 安全域/CTA --- */
+/* --- スクロール/安全域/CTA高さ --- */
 :root{
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px;
+  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
 body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
 
-/* --- アコーディオン（既存）※サイズは“変更しない” --- */
+/* --- アコーディオン（既存） --- */
 details summary{
   padding:1rem 1.2rem;cursor:pointer;list-style:none;
-  border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* 1行で省略（サイズは触らない） */
+  border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700
 }
 details[open] summary{background:#f8fafc;border-bottom-left-radius:0;border-bottom-right-radius:0}
 details .content{
@@ -24,51 +23,54 @@ details .content{
   padding:1rem 1.2rem .9rem;background:#fff
 }
 .accordion>details{margin:.55rem 0!important}
-
-.text-sm{font-size:.86em;opacity:.9}
-.muted{color:#475569}
-.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
+.text-sm{font-size:.86em;opacity:.9}.muted{color:#475569}.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
 .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
-
+.security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+.price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
+.price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
+.price-promo .label{color:#475569;font-weight:700}
+.price-promo .old{color:#64748b;text-decoration:line-through}
+.price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
+.price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
+.price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
+.price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
+.price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
+.progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
+.progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
+.progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
 table{width:100%;border-collapse:collapse;margin:.5rem 0}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
-
-/* --- フッターは常に黒（翻訳で白化しない） --- */
-:root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
-.site-foot{
-  background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
-  text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  font-size:13px; line-height:1.7;
+@media (max-width:480px){
+  h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
 }
-.site-foot small{ display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em; }
-.site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
-.site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
-@media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
-section[id], details[id]{ scroll-margin-top: 70px; }
+/* ご指定：KYCと料金の隙間を詰める（既存） */
+#corp-setup{padding-bottom:0!important}
+#plans{padding-top:0!important;margin-top:0!important}
 
-/* ========== 右上アイコンの“被り”根絶（最重要） ========== */
-.menu-button,
-.lang-button{
-  position:fixed;
-  top:calc(10px + var(--safe-top));
-  z-index:2147483647 !important;   /* 何が被っても最前面 */
-  pointer-events:auto !important;
+/* --- 右上ハンバーガー（アイコン） --- */
+.menu-button{
+  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
 }
-.menu-button{ right:calc(10px + var(--safe-right)); width:48px; height:48px; }
-.lang-button{ right:calc(10px + var(--safe-right) + 48px + 10px); width:48px; height:48px; }
-.lang-button .globe{ font-size:20px; line-height:1; } /* 地球儀は見た目20px */
+.menu-button .bars{display:block;width:28px;height:20px;position:relative}
+.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
+  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
+}
+.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* --- ハンバーガー本体 --- */
+/* --- ハンバーガー本体（被り根絶・縦分割） --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38;display:flex;flex-direction:column;
+  font-size:14px;line-height:1.38;
+  display:flex;flex-direction:column;
 }
 .menu-head{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -81,6 +83,7 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
 }
 .menu-close:hover{background:#f3f4f6}
+/* ←固定高をやめ、上に十分な余白＋scroll-padding-top を確保 */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto !important;
   padding: calc(var(--menu-head-h) + 10px) 0 12px;
@@ -98,7 +101,29 @@ html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 html.menu-open,html.menu-open body{overflow:hidden}
 
-/* --- 言語モーダル --- */
+/* --- 画面最下部 固定CTA（既存） --- */
+.fixed-cta{
+  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:var(--safe-bottom)
+}
+.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
+.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn.neutral{background:#e5e7eb;color:#111827}
+.btn.secondary{background:#1f2937;color:#fff}
+.btn.success{background:#10b981;color:#fff}
+.btn:hover{opacity:.92}
+
+/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
+.lang-button{
+  position:fixed;top:calc(10px + var(--safe-top));
+  right:calc(10px + var(--safe-right) + 48px + 10px);
+  z-index:10001; width:48px;height:48px;border-radius:12px;
+  background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
+  display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.15)
+}
+.lang-button .globe{font-size:20px;line-height:1}
 .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
 .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .lang-panel{
@@ -125,36 +150,49 @@ html.menu-open,html.menu-open body{overflow:hidden}
 html.lang-open .lang-wrap{pointer-events:auto}
 html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
+@media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* --- Google翻訳のUI/青バナーを隠す（公式ウィジェットは画面外） --- */
+/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
+/* 公式ウィジェット自体は画面外へ退避（JSが操作する） */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
 }
+/* 青バーが出た端末向けのバッファ */
 html.gtbar body{ padding-top:44px; }
 
-/* --- 固定CTA --- */
-.fixed-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom:var(--safe-bottom)
+/* --- フッターは常に黒（翻訳で白化しない） --- */
+:root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
+.site-foot{
+  background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
+  text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  font-size:13px; line-height:1.7;
 }
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
+.site-foot small{ display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em; }
+.site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
+.site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
+@media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- フォントは“元に戻す”。強制上書きはしない --- */
+/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
+section[id], details[id]{ scroll-margin-top: 70px; }
+
+/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避・据置仕様） --- */
+@media (max-width: 480px){
+  .menu-panel{ width:58vw; }
+  body{ padding-top:66px; }
+  html.gtbar body{ padding-top: calc(66px + 44px); }
+}
+/* ===== revert font to site default (append-only) ===== */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
   font-family: revert !important;
 }
+
+/* Safari 等で 'revert' が効かない場合のフォールバック */
 @supports not (font-family: revert) {
   html, body,
   button, input, select, textarea, summary, details,
@@ -162,46 +200,299 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
     font-family: inherit !important;
   }
 }
+/* ==== revert fonts: fall back to the site's original stack ==== */
+:root { --font-jp: initial; } /* 念のため無効化 */
 
-/* --- モバイル時の左右ガター（はみ出し防止） --- */
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
+}
+/* === REVERT: フォントは元の style.css に戻す（こちらの強制指定を無効化） === */
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* 既存の style.css の指定に戻す */
+}
+
+/* iOS が古くて revert 非対応な場合の保険（ほぼ使われません） */
+@supports not (font-family: revert) {
+  html { font-family: inherit !important; }
+  body { font-family: inherit !important; }
+  button, input, select, textarea, summary, details,
+  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
+}
+/* === revert to original JP/OS font stack (override only) === */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a, .menu-panel, .menu-list, .lang-panel {
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", Meiryo, "Noto Sans JP",
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+/* === Top余白を約1行ぶんだけ詰める（スマホだけ）=== */
+@media (max-width: 600px){
+  #corp-setup{ margin-top: -0.9em !important; }
+}
+/* ==== Accordion summary: 大きさを固定 & 1行表示（省略記号） ==== */
+html{
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+.accordion > details > summary{
+  font-size: 17px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (min-width: 480px){
+  .accordion > details > summary{ font-size: 18px; }
+}
+@media (min-width: 768px){
+  .accordion > details > summary{ font-size: 19px; }
+}
+/* ==== Mobile: セクション左右にガターを追加（はみ出し防止） ==== */
 @media (max-width: 640px){
-  #corp-setup, #plans, #sole-setup, #personal-account, #disclaimer{
+  #corp-setup,
+  #plans,
+  #sole-setup,
+  #personal-account,
+  #disclaimer{
+    padding-left: 18px !important;
+    padding-right: 18px !important;
     padding-left: calc(18px + env(safe-area-inset-left, 0px)) !important;
     padding-right: calc(18px + env(safe-area-inset-right, 0px)) !important;
   }
 }
-
-/* ========== FX簡易シミュレーション表（見切れ防止＆線の途切れ防止） ========== */
-.fx-sim-scroll{
-  overflow-x:auto; -webkit-overflow-scrolling:touch;
-  border:1px solid #e5e7eb; border-radius:12px; background:#fff;
-  padding-right:12px; padding-bottom:2px;
+/* ==== Mobile: 1セクション目の上余白を1行ぶんだけ圧縮 ==== */
+@media (max-width: 640px){
+  #corp-setup{
+    padding-top: 10px !important;
+  }
+  #corp-setup > h2{
+    margin-top: 0 !important;
+  }
 }
-table.fx-sim-table{
-  width:max-content; /* 内容幅に合わせる → 横スクで見切れない */
-  border-collapse:separate; border-spacing:0;
-  font-variant-numeric:tabular-nums;
+/* ==== FX簡易シミュレーション表（限定） ==== */
+#disclaimer .fx-sim-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+}
+#disclaimer table.fx-sim-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+#disclaimer table.fx-sim-table th,
+#disclaimer table.fx-sim-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.45;
+  font-size: 16px;
+}
+#disclaimer table.fx-sim-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f9fafb;
+  font-weight: 700;
+  border-bottom: 1px solid #d1d5db;
+}
+#disclaimer table.fx-sim-table tbody tr:nth-child(even) { background: #fafafa; }
+#disclaimer table.fx-sim-table tbody tr:hover { background: #f5f7fa; }
+/* 整列と幅 */
+#disclaimer table.fx-sim-table th:first-child,
+#disclaimer table.fx-sim-table td:first-child { text-align: left; white-space: nowrap; }
+#disclaimer table.fx-sim-table th:not(:first-child),
+#disclaimer table.fx-sim-table td:not(:first-child) { text-align: right; }
+#disclaimer table.fx-sim-table th:nth-child(1),
+#disclaimer table.fx-sim-table td:nth-child(1) { width: 36%; }
+#disclaimer table.fx-sim-table th:nth-child(2),
+#disclaimer table.fx-sim-table td:nth-child(2) { width: 14%; }
+#disclaimer table.fx-sim-table th:nth-child(3),
+#disclaimer table.fx-sim-table td:nth-child(3) { width: 18%; }
+#disclaimer table.fx-sim-table th:nth-child(4),
+#disclaimer table.fx-sim-table td:nth-child(4) { width: 20%; }
+#disclaimer table.fx-sim-table th:nth-child(5),
+#disclaimer table.fx-sim-table td:nth-child(5) { width: 12%; }
+/* 損益の色づけ（▲などのマイナスを赤、＋を濃いめの緑） */
+#disclaimer table.fx-sim-table td.fx-neg { color: #b91c1c; font-weight: 600; }
+#disclaimer table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
+/* モバイル調整 */
+@media (max-width: 480px) {
+  #disclaimer table.fx-sim-table th,
+  #disclaimer table.fx-sim-table td { padding: 12px; font-size: 15px; }
 }
 
-/* “セルのボーダー”ではなく“行の影”で1本線 → 途切れない */
-table.fx-sim-table th, table.fx-sim-table td{ border-bottom:0 !important; padding:12px 14px; line-height:1.45; font-size:16px; }
-table.fx-sim-table thead tr{ box-shadow: inset 0 -1px #d1d5db !important; background:#f9fafb; font-weight:700; position:sticky; top:0; z-index:1; }
-table.fx-sim-table tbody tr{ box-shadow: inset 0 -1px #e5e7eb !important; }
-table.fx-sim-table tbody tr:last-child{ box-shadow:none !important; }
-
-/* 整列 */
-table.fx-sim-table th:first-child, table.fx-sim-table td:first-child{ text-align:left; white-space:nowrap; }
-table.fx-sim-table th:not(:first-child), table.fx-sim-table td:not(:first-child){ text-align:right; }
-
-/* 損益の色づけ＋下線完全無効化（保険） */
-table.fx-sim-table td.fx-neg{ color:#b91c1c; font-weight:600; }
-table.fx-sim-table td.fx-pos{ color:#0f766e; font-weight:600; }
-table.fx-sim-table td:last-child, table.fx-sim-table td:last-child *{
-  white-space:nowrap; text-decoration:none !important; -webkit-text-decoration-skip:none !important; text-decoration-skip-ink:none !important;
-  background-image:none !important; box-shadow:none !important;
+/* ==== FX簡易シミュレーション表（場所を限定しない版） ==== */
+.fx-sim-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
 }
-
+table.fx-sim-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+table.fx-sim-table th,
+table.fx-sim-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  line-height: 1.45;
+  font-size: 16px;
+}
+table.fx-sim-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f9fafb;
+  font-weight: 700;
+  border-bottom: 1px solid #d1d5db;
+}
+table.fx-sim-table tbody tr:nth-child(even) { background: #fafafa; }
+table.fx-sim-table tbody tr:hover { background: #f5f7fa; }
+/* 整列と幅 */
+table.fx-sim-table th:first-child,
+table.fx-sim-table td:first-child { text-align: left; white-space: nowrap; }
+table.fx-sim-table th:not(:first-child),
+table.fx-sim-table td:not(:first-child) { text-align: right; }
+table.fx-sim-table th:nth-child(1),
+table.fx-sim-table td:nth-child(1) { width: 36%; }
+table.fx-sim-table th:nth-child(2),
+table.fx-sim-table td:nth-child(2) { width: 14%; }
+table.fx-sim-table th:nth-child(3),
+table.fx-sim-table td:nth-child(3) { width: 18%; }
+table.fx-sim-table th:nth-child(4),
+table.fx-sim-table td:nth-child(4) { width: 20%; }
+table.fx-sim-table th:nth-child(5),
+table.fx-sim-table td:nth-child(5) { width: 12%; }
+/* 損益の色づけ */
+table.fx-sim-table td.fx-neg { color: #b91c1c; font-weight: 600; }
+table.fx-sim-table td.fx-pos { color: #0f766e; font-weight: 600; }
 /* モバイル微調整 */
-@media (max-width:480px){
-  table.fx-sim-table th, table.fx-sim-table td{ padding:12px; font-size:15px; }
+@media (max-width: 480px) {
+  table.fx-sim-table th,
+  table.fx-sim-table td { padding: 12px; font-size: 15px; }
+}
+
+/* ==== FX簡易シミュレーション：損益列を常に1行に ==== */
+table.fx-sim-table td:last-child,
+table.fx-sim-table th:last-child{
+  white-space: nowrap;
+}
+table.fx-sim-table td:last-child{
+  display: inline-block;
+}
+
+/* ==== FX簡易シミュレーション：横端の見切れ対策（スクロール余白） ==== */
+.fx-sim-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 12px;
+  padding-bottom: 2px;
+}
+.fx-sim-scroll > table.fx-sim-table {
+  width: max-content;
+}
+
+/* ==== リスク&為替シミュレーション表：損益列の不要な下線を無効化 ==== */
+.sim-noline td:last-child,
+.sim-noline td:last-child * {
+  text-decoration: none !important;
+  text-decoration-skip-ink: none !important;
+  -webkit-text-decoration-skip: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+  background-image: none !important;
+}
+/* iOS の自動リンク対策（電話等と誤検出された場合の下線） */
+.sim-noline a[x-apple-data-detectors] {
+  text-decoration: none !important;
+  color: inherit;
+  border-bottom: 0 !important;
+}
+/* ==== 損益列の“文字下線”を完全に無効化（保険） ==== */
+.sim-noline td:last-child,
+.sim-noline td:last-child *,
+table.fx-sim-table td:last-child,
+table.fx-sim-table td:last-child * {
+  text-decoration: none !important;
+  -webkit-text-decoration-skip: none !important;
+  text-decoration-skip-ink: none !important;
+  background-image: none !important; /* CSS擬似下線対策 */
+  box-shadow: none !important;
+}
+/* iOSの自動リンク誤検出にも対応 */
+.sim-noline a[x-apple-data-detectors] {
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: 0 !important;
+}
+/* === FX簡易シミュレーション表：縦罫線OFF＋損益列の下線ゼロ（上書き専用） === */
+/* 縦線を消して、行区切りだけ残す */
+table.fx-sim-table th,
+table.fx-sim-table td{
+  border: none !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* 外枠はラッパに任せる（見切れ防止もそのまま） */
+.fx-sim-scroll{
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 12px;
+  padding-bottom: 2px;
+}
+
+/* 損益列は1行固定。もし前に inline-block を当てていたら元に戻す */
+table.fx-sim-table td:last-child{
+  white-space: nowrap !important;
+  display: table-cell !important;
+  text-decoration: none !important;
+}
+
+/* iOSの自動リンク/下線の完全無効化（保険） */
+table.fx-sim-table td:last-child *{ 
+  text-decoration: none !important; 
+  background-image: none !important; 
+  box-shadow: none !important;
+}
+table.fx-sim-table a[x-apple-data-detectors]{
+  text-decoration: none !important;
+  color: inherit !important;
+  border-bottom: 0 !important;
+}
+/* ==== FX表：横線が途中で切れないように（行全幅で描画） ==== */
+/* いったんセルの下線を無効化し、行のインセット影で1本線を引く */
+table.fx-sim-table th,
+table.fx-sim-table td{
+  border-bottom: 0 !important;   /* 既存の下線を無効化 */
+}
+
+/* 見出し行の下に太めの1本線 */
+table.fx-sim-table thead tr{
+  box-shadow: inset 0 -1px #d1d5db !important;
+}
+
+/* 各データ行の下に細めの1本線（行全幅で途切れない） */
+table.fx-sim-table tbody tr{
+  box-shadow: inset 0 -1px #e5e7eb !important;
+}
+
+/* 最終行はラッパーの外枠に任せる */
+table.fx-sim-table tbody tr:last-child{
+  box-shadow: none !important;
 }
