@@ -1,10 +1,10 @@
-/* ===== script.js（全置換版）===== */
+/* ===== script.js (10/12基準・完全置換) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止 ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（二重対策） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -15,6 +15,7 @@
       });
       const ifr = document.querySelector('iframe.goog-te-banner-frame');
       if (ifr){ if (ifr.remove) ifr.remove(); else ifr.style.display='none'; }
+      // 出ているかの簡易判定（CSSバッファ用）
       const showing = !!ifr && ifr.offsetHeight > 0;
       html.classList.toggle('gtbar', !!showing);
     }catch(_){}
@@ -23,7 +24,7 @@
   window.addEventListener('load', killGoogleBar, {once:true});
   setInterval(killGoogleBar, 1500);
 
-  /* ---------- 1) ハンバーガー開閉 ---------- */
+  /* ---------- 1) ハンバーガー開閉（クリック不能対策を整理） ---------- */
   const menuBtn      = $('#menuBtn');
   const menuDrawer   = $('#menuDrawer');
   const menuBackdrop = $('#menuBackdrop');
@@ -42,7 +43,7 @@
   menuClose && menuClose.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 
-  /* ---------- 2) ハンバーガー目次（自動生成） ---------- */
+  /* ---------- 2) 目次（各セクション＋全summaryを自動生成） ---------- */
   (function buildMenu(){
     const groups = $('#menuGroups');
     if (!groups) return;
@@ -54,6 +55,7 @@
       ['personal-account', '個人口座開設（銀行）'],
       ['disclaimer',       '免責事項・キャンセル']
     ];
+
     const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
     const mkId = base => base.toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 
@@ -79,28 +81,19 @@
       if (!sec) return;
 
       const group = document.createElement('div'); group.className='menu-group';
-      // 「料金プラン」の非クリック見出しは出さない
-      if (secId !== 'plans'){
-        const h4 = document.createElement('h4');  h4.textContent = secLabel;
-        group.appendChild(h4);
-      }
+      const h4    = document.createElement('h4');  h4.textContent = secLabel;
       const ul    = document.createElement('ul');  ul.className   ='menu-list';
 
-      // セクションのトップ（「（トップ）」は付けない）
+      // セクションのトップ
       const liTop = document.createElement('li');
       const aTop  = document.createElement('a');
       aTop.href = `#${secId}`;
-      aTop.textContent = secLabel;
-      aTop.addEventListener('click', (e)=>{
-        e.preventDefault();
-        const t = document.getElementById(secId);
-        if (t){ t.scrollIntoView({behavior:'smooth', block:'start'}); }
-        closeMenu();
-      });
+      aTop.textContent = `${secLabel}（トップ）`;
+      aTop.addEventListener('click', closeMenu);
       liTop.appendChild(aTop); ul.appendChild(liTop);
 
-      // 直下の summary を列挙（ネスト除外）
-      sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx)=>{
+      // そのセクション内の summary をすべて列挙
+      sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
         const det   = sum.closest('details'); if (!det) return;
         const label = sanitize(sum.textContent);
         const id    = ensureId(det, secId, label, idx);
@@ -109,21 +102,16 @@
         const a  = document.createElement('a');
         a.href = `#${id}`;
         a.textContent = label;
-        a.addEventListener('click', (e)=>{
-          e.preventDefault();
+        a.addEventListener('click', ()=>{
           const t = document.getElementById(id);
-          if (t){ t.open = true; t.scrollIntoView({behavior:'smooth', block:'start'}); }
-          closeMenu();
+          if (t){ openAncestors(t); }
+          setTimeout(closeMenu, 0);
         });
         li.appendChild(a); ul.appendChild(li);
       });
 
-      group.appendChild(ul); groups.appendChild(group);
+      group.appendChild(h4); group.appendChild(ul); groups.appendChild(group);
     });
-
-    // 念のため：残っている「（トップ）」表記は削除 & 「料金プラン」h4は出さない
-    $$('#menuGroups a').forEach(a => { a.textContent = a.textContent.replace(/（トップ）/g, ''); });
-    $$('#menuGroups .menu-group h4').forEach(h => { if ((h.textContent||'').trim()==='料金プラン') h.remove(); });
   })();
 
   /* ---------- 3) 言語ドロワー（英語名で全言語） ---------- */
@@ -201,103 +189,750 @@
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     }catch(_){}
+    // select が生えたらリストを作る
     setTimeout(buildLangList, 600);
+    // 以後も変化を監視
     const host = $('#google_translate_element');
     if (host){
       new MutationObserver(()=>setTimeout(buildLangList,0)).observe(host,{childList:true,subtree:true});
     }
   };
 
-  /* ---------- 4) FX簡易シミュレーション表：装飾＆不具合潰し ---------- */
-  (function () {
-    function findFxTable() {
-      // 免責→「リスクと為替の考え方」優先
-      const s = Array.from(document.querySelectorAll('#disclaimer summary'))
-        .find(x => /リスクと為替の考え方|簡易シミュレーション/.test((x.textContent||'')));
-      if (s) {
-        const det = s.closest('details');
-        const t = det && det.querySelector('table');
-        if (t) return t;
-      }
-      // フォールバック：ヘッダー語から推定
-      return Array.from(document.querySelectorAll('table')).find(tbl => {
-        const head = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '');
-        return /為替|シナリオ/.test(head) && /損益/.test(head);
-      });
+})();
+/* ---- Hamburger: 非クリックの見出し「料金プラン」だけを削除（append-only） ---- */
+(function () {
+  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+    if ((h.textContent || '').trim() === '料金プラン') h.remove();
+  });
+})();
+/* ==== remove only "（トップ）" items in hamburger ==== */
+(function () {
+  const isTop = /（トップ）\s*$/; // 全角カッコの「（トップ）」で終わる
+  document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
+    const a = li.querySelector('a');
+    if (!a) return;
+    const label = (a.textContent || '').trim();
+    if (isTop.test(label)) li.remove();
+  });
+})();
+/* === MENU: （トップ）を消す + ネスト項目を除外して作り直す === */
+(() => {
+  const wrap = document.getElementById('menuGroups');
+  if (!wrap) return;
+
+  // 対象セクション（既存の並びそのまま）
+  const SECTIONS = [
+    ['corp-setup',       '法人設立'],
+    ['plans',            '料金プラン'],
+    ['sole-setup',       '個人事業主（IE/SBS）'],
+    ['personal-account', '個人口座開設（銀行）'],
+    ['disclaimer',       '免責事項・キャンセル'],
+  ];
+
+  const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
+  const closeMenu = () => {
+    const html = document.documentElement;
+    html.classList.remove('menu-open');
+    document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
+    document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
+  };
+
+  /* いったん空にしてから、トップレベルだけで再構築 */
+  wrap.innerHTML = '';
+
+  SECTIONS.forEach(([secId, label]) => {
+    const sec = document.getElementById(secId);
+    if (!sec) return;
+
+    const group = document.createElement('div');
+    group.className = 'menu-group';
+
+    // 「料金プラン」の見出し(h4)は出さない
+    if (secId !== 'plans') {
+      const h4 = document.createElement('h4');
+      h4.textContent = label;
+      group.appendChild(h4);
     }
 
-    function wrapAndMark(table){
-      if (!table.classList.contains('fx-sim-table')) {
+    const ul = document.createElement('ul');
+    ul.className = 'menu-list';
+
+    // セクションのトップ（※「（トップ）」は付けない）
+    const liTop = document.createElement('li');
+    const aTop = document.createElement('a');
+    aTop.href = `#${secId}`;
+    aTop.textContent = label;
+    aTop.addEventListener('click', closeMenu);
+    liTop.appendChild(aTop);
+    ul.appendChild(liTop);
+
+    // 直下の <details> だけを採用（ネストは除外）
+    sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx) => {
+      const det = sum.closest('details');
+      if (!det) return;
+
+      // idが無ければユニークidを振る（既存はそのまま）
+      if (!det.id) {
+        let id = `${secId}-d-${idx+1}`, n = 2;
+        while (document.getElementById(id)) id = `${secId}-d-${idx+1}-${n++}`;
+        det.id = id;
+      }
+
+      const li = document.createElement('li');
+      const a  = document.createElement('a');
+      a.href = `#${det.id}`;
+      a.textContent = sanitize(sum.textContent);
+      a.addEventListener('click', () => { det.open = true; closeMenu(); });
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+
+    group.appendChild(ul);
+    wrap.appendChild(group);
+  });
+
+  // 念のため：残っている「（トップ）」表記はすべて削除
+  document.querySelectorAll('#menuGroups a').forEach(a => {
+    a.textContent = a.textContent.replace(/（トップ）/g, '');
+  });
+})();
+/* === hamburger cleanup: remove "(トップ)" and duplicated group-title items === */
+(function () {
+  const groups = document.querySelectorAll('#menuGroups .menu-group');
+
+  groups.forEach(g => {
+    const title = (g.querySelector('h4')?.textContent || '')
+                    .trim().replace(/\s+/g, ' ');
+    const links = g.querySelectorAll('.menu-list a');
+
+    links.forEach(a => {
+      const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
+      // 末尾が（トップ）/ (トップ) の項目、または見出しと同じ文言の項目を削除
+      if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
+        a.closest('li')?.remove();
+      }
+    });
+  });
+
+  // 保険：h4 が「料金プラン」の見出しは非表示（既に実施済みでもOK）
+  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+    const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+    if (t === '料金プラン') h.remove();
+  });
+})();
+/* セーフティ追記：target="_blank" には安全属性を必ず付与 */
+(function(){
+  document.querySelectorAll('a[target="_blank"]').forEach(a=>{
+    const need = ['noopener','noreferrer'];
+    const cur  = (a.rel||'').split(/\s+/).filter(Boolean);
+    need.forEach(t => { if (!cur.includes(t)) cur.push(t); });
+    a.rel = cur.join(' ');
+  });
+})();
+/* 重要なお知らせを「免責事項」内へ自動移動（もう入っていれば何もしない） */
+(function(){
+  var note = document.getElementById('legal-safety-note');
+  var dest = document.querySelector('#disclaimer details:first-of-type .content');
+  if (note && dest && !dest.contains(note)) dest.appendChild(note);
+})();
+/* ▼「重要なお知らせ」ブロックを必ず #disclaimer 内へ移動（id無しでもOK） */
+(function () {
+  const dest = document.querySelector('#disclaimer details:first-of-type .content');
+  if (!dest) return;
+
+  // 1) まず id=legal-safety-note を探す
+  let block = document.getElementById('legal-safety-note');
+
+  // 2) なければテキストで推定して拾う（見出しや周辺の箱を優先）
+  if (!block) {
+    const hasNoteText = el => /重要なお知らせ/.test((el.textContent || '').replace(/\s+/g,' '));
+    // 先に「見出しを含む箱」を探す
+    block = Array.from(document.querySelectorAll('section,article,aside,div'))
+      .find(el => hasNoteText(el) && (el.querySelector('ul,ol,li') || el.querySelector('p')));
+    // 見つからない場合は見出し行→親箱
+    if (!block) {
+      const heading = Array.from(document.querySelectorAll('h1,h2,h3,strong,p,div'))
+        .find(el => hasNoteText(el));
+      if (heading) block = heading.closest('section,article,aside,div') || heading.parentElement;
+    }
+    // さらに最後の保険：箇条書きそのものを拾って包む
+    if (!block) {
+      const list = Array.from(document.querySelectorAll('ul,ol'))
+        .find(el => hasNoteText(el.previousElementSibling || {textContent:''}) || hasNoteText(el));
+      if (list) {
         const wrap = document.createElement('div');
-        wrap.className = 'fx-sim-scroll';
-        table.parentElement.insertBefore(wrap, table);
-        wrap.appendChild(table);
-        table.classList.add('fx-sim-table');
+        wrap.id = 'legal-safety-note';
+        wrap.className = list.className || 'security-note';
+        // 見出し行が直前にあれば一緒に移す
+        const prev = list.previousElementSibling;
+        if (prev && hasNoteText(prev)) wrap.appendChild(prev);
+        list.parentNode.insertBefore(wrap, list);
+        wrap.appendChild(list);
+        block = wrap;
       }
     }
+  }
 
-    function colorLastCol(table){
-      const last = (table.tHead ? table.tHead.rows[0].cells.length : (table.rows[0]?.cells.length||1)) - 1;
-      if (last < 0) return;
-      Array.from(table.tBodies[0]?.rows || []).forEach(tr=>{
-        const td = tr.cells[last]; if(!td) return;
-        const t = (td.textContent||'').trim();
+  // 3) 見つかったら #disclaimer の最初のdetails内へ移動
+  if (block && !dest.contains(block)) dest.appendChild(block);
+})();
+/* === 重要なお知らせ：内容が違う2ブロックを1つのアコーディオンに集約（append-only） === */
+(() => {
+  const sec = document.getElementById('disclaimer');
+  if (!sec) return;
+
+  // 既存の候補を収集（id/class または見出しテキストで検出）
+  const sources = new Set();
+  document.querySelectorAll('#legal-safety-note, .legal-safety-note, .legal-important-note')
+    .forEach(n => sources.add(n));
+  document.querySelectorAll('h1,h2,h3,h4,strong,b').forEach(h => {
+    if (/重要なお知らせ/.test((h.textContent || ''))) {
+      const box = h.closest('section,article,div');
+      if (box) sources.add(box);
+    }
+  });
+  if (sources.size === 0) return;
+
+  // 免責セクション内のアコーディオン（無ければ作る）
+  let acc = sec.querySelector('.accordion');
+  if (!acc) { acc = document.createElement('div'); acc.className = 'accordion'; sec.appendChild(acc); }
+
+  // すでに作成済みならそこへ追加入れ、それ以外は新規で作成
+  let details = sec.querySelector('details[data-legal-note]');
+  if (!details) {
+    details = document.createElement('details');
+    details.setAttribute('data-legal-note', '');
+    const sum = document.createElement('summary');
+    sum.textContent = '重要なお知らせ（要点・注意喚起）';
+    const content = document.createElement('div');
+    content.className = 'content';
+    details.appendChild(sum);
+    details.appendChild(content);
+    acc.appendChild(details);
+  }
+  const content = details.querySelector('.content');
+
+  // 収集したブロックを中へ移動（両方とも残す／重複作成はしない）
+  [...sources].forEach(node => { if (!content.contains(node)) content.appendChild(node); });
+
+  // まとめ終わったら、変に2箇所に残らないように、免責セクション外のダブりを掃除
+  document.querySelectorAll('body > section, body > div, body > article, body > aside')
+    .forEach(el => {
+      if (el !== sec && el.querySelector && /重要なお知らせ/.test(el.textContent||'')) {
+        // 中身は移動済みなので空の入れ物だけ消す
+        if (!el.contains(details)) el.remove();
+      }
+    });
+})();
+/* ==== HOTFIX: 言語モーダルが空になる時の復旧（append-only） ==== */
+(function () {
+  const list   = document.getElementById('langList');
+  const search = document.getElementById('langSearch');
+  const btn    = document.getElementById('langBtn');
+  if (!list || !btn) return;
+
+  const dn = (window.Intl && Intl.DisplayNames)
+    ? new Intl.DisplayNames(['en'], { type: 'language' })
+    : null;
+
+  // フォールバック（主要言語／Google対応コード）
+  const FALLBACK = [
+    'en','ja','zh-CN','zh-TW','ko','es','fr','de','it','pt','ru','ar','th','id','vi','hi','tr','uk','pl','nl','sv','fi','no','da','cs','sk','sl','hu','ro','bg','el','he','ur','fa','ms','bn','ta','te','ml','mr','gu','pa','ne','si','km','lo','my','az','kk','uz','mn','ka','hy','am','sq','bs','mk','hr','lt','lv','et','is','ga','mt','af','sw','fil'
+  ];
+
+  function codeToName(code, fallbackText) {
+    try { return (dn && dn.of(code.replace('_','-'))) || fallbackText || code; }
+    catch (_) { return fallbackText || code; }
+  }
+
+  function render(items) {
+    list.innerHTML = '';
+    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
+    items
+      .filter(x => x && x.code)
+      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}))
+      .forEach(({code,name})=>{
+        const el = document.createElement('div');
+        el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
+        el.setAttribute('role','option');
+        el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
+        el.addEventListener('click', ()=>{
+          const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+          if (sel) {
+            sel.value = code;
+            sel.dispatchEvent(new Event('change', {bubbles:true}));
+          }
+          document.documentElement.classList.remove('lang-open');
+        });
+        list.appendChild(el);
+      });
+
+    if (search) {
+      search.oninput = () => {
+        const q = search.value.trim().toLowerCase();
+        list.querySelectorAll('.ls-item').forEach(el=>{
+          const txt = (el.textContent||'').toLowerCase();
+          el.style.display = (!q || txt.includes(q)) ? '' : 'none';
+        });
+      };
+    }
+  }
+
+  function fromSelect() {
+    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel || sel.options.length < 2) return false;
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== 'auto')
+      .map(o => {
+        const code = o.value.trim();
+        const name = codeToName(code, (o.textContent||code).trim());
+        return { code, name };
+      });
+    render(items);
+    return true;
+  }
+
+  function fallback() {
+    render(FALLBACK.map(code => ({ code, name: codeToName(code) })));
+  }
+
+  function tryRebuildWithRetry() {
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      if (fromSelect()) { clearInterval(timer); return; }
+      if (tries >= 10) { fallback(); clearInterval(timer); }
+    }, 300);
+  }
+
+  // モーダルを開いた時に毎回リビルド（既存の開閉処理はそのまま）
+  btn.addEventListener('click', () => setTimeout(tryRebuildWithRetry, 50));
+
+  // 念のため：初回ロード後もし空なら自動復旧
+  setTimeout(() => { if (!fromSelect()) fallback(); }, 2000);
+})();
+/* ==== FX簡易シミュレーション表：対象検出＆ラップ（append-only） ==== */
+(function () {
+  // 「リスクと為替の考え方」を見つけ、その中の最初の table を装飾対象にする
+  const sum = Array.from(document.querySelectorAll('#disclaimer .accordion summary'))
+    .find(s => /リスクと為替の考え方/.test((s.textContent || '')));
+  if (!sum) return;
+
+  const details = sum.closest('details');
+  if (!details) return;
+
+  const table = details.querySelector('table');
+  if (!table) return;
+
+  // ラップを作って横スクロール対応＋クラス付与
+  if (!table.classList.contains('fx-sim-table')) {
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-sim-scroll';
+    table.parentElement.insertBefore(wrap, table);
+    wrap.appendChild(table);
+    table.classList.add('fx-sim-table');
+  }
+
+  // 損益列の＋/▲を見て色クラスを付与（表示テキストは変更しない）
+  const lastColIndex = table.tHead ? table.tHead.rows[0].cells.length - 1
+                                   : (table.rows[0]?.cells.length || 1) - 1;
+  Array.from(table.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[lastColIndex];
+    if (!td) return;
+    const t = (td.textContent || '').trim();
+    if (/^[＋+]/.test(t)) td.classList.add('fx-pos');
+    if (/▲|−|-/.test(t) && !/^[＋+]/.test(t)) td.classList.add('fx-neg');
+  });
+})();
+/* ==== FX簡易シミュレーション表：場所を問わず検出して装飾（append-only） ==== */
+(function () {
+  if (window.__fxSimDecorated) return; // 多重実行ガード
+
+  function findFxTable() {
+    // ①「リスクと為替の考え方」summary配下を優先
+    const targetSummary = Array.from(document.querySelectorAll('summary'))
+      .find(s => /リスクと為替の考え方|簡易シミュレーション/.test((s.textContent || '')));
+    if (targetSummary) {
+      const details = targetSummary.closest('details');
+      const t1 = details && details.querySelector('table');
+      if (t1) return t1;
+    }
+    // ② フォールバック：ヘッダー語を手掛かりに全テーブルから特定
+    return Array.from(document.querySelectorAll('table')).find(tbl => {
+      const headTxt = (tbl.tHead ? tbl.tHead.textContent : tbl.rows[0]?.textContent) || '';
+      return /為替|シナリオ/.test(headTxt) && /損益/.test(headTxt);
+    });
+  }
+
+  function decorate(table) {
+    if (!table || table.classList.contains('fx-sim-table')) return;
+
+    // 横スクロール用のラッパー
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-sim-scroll';
+    table.parentElement.insertBefore(wrap, table);
+    wrap.appendChild(table);
+
+    // 目印クラス
+    table.classList.add('fx-sim-table');
+
+    // 最終列（損益）に色クラス付与（表示テキストは変更しない）
+    const lastColIndex = (table.tHead ? table.tHead.rows[0].cells.length
+                                      : table.rows[0]?.cells.length) - 1;
+    if (lastColIndex >= 0) {
+      Array.from(table.tBodies[0]?.rows || []).forEach(tr => {
+        const td = tr.cells[lastColIndex];
+        if (!td) return;
+        const t = (td.textContent || '').trim();
         if (/^[＋+]/.test(t)) td.classList.add('fx-pos');
         else if (/▲|−|-/.test(t)) td.classList.add('fx-neg');
       });
     }
+  }
 
-    // 「¥1,547, -」→「¥1,547,000」：テキストノードだけ安全置換
-    function fixYenDash(table){
-      const headRow = (table.tHead?.rows[0] || table.rows[0]);
-      if (!headRow) return;
-      const yenCol = Array.from(headRow.cells).findIndex(th => /円換算額/.test((th.textContent||'').replace(/\s+/g,'')));
-      const col = yenCol >= 0 ? yenCol : 2; // 保険
-      const YEN='[¥￥]'; const DASH='[-−―ー–—]';
-      const RE_NODE = new RegExp(`(${YEN}\\s*[0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:${DASH})?\\s*$`);
-
-      Array.from(table.tBodies[0]?.rows || []).forEach(tr=>{
-        const td = tr.cells[col]; if(!td) return;
-        // 改行はスペースに統一
-        td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
-        // 下線などの装飾は保持しつつテキストノードを置換
-        const w = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
-        const nodes=[]; while(w.nextNode()) nodes.push(w.currentNode);
-        let done=false;
-        nodes.forEach(n=>{
-          const s=n.nodeValue; if(RE_NODE.test(s)){ n.nodeValue=s.replace(RE_NODE,(_,a)=>a+'000'); done=true; }
-        });
-        if(!done){
-          const txt=(td.textContent||'').trim();
-          if(RE_NODE.test(txt)) td.textContent = txt.replace(RE_NODE,(_,a)=>a+'000');
-        }
-      });
+  function run() {
+    const tbl = findFxTable();
+    if (tbl) {
+      decorate(tbl);
+      window.__fxSimDecorated = true;
     }
+  }
 
-    function stripUnderline(table){
-      table.classList.add('sim-noline');
-      const last = (table.tHead ? table.tHead.rows[0].cells.length : (table.rows[0]?.cells.length||1)) - 1;
-      if (last < 0) return;
-      Array.from(table.tBodies[0]?.rows || []).forEach(tr=>{
-        const td = tr.cells[last]; if(!td) return;
-        td.style.textDecoration='none';
-        td.style.webkitTextDecorationSkip='none';
-        td.style.whiteSpace='nowrap';
-      });
-    }
+  // 初回＆少しリトライ（遅延レンダリング対策）
+  run();
+  let n = 0;
+  const tm = setInterval(() => { if (++n > 10 || window.__fxSimDecorated) return clearInterval(tm); run(); }, 300);
 
-    function run(){
-      const tbl = findFxTable(); if(!tbl) return;
-      wrapAndMark(tbl);
-      colorLastCol(tbl);
-      fixYenDash(tbl);
-      stripUnderline(tbl);
-    }
-
-    run();
-    let n=0; const tm=setInterval(()=>{ run(); if(++n>10) clearInterval(tm); }, 300);
-    document.addEventListener('toggle', e=>{ if(e.target.tagName==='DETAILS' && e.target.open) run(); }, true);
-    new MutationObserver(()=>run()).observe(document.getElementById('disclaimer')||document.body,{childList:true,subtree:true});
-  })();
-
+  // 対象 details を開いたタイミングでも実行
+  document.addEventListener('toggle', e => {
+    if (e.target.tagName === 'DETAILS') run();
+  }, true);
 })();
+/* ==== FX簡易シミュレーション：損益セルの改行を除去（1行化） ==== */
+(function () {
+  const tbl = document.querySelector('table.fx-sim-table');
+  if (!tbl) return;
+
+  const lastCol = (tbl.tHead ? tbl.tHead.rows[0].cells.length
+                              : tbl.rows[0]?.cells.length) - 1;
+  if (lastCol < 0) return;
+
+  Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[lastCol];
+    if (!td) return;
+
+    // <br> をスペースに置換
+    td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+    // 余分な改行/連続空白を整理して1行に
+    const text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+    td.textContent = text; // 文字だけ戻す（色付けはtdのクラスfx-pos/fx-negで維持）
+
+    // 念のため：もう一度改行禁止
+    td.style.whiteSpace = 'nowrap';
+  });
+})();
+/* ==== FX簡易シミュレーション：スクロール用ラッパを自動付与（append-only） ==== */
+(function () {
+  const t = document.querySelector('table.fx-sim-table');
+  if (!t) return;
+  if (t.parentElement && t.parentElement.classList.contains('fx-sim-scroll')) return;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'fx-sim-scroll';
+  t.parentNode.insertBefore(wrap, t);
+  wrap.appendChild(t);
+})();
+
+/* ==== ★追加：損益列の“下線”を確実に無効化するクラスを付与（append-only） ==== */
+(function () {
+  function addNoLine() {
+    // まず fx-sim-table を優先、なければ見出し語で推定
+    var tbl = document.querySelector('table.fx-sim-table') ||
+      Array.from(document.querySelectorAll('table')).find(function(t){
+        var txt = (t.tHead ? t.tHead.textContent : t.textContent) || '';
+        return /円換算額/.test(txt) && /損益/.test(txt);
+      });
+    if (tbl) tbl.classList.add('sim-noline');
+  }
+  addNoLine();
+  // details を開いた直後や遅延描画にも対応
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') setTimeout(addNoLine, 0); }, true);
+  setTimeout(addNoLine, 800);
+})();
+/* ==== FX簡易シミュレーション：損益列の下線を強制的に除去（append-only） ==== */
+(function () {
+  function stripProfitUnderline() {
+    var tbl = document.querySelector('table.fx-sim-table');
+    if (!tbl) return;
+
+    var last = (tbl.tHead ? tbl.tHead.rows[0].cells.length
+                          : (tbl.rows[0] ? tbl.rows[0].cells.length : 0)) - 1;
+    if (last < 0) return;
+
+    Array.from(tbl.tBodies[0] ? tbl.tBodies[0].rows : []).forEach(function (tr) {
+      var td = tr.cells[last];
+      if (!td) return;
+
+      // 1) 中の <a>/<u>/<ins> などを丸ごと“テキストだけ”にする
+      var text = (td.textContent || '').replace(/\s+/g, ' ').trim();
+      td.textContent = text;  // クラス fx-pos/fx-neg は td 側に残るので色は維持
+
+      // 2) 念のため style で下線を完全無効化
+      td.style.setProperty('text-decoration', 'none', 'important');
+      td.style.setProperty('-webkit-text-decoration-skip', 'none', 'important');
+      td.style.whiteSpace = 'nowrap';
+      td.style.display = 'inline-block'; // 余計な折り返し防止
+    });
+
+    // 表全体にも識別クラス（CSS側の保険）
+    tbl.classList.add('sim-noline');
+  }
+
+  // 初回・遅延描画・details 開閉の各タイミングで実行
+  stripProfitUnderline();
+  setTimeout(stripProfitUnderline, 500);
+  document.addEventListener('toggle', function (e) {
+    if (e.target && e.target.tagName === 'DETAILS') setTimeout(stripProfitUnderline, 0);
+  }, true);
+})();
+/* 円換算額の「,-」を「,000」に統一（FX表だけ・他は触らない） */
+(function () {
+  const tbl = document.querySelector('table.fx-sim-table');
+  if (!tbl) return;
+
+  // 見出しから「円換算額」列の位置を取得（なければ3列目を仮定）
+  let col = -1;
+  const heads = (tbl.tHead ? tbl.tHead.rows[0].cells : tbl.rows[0]?.cells) || [];
+  [...heads].forEach((th, i) => {
+    if (/円換算額/.test((th.textContent || '').trim())) col = i;
+  });
+  if (col < 0) col = 2; // 保険：3列目（0始まり）
+
+  // 末尾が ",-" だけを ",000" に置換
+  (tbl.tBodies[0]?.rows || []).forEach(tr => {
+    const td = tr.cells[col];
+    if (!td) return;
+    td.textContent = (td.textContent || '').replace(/,\s*-\s*$/, ',000');
+  });
+})();
+/* 円換算額の「,-」を「,000」に正規化（表示だけ／他は触らない） */
+(function () {
+  const PAT = /,\s*[−-]\s*$/u; // 末尾「,-」「, −」など（全角マイナス含む）
+
+  function fixOneTable(tbl) {
+    // ヘッダから「円換算額」列のインデックスを推定
+    let col = -1;
+    const headRow =
+      (tbl.tHead && tbl.tHead.rows[0]) ||
+      Array.from(tbl.rows).find(r => r.querySelector('th'));
+    if (headRow) {
+      const cells = Array.from(headRow.cells);
+      col = cells.findIndex(th =>
+        /円換算額/.test((th.textContent || '').replace(/\s+/g, ' '))
+      );
+    }
+    if (col < 0) col = 2; // 保険（3列目）
+
+    // 対象列だけ置換。既に「,000」なら何もしない
+    Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => {
+      const td = tr.cells[col];
+      if (!td) return;
+
+      // 余計な改行があればスペースへ
+      td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+      const txt = (td.textContent || '').trim();
+      if (PAT.test(txt)) {
+        td.textContent = txt.replace(PAT, ',000');
+      }
+    });
+  }
+
+  function run() {
+    // ヘッダに「円換算額」を含む表だけを対象
+    document.querySelectorAll('table').forEach(tbl => {
+      const headerTxt =
+        (tbl.tHead ? tbl.tHead.textContent : tbl.rows[0]?.textContent) || '';
+      if (/円換算額/.test(headerTxt)) fixOneTable(tbl);
+    });
+  }
+
+  // 即時実行＋遅延描画対策（数回リトライ）＋detailsオープン時
+  run();
+  let tries = 0;
+  const tm = setInterval(() => { run(); if (++tries > 10) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e => {
+    if (e.target.tagName === 'DETAILS' && e.target.open) run();
+  }, true);
+
+  // 免責セクション内でDOMが後から差し替わっても再実行
+  const host = document.getElementById('disclaimer') || document.body;
+  new MutationObserver(run).observe(host, { childList: true, subtree: true });
+})();
+/* 円換算額の末尾「, - / , − / , － …」を「,000」に統一（他は触らない） */
+(function () {
+  // 「,」(半角/全角) のあとに各種ハイフンが来て行末で終わるパターン
+  const TRAIL = /([,\uFF0C])\s*[‐-‒–—\-−－]\s*$/u;
+
+  function normalizeCell(td) {
+    if (!td || td.dataset.fxFixed) return;
+
+    // <br>はスペースに統一（表示だけ整える）
+    td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+
+    const before = (td.textContent || '').trim();
+    if (TRAIL.test(before)) {
+      td.textContent = before.replace(TRAIL, '$1000'); // 例: "¥1,547, -" → "¥1,547,000"
+      td.dataset.fxFixed = '1';
+    }
+  }
+
+  function targetColIndex(tbl) {
+    // thead か 先頭行の th から「円換算額」列を探す
+    const heads = tbl.querySelectorAll('thead th, tr:first-child th');
+    for (let i = 0; i < heads.length; i++) {
+      const t = (heads[i].textContent || '').replace(/\s+/g,'');
+      if (t.includes('円換算額')) return i;
+    }
+    // 保険：1行目のセルを見て「¥… ,(スペース)ハイフン行末」を含む列を推定
+    const r0 = tbl.tBodies[0]?.rows?.[0];
+    if (r0) {
+      for (let i = 0; i < r0.cells.length; i++) {
+        const txt = (r0.cells[i].textContent || '').trim();
+        if (/^¥/.test(txt) && TRAIL.test(txt)) return i;
+      }
+    }
+    return -1;
+  }
+
+  function fixTable(tbl) {
+    const col = targetColIndex(tbl);
+    if (col < 0) return;
+    Array.from(tbl.tBodies[0]?.rows || []).forEach(tr => normalizeCell(tr.cells[col]));
+  }
+
+  function run() {
+    // 見出しに「円換算額」がある表だけを対象
+    document.querySelectorAll('table').forEach(tbl => {
+      const headTxt = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '');
+      if (/円換算額/.test(headTxt)) fixTable(tbl);
+    });
+  }
+
+  // 即時＋遅延描画/開閉に備えた再実行
+  run();
+  let n = 0; const tm = setInterval(() => { run(); if (++n > 10) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS' && e.target.open) run(); }, true);
+  new MutationObserver(run).observe(document.getElementById('disclaimer') || document.body, { childList:true, subtree:true });
+})();
+/* ==== FX表：円換算額の「, -」を「,000」に正規化（この表だけ） ==== */
+(function () {
+  // 「円換算額」ヘッダを持つテーブルだけを対象にする
+  function isTargetTable(tbl) {
+    const headTxt = ((tbl.tHead && tbl.tHead.textContent) || (tbl.rows[0] && tbl.rows[0].textContent) || '')
+      .replace(/\s+/g, '');
+    return headTxt.includes('円換算額') && (headTxt.includes('損益') || headTxt.includes('満期残高'));
+  }
+
+  // ヘッダから「円換算額」列の位置を特定
+  function getYenCol(tbl) {
+    const cells = Array.from((tbl.tHead && tbl.tHead.rows[0].cells) || (tbl.rows[0] && tbl.rows[0].cells) || []);
+    return cells.findIndex(th => /円換算額/.test((th.textContent || '').replace(/\s+/g, '')));
+  }
+
+  // 「¥1,547, -」/「¥1,547,−」/「¥1,547, 」→「¥1,547,000」
+  const DASH = '[-\\u2212\\uFF0D\\u2012\\u2013\\u2014]'; // 半角/全角/各種ダッシュ
+  const RE_BAD = new RegExp('^¥\\s*([0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:' + DASH + ')?\\s*$');
+
+  function fixTable(tbl) {
+    const col = getYenCol(tbl);
+    if (col < 0) return;
+
+    const rows = (tbl.tBodies && tbl.tBodies[0] && tbl.tBodies[0].rows) ? Array.from(tbl.tBodies[0].rows)
+                 : Array.from(tbl.rows).slice(1);
+
+    rows.forEach(tr => {
+      const td = tr.cells[col];
+      if (!td) return;
+      const txt = (td.textContent || '').trim();
+      const m = txt.match(RE_BAD);
+      if (m) td.textContent = `¥${m[1]}000`;
+    });
+  }
+
+  function run() {
+    document.querySelectorAll('table').forEach(tbl => { if (isTargetTable(tbl)) fixTable(tbl); });
+  }
+
+  // 即時実行＋遅延レンダリング/アコーディオン開閉にも対応
+  run();
+  let tries = 0;
+  const timer = setInterval(() => { run(); if (++tries > 12) clearInterval(timer); }, 300);
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') run(); }, true);
+  new MutationObserver(() => run()).observe(document.body, { childList: true, subtree: true });
+})();
+<!-- FX表：円換算額「¥1,547, -」→「¥1,547,000」確実版（この表だけ） -->
+<script>
+(function(){
+  // 1) 対象テーブル判定（見出しに「円換算額」「損益」がある表のみ）
+  function isFxTable(tbl){
+    const head = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '')
+      .replace(/\s+/g,'');
+    return head.includes('円換算額') && head.includes('損益');
+  }
+
+  // 2) 「円換算額」列のインデックス
+  function yenColIndex(tbl){
+    const row = (tbl.tHead?.rows[0] || tbl.rows[0]);
+    if(!row) return -1;
+    const cells = Array.from(row.cells||[]);
+    return cells.findIndex(c => /円換算額/.test((c.textContent||'').replace(/\s+/g,'')));
+  }
+
+  // 3) セル内のテキストノードだけを安全に置換（装飾は壊さない）
+  const YEN  = '[¥￥]';               // 半角/全角どちらも
+  const DASH = '[-−―ー–—]';           // 各種ダッシュ・長音
+  const RE_NODE = new RegExp(`(${YEN}\\s*[0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:${DASH})?\\s*$`);
+  const RE_FULL = new RegExp(`^(${YEN}\\s*[0-9]{1,3}(?:,[0-9]{3})*),\\s*(?:${DASH})?\\s*$`);
+
+  function fixCell(td){
+    // テキストノードを走査して末尾の「, -」系を「000」に
+    const walker = document.createTreeWalker(td, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    let replaced = false;
+    nodes.forEach(n=>{
+      const s = n.nodeValue;
+      if (RE_NODE.test(s)) { n.nodeValue = s.replace(RE_NODE, (_,a)=> a+'000'); replaced = true; }
+    });
+    // フォールバック：セル全体で一致したら一括で文字列化
+    if (!replaced){
+      const full = (td.textContent||'').trim();
+      const m = full.match(RE_FULL);
+      if (m) td.textContent = m[1] + '000';
+    }
+  }
+
+  function run(){
+    document.querySelectorAll('table').forEach(tbl=>{
+      if(!isFxTable(tbl)) return;
+      const col = yenColIndex(tbl);
+      if(col < 0) return;
+      const bodyRows = tbl.tBodies[0]?.rows || [];
+      const rows = bodyRows.length ? Array.from(bodyRows) : Array.from(tbl.rows).slice(1); // thead無い場合
+      rows.forEach(tr => {
+        const td = tr.cells[col];
+        if (td) fixCell(td);
+      });
+    });
+  }
+
+  // 初回 & 遅延描画/翻訳/アコーディオン開閉にも追従
+  run();
+  let n=0; const tm=setInterval(()=>{ run(); if(++n>12) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e=>{ if(e.target.tagName==='DETAILS') run(); }, true);
+  new MutationObserver(m=>{ for(const r of m){ if(r.addedNodes.length){ run(); break; } }})
+    .observe(document.body,{childList:true,subtree:true});
+})();
+</script>
