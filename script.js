@@ -922,3 +922,60 @@
     }
   }, {once:true});
 })();
+/* === FIX v2: 日本語へ戻す時に確実に復元（フリック不要・append-only） === */
+(function(){
+  function delCookie(name){
+    var past = 'Thu, 01 Jan 1970 00:00:00 GMT';
+    var host = location.hostname, parts = host.split('.');
+    // 現在ドメイン
+    document.cookie = name + '=; expires=' + past + '; path=/';
+    // ルートドメイン（sub.example.co.jp → .example.co.jp）にも
+    if (parts.length >= 3){
+      var root = '.' + parts.slice(-2).join('.');
+      document.cookie = name + '=; expires=' + past + '; path=/; domain=' + root;
+    }
+  }
+  function isTranslated(){
+    var html = document.documentElement;
+    return html.classList.contains('translated-ltr') ||
+           html.classList.contains('translated-rtl') ||
+           /\btranslated\b/.test(document.body.className || '');
+  }
+
+  // ① 言語モーダル（.ls-item）クリック時：日本語が選ばれたら強制復元
+  document.addEventListener('click', function(e){
+    var item = e.target.closest('.ls-item'); if(!item) return;
+    var codeEl = item.querySelector('.ls-code');
+    var code = codeEl && codeEl.textContent ? codeEl.textContent.trim() : '';
+    if(!code) return;
+
+    // “ja” 系は Google翻訳ではなく「原文復元」扱いにする
+    if (/^ja(\b|[-_]|$)/i.test(code)){
+      delCookie('googtrans'); // 翻訳指示クッキーを削除
+      // 公式 select があれば原文に戻すイベントだけ発火
+      try{
+        var sel = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (sel){ sel.value = ''; sel.dispatchEvent(new Event('change', {bubbles:true})); }
+      }catch(_){}
+      // まだ翻訳状態ならハードに復元（ページ更新）
+      setTimeout(function(){ if (isTranslated()) location.reload(); }, 250);
+    }
+  }, true);
+
+  // ② 公式の隠し <select> 操作時にも同じ復元を適用（保険）
+  document.addEventListener('change', function(e){
+    var sel = e.target;
+    if (!sel || !sel.matches('#google_translate_element select.goog-te-combo')) return;
+    var code = (sel.value || '').trim();
+    if (/^ja(\b|[-_]|$)/i.test(code)){
+      delCookie('googtrans');
+      setTimeout(function(){ if (isTranslated()) location.reload(); }, 250);
+    }
+  }, true);
+
+  // ③ 読み込み時：万一 googtrans=/ja/ja が残ってたら消す（保険）
+  window.addEventListener('load', function(){
+    var ck = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
+    if (ck && /\/ja\/ja$/.test(ck)) delCookie('googtrans');
+  }, {once:true});
+})();
