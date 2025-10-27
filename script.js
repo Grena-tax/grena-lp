@@ -846,3 +846,79 @@
   document.querySelectorAll('#legal-safety-note, .legal-safety-note, .legal-important-note') /* ★FIX */
     .forEach(n=>{ if (n && !content.contains(n)) content.appendChild(n); });/* ★FIX */
 })();                                                                        /* ★FIX */
+/* === FIX: Google翻訳 強制ロード + クッキー方式フォールバック（append-only） === */
+(function(){
+  // 1) Googleのelement.jsが未読込なら注入
+  function ensureGTE(){
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) return;
+    if (document.getElementById('gt-script')) return;
+    var s = document.createElement('script');
+    s.id = 'gt-script';
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  ensureGTE();
+
+  // 2) サイト側に書けるクッキーで翻訳を指示（/ja/xx）
+  function setCookie(name, value, days){
+    var d = new Date(); d.setTime(d.getTime() + (days||365)*864e5);
+    var exp = '; expires=' + d.toUTCString();
+    var path = '; path=/';
+    var host = location.hostname;
+
+    document.cookie = name + '=' + encodeURIComponent(value) + exp + path;
+
+    // サブドメイン対策（example.co.jp のようにドットが2つ以上ならトップ2階層にも）
+    var parts = host.split('.');
+    if (parts.length >= 3){
+      var root = '.' + parts.slice(-2).join('.');
+      document.cookie = name + '=' + encodeURIComponent(value) + exp + '; path=/; domain=' + root;
+    }
+  }
+  function forceTranslateTo(code){
+    var src = 'ja';
+    var val = '/' + src + '/' + code;
+    setCookie('googtrans', val);
+
+    // 既存の select があれば change を飛ばし、それでも無理ならリロード
+    try{
+      var sel = document.querySelector('#google_translate_element select.goog-te-combo');
+      if (sel){
+        sel.value = code;
+        sel.dispatchEvent(new Event('change', {bubbles:true}));
+        return;
+      }
+    }catch(_){}
+    location.reload();
+  }
+
+  // 3) 言語モーダルのクリックを監視：既存処理→0.6秒様子見→未翻訳なら強制適用
+  document.addEventListener('click', function(e){
+    var el = e.target.closest('.ls-item');
+    if (!el) return;
+    var codeEl = el.querySelector('.ls-code');
+    var code = codeEl && codeEl.textContent && codeEl.textContent.trim();
+    if (!code) return;
+
+    // 既存のハンドラに任せたあと、翻訳されたか判定
+    setTimeout(function(){
+      var translated = document.querySelector('html.translated-ltr, html.translated-rtl') ||
+                       /\btranslated\b/.test(document.body.className);
+      if (!translated) forceTranslateTo(code);
+    }, 600);
+  }, true);
+
+  // 4) ページ読込時：googtrans クッキーがあるのに未適用なら、初期化を促す
+  window.addEventListener('load', function(){
+    var ck = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
+    var applied = document.querySelector('html.translated-ltr, html.translated-rtl');
+    if (ck && !applied){
+      ensureGTE();
+      // 念のため再初期化を呼ぶ（cbが未発火のケース向け）
+      setTimeout(function(){
+        if (window.googleTranslateElementInit) window.googleTranslateElementInit();
+      }, 800);
+    }
+  }, {once:true});
+})();
