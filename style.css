@@ -251,7 +251,7 @@ html{
   .accordion > details > summary{ font-size: 18px; }
 }
 @media (min-width: 768px){
-  .accordion > details > summary{ font-size: 19px; }
+  .accordion > details > summary{ fontサイズ: 19px; }
 }
 /* ==== Mobile: セクション左右にガターを追加（はみ出し防止） ==== */
 @media (max-width: 640px){
