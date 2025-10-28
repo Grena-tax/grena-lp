@@ -725,3 +725,65 @@
   document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS' && e.target.open) setTimeout(run, 0); }, true);
 })();
 </script>
+<script>
+/* ==== FX表だけの末尾「, -」を「,000」に直す安全版（翻訳/メニュー無関係） ==== */
+(function(){
+  'use strict';
+
+  function findFxTable(){
+    const sec = document.getElementById('disclaimer');
+    if (!sec) return null;
+    const byClass = sec.querySelector('table.fx-sim-table');
+    if (byClass) return byClass;
+    for (const tbl of sec.querySelectorAll('table')){
+      const head = (tbl.tHead?.textContent || tbl.rows[0]?.textContent || '').replace(/\s+/g,'');
+      if (head.includes('円換算額') && head.includes('損益')) return tbl;
+    }
+    return null;
+  }
+
+  const YEN  = '[¥￥]';
+  const COM  = '[,，]';
+  const DASH = '[\\-\\u2212\\u2010\\u2011\\u2012\\u2013\\u2014\\u2015\\u30FC\\uFF0D]';
+  const RE_END = new RegExp('(' + YEN + '\\s*\\d{1,3}(?:' + COM + '\\d{3})*),\\s*(?:' + DASH + ')\\s*$','u');
+
+  function fixFx(){
+    const tbl = findFxTable();
+    if (!tbl) return;
+
+    // ヘッダから「円換算額」列を特定
+    let yenCol = -1;
+    const headRow = (tbl.tHead?.rows[0]) || tbl.rows[0];
+    if (headRow){
+      const cells = Array.from(headRow.cells);
+      yenCol = cells.findIndex(c => /円換算額/.test((c.textContent||'').replace(/\s+/g,'')));
+    }
+    if (yenCol < 0) return;
+
+    const rows = tbl.tBodies[0]?.rows ? Array.from(tbl.tBodies[0].rows) : Array.from(tbl.rows).slice(1);
+    rows.forEach(tr => {
+      const td = tr.cells[yenCol]; if (!td) return;
+      td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+      const before = (td.textContent || '').replace(/\s+/g,' ').trim();
+      if (RE_END.test(before)) td.textContent = before.replace(RE_END, (_,a)=> a + '000');
+    });
+  }
+
+  function setup(){
+    fixFx(); // 初回のみ
+    const host = document.getElementById('disclaimer');
+    if (host){
+      new MutationObserver(() => fixFx()).observe(host, {childList:true, subtree:true});
+      host.addEventListener('toggle', e => {
+        if (e.target.tagName === 'DETAILS' && e.target.open) fixFx();
+      }, true);
+    }
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', setup, {once:true});
+  } else {
+    setup();
+  }
+})();
+</script>
