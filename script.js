@@ -1087,3 +1087,45 @@
     ensureScript('googleTranslateElementInit');
   }, {once:true});
 })();
+<script>
+/* FX表の「円換算額」で ",000" が落ちて見える行だけ補う（他は一切変更しない） */
+(function () {
+  // 対象テーブル：ヘッダに「円換算額」があるものだけ
+  const tbl = Array.from(document.querySelectorAll('table')).find(t => {
+    const h = (t.tHead?.textContent || t.rows[0]?.textContent || '').replace(/\s+/g,'');
+    return /円換算額/.test(h);
+  });
+  if (!tbl) return;
+
+  // 「円換算額」列のインデックス
+  let col = -1;
+  const headRow = (tbl.tHead?.rows[0] || tbl.rows[0]);
+  Array.from(headRow?.cells || []).forEach((th,i)=>{
+    const txt = (th.textContent || '').replace(/\s+/g,'');
+    if (txt.includes('円換算額')) col = i;
+  });
+  if (col < 0) return;
+
+  // 末尾が「円」で、カンマが1回以下（= 1,547円 など）だけ 「,000円」に補正
+  const ROWS = (tbl.tBodies[0]?.rows?.length ? Array.from(tbl.tBodies[0].rows)
+                                              : Array.from(tbl.rows).slice(1));
+  ROWS.forEach(tr => {
+    const td = tr.cells[col];
+    if (!td) return;
+    const raw = (td.textContent || '').trim();
+
+    // 既に「,000」が入っている/カンマ2回以上の桁数はスキップ
+    const commaCount = (raw.match(/,/g)||[]).length;
+    if (!/円\s*$/.test(raw) || commaCount >= 2 || /,000円\s*$/.test(raw)) return;
+
+    // 「1,547円」や「1547円」→ 「1,547,000円」にだけ置換（￥記号は残す）
+    const fixed = raw
+      .replace(/(¥|￥)?\s*(\d{1,3})(?:,(\d{3}))?\s*円\s*$/u, (m, yen, a, b) => {
+        const head = (yen ? yen : '') + (b ? `${a},${b}` : a);
+        return `${head},000円`;
+      });
+
+    td.textContent = fixed;
+  });
+})();
+</script>
