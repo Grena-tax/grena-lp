@@ -694,3 +694,34 @@
   document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS') run(); }, true);
   new MutationObserver(() => run()).observe(document.body, { childList: true, subtree: true });
 })();
+<script>
+/* ==== FX表の「¥1,547, -」→「¥1,547,000」だけを直す最小パッチ（翻訳・メニュー無関係） ==== */
+(function(){
+  'use strict';
+  // ¥/￥、半角/全角カンマ、あらゆるダッシュ（‐-–—―ー−FF0D）に対応
+  const YEN  = '[¥￥]';
+  const COM  = '[,，]';
+  const DASH = '[\\-\\u2212\\u2010\\u2011\\u2012\\u2013\\u2014\\u2015\\u30FC\\uFF0D]';
+  const RE_END = new RegExp('(' + YEN + '\\s*\\d{1,3}(?:' + COM + '\\d{3})*),\\s*(?:' + DASH + ')\\s*$', 'u');
+
+  function fixCell(td){
+    if (!td) return;
+    // <br> をスペースに統一（見た目そのまま）
+    td.querySelectorAll && td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+    const before = (td.textContent || '').replace(/\s+/g,' ').trim();
+    if (!RE_END.test(before)) return;                 // 対象以外は触らない
+    const after = before.replace(RE_END, (_,a)=> a + '000');
+    if (after !== before) td.textContent = after;     // マークアップ壊さない範囲でテキストだけ更新
+  }
+
+  function run(root){
+    (root || document).querySelectorAll('table td, table th').forEach(fixCell);
+  }
+
+  // 初回 & 遅延描画・アコーディオン開閉に追従（翻訳コードには一切フックしない）
+  run();
+  let tries = 0;
+  const tm = setInterval(() => { run(); if (++tries > 12) clearInterval(tm); }, 300);
+  document.addEventListener('toggle', e => { if (e.target.tagName === 'DETAILS' && e.target.open) setTimeout(run, 0); }, true);
+})();
+</script>
