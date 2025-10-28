@@ -979,3 +979,111 @@
     if (ck && /\/ja\/ja$/.test(ck)) delCookie('googtrans');
   }, {once:true});
 })();
+/* === FIX v3: Google翻訳を確実に起動 + 失敗時の強制適用（append-only） === */
+(function(){
+  // 既存のコールバックが無い環境でも動くように保険
+  if (!window.googleTranslateElementInit) {
+    window.googleTranslateElementInit = function(){
+      try{
+        new google.translate.TranslateElement(
+          { pageLanguage: 'ja', autoDisplay: false },
+          'google_translate_element'
+        );
+      }catch(_){}
+    };
+  }
+
+  // ホスト要素を必ず用意（無ければ自動作成）
+  function ensureHost(){
+    if (!document.getElementById('google_translate_element')){
+      var d=document.createElement('div');
+      d.id='google_translate_element';
+      d.style.cssText='position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;';
+      (document.body||document.documentElement).appendChild(d);
+    }
+  }
+
+  // 翻訳スクリプトが無ければ注入
+  function ensureScript(cb){
+    var id='__gt_script__';
+    if (document.getElementById(id)) return true;
+    var s=document.createElement('script');
+    s.id=id;
+    s.src='https://translate.google.com/translate_a/element.js?cb='+(cb||'googleTranslateElementInit');
+    s.async=true; s.defer=true;
+    (document.head||document.documentElement).appendChild(s);
+    return false;
+  }
+
+  // ルートドメイン推定（cookie用）
+  function rootDomain(){
+    var h=location.hostname.split('.');
+    return (h.length>=3) ? ('.'+h.slice(-2).join('.')) : location.hostname;
+  }
+  function setCookie(name,val,days){
+    var exp=''; if(days){ var t=new Date(); t.setTime(t.getTime()+days*864e5); exp='; expires='+t.toUTCString(); }
+    document.cookie = name+'='+encodeURIComponent(val)+'; path=/; domain='+rootDomain()+exp;
+  }
+  function delCookie(name){
+    document.cookie = name+'=; path=/; domain='+rootDomain()+'; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  }
+
+  // 言語適用：selectが無くてもcookie経由で確実適用→必要ならリロード
+  function applyLang(code){
+    ensureHost();
+    ensureScript('googleTranslateElementInit');
+
+    if (/^ja(\b|[-_]|$)/i.test(code)){
+      delCookie('googtrans'); // 原文に戻す
+    } else {
+      setCookie('googtrans','/ja/'+code,7); // 翻訳指示
+    }
+
+    var setSelect = function(c){
+      var sel=document.querySelector('#google_translate_element select.goog-te-combo');
+      if (!sel) return false;
+      sel.value=c;
+      sel.dispatchEvent(new Event('change',{bubbles:true}));
+      return true;
+    };
+
+    if (setSelect(code)) return;
+
+    // 少し待っても<select>が出ない＝スクリプト遅延時は最終手段でリロード
+    var tries=0, tm=setInterval(function(){
+      if (setSelect(code)){ clearInterval(tm); return; }
+      if (++tries>=8){ clearInterval(tm); location.reload(); } // 2秒後に再起動
+    },250);
+  }
+
+  // 自前の言語リスト(.ls-item)クリックを横取りして確実に適用
+  document.addEventListener('click', function(e){
+    var item=e.target.closest('.ls-item'); if(!item) return;
+    var code=(item.querySelector('.ls-code')?.textContent||'').trim();
+    if(!code) return;
+    e.preventDefault();
+
+    if (/^ja(\b|[-_]|$)/i.test(code)){
+      // 日本語に戻す：クッキー消して翻訳状態なら軽くリロード（フリック不要）
+      delCookie('googtrans');
+      setTimeout(function(){ location.reload(); }, 150);
+    } else {
+      applyLang(code);
+    }
+  }, true);
+
+  // 公式<select>経由でもcookieを同期（保険）
+  document.addEventListener('change', function(e){
+    var sel=e.target;
+    if (!sel || !sel.matches('#google_translate_element select.goog-te-combo')) return;
+    var code=(sel.value||'').trim();
+    if (/^ja(\b|[-_]|$)/i.test(code)) delCookie('googtrans');
+    else setCookie('googtrans','/ja/'+code,7);
+  }, true);
+
+  // 初回起動
+  window.addEventListener('load', function(){
+    ensureHost();
+    ensureScript('googleTranslateElementInit');
+  }, {once:true});
+})();
