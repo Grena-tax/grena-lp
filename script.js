@@ -130,3 +130,75 @@
 
 })();
 </script>
+<!-- ★ FX末尾だけ補正（翻訳・UI無関与）: 既存JSの最後に追加 -->
+<script>
+(() => {
+  'use strict';
+  if (window.__GRN_FX_ONLY__) return;
+  window.__GRN_FX_ONLY__ = true;
+
+  // 末尾 ", -" を "000" 付与に直す（¥/￥、カンマ全角、各種ダッシュ対応）
+  const RE = /^([¥￥]\s*\d{1,3}(?:[,，]\d{3})*)\s*,\s*(?:[\-\u2212\u2010\u2011\u2012\u2013\u2014\u2015\u30FC\uFF0D])\s*$/u;
+
+  function isFxTable(tbl){
+    const head = ((tbl.tHead?.textContent) || (tbl.rows[0]?.textContent) || '').replace(/\s+/g,'');
+    return head.includes('円換算額') && head.includes('損益');
+  }
+
+  function fixCell(td){
+    if (!td) return false;
+    // <br>は見た目維持のためスペース化（DOM移動なし）
+    td.querySelectorAll('br').forEach(br => br.replaceWith(document.createTextNode(' ')));
+    const before = (td.textContent || '')
+      .replace(/\u00A0/g, ' ')   // NBSP
+      .replace(/\s+/g, ' ')
+      .trim();
+    const m = before.match(RE);
+    if (!m) return false;
+    const after = m[1] + '000';
+    if (after !== before) {
+      td.textContent = after;   // テキストのみ更新（クラス等は不変）
+      return true;
+    }
+    return false;
+  }
+
+  function run(){
+    let changed = 0;
+    document.querySelectorAll('table').forEach(tbl => {
+      if (!isFxTable(tbl)) return;
+
+      const headRow = (tbl.tHead?.rows[0] || tbl.rows[0]);
+      if (!headRow) return;
+
+      // 「円換算額」列のインデックスを特定
+      const ycol = Array.from(headRow.cells).findIndex(c =>
+        /円換算額/.test((c.textContent || '').replace(/\s+/g,''))
+      );
+      if (ycol < 0) return;
+
+      const rows = Array.from(tbl.tBodies[0]?.rows || []);
+      rows.forEach(tr => { changed += fixCell(tr.cells[ycol]) ? 1 : 0; });
+    });
+    // console.debug('[FX-only] fixed cells:', changed);
+  }
+
+  // 初回 & 遅延描画に追従（翻訳でDOM差し替えされても再実行）
+  function boot(){
+    run();
+    let i = 0;
+    const tm = setInterval(() => { run(); if (++i > 15) clearInterval(tm); }, 300);
+
+    const obs = new MutationObserver(muts => {
+      for (const m of muts) {
+        if (m.addedNodes && m.addedNodes.length) { run(); break; }
+      }
+    });
+    obs.observe(document.body, { childList: true, subtree: true });
+  }
+
+  (document.readyState === 'loading')
+    ? document.addEventListener('DOMContentLoaded', boot, { once: true })
+    : boot();
+})();
+</script>
