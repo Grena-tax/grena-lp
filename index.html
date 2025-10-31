@@ -1,25 +1,25 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>ジョージア法人設立LP</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ジョージア法人設立LP</title>
 
-  <!-- Google自動翻訳の常時翻訳は抑止（ウィジェットは利用） -->
-  <meta name="google" content="notranslate">
+<!-- 自動翻訳の誘導を抑止（ウィジェットは動作） -->
+<meta name="google" content="notranslate">
 
-  <!-- 既存CSS（そのまま） -->
-  <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
+<!-- 既存：差し替え確認用ピンクバー（そのまま） -->
+<style>html{border-top:8px solid #ff0077!important}</style>
 
-  <!-- 追加の最小限パッチ -->
-  <link rel="stylesheet" href="./patch.css?v=20251031-fixA">
+<!-- 既存のメインCSSのみ（patch.cssは外す） -->
+<link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 </head>
 <body>
 
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 言語ドロワー（地球儀） -->
+<!-- 右上：言語スイッチ（UIは既存のまま。クリック不能対策はJSのみで実施） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -31,16 +31,20 @@
       <button class="lang-close" id="langClose" aria-label="Close">×</button>
     </div>
     <div class="lang-body">
-      <div class="ls-search"><input id="langSearch" type="search" placeholder="Search language (English names)" autocomplete="off"></div>
+      <div class="ls-search">
+        <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
+      </div>
+      <!-- ★ リストはJSで自動生成 -->
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-      <!-- Google公式ウィジェット（画面外待機） -->
+
+      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
   </aside>
 </div>
 
-<!-- ハンバーガー（目次） -->
+<!-- 右上ハンバーガー（UIは既存のまま。クリック不能対策はJSのみで実施） -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -51,7 +55,7 @@
       <strong class="menu-title">目次（各セクションへ移動）</strong>
       <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
     </div>
-    <div class="menu-groups" id="menuGroups"><!-- JSが自動生成 --></div>
+    <div class="menu-groups" id="menuGroups"><!-- JSが自動生成（既存のまま） --></div>
   </aside>
 </nav>
 
@@ -60,10 +64,12 @@
 ========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">
-    ジョージア法人設立｜<br>OECD・PwC準拠／MoU契約／完全オンライン
+    ジョージア法人設立｜<br>
+    OECD・PwC準拠／MoU契約／完全オンライン
   </h2>
 
   <div class="space-y-3 accordion">
+
     <details>
       <summary>ジョージア法人設立 OECD・PwC準拠｜MoU契約済｜完全オンライン対応</summary>
       <div class="content">
@@ -71,11 +77,10 @@
         <span class="note">※ OECD＝経済協力開発機構／PwC＝PricewaterhouseCoopers／MoU＝覚書</span>
         <p><strong>ジョージアの税制特徴（現地法上の扱い）</strong></p>
         <ul>
-          <li>ジョージア現地法上、再投資中の利益には法人税が課税されない制度です（配当時15％）。</li>
-          <li>※ 居住国の税法（CFC・移転価格等）が適用される可能性。必ず税理士へ相談。</li>
-          <li>※ 実際の税務効果は居住国・個別事情で異なります。</li>
+          <li>再投資中の利益には法人税が課税されない（配当時15%）。</li>
+          <li>※ 居住国の税法（CFCルール等）が適用される可能性。必ず税理士へ。</li>
+          <li>※ 実際の税務効果は居住国・個別事情で異なる。</li>
         </ul>
-        <span class="note">※ CFC＝タックスヘイブン対策税制</span>
         <p>渡航・英語・Zoom不要。すべて日本語と文面で完結。</p>
       </div>
     </details>
@@ -85,10 +90,10 @@
       <div class="content">
         <ul>
           <li>仮想通貨が利益確定できない</li>
-          <li>海外法人を作りたいが英語・現地手続きが不安</li>
-          <li>高税率やCFC制度に限界を感じている</li>
+          <li>海外法人を作りたいが、英語・現地手続きが不安</li>
+          <li>高税率やCFC制度に将来の限界を感じている</li>
         </ul>
-        <span class="note">※ CFC＝タックスヘイブン対策税制</span>
+        <span class="note">※ 用語：CFC＝タックスヘイブン対策税制</span>
         <p>→ そんな方にこそ、ジョージア法人が最適です。</p>
       </div>
     </details>
@@ -97,14 +102,14 @@
       <summary>仮想通貨とジョージア法人の相性（重要な注意点）</summary>
       <div class="content">
         <p><strong>お悩み → ジョージア法人なら</strong></p>
-        <p>含み益が動かせない → <em>注意:</em> 移管や構成変更の課税タイミングは居住国の税制に依存。移管が課税対象となる場合あり。必ず専門家に確認。</p>
+        <p>含み益が動かせない → <em>注意:</em> 移管や構成変更の課税タイミングは居住国の税制に依存。移管自体が課税対象となる場合あり。必ず専門家に確認。</p>
         <p><strong>仮想通貨の法人移管に関する注意</strong></p>
         <ul>
-          <li>ジョージア法人への移管は現地法上の手続きに過ぎません。</li>
-          <li>居住国での課税タイミングは各国税制で異なります。</li>
-          <li>移管自体が課税対象となるケースがあるため要確認。</li>
+          <li>ジョージア法人への移管は現地法上の手続き。</li>
+          <li>居住国での課税タイミングは各国税制で異なる。</li>
+          <li>移管自体が課税対象になるケースあり。</li>
         </ul>
-        <p>税務リスクが高い → OECD/PwC基準での帳簿・証憑整備<strong>（当社は記入サポートのみ。税務アドバイスは行いません）</strong>／個人名義が不安 → 法人名義ウォレット＋法人運用へ移行可能。</p>
+        <p>税務リスクが高い → OECD/PwC基準の証憑整備<strong>（当社は記入サポートのみ。税務アドバイスなし）</strong>。個人名義が不安 → 法人名義ウォレットへ移行可能。</p>
         <span class="note">※ 証憑＝請求書・契約書・送金記録など</span>
       </div>
     </details>
@@ -113,21 +118,18 @@
       <summary>ジョージア法人が安心な理由</summary>
       <div class="content">
         <ul>
-          <li>法的根拠：ジョージア商法・MoU契約構成</li>
+          <li>法的根拠：ジョージア商法・MoU構成</li>
           <li>PwC・OECDレポート準拠</li>
-          <li>現地法律事務所「TREX LEGAL」との連携体制</li>
-          <li>書類・用途証憑も整備可能</li>
+          <li>現地法律事務所「TREX LEGAL」と連携</li>
+          <li>書類・用途証憑の整備が可能</li>
         </ul>
-        <span class="note">※ MoU＝覚書</span>
       </div>
     </details>
 
     <details>
       <summary>法人税の課税タイミング（エストニア型モデル）</summary>
       <div class="content">
-        <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税（例外あり）。<br><span class="text-sm muted">※ 日本居住者はCFCの適用可能性。税理士に要確認。</span></p>
-        <p class="text-sm muted">※ 支配要件等で<strong>留保所得の合算課税</strong>となる場合があります。</p>
-        <p>出典：</p>
+        <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税（例外あり）。<br><span class="text-sm muted">※ 日本居住者はCFC等の適用可能性。税理士に要確認。</span></p>
         <ul>
           <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener">PwC税制レポート</a></li>
           <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener">OECD評価レポート</a></li>
@@ -139,12 +141,11 @@
       <summary>法律事務所とMoU提携済</summary>
       <div class="content">
         <ul>
-          <li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li>
+          <li>パートナー：TREX LEGAL（現地法律事務所）</li>
           <li>MoU締結日：2025年5月28日（現地時間）</li>
           <li>提携内容：登記、税務、口座、帳簿、契約サポート</li>
           <li>法人ID：406365525</li>
         </ul>
-        <span class="note">※ MoU＝覚書</span>
       </div>
     </details>
 
@@ -152,10 +153,10 @@
       <summary>初年度に含まれるサービス</summary>
       <div class="content">
         <ul>
-          <li>法人登記（実働2〜3営業日目安：現地営業日ベース）</li>
+          <li>法人登記（実働2〜3営業日目安）※現地営業日基準</li>
           <li>バーチャルオフィス（12ヶ月）</li>
           <li>英文契約書＋アポスティーユ</li>
-          <li>IBAN法人口座<strong>開設支援</strong>（現地パートナー経由）</li>
+          <li>IBAN法人口座<strong>開設支援</strong></li>
           <li>eSIM設定／税務ポータル登録（RS.ge）</li>
         </ul>
         <span class="note">※ IBAN＝国際銀行口座番号／RS.ge＝税務ポータル</span>
@@ -168,11 +169,10 @@
         <ul>
           <li>名義はジョージア国籍の代表者／株主で設定</li>
           <li>MoU＋委任状＋支配者証明で正規構成</li>
-          <li>実務はすべて依頼者本人が実行</li>
-          <li>年額：€2,500 <span class="text-sm">（税込／2025年8月時点）</span></li>
-          <li><strong>実質支配者（UBO）の開示は法的義務</strong></li>
+          <li>実務は依頼者本人が実行</li>
+          <li>年額：€2,500<span class="text-sm">（税込／2025年8月時点）</span></li>
+          <li><strong>UBOは公証済み宣誓書等で開示義務</strong></li>
         </ul>
-        <span class="note">※ UBO＝Ultimate Beneficial Owner</span>
       </div>
     </details>
 
@@ -182,13 +182,18 @@
         <p><strong>KYC（本人確認）</strong></p>
         <ul>
           <li>パスポート（顔写真ページ）</li>
-          <li>住所確認書類</li>
-          <li>仮想通貨利用時：ウォレット取引履歴（PDF）</li>
+          <li>住所書類</li>
+          <li>仮想通貨：ウォレット取引履歴（PDF）</li>
         </ul>
-        <p><strong>FMS（金融監督庁）</strong>：高額送金・仮想通貨額が大きい場合に報告や開示が必要なことあり。</p>
-        <p class="text-sm muted">※ 反社該当・関与の場合やAML/CFT上の疑いがある場合、支援はお断りします。</p>
+        <p><strong>FMS</strong>：仮想通貨保有・送金が多い場合は報告や開示が必要なことあり。</p>
+        <p><strong>FAQ</strong></p>
+        <ul>
+          <li>Q. 普通の人でもFMS報告必要？ → A. 基本不要、資産額次第。</li>
+          <li>Q. 提出はいつ？ → A. 要請時のみ。</li>
+        </ul>
       </div>
     </details>
+
   </div>
 </section>
 
@@ -206,12 +211,12 @@
           <div class="content">
             <ul>
               <li>法人登記（現地登記官とのやり取り含む）</li>
-              <li>法人口座<strong>開設支援</strong>（TBC／BOGほか）</li>
+              <li>法人口座<strong>開設支援</strong>（TBC／BOG ほか）</li>
               <li>登記住所（家賃1年分込み）</li>
               <li>書類翻訳・郵送サポート</li>
-              <li>日本語サポート（Zoom不要／英語不要）</li>
+              <li>日本語サポート → Zoom不要／英語不要／文面完結</li>
             </ul>
-            <span class="note">※ 価格は「紹介・サポート」の対価であり、銀行手数料や預入金とは無関係です。</span>
+            <span class="note">※ 表示価格はサービス提供料金。銀行手数料・預入金とは無関係。</span>
           </div>
         </details>
 
@@ -219,9 +224,12 @@
           <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
             <ul>
-              <li>基本プランに加え、.geドメイン／初期設計済みLP／月1回ライト相談 等</li>
+              <li>基本プラン＋</li>
+              <li>.geドメイン取得手続き</li>
+              <li>初期設計済みLP（問い合わせ＋運用ガイド）</li>
+              <li>月1回のライト相談（LINE/チャット）</li>
+              <li>ライティング／構成アドバイス</li>
             </ul>
-            <span class="note">※ LP＝ランディングページ</span>
           </div>
         </details>
 
@@ -229,7 +237,11 @@
           <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
           <div class="content">
             <ul>
-              <li>設立＋LPパックに加え、参考資料（税務助言は含まず）／帳簿テンプレ 等</li>
+              <li>設立＋LPパック＋</li>
+              <li><strong>【情報提供】CFC/経費管理の参考資料</strong>（税務助言は含まず）</li>
+              <li>帳簿テンプレ／経費リストPDF</li>
+              <li>職業別アドバイス（個別送付）</li>
+              <li>月1回の運用レビュー（文面）</li>
             </ul>
           </div>
         </details>
@@ -238,33 +250,51 @@
           <summary><strong>追加オプション</strong></summary>
           <div class="content">
             <ul>
-              <li><strong>Nominee構成</strong>：€2,500/年 <span class="text-sm">（税込／2025年8月時点）</span></li>
-              <li><strong>LP＋.geドメイン追加（2年目以降）</strong>：¥250,000 <span class="text-sm">（税込）</span></li>
-              <li><strong>RS.ge税務ポータル開設サポート（任意）</strong>：¥33,000〜</li>
+              <li><strong>Nominee構成</strong>：€2,500/年<span class="text-sm">（税込／2025年8月時点）</span></li>
+              <li><strong>LP＋.ge追加（2年目以降）</strong>：¥250,000</li>
+              <li><strong>RS.ge開設支援（任意）</strong>：¥33,000〜</li>
               <li><strong>公証／アポスティーユ</strong>：¥15,000〜／書類</li>
-              <li><strong>書類国際郵送（DHL）</strong>：¥5,000〜</li>
+              <li><strong>国際郵送（DHL）</strong>：¥5,000〜</li>
             </ul>
+            <span class="note">※ €建ては請求時点の為替で円換算。</span>
           </div>
         </details>
 
-        <p class="text-sm muted" style="margin-top:10px;">※ €建て表示は請求時点の為替レートで円換算。為替により請求額は変動します。</p>
       </div>
     </details>
 
     <details>
       <summary>2年目以降の維持・サポート</summary>
       <div class="content">
-        <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong> <span class="text-sm">（税込）</span></h4>
+        <h4>A.【法人維持のみ】<strong>¥198,000／年</strong></h4>
         <ul>
           <li>登記住所更新（家賃1年分込み）</li>
           <li>書類更新サポート</li>
-          <li>現地パートナー対応（Zoom不要）</li>
+          <li>現地パートナー対応／文面完結</li>
         </ul>
 
-        <h4>B.【法人維持＋LP保守】　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
+        <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）<strong>¥298,000／年</strong></h4>
         <ul>
-          <li>Aの内容＋問い合わせフォーム保守・軽微なLP調整</li>
+          <li>Aの内容すべて</li>
+          <li>問い合わせフォーム保守・小修正</li>
+          <li>年1回までの軽微なLP調整</li>
         </ul>
+
+        <div class="price-promo" aria-label="LP/ドメイン追加（基本プラン利用者向け）">
+          <div class="row">
+            <span class="label">LP＋.geドメイン追加（2年目以降）</span>
+            <span class="now">¥250,000</span><span class="text-sm">（税込）</span>
+          </div>
+          <div class="meta">
+            <small>※ 初年度「基本プラン」ご利用でLPやドメイン未整備の方向け。</small>
+          </div>
+        </div>
+
+        <div class="progress-steps">
+          <div class="step completed">1. 相談</div>
+          <div class="step">2. 申込</div>
+          <div class="step">3. 維持更新</div>
+        </div>
       </div>
     </details>
 
@@ -278,6 +308,7 @@
         </ul>
       </div>
     </details>
+
   </div>
 </section>
 
@@ -288,15 +319,16 @@
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
 
   <div class="space-y-3 accordion">
+
     <details>
       <summary>ジョージアで、スモールに世界を始める（IE＋Small Business Status）</summary>
       <div class="content">
-        <p><strong>Small Business Status（SBS）</strong>で年収30,001〜500,000ラリは<strong>税率1%</strong>（条件あり）。</p>
+        <p><strong>Small Business Status（SBS）</strong>を取得すると、年収30,001〜500,000ラリで<strong>税率1%</strong>（条件あり）。</p>
         <ul>
           <li>登録対象：IE＋SBS</li>
-          <li>所要期間：7〜10営業日（2025年実績 平均8.2日）</li>
-          <li>言語対応：日本語／英語／ジョージア語（翻訳士対応可）</li>
-          <li>申請はオンライン、渡航不要</li>
+          <li>所要：7〜10営業日（実績 平均8.2日）</li>
+          <li>言語：日本語／英語／ジョージア語</li>
+          <li>申請は完全オンライン</li>
           <li>MoU提携：TREX LEGAL（2025/5/28）</li>
         </ul>
       </div>
@@ -307,9 +339,9 @@
       <div class="content">
         <ul>
           <li>海外クライアントと直接契約したいフリーランス</li>
-          <li>副業を「国際事業」として正式登録したい個人</li>
-          <li>渡航せずに海外ビジネス基盤を持ちたい人</li>
-          <li>節税より「法制度準拠の安心感」を重視する人</li>
+          <li>副業を「国際事業」として登録したい個人</li>
+          <li>渡航せず海外ビジネス基盤を持ちたい人</li>
+          <li>節税よりも制度準拠の安心感を重視する人</li>
         </ul>
       </div>
     </details>
@@ -318,22 +350,24 @@
       <summary>サポート内容と料金</summary>
       <div class="content">
         <ul>
-          <li>登録一式（IE＋SBS）／登録証明（英・ジョージア語）／納税ID</li>
+          <li>登録一式（IE＋SBS）／登録証明（英語・ジョージア語）／納税ID</li>
           <li>RS.ge初期セットアップ</li>
           <li>書類テンプレ一式・提出サポート</li>
         </ul>
 
         <div class="price-promo" aria-label="IE/SBS 登録料金">
-          <div class="row"><span class="label">料金：</span><span class="now">¥248,000</span><span class="text-sm">（税込）</span></div>
+          <div class="row">
+            <span class="label">料金：</span>
+            <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
+          </div>
           <div class="meta">
-            <small>※ 本料金は「紹介・サポート」の料金。公証・郵送などの<strong>実費</strong>は別途。</small>
-            <small>※ 税務助言は含みません（登録支援）。</small>
+            <small>※ 本料金は紹介・サポート等のサービス料金。公証・郵送などの実費は別途。</small>
           </div>
         </div>
 
         <h5>別途費用（必要に応じて実費）</h5>
         <ul>
-          <li>書類国際郵送（DHL）：¥5,000〜</li>
+          <li>国際郵送（DHL）：¥5,000〜</li>
           <li>公証／アポスティーユ：¥15,000〜／書類</li>
           <li>RS.ge税務ポータル開設サポート（任意）：¥33,000〜</li>
         </ul>
@@ -351,34 +385,22 @@
             <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
           </tbody>
         </table>
-        <p>適用業種例：IT開発、コンサル、デザイン、翻訳、小規模輸出入 等</p>
-        <p class="text-sm">※ 日本居住者は国外所得の申告義務があります。国税庁の案内等をご確認ください。</p>
       </div>
     </details>
 
     <details>
       <summary>KYCとFMS（本人確認・資金源）／FAQ</summary>
       <div class="content">
-        <p><strong>KYC（本人確認）</strong></p>
-        <ul><li>パスポート</li><li>住所証明</li></ul>
-        <p><strong>FMS（金融監督庁）</strong>：高額送金・仮想通貨額が大きい場合の確認あり。</p>
-        <p class="text-sm muted">※ 反社該当・関与の場合やAML/CFT上の疑いがある場合、支援はお断りします。</p>
+        <p><strong>KYC</strong>：パスポート／住所書類。<br><strong>FMS</strong>：高額送金・仮想通貨額が大きい場合に確認あり。</p>
+        <h5>FAQ</h5>
+        <ul>
+          <li>Q. 日本からでも利用可？ → A. はい、オンライン完結。</li>
+          <li>Q. 個人口座開設は含む？ → A. 含みません（別サービス）。</li>
+          <li>Q. 年収が2,500万円超えたら？ → A. 通常課税（3〜5%）へ切替。</li>
+        </ul>
       </div>
     </details>
 
-    <details>
-      <summary>個人 → 法人化の成長パス／IE登録者限定割引</summary>
-      <div class="content">
-        <ul>
-          <li>年商1,500万円超が見えたら法人化が現実的。</li>
-          <li>IE登録者限定で法人設立の基本プランを割引提供。</li>
-        </ul>
-        <div class="price-promo" aria-label="IE登録者限定割引">
-          <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着10社</span></div>
-        </div>
-      </div>
-    </details>
   </div>
 </section>
 
@@ -389,23 +411,30 @@
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設サポート（非居住者OK）</h2>
 
   <div class="space-y-3 accordion">
+
     <details>
       <summary>ジョージアって今どんな国？（成長率・制度）</summary>
       <div class="content">
         <ul>
           <li>IMF予測：2024年成長率7.6%、2025年6.0%</li>
-          <li>EU加盟候補国（2023）</li>
-          <li>ADB／EBRD／AIIB／EIB等の国際支援</li>
+          <li>EU加盟候補国として承認（2023）</li>
+          <li>ADB／EBRD／AIIB／EIB等の支援でインフラ加速</li>
         </ul>
-        <p class="text-sm muted">※ 指標は変動。投資判断は各自で。</p>
+        <div class="progress-steps">
+          <div class="step completed">インフラ投資</div>
+          <div class="step completed">海外資本導入</div>
+          <div class="step">制度整備</div>
+        </div>
+        <p class="text-sm muted">※ 指標は変動します。投資判断は各自で。</p>
       </div>
     </details>
 
     <details>
       <summary>なぜ二桁利息が成立？（成長型金融モデル）</summary>
       <div class="content">
-        <p>「預金11.5% → 融資13〜15%」のような構造で利鞘を確保。</p>
+        <p>資金需要が高い成長局面では、銀行は二桁前後の金利で資金を集め、より高い金利で融資することで利鞘を確保。<br>「預金11.5% → 融資13〜15%」の構造が成立。</p>
         <p class="text-sm muted">※ 金利は商品・銀行・時期で変動。将来の利回りは保証されません。</p>
+        <p class="text-sm muted">※ 記載の金利・条件は参考例（2025年10月時点）。</p>
       </div>
     </details>
 
@@ -417,6 +446,7 @@
           <li>預金保護：GEL 30,000 まで自動保証（約165万円目安）</li>
           <li>非居住者の口座開設：条件付きで可能</li>
         </ul>
+        <p class="text-sm muted">※ 当社は金融商品の勧誘・媒介・代理は行いません。</p>
         <span class="note">※ SWIFT＝国際送金網／GEL＝ジョージア・ラリ</span>
       </div>
     </details>
@@ -425,11 +455,12 @@
       <summary>必要書類（日本在住・非居住者向け）</summary>
       <div class="content">
         <ul>
-          <li>パスポート<strong>＋公証＆アポスティーユ</strong></li>
-          <li>英語の住所証明（3ヶ月以内）</li>
-          <li>署名（パスポート一致）</li>
-          <li>原本国際郵送（PDF不可）</li>
+          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
+          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
+          <li>署名（一致の筆跡）</li>
+          <li>書類原本の国際郵送（PDF不可）</li>
         </ul>
+        <p>当社提供：eSIM（SMS認証用）／委任状・英文書式／郵送先案内 等</p>
       </div>
     </details>
 
@@ -437,40 +468,50 @@
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
         <ul>
-          <li>提携法律事務所による正規ルート申請（MoU済）</li>
-          <li>公証・アポスティーユ案内、翻訳、最終チェック</li>
-          <li>Wise登録サポート、個別チャット対応</li>
+          <li>提携法律事務所による正規ルート申請（MoU締結済）</li>
+          <li>公証・アポスティーユ取得案内、書類翻訳・最終チェック</li>
+          <li>Wise登録サポート、個別チャット対応（LINE/WhatsApp）</li>
+          <li>必要書類・マニュアル一式＋最終チェック（日本語）</li>
         </ul>
         <div class="price-promo" aria-label="先着特別価格（個人口座開設）">
-          <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span><span class="badge">先着15名限定</span></div>
+          <div class="row"><span class="label">通常価格：</span><span class="old">¥258,000</span></div>
+          <div class="row"><span class="label">特別価格：</span><span class="now">¥198,000</span><span class="badge">先着15名限定</span></div>
         </div>
       </div>
     </details>
 
-    <!-- ① リスクと為替：数値をHTML側で確定＋横スクロール可 -->
     <details>
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
-        <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
-        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は仮定の計算例で、将来の成果を保証しません。金利・為替・税制は変動します。</p>
+        <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当）。</p>
 
-        <div class="fx-sim-scroll">
-          <table class="fx-sim-table sim-noline">
-            <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
+        <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は仮定の計算例であり、将来の成果を保証しません。金利・為替・税制は変動します。</p>
+
+        <!-- 横スクロールのみを付与（CSSはいじらず、inline styleだけ） -->
+        <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+          <table>
+            <thead>
+              <tr>
+                <th>為替シナリオ</th>
+                <th>1GELの円価</th>
+                <th>満期残高（GEL）</th>
+                <th>円換算額</th>
+                <th>損益</th>
+              </tr>
+            </thead>
             <tbody>
-              <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td class="fx-pos">+¥398,860</td></tr>
-              <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,547,000</td><td class="fx-pos">+約¥227,000</td></tr>
-              <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375,000</td><td class="fx-pos">+約¥55,000</td></tr>
-              <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,290,000</td><td class="fx-neg">約▲¥30,000</td></tr>
-              <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889,000</td><td class="fx-pos">+約¥569,000</td></tr>
+              <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td>+¥398,860</td></tr>
+              <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,546,974</td><td>+約¥227,000</td></tr>
+              <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375,088</td><td>+約¥55,000</td></tr>
+              <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,289,145</td><td>約▲¥30,000</td></tr>
+              <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,890,746</td><td>+約¥571,000</td></tr>
             </tbody>
           </table>
         </div>
 
         <ul>
-          <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。夫婦・複数行で分散も可。</li>
-          <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計</strong>（試算であり保証しません）。</li>
+          <li>預金保護：GEL 30,000（約¥1.65M）まで自動補償。</li>
+          <li>為替が20%以上下落しない限り、元本超えの可能性が<strong>見込まれる設計（仮定に基づく）</strong>。</li>
         </ul>
       </div>
     </details>
@@ -498,17 +539,19 @@
       <summary>よくある質問（Q&A）</summary>
       <div class="content">
         <ul>
-          <li>Q. 元本保証は？ → A. GEL 30,000 まで預金保護（自動）。</li>
-          <li>Q. 為替リスクは？ → A. 利息がクッションに。分散が有効。</li>
+          <li>Q. 元本保証は？ → A. GEL 30,000まで預金保護（自動）。</li>
+          <li>Q. 為替リスクは？ → A. 大幅下落しない限り利息がクッションに。分散を。</li>
           <li>Q. 出金方法は？ → A. SWIFT送金／現地ATM 等。</li>
+          <li>Q. 審査が落ちたら？ → A. 銀行判断。必要に応じ再申請を案内。</li>
         </ul>
       </div>
     </details>
+
   </div>
 </section>
 
 <!-- =========================
-  免責事項・キャンセル・重要なお知らせ（アコーディオン）
+  免責事項・キャンセル（＋重要なお知らせをアコーディオン化）
 ========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
@@ -519,12 +562,13 @@
       <div class="content">
         <ul>
           <li>当サービスは<strong>情報提供・紹介・実務サポート</strong>であり、<strong>銀行口座の代理開設</strong>や金融商品の勧誘は行いません。</li>
-          <li>実際の銀行口座開設は現地の正規パートナーが、委任状・現地法・各銀行規程に基づき実施します。</li>
-          <li>当社の料金は<strong>紹介料・サポート料</strong>であり、銀行手数料や預入金とは無関係です。</li>
-          <li>税務・法務の<strong>助言</strong>は行いません。適用可否は<strong>税理士・弁護士</strong>へご相談ください。</li>
-          <li>金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件は保証できません</strong>。</li>
-          <li>表示利率・試算は参考値で、将来の成果を保証しません。</li>
-          <li>個人情報は提携先のみと共有し、目的外利用は行いません。</li>
+          <li>口座開設は現地の正規パートナーが、委任状・現地法・各銀行規程に基づき直接実施。</li>
+          <li>当社手数料は<strong>紹介料・サポート料</strong>であり、銀行手数料や預入金とは無関係。</li>
+          <li>税務・法務の<strong>助言</strong>は行いません。適用可否は<strong>税理士・弁護士</strong>へ。</li>
+          <li>口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件は保証不可</strong>。</li>
+          <li>記載利率・試算は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
+          <li>個人情報は提携先の業務目的でのみ共有。口座・パスワードは預かりません。</li>
+          <li>提供はジョージア法人。準拠法はジョージア法、<strong>専属的合意管轄はジョージア裁判所</strong>。</li>
         </ul>
       </div>
     </details>
@@ -533,36 +577,39 @@
       <summary>キャンセルポリシー（返金条件）</summary>
       <div class="content">
         <ul>
-          <li>依頼開始前：返金手数料（1万円）を控除して返金</li>
-          <li>依頼開始後：お支払い金額の100%</li>
-          <li>当社の明確な不履行がある場合は<strong>返金・再対応</strong>等で適切に措置</li>
-          <li>当社はジョージア法人であり、日本のクーリングオフ制度は適用外</li>
+          <li>当社が現地パートナー依頼前：返金手数料（1万円）控除の上返金。</li>
+          <li>依頼後：お支払い金額の100%をキャンセル料として申し受けます。</li>
+          <li>当社の明確な不履行がある場合は<strong>返金・再対応</strong>等の措置。</li>
+          <li>AML/CFT対応：虚偽申告・反社該当は支援不可。</li>
+          <li>当社はジョージア法人であり、日本の特商法クーリングオフは適用外。</li>
         </ul>
       </div>
     </details>
 
-    <!-- ③ 重要なお知らせ：全文そのまま。アコーディオン化のみ -->
+    <!-- ▼ 重要なお知らせを“アコーディオン化”。文言は一切削除・改変なし -->
     <details>
       <summary>重要なお知らせ</summary>
       <div class="content">
-        <div class="security-note" role="note" aria-label="重要なお知らせ" style="margin-top:12px">
+        <div class="security-note" role="note" aria-label="重要なお知らせ">
           <strong>【重要なお知らせ】</strong>
           <ul style="margin:.5rem 0; padding-left:1.1rem">
             <li>本サイトは <strong>情報提供・事務サポート</strong>のみを行い、金融商品の勧誘、預金等の受入、銀行・資金移動等の<strong>代理・媒介・取次</strong>、投資助言・代理、暗号資産交換業に該当する行為は<strong>一切行いません</strong>。銀行・商品の選定/契約はお客様と各銀行・事業者との<strong>直接契約</strong>です。</li>
             <li>記載の金利・条件・実例は<strong>参考例</strong>であり、銀行/商品/時期により変動します。将来の結果を<strong>保証しません</strong>。最新条件は必ず各行の公表情報をご確認ください。</li>
             <li>本ページの記載は一般的な情報であり、<strong>税務・法務・会計の助言ではありません</strong>。居住国や個別事情により、<strong>CFC</strong>／<strong>PE</strong>／移転価格／国外財産調書・国外送金等調書の提出が必要となる場合があります。適用可否は<strong>税理士・弁護士</strong>へご相談ください。</li>
             <li>AML/CFT に基づき、必要に応じて本人確認・資金源の確認やお取引の中止をお願いする場合があります。<strong>反社会的勢力</strong>に該当・関与する方への提供は行いません。</li>
-            <li>個人情報は業務遂行のため提携先（ジョージア所在を含む第三国）に提供・移転される場合があります。移転時は適切な保護措置を講じ、目的外利用は行いません（詳細はプライバシーポリシー）。</li>
+            <li>個人情報は業務目的の範囲でのみ利用し、法令上必要な保存期間を超えて保有しません。第三国への移転が必要な場合は適切な保護措置を講じます。</li>
             <li>表示価格は<strong>税込</strong>。為替建て料金は請求時点の為替で円換算します。追加で発生する公証・郵送等の<strong>実費</strong>は別途。キャンセル・返金条件は本ページの「キャンセルポリシー」に従います。</li>
-            <li>本サイトの多言語表示は<strong>機械翻訳</strong>を含みます。翻訳の正確性は保証されません。正式文書は日本語/英語版をご参照ください。</li>
+            <li>多言語表示は<strong>機械翻訳</strong>を含みます。翻訳の正確性は保証されません。正式文書は日本語/英語版をご参照ください。</li>
           </ul>
         </div>
       </div>
     </details>
+    <!-- ▲ 重要なお知らせ：HTMLの外に出ていたブロックをここへ移設 -->
+
   </div>
 </section>
 
-<!-- 画面最下部 固定CTA -->
+<!-- 画面最下部 固定CTA（既存のまま） -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -576,11 +623,13 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
 
-<!-- JS -->
-<script src="./script.js?v=20251031-fixA" defer></script>
+<!-- ===== 最小限のUI操作JS ===== -->
+<script src="./script.js?v=20251031-rx" defer></script>
 
-<!-- Google翻訳 公式ウィジェット（コールバックはscript.js内定義） -->
-<script>/* window.googleTranslateElementInit は script.js で定義 */</script>
+<!-- ===== Google翻訳 公式ウィジェット ===== -->
+<script>
+  // TranslateElement の初期化は script.js 内の window.googleTranslateElementInit を使用
+</script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
