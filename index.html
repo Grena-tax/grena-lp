@@ -2009,5 +2009,252 @@
 })();
 </script>
 <!-- ===== ▲ v1101d FINAL（末尾追記のみ） ===== -->
+<!-- ===== ▼ ここから貼る（index.html の </body> 直前・追記のみ） ===== -->
+
+<!-- A) 右上アイコン & 右スライドドロワー強制（CSS上書き） -->
+<style id="hotfix-1101-css">
+  :root{ --icon-size:48px; --icon-gap:10px; }
+  /* 右上：🌐が一番右／左隣に☰ */
+  .lang-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px)) !important; left:auto !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  .menu-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + var(--icon-gap)) !important; left:auto !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  /* ドロワー：右固定に統一 */
+  .menu-wrap{ left:auto !important; right:0 !important; width:min(92vw,420px) !important; height:100vh !important;
+    transform:translateX(100%) !important; transition:transform .25s ease !important; position:fixed !important; top:0 !important; z-index:10015 !important; }
+  .menu-open .menu-wrap{ transform:translateX(0) !important; }
+  .menu-backdrop{ position:fixed !important; inset:0 !important; background:rgba(0,0,0,.4) !important;
+    opacity:0 !important; pointer-events:none !important; z-index:10014 !important; transition:opacity .2s !important; }
+  .menu-open .menu-backdrop{ opacity:1 !important; pointer-events:auto !important; }
+  /* 開いていないときは中身を完全に消してタップ遮り防止 */
+  .menu-wrap[aria-hidden="true"], .lang-wrap[aria-hidden="true"]{ display:none !important; }
+</style>
+
+<!-- B) 重要なお知らせ（本文）※どこに置いてもOK。JSが #disclaimer 内へ移して<details>化します -->
+<div id="important-notice">
+  <p class="text-sm muted">最終更新：2025-11-01｜運営：Grena Group LLC（ジョージア法人）</p>
+
+  <h3>本サービスの位置づけ</h3>
+  <ul>
+    <li>本サイトは、ジョージア共和国における法人設立・個人事業登録・銀行口座開設に関する<strong>情報提供・紹介・実務支援</strong>を目的としています。</li>
+    <li><strong>金融商品取引法・資金決済法・銀行法</strong>等で定義される「勧誘・媒介・代理」行為や、預金・資金の受け入れ行為は一切行っておりません。</li>
+    <li>銀行口座開設は<strong>お客様本人と各銀行の直接契約</strong>により行われ、Grena Group LLCはその手続を支援する立場であり、<strong>代理権・媒介権はありません。</strong></li>
+    <li>表示金額はすべて<strong>サポート・情報提供サービスの料金</strong>であり、銀行や税務機関への支払いとは無関係です。</li>
+  </ul>
+
+  <h3>金利・為替・シミュレーションについて</h3>
+  <ul>
+    <li>掲載の金利・為替レート・数値試算は<strong>参考例</strong>であり、将来の成果・利回り・利益を保証するものではありません。</li>
+    <li>為替変動、税制改正、金融規制、各銀行の方針変更等により、実際の結果は大きく異なる可能性があります。</li>
+    <li>掲載情報は作成時点の一般的データに基づくもので、最新情報を保証するものではありません。</li>
+  </ul>
+
+  <h3>税務・法務に関する重要事項</h3>
+  <ul>
+    <li>当社は税務・法務・投資に関する<strong>助言（advice）や判断代行を行いません。</strong></li>
+    <li>各種制度の適用可否（例：CFCルール、移転価格、国外財産調書、PE認定等）は、居住国や所得区分により異なります。必ず<strong>専門家（税理士・弁護士）</strong>へご相談ください。</li>
+    <li>提出書類・契約書等の最終判断および責任は、お客様ご自身に帰属します。</li>
+  </ul>
+
+  <h3>KYC／AML・反社会的勢力排除</h3>
+  <ul>
+    <li>本人確認（KYC）や資金源確認（Source of Funds）を求められる場合があります。虚偽申告や合理的疑義がある場合、サポートを停止または契約を解除します。</li>
+    <li>反社会的勢力およびこれに準ずる行為への関与が判明した場合は、サービス提供を即時終了します。</li>
+  </ul>
+
+  <h3>翻訳と外部リンクについて</h3>
+  <ul>
+    <li>多言語対応部分には自動翻訳（Google Translate）を利用しています。法的効力・正確性については原文（日本語または英語）を優先します。</li>
+    <li>外部リンク・参考資料の内容は、当社が保証・支持するものではありません。</li>
+  </ul>
+
+  <h3>料金・返金・変更について</h3>
+  <ul>
+    <li>料金・サポート内容・掲載条件は、運営方針や為替・実務コストに応じて<strong>予告なく変更</strong>される場合があります。</li>
+    <li>返金条件は、同ページ内の「キャンセルポリシー」に準じます。</li>
+  </ul>
+
+  <h3>準拠法と管轄</h3>
+  <ul>
+    <li>本サービスおよび全ての契約関係は、<strong>ジョージア法（Law of Georgia）</strong>に準拠し、専属的合意管轄は<strong>ジョージア共和国の裁判所</strong>とします。</li>
+  </ul>
+
+  <h3>運営法人情報</h3>
+  <ul>
+    <li><strong>法人名：</strong>Grena Group LLC</li>
+    <li><strong>法人ID：</strong>400433768</li>
+    <li><strong>登録機関：</strong>LEPL National Agency of Public Registry（ジョージア司法省 登記庁）</li>
+    <li><strong>所在地：</strong>Georgia, Tbilisi, Nadzaladevi district, Erosi Manjgaladze street, N 75a</li>
+    <li><strong>代表者：</strong>Tetsuya Shirai（TZ1176900／日本）</li>
+  </ul>
+
+  <h3>お問い合わせ</h3>
+  <ul>
+    <li>本サイト・サービスに関するお問い合わせは、<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE公式アカウント（@georgia-tax）</a>までご連絡ください。</li>
+    <li>個別の税務・法務・投資判断に関する質問は、各専門家へのご相談をお願いいたします。</li>
+  </ul>
+</div>
+
+<!-- C) 末尾パッチ：右ドロワー/目次再生成/翻訳大量化/重要なお知らせ移動 + “404になるブラウザ翻訳”を抑止 -->
+<script id="hotfix-1101-js">
+(function(){
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+  const html=document.documentElement;
+
+  /* C-0. ブラウザ翻訳の404誘発を止める（サイト内翻訳のみ使う） */
+  (function(){
+    const m=document.createElement('meta');
+    m.setAttribute('name','google'); m.setAttribute('content','notranslate');
+    document.head.appendChild(m);
+  })();
+
+  /* C-1. メニュー/言語トグルの保険 */
+  function closeAll(){
+    html.classList.remove('menu-open','lang-open');
+    $('#menuDrawer')?.setAttribute('aria-hidden','true');
+    $('#langDrawer')?.setAttribute('aria-hidden','true');
+    $('#menuBtn')?.setAttribute('aria-expanded','false');
+    $('#langBtn')?.setAttribute('aria-expanded','false');
+  }
+  const btnMenu = $('#menuBtn') || $('[data-role="menu-button"]') || $('.menu-button');
+  const drMenu  = $('#menuDrawer') || $('.menu-wrap');
+  const btnLang = $('#langBtn') || $('[data-role="lang-button"]') || $('.lang-button');
+  const drLang  = $('#langDrawer') || $('.lang-wrap');
+  const toggle=(type)=> (e)=>{ e&&e.preventDefault();
+    const open = !html.classList.contains(type+'-open');
+    html.classList.toggle(type+'-open',open);
+    (type==='menu'?drMenu:drLang)?.setAttribute('aria-hidden',String(!open));
+    (type==='menu'?btnMenu:btnLang)?.setAttribute('aria-expanded',String(open));
+  };
+  btnMenu && btnMenu.addEventListener('click',toggle('menu'),{passive:false});
+  btnLang && btnLang.addEventListener('click',toggle('lang'),{passive:false});
+  addEventListener('resize',()=>{closeAll();},{passive:true});
+  addEventListener('orientationchange',()=>{closeAll();},{passive:true});
+
+  /* C-2. 「重要なお知らせ」を #disclaimer に移し <details> 化 */
+  (function mountImportantNotice(){
+    const host=$('#disclaimer')||document.body;
+    const src=$('#important-notice'); if(!host||!src) return;
+    if($('#important-notice-details')) return;
+    const det=document.createElement('details'); det.id='important-notice-details'; det.open=true;
+    const sum=document.createElement('summary'); sum.textContent='重要なお知らせ';
+    const content=document.createElement('div'); content.className='content';
+    while(src.firstChild) content.appendChild(src.firstChild);
+    det.append(sum,content);
+    let acc=host.querySelector('.accordion'); if(!acc){ acc=document.createElement('div'); acc.className='accordion'; host.appendChild(acc); }
+    acc.appendChild(det); src.remove?.();
+  })();
+
+  /* C-3. ハンバーガー目次を“全再生成”して重複や欠落を排除 */
+  (function rebuildMenu(){
+    const groups = $('#menuGroups') || $('.menu-groups'); if(!groups) return;
+    groups.innerHTML='';
+
+    // 1) 目次（disclaimer以外のdetails一覧）
+    const g1=document.createElement('div'); g1.className='menu-group';
+    g1.innerHTML='<h4>目次（各セクションへ移動）</h4><ul class="menu-list"></ul>';
+    const ul1=g1.querySelector('ul');
+    $$('details > summary').forEach((sum,idx)=>{
+      const det=sum.closest('details'); if(!det || det.closest('#disclaimer')) return;
+      if(!det.id) det.id='sec-'+(idx+1);
+      const li=document.createElement('li'); const a=document.createElement('a');
+      a.href='#'+det.id; a.textContent=(sum.textContent||'').trim();
+      a.addEventListener('click', ()=>{ det.open=true; closeAll(); });
+      li.appendChild(a); ul1.appendChild(li);
+    });
+    groups.appendChild(g1);
+
+    // 2) 免責事項・キャンセル（disclaimer配下＋重要なお知らせ）
+    const g2=document.createElement('div'); g2.className='menu-group';
+    g2.innerHTML='<h4>免責事項・キャンセル</h4><ul class="menu-list"></ul>';
+    const ul2=g2.querySelector('ul');
+    const addLink=(id,label)=>{
+      const li=document.createElement('li'); const a=document.createElement('a');
+      a.href='#'+id; a.textContent=label;
+      a.addEventListener('click',()=>{ const t=$(a.getAttribute('href')); if(t?.tagName==='DETAILS') t.open=true; closeAll(); });
+      li.appendChild(a); ul2.appendChild(li);
+    };
+    addLink('disclaimer','免責事項・キャンセル');
+    $('#disclaimer')?.querySelectorAll(':scope .accordion > details').forEach((det,idx)=>{
+      if(!det.id) det.id='disc-'+(idx+1);
+      const label=(det.querySelector('summary')?.textContent||'').trim();
+      if(label) addLink(det.id,label);
+    });
+    if($('#important-notice-details')) addLink('important-notice-details','重要なお知らせ');
+    groups.appendChild(g2);
+  })();
+
+  /* C-4. 翻訳ポップアップ：Google要素→内蔵リストの順で大量化 */
+  (function buildLang(){
+    // Google要素の土台が無い場合は作る
+    if(!$('#google_translate_element')){
+      const holder=document.createElement('div'); holder.id='google_translate_element'; holder.style.display='none';
+      document.body.appendChild(holder);
+      // スクリプト未読込ならロード
+      if(!window.google || !window.google.translate){
+        const s=document.createElement('script');
+        s.src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+        window.googleTranslateElementInit=function(){
+          try{ new window.google.translate.TranslateElement({pageLanguage:'ja'}, 'google_translate_element'); }catch(e){}
+        };
+        document.head.appendChild(s);
+      }
+    }
+    const list=$('#langList'); if(!list) return;
+
+    // まずGoogleのコンボを参照
+    function fromGoogle(){
+      const sel=document.querySelector('#google_translate_element select.goog-te-combo');
+      if(sel && sel.options.length>1){
+        fill(Array.from(sel.options).filter(o=>o.value && o.value!=='auto').map(o=>[o.value, o.textContent.trim()]));
+        return true;
+      }
+      return false;
+    }
+
+    // うまく取れない場合の内蔵リスト（主要60言語）
+    const FALLBACK = 'af:Afrikaans,ar:Arabic,az:Azerbaijani,be:Belarusian,bg:Bulgarian,bn:Bengali,ca:Catalan,cs:Czech,cy:Welsh,da:Danish,de:German,el:Greek,en:English,es:Spanish,et:Estonian,fa:Persian,fi:Finnish,fil:Filipino,fr:French,ga:Irish,gu:Gujarati,he:Hebrew,hi:Hindi,hr:Croatian,hu:Hungarian,id:Indonesian,is:Icelandic,it:Italian,ja:Japanese,ka:Georgian,kk:Kazakh,km:Khmer,ko:Korean,lt:Lithuanian,lv:Latvian,ms:Malay,mt:Maltese,my:Burmese,nl:Dutch,no:Norwegian,pl:Polish,pt:Portuguese,ro:Romanian,ru:Russian,si:Sinhala,sk:Slovak,sl:Slovenian,sq:Albanian,sr:Serbian,sv:Swedish,ta:Tamil,te:Telugu,th:Thai,tr:Turkish,uk:Ukrainian,ur:Urdu,uz:Uzbek,vi:Vietnamese,zh-CN:Chinese (Simplified),zh-TW:Chinese (Traditional)'.split(',').map(p=>p.split(':'));
+    function fill(pairs){
+      list.innerHTML='';
+      const cur=decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
+      pairs.sort((a,b)=>a[1].localeCompare(b[1])).forEach(([code,name])=>{
+        const el=document.createElement('div');
+        el.className='ls-item'+(cur.endsWith('/'+code)?' ls-active':'');
+        el.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
+        el.addEventListener('click',()=>{
+          // Googleコンボがあればそれを使う／無ければCookieで切替
+          const sel=document.querySelector('#google_translate_element select.goog-te-combo');
+          if(sel){ sel.value=code; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+          else{
+            document.cookie='googtrans=/auto/'+code+'; path=/';
+            document.cookie='googtrans=/ja/'+code+'; path=/';
+            location.reload();
+          }
+          html.classList.remove('lang-open');
+          $('#langDrawer')?.setAttribute('aria-hidden','true');
+        });
+        list.appendChild(el);
+      });
+      const q=$('#langSearch'); if(q){
+        q.oninput=()=>{ const s=(q.value||'').toLowerCase();
+          list.querySelectorAll('.ls-item').forEach(el=> el.style.display = !s || (el.textContent||'').toLowerCase().includes(s) ? '' : 'none');
+        };
+      }
+    }
+
+    // 実行
+    setTimeout(()=>{ if(!fromGoogle()) fill(FALLBACK); }, 800);
+  })();
+})();
+</script>
+
+<!-- ===== ▲ ここまで貼る（index.html の </body> 直前・追記のみ） ===== -->
 </body>
 </html>
