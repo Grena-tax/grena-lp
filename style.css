@@ -253,3 +253,25 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
   .accordion .content th,
   .accordion .content td { white-space: normal; }
 }
+/* === HOTFIX (2025-11-01-b) === */
+/* 1) アイコン位置&重なり順を強制（表示・タップ不能対策） */
+.menu-button,
+.lang-button{
+  position: fixed;
+  top: 12px;
+  z-index: 10000;               /* 最前面に */
+  display: inline-flex !important;
+  width: 44px; height: 44px; border-radius: 9999px;
+  align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto;
+}
+.menu-button{ left: 12px; }     /* ← ハンバーガー */
+.lang-button{ right: 12px; }    /* ← 地球儀（右上に固定） */
+
+/* ドロワーは開いてない時だけ無効化（タッチ遮り防止） */
+.menu-wrap[aria-hidden="true"],
+.lang-wrap[aria-hidden="true"]{ display: none; }
+
+/* 念のため：中身は前面に */
+.menu-panel, .lang-panel{ z-index: 10001; position: relative; }
