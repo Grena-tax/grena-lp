@@ -399,3 +399,57 @@
     accordionizeImportantNotice();
   }
 })();
+/* === HOTFIX-1: 既存/別名セレクタも拾ってトグルを再配線 === */
+(() => {
+  const $ = s => document.querySelector(s);
+  // Lang(地球儀)
+  const btnLang = $('#langBtn') || $('#gtBtn') || $('#translateBtn') || document.querySelector('[data-role="lang-button"]');
+  const drawerLang = $('#langDrawer') || $('#languageDrawer') || $('.lang-wrap');
+  const closeLangBtn = $('#langClose') || drawerLang?.querySelector('.lang-close');
+  const backdropLang = $('#langBackdrop') || drawerLang?.querySelector('.lang-backdrop');
+  const openLang  = () => { document.documentElement.classList.add('lang-open');  drawerLang?.setAttribute('aria-hidden','false'); btnLang?.setAttribute('aria-expanded','true'); };
+  const closeLang = () => { document.documentElement.classList.remove('lang-open'); drawerLang?.setAttribute('aria-hidden','true');  btnLang?.setAttribute('aria-expanded','false'); };
+  btnLang?.addEventListener('click', e => { e.preventDefault(); (document.documentElement.classList.contains('lang-open') ? closeLang : openLang)(); }, {passive:false});
+  closeLangBtn?.addEventListener('click', closeLang, {passive:true});
+  backdropLang?.addEventListener('click', closeLang, {passive:true});
+
+  // Menu(ハンバーガー)
+  const btnMenu = $('#menuBtn') || $('#navBtn') || $('#hamburgerBtn') || document.querySelector('[data-role="menu-button"]');
+  const drawerMenu = $('#menuDrawer') || $('#navDrawer') || $('.menu-wrap');
+  const closeMenuBtn = $('#menuClose') || drawerMenu?.querySelector('.menu-close');
+  const backdropMenu = $('#menuBackdrop') || drawerMenu?.querySelector('.menu-backdrop');
+  const openMenu  = () => { document.documentElement.classList.add('menu-open');  drawerMenu?.setAttribute('aria-hidden','false'); btnMenu?.setAttribute('aria-expanded','true'); };
+  const closeMenu = () => { document.documentElement.classList.remove('menu-open'); drawerMenu?.setAttribute('aria-hidden','true');  btnMenu?.setAttribute('aria-expanded','false'); };
+  btnMenu?.addEventListener('click', e => { e.preventDefault(); (document.documentElement.classList.contains('menu-open') ? closeMenu : openMenu)(); }, {passive:false});
+  closeMenuBtn?.addEventListener('click', closeMenu, {passive:true});
+  backdropMenu?.addEventListener('click', closeMenu, {passive:true});
+})();
+
+/* === HOTFIX-2: 「重要なお知らせ」を安全に<details>化（#disclaimer内のみ、初期open） === */
+(() => {
+  const root = document.getElementById('disclaimer') || document;
+  const targets = Array.from(root.querySelectorAll('h1,h2,h3,h4,h5,h6'))
+    .filter(el => /重要なお知らせ/.test((el.textContent||'').replace(/\s+/g,'')));
+  if (!targets.length) return;
+  targets.forEach(h => {
+    if (h.dataset._accDone) return;
+    const level = Number(h.tagName.slice(1));
+    const det = document.createElement('details'); det.open = true;
+    const sum = document.createElement('summary'); sum.textContent = '重要なお知らせ';
+    const content = document.createElement('div'); content.className = 'content';
+
+    // 対象見出しの“次の同格以上の見出し”の手前までを安全に移動
+    let el = h.nextElementSibling;
+    while (el) {
+      const isHead = /^H[1-6]$/.test(el.tagName);
+      if (isHead && Number(el.tagName.slice(1)) <= level) break;
+      const nxt = el.nextElementSibling;
+      content.appendChild(el);
+      el = nxt;
+    }
+    det.appendChild(sum); det.appendChild(content);
+    h.replaceWith(det);
+    det.closest('.accordion') || det.classList.add('accordion');
+    det.dataset._accDone = '1';
+  });
+})();
