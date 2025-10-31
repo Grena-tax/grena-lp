@@ -453,3 +453,107 @@
     det.dataset._accDone = '1';
   });
 })();
+/* === PATCH 2025-11-01-c (append-only) ================================== */
+(() => {
+  const html = document.documentElement;
+
+  /* 1) ハンバーガー：中身が空なら安全に再生成（:scope不使用でiOS対応） */
+  const groups = document.getElementById('menuGroups');
+  if (groups && !groups.children.length) {
+    const SECTIONS = [
+      ['corp-setup',       '法人設立'],
+      ['plans',            '料金プラン'],
+      ['sole-setup',       '個人事業主（IE/SBS）'],
+      ['personal-account', '個人口座開設（銀行）'],
+      ['disclaimer',       '免責事項・キャンセル'],
+    ];
+    const sanitize = s => (s || '').replace(/\s+/g,' ').trim();
+
+    const closeMenu = () => {
+      html.classList.remove('menu-open');
+      document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
+      document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
+    };
+
+    groups.innerHTML = '';
+    SECTIONS.forEach(([secId, label]) => {
+      const sec = document.getElementById(secId);
+      if (!sec) return;
+
+      const g  = document.createElement('div'); g.className = 'menu-group';
+      const h4 = document.createElement('h4');  h4.textContent = label;
+      const ul = document.createElement('ul');  ul.className   = 'menu-list';
+
+      // セクション先頭
+      const liTop = document.createElement('li');
+      const aTop  = document.createElement('a');
+      aTop.href = `#${secId}`; aTop.textContent = label;
+      aTop.addEventListener('click', closeMenu);
+      liTop.appendChild(aTop); ul.appendChild(liTop);
+
+      // そのセクション内の .accordion 直下の details を列挙（ネスト除外）
+      sec.querySelectorAll('.accordion').forEach((acc, ai) => {
+        acc.querySelectorAll('> details > summary').forEach((sum, di) => {
+          const det = sum.parentElement;
+          if (!det.id) {
+            let id = `${secId}-d-${ai+1}-${di+1}`, n = 2;
+            while (document.getElementById(id)) id = `${id}-${n++}`;
+            det.id = id;
+          }
+          const li = document.createElement('li');
+          const a  = document.createElement('a');
+          a.href = `#${det.id}`;
+          a.textContent = sanitize(sum.textContent);
+          a.addEventListener('click', () => { det.open = true; closeMenu(); });
+          li.appendChild(a); ul.appendChild(li);
+        });
+      });
+
+      g.appendChild(h4); g.appendChild(ul); groups.appendChild(g);
+    });
+  }
+
+  /* 2) 地球儀：Google未ロードでも使えるフォールバック言語リストを表示 */
+  const langList = document.getElementById('langList');
+  if (langList && !langList.children.length) {
+    const FALLBACK = [
+      ['ja','Japanese'],['en','English'],['ko','Korean'],
+      ['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
+      ['es','Spanish'],['fr','French'],['de','German'],
+      ['it','Italian'],['ru','Russian'],['pt','Portuguese'],
+      ['ar','Arabic'],['id','Indonesian'],['hi','Hindi'],
+      ['th','Thai'],['tr','Turkish'],['vi','Vietnamese']
+    ];
+    const setCookieAndReload = (code) => {
+      const host = location.hostname.replace(/^www\./,'');
+      const exp  = new Date(Date.now()+365*864e5).toUTCString();
+      const val  = `/ja/${code}`;
+      document.cookie = `googtrans=${encodeURIComponent(val)}; expires=${exp}; path=/`;
+      document.cookie = `googtrans=${encodeURIComponent(val)}; expires=${exp}; path=/; domain=.${host}`;
+      document.cookie = `googtrans=${encodeURIComponent(val)}; expires=${exp}; path=/; domain=${host}`;
+      location.reload();
+    };
+    const frag = document.createDocumentFragment();
+    FALLBACK.forEach(([code, name]) => {
+      const item = document.createElement('div');
+      item.className = 'ls-item';
+      item.setAttribute('role','option');
+      item.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
+      item.addEventListener('click', () => setCookieAndReload(code));
+      frag.appendChild(item);
+    });
+    langList.appendChild(frag);
+  }
+
+  /* 3) クリック無効化の保険：ボタンは常に前面・タップ可に */
+  (function ensureClickable(){
+    const ids = ['menuBtn','langBtn'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.pointerEvents = 'auto';
+      el.style.position = 'fixed';
+      el.style.zIndex = '10005';
+    });
+  })();
+})();
