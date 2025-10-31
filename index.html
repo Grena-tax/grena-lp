@@ -680,5 +680,133 @@
   // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
+<!-- ===== append-only HOTFIX v241101C (do not edit others) ===== -->
+<style id="hf-241101c-css">
+  /* 1) 右上に揃える：地球儀を最右、ハンバーガーをその左 */
+  .lang-button{
+    position:fixed !important;
+    top:calc(10px + env(safe-area-inset-top,0px)) !important;
+    right:calc(10px + env(safe-area-inset-right,0px)) !important;
+    left:auto !important;
+    z-index:2147483000 !important;
+    pointer-events:auto !important;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  .menu-button{
+    position:fixed !important;
+    top:calc(10px + env(safe-area-inset-top,0px)) !important;
+    right:calc(10px + env(safe-area-inset-right,0px) + 54px) !important; /* ←地球儀の左に並べる */
+    left:auto !important;
+    z-index:2147483000 !important;
+    pointer-events:auto !important;
+    -webkit-tap-highlight-color:transparent;
+    touch-action:manipulation;
+  }
+  /* 隠れているドロワーはタップを奪わない */
+  #menuDrawer[aria-hidden="true"],
+  #langDrawer[aria-hidden="true"]{ pointer-events:none !important; }
+
+  /* iOSで上部と被らない余白（既存があればそちら優先） */
+  @media (max-width:480px){
+    body{ padding-top:66px; }
+  }
+</style>
+
+<script id="hf-241101c-js">
+(function(){
+  const html = document.documentElement;
+
+  // ---- A) クリック不具合の最終ガード（capture段階で確実に拾う） ----
+  const $id = (id)=>document.getElementById(id);
+  const menuBtn      = $id('menuBtn');
+  const menuDrawer   = $id('menuDrawer');
+  const menuBackdrop = $id('menuBackdrop');
+  const menuClose    = $id('menuClose');
+
+  const langBtn      = $id('langBtn');
+  const langDrawer   = $id('langDrawer');
+  const langBackdrop = $id('langBackdrop');
+  const langClose    = $id('langClose');
+
+  function setOpen(kind, open){
+    const btn    = (kind==='menu') ? menuBtn    : langBtn;
+    const drawer = (kind==='menu') ? menuDrawer : langDrawer;
+    html.classList.toggle(kind+'-open', open);
+    drawer && drawer.setAttribute('aria-hidden', String(!open));
+    btn    && btn.setAttribute('aria-expanded', String(open));
+  }
+  function toggle(kind){ setOpen(kind, !html.classList.contains(kind+'-open')); }
+  function closeAll(){ setOpen('menu', false); setOpen('lang', false); }
+
+  const bindCap = (el, fn)=>{
+    if(!el) return;
+    ['touchstart','click'].forEach(ev=>{
+      el.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); fn(); }, {capture:true});
+    });
+  };
+
+  bindCap(menuBtn, ()=>toggle('menu'));
+  bindCap(langBtn, ()=>toggle('lang'));
+  bindCap(menuBackdrop, ()=>setOpen('menu', false));
+  bindCap(menuClose,    ()=>setOpen('menu', false));
+  bindCap(langBackdrop, ()=>setOpen('lang', false));
+  bindCap(langClose,    ()=>setOpen('lang', false));
+
+  // 配置は念押し（他CSSがleftを当てても無効化）
+  function placeGuard(){
+    if (menuBtn){
+      Object.assign(menuBtn.style,{
+        position:'fixed', left:'auto', right:'calc(10px + env(safe-area-inset-right,0px) + 54px)',
+        top:'calc(10px + env(safe-area-inset-top,0px))', zIndex:2147483000
+      });
+    }
+    if (langBtn){
+      Object.assign(langBtn.style,{
+        position:'fixed', left:'auto', right:'calc(10px + env(safe-area-inset-right,0px))',
+        top:'calc(10px + env(safe-area-inset-top,0px))', zIndex:2147483000
+      });
+    }
+  }
+  placeGuard();
+
+  // 画面回転/リサイズ/復帰時のゴースト対策
+  addEventListener('resize', placeGuard, {passive:true});
+  addEventListener('orientationchange', ()=>{ closeAll(); placeGuard(); }, {passive:true});
+  addEventListener('pageshow', ()=>{ closeAll(); placeGuard(); }, {passive:true});
+  document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') closeAll(); });
+
+  // ---- B) Google翻訳の青バー等がタップを奪う個体への除去 ----
+  (function killGoogle(){
+    try{
+      document.body.style.top='0px';
+      document.getElementById('goog-gt-tt')?.remove();
+      document.querySelector('iframe#goog-te-banner-frame')?.remove();
+      document.querySelector('.goog-te-banner-frame')?.remove();
+      const sk = document.querySelector('body > .skiptranslate'); if (sk) sk.style.display='none';
+    }catch(_){}
+    setTimeout(killGoogle, 1500);
+  })();
+
+  // ---- C) 「重要なお知らせ」を“ある時だけ”<details>化（余計な生成はしない） ----
+  (function accordionizeImportant(){
+    // 対象が無ければ何もしない（＝あなたの意図通り）
+    const boxes = Array.from(document.querySelectorAll('#important-notice, .important-notice'));
+    if (!boxes.length) return;
+    boxes.forEach(box=>{
+      if (box.dataset._accDone) return;
+      if (box.querySelector('details > summary')){ box.classList.add('accordion'); box.dataset._accDone='1'; return; }
+      const det = document.createElement('details'); det.open = true;
+      const sum = document.createElement('summary'); sum.textContent = '重要なお知らせ';
+      const content = document.createElement('div'); content.className = 'content';
+      while (box.firstChild) content.appendChild(box.firstChild);
+      det.appendChild(sum); det.appendChild(content);
+      box.classList.add('accordion'); box.appendChild(det);
+      box.dataset._accDone='1';
+    });
+  })();
+})();
+</script>
+<!-- ===== /append-only HOTFIX ===== -->
 </body>
 </html>
