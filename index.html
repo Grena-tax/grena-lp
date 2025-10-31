@@ -2256,5 +2256,104 @@
 </script>
 
 <!-- ===== ▲ ここまで貼る（index.html の </body> 直前・追記のみ） ===== -->
+<!-- ===== ▼ ここから貼る（index.html の </body> 直前・追記のみ） ===== -->
+
+<script id="hotfix-1101b-js">
+(function(){
+  const $=(s,r=document)=>r.querySelector(s);
+  const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+
+  /* 1) 重要なお知らせ：#disclaimer へ移動・重複除去・デフォ閉 */
+  (function(){
+    const blocks = $$('#important-notice');             // 万一複数あっても全部拾う
+    if(!blocks.length) return;
+    const host = $('#disclaimer') || document.body;
+    if(!$('#important-notice-details')) {
+      const det = document.createElement('details');    // ← 最初から閉じる
+      det.id = 'important-notice-details'; det.open = false;
+      const sum = document.createElement('summary'); sum.textContent = '重要なお知らせ';
+      const body = document.createElement('div'); body.className = 'content';
+      const src = blocks[0];                             // 先頭の本文を採用
+      while(src.firstChild) body.appendChild(src.firstChild);
+      det.append(sum, body);
+      let acc = host.querySelector('.accordion');
+      if(!acc){ acc=document.createElement('div'); acc.className='accordion'; host.appendChild(acc); }
+      acc.appendChild(det);
+    }
+    blocks.forEach(n=> n.remove());                      // 余ってる分は全部消す（黒帯下のダブり対策）
+  })();
+
+  /* 2) メニューパネル：上下のかぶり解消（スクロール領域を確保） */
+  (function(){
+    const panel = document.querySelector('.menu-panel') || document.querySelector('.menu-wrap');
+    if(panel){
+      panel.style.overflow='auto';
+      panel.style.maxHeight='100vh';
+      panel.style.paddingTop='64px';
+      panel.style.paddingBottom='140px';
+    }
+  })();
+
+  /* 3) 目次の重複見出しを掃除 & 「重要なお知らせ」リンクを必ず追加 */
+  (function(){
+    const groups = $('#menuGroups') || $('.menu-groups'); if(!groups) return;
+    const seen = new Set();
+    [...groups.querySelectorAll('.menu-group')].forEach(g=>{
+      const key=(g.querySelector('h4')?.textContent||'').trim();
+      if(seen.has(key)) g.remove(); else seen.add(key);
+    });
+    if($('#important-notice-details') && !groups.querySelector('a[href="#important-notice-details"]')){
+      const sec = [...groups.querySelectorAll('.menu-group')]
+        .find(g=>(g.querySelector('h4')?.textContent||'').includes('免責事項')) || groups.lastElementChild;
+      const ul = sec.querySelector('.menu-list') || sec.appendChild(Object.assign(document.createElement('ul'),{className:'menu-list'}));
+      const li=document.createElement('li'), a=document.createElement('a');
+      a.href='#important-notice-details'; a.textContent='重要なお知らせ';
+      a.addEventListener('click',()=>{ $('#important-notice-details').open=true; document.documentElement.classList.remove('menu-open'); });
+      li.appendChild(a); ul.appendChild(li);
+    }
+  })();
+
+  /* 4) 翻訳：リストを強制充填 → クリックで Google Translate ビューへ遷移 */
+  (function(){
+    const list = $('#langList'); if(!list || list.children.length) return;
+    const PAIRS = [
+      ['en','English'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],
+      ['es','Spanish'],['fr','French'],['de','German'],['it','Italian'],['pt','Portuguese'],
+      ['ru','Russian'],['ar','Arabic'],['hi','Hindi'],['id','Indonesian'],['th','Thai'],
+      ['vi','Vietnamese'],['ko','Korean'],['tr','Turkish'],['uk','Ukrainian'],['ms','Malay'],
+      ['fa','Persian'],['nl','Dutch'],['sv','Swedish'],['pl','Polish'],['cs','Czech'],
+      ['el','Greek'],['he','Hebrew'],['ro','Romanian'],['hu','Hungarian'],['da','Danish'],
+      ['fi','Finnish'],['no','Norwegian'],['bg','Bulgarian'],['sr','Serbian'],['sk','Slovak'],
+      ['sl','Slovenian'],['hr','Croatian'],['lt','Lithuanian'],['lv','Latvian'],['et','Estonian'],
+      ['ka','Georgian'],['bn','Bengali'],['ta','Tamil'],['te','Telugu'],['ur','Urdu'],
+      ['sw','Swahili'],['af','Afrikaans'],['is','Icelandic'],['ga','Irish'],['my','Burmese'],['km','Khmer']
+    ].sort((a,b)=>a[1].localeCompare(b[1]));
+    const frag=document.createDocumentFragment();
+    for(const [code,name] of PAIRS){
+      const el=document.createElement('div'); el.className='ls-item';
+      el.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
+      el.addEventListener('click',()=>{
+        location.href = 'https://translate.google.com/translate?sl=auto&tl=' + encodeURIComponent(code) + '&u=' + encodeURIComponent(location.href);
+      });
+      frag.appendChild(el);
+    }
+    list.appendChild(frag);
+    const q=$('#langSearch');
+    if(q){ q.oninput=()=>{ const s=(q.value||'').toLowerCase(); list.querySelectorAll('.ls-item').forEach(el=>{
+      el.style.display = !s || (el.textContent||'').toLowerCase().includes(s) ? '' : 'none';
+    });};}
+  })();
+})();
+</script>
+
+<style id="hotfix-1101b-css">
+  /* 右から出す・被り対策（既存CSSの上書き用） */
+  .menu-wrap{ right:0 !important; left:auto !important; transform:translateX(100%) !important; }
+  .menu-open .menu-wrap{ transform:translateX(0) !important; }
+  .menu-wrap[aria-hidden="true"], .lang-wrap[aria-hidden="true"]{ display:none !important; }
+  .menu-panel{ padding-top:64px !important; padding-bottom:140px !important; }
+</style>
+
+<!-- ===== ▲ ここまで貼る（index.html の </body> 直前・追記のみ） ===== -->
 </body>
 </html>
