@@ -1580,5 +1580,434 @@
 })();
 </script>
 <!-- ===== ▲ v1101c ここまで（追記のみ） ===== -->
+<!-- ===== ▼ v1101c 末尾パッチ：右開きメニュー＋翻訳復旧＋重要なお知らせ挿入 ===== -->
+<style id="hotfix-1101c-css">
+  :root{ --icon-size:48px; --icon-gap:10px; }
+  /* 右上アイコン：右=🌐 左=☰ */
+  .lang-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px)) !important; left:auto !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  .menu-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + var(--icon-gap)) !important; left:auto !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  /* ドロワー：右から出す／被り防止の余白／常に最前面 */
+  .menu-wrap{
+    position:fixed !important; inset:auto 0 0 auto !important; top:0 !important; right:0 !important; left:auto !important;
+    width:min(92vw,560px) !important; height:100vh !important;
+    transform:translateX(110%) !important; transition:transform .25s ease !important;
+    z-index:10030 !important; padding-top:max(16px, env(safe-area-inset-top,0px)) !important;
+    background:var(--panel, #fff);
+  }
+  .menu-panel{ margin-left:auto !important; height:100%; overflow:auto; position:relative; z-index:10031 !important; }
+  .menu-backdrop{ position:fixed !important; inset:0 !important; background:rgba(0,0,0,.35) !important; z-index:10025 !important; display:block !important; }
+  .menu-wrap[aria-hidden="true"]{ transform:translateX(110%) !important; }
+  .menu-open .menu-wrap[aria-hidden="false"]{ transform:translateX(0) !important; }
+  /* 開いてない時は完全に消してタップ遮り防止 */
+  .menu-wrap[aria-hidden="true"], .lang-wrap[aria-hidden="true"]{ display:none !important; }
+  .menu-panel, .lang-panel{ position:relative; z-index:10031 !important; }
+  body.menu-open, html.menu-open{ overflow:hidden !important; }
+</style>
+
+<!-- 重要なお知らせ 本文（どこに置いてもOK。JSが #disclaimer 内へ移して<details>化） -->
+<div id="important-notice">
+  <p class="text-sm muted">最終更新：2025-11-01｜運営：Grena Group LLC（ジョージア法人）</p>
+  <h3>本サービスの位置づけ</h3>
+  <ul>
+    <li>本サイトは、ジョージア共和国における法人設立・個人事業登録・銀行口座開設に関する<strong>情報提供・紹介・実務支援</strong>を目的としています。</li>
+    <li><strong>金融商品取引法・資金決済法・銀行法</strong>等で定義される「勧誘・媒介・代理」行為や、預金・資金の受け入れ行為は一切行っておりません。</li>
+    <li>銀行口座開設は<strong>お客様本人と各銀行の直接契約</strong>により行われ、Grena Group LLCはその手続を支援する立場であり、<strong>代理権・媒介権はありません。</strong></li>
+    <li>表示金額はすべて<strong>サポート・情報提供サービスの料金</strong>であり、銀行や税務機関への支払いとは無関係です。</li>
+  </ul>
+  <h3>金利・為替・シミュレーションについて</h3>
+  <ul>
+    <li>掲載の金利・為替レート・数値試算は<strong>参考例</strong>であり、将来の成果・利回り・利益を保証するものではありません。</li>
+    <li>為替変動、税制改正、金融規制、各銀行の方針変更等により、実際の結果は大きく異なる可能性があります。</li>
+    <li>掲載情報は作成時点の一般的データに基づくもので、最新情報を保証するものではありません。</li>
+  </ul>
+  <h3>税務・法務に関する重要事項</h3>
+  <ul>
+    <li>当社は税務・法務・投資に関する<strong>助言（advice）や判断代行を行いません。</strong></li>
+    <li>各種制度の適用可否は居住国や所得区分により異なります。必ず<strong>専門家（税理士・弁護士）</strong>へご相談ください。</li>
+    <li>提出書類・契約書等の最終判断および責任は、お客様ご自身に帰属します。</li>
+  </ul>
+  <h3>KYC／AML・反社会的勢力排除</h3>
+  <ul>
+    <li>本人確認（KYC）や資金源確認（Source of Funds）を求められる場合があります。虚偽申告や合理的疑義がある場合、サポートを停止または契約を解除します。</li>
+    <li>反社会的勢力等への関与が判明した場合は、サービス提供を即時終了します。</li>
+  </ul>
+  <h3>翻訳と外部リンクについて</h3>
+  <ul>
+    <li>多言語対応は自動翻訳（Google Translate）を利用。法的効力・正確性は原文（日本語/英語）を優先します。</li>
+    <li>外部リンク・参考資料の内容は当社が保証・支持するものではありません。</li>
+  </ul>
+  <h3>料金・返金・変更について</h3>
+  <ul>
+    <li>料金・サポート内容・掲載条件は、運営方針や為替・実務コストに応じて<strong>予告なく変更</strong>される場合があります。</li>
+    <li>返金条件は同ページ内の「キャンセルポリシー」に準じます。</li>
+  </ul>
+  <h3>準拠法と管轄</h3>
+  <ul>
+    <li>本サービスは<strong>ジョージア法</strong>に準拠し、専属的合意管轄は<strong>ジョージア共和国の裁判所</strong>です。</li>
+  </ul>
+  <h3>運営法人情報</h3>
+  <ul>
+    <li><strong>法人名：</strong>Grena Group LLC／ID: 400433768</li>
+    <li><strong>登録機関：</strong>LEPL National Agency of Public Registry</li>
+    <li><strong>所在地：</strong>Georgia, Tbilisi, Nadzaladevi district, Erosi Manjgaladze St. 75a</li>
+    <li><strong>代表者：</strong>Tetsuya Shirai（TZ1176900／日本）</li>
+  </ul>
+  <h3>お問い合わせ</h3>
+  <ul>
+    <li>LINE公式：<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">@georgia-tax</a></li>
+    <li>個別の税務・法務・投資判断は各専門家へご相談ください。</li>
+  </ul>
+</div>
+
+<script id="hotfix-1101c-js">
+(function(){
+  const $=(s,r=document)=>r.querySelector(s);
+  const html=document.documentElement;
+
+  /* === 1) トグル再配線（404/黒画面防止） === */
+  function bindToggles(){
+    const btnMenu = $('#menuBtn') || $('[data-role="menu-button"]') || $('.menu-button');
+    const drMenu  = $('#menuDrawer') || $('.menu-wrap');
+    const bdMenu  = $('#menuBackdrop') || drMenu?.querySelector('.menu-backdrop');
+    const xMenu   = $('#menuClose') || drMenu?.querySelector('.menu-close');
+    const tMenu = (e)=>{ e?.preventDefault(); const open=!html.classList.contains('menu-open');
+      html.classList.toggle('menu-open',open);
+      drMenu?.setAttribute('aria-hidden', String(!open));
+      (btnMenu||{}).setAttribute?.('aria-expanded', String(open));
+    };
+    btnMenu?.addEventListener('click',tMenu,{passive:false});
+    btnMenu?.addEventListener('touchstart',tMenu,{passive:false});
+    bdMenu?.addEventListener('click',()=>closeAll(),{passive:true});
+    xMenu?.addEventListener('click',()=>closeAll(),{passive:true});
+
+    const btnLang = $('#langBtn') || $('[data-role="lang-button"]') || $('.lang-button');
+    const drLang  = $('#langDrawer') || $('.lang-wrap');
+    const bdLang  = $('#langBackdrop') || drLang?.querySelector('.lang-backdrop');
+    const xLang   = $('#langClose') || drLang?.querySelector('.lang-close');
+    const tLang = (e)=>{ e?.preventDefault(); const open=!html.classList.contains('lang-open');
+      html.classList.toggle('lang-open',open);
+      drLang?.setAttribute('aria-hidden', String(!open));
+      (btnLang||{}).setAttribute?.('aria-expanded', String(open));
+    };
+    btnLang?.addEventListener('click',tLang,{passive:false});
+    btnLang?.addEventListener('touchstart',tLang,{passive:false});
+    bdLang?.addEventListener('click',()=>closeAll(),{passive,true});
+    xLang?.addEventListener('click',()=>closeAll(),{passive:true});
+  }
+  function closeAll(){
+    html.classList.remove('menu-open','lang-open');
+    $('#menuDrawer')?.setAttribute('aria-hidden','true');
+    $('#langDrawer')?.setAttribute('aria-hidden','true');
+    $('#menuBtn')?.setAttribute('aria-expanded','false');
+    $('#langBtn')?.setAttribute('aria-expanded','false');
+  }
+  ['resize','orientationchange','pageshow','visibilitychange'].forEach(ev=>{
+    addEventListener(ev,()=>{ setTimeout(closeAll,120); },{passive:true});
+  });
+
+  /* === 2) 重要なお知らせを #disclaimer 内へ挿入＆目次に追加（重複防止） === */
+  function mountImportant(){
+    const host = $('#disclaimer') || document.body;
+    const src  = $('#important-notice');
+    if(!host || !src) return;
+    if($('#important-notice-details')) return;
+
+    const det=document.createElement('details'); det.id='important-notice-details'; det.open=true;
+    const sum=document.createElement('summary'); sum.textContent='重要なお知らせ';
+    const wrap=document.createElement('div'); wrap.className='content';
+    while(src.firstChild) wrap.appendChild(src.firstChild);
+    det.append(sum,wrap);
+
+    let acc = host.querySelector('.accordion'); if(!acc){ acc=document.createElement('div'); acc.className='accordion'; host.appendChild(acc); }
+    acc.appendChild(det); src.remove?.();
+
+    const groups = $('#menuGroups') || $('.menu-groups');
+    if(!groups) return;
+
+    // 既存の「免責事項」グループにだけ足す。無ければ新設。
+    let grp=[...groups.querySelectorAll('.menu-group')].find(g=>(g.querySelector('h4')?.textContent||'').includes('免責事項'));
+    if(!grp){
+      grp=document.createElement('div'); grp.className='menu-group';
+      const h4=document.createElement('h4'); h4.textContent='免責事項・キャンセル';
+      const ul=document.createElement('ul'); ul.className='menu-list';
+      grp.append(h4,ul); groups.appendChild(grp);
+    }
+    const ul=grp.querySelector('.menu-list');
+    if(!ul.querySelector('a[href="#disclaimer"]')){
+      const li=document.createElement('li'), a=document.createElement('a');
+      a.href='#disclaimer'; a.textContent='免責事項・キャンセル'; a.addEventListener('click', closeAll);
+      li.appendChild(a); ul.appendChild(li);
+    }
+    if(!ul.querySelector('a[href="#important-notice-details"]')){
+      const li=document.createElement('li'), a=document.createElement('a');
+      a.href='#important-notice-details'; a.textContent='重要なお知らせ';
+      a.addEventListener('click', ()=>{ $('#important-notice-details')?.setAttribute('open',''); closeAll(); });
+      li.appendChild(a); ul.appendChild(li);
+    }
+  }
+
+  /* === 3) 言語リスト復旧：Googleが来なければ大量フォールバックで埋める === */
+  const FALLBACK_LANGS = [
+    ['af','Afrikaans'],['am','Amharic'],['ar','Arabic'],['az','Azerbaijani'],['be','Belarusian'],
+    ['bg','Bulgarian'],['bn','Bengali'],['bs','Bosnian'],['ca','Catalan'],['ceb','Cebuano'],
+    ['co','Corsican'],['cs','Czech'],['cy','Welsh'],['da','Danish'],['de','German'],
+    ['el','Greek'],['en','English'],['eo','Esperanto'],['es','Spanish'],['et','Estonian'],
+    ['eu','Basque'],['fa','Persian'],['fi','Finnish'],['fil','Filipino'],['fr','French'],
+    ['fy','Frisian'],['ga','Irish'],['gd','Scots Gaelic'],['gl','Galician'],['gu','Gujarati'],
+    ['ha','Hausa'],['haw','Hawaiian'],['he','Hebrew'],['hi','Hindi'],['hmn','Hmong'],
+    ['hr','Croatian'],['ht','Haitian Creole'],['hu','Hungarian'],['hy','Armenian'],['id','Indonesian'],
+    ['ig','Igbo'],['is','Icelandic'],['it','Italian'],['ja','Japanese'],['jv','Javanese'],
+    ['ka','Georgian'],['kk','Kazakh'],['km','Khmer'],['kn','Kannada'],['ko','Korean'],
+    ['ku','Kurdish'],['ky','Kyrgyz'],['la','Latin'],['lb','Luxembourgish'],['lo','Lao'],
+    ['lt','Lithuanian'],['lv','Latvian'],['mk','Macedonian'],['ml','Malayalam'],['mn','Mongolian'],
+    ['mr','Marathi'],['ms','Malay'],['mt','Maltese'],['my','Myanmar (Burmese)'],['ne','Nepali'],
+    ['nl','Dutch'],['no','Norwegian'],['ny','Nyanja'],['or','Odia'],['pa','Punjabi'],
+    ['pl','Polish'],['ps','Pashto'],['pt','Portuguese'],['ro','Romanian'],['ru','Russian'],
+    ['sd','Sindhi'],['si','Sinhala'],['sk','Slovak'],['sl','Slovenian'],['sm','Samoan'],
+    ['sn','Shona'],['so','Somali'],['sq','Albanian'],['sr','Serbian'],['st','Sesotho'],
+    ['su','Sundanese'],['sv','Swedish'],['sw','Swahili'],['ta','Tamil'],['te','Telugu'],
+    ['tg','Tajik'],['th','Thai'],['tr','Turkish'],['uk','Ukrainian'],['ur','Urdu'],
+    ['uz','Uzbek'],['vi','Vietnamese'],['xh','Xhosa'],['yi','Yiddish'],['yo','Yoruba'],
+    ['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)'],['zu','Zulu']
+  ];
+  function buildLang(){
+    const list=$('#langList'); if(!list) return;
+    const sel = document.querySelector('#google_translate_element select.goog-te-combo') || document.querySelector('select.goog-te-combo');
+    // 既に埋まってたら何もしない
+    if(list.childElementCount>0) return;
+
+    let entries=[];
+    if(sel && sel.options.length>2){
+      entries=[...sel.options].filter(o=>o.value && o.value!=='auto').map(o=>[o.value, (o.textContent||o.value).trim()]);
+    }else{
+      entries=FALLBACK_LANGS; // 大量フォールバック
+      setTimeout(buildLang,700); // 後でGoogleが来たら上書きしない（既に埋まってるのでreturn）
+    }
+    const cur = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
+    const frag=document.createDocumentFragment();
+    entries.sort((a,b)=>a[1].localeCompare(b[1])).forEach(([code,name])=>{
+      const el=document.createElement('div');
+      el.className='ls-item'+(cur.endsWith('/'+code)?' ls-active':'');
+      el.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
+      el.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(sel){ sel.value=code; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+        // Google未読でもcookieを書いて擬似的に表示更新
+        document.cookie=`googtrans=/auto/${code};path=/`;
+        closeAll();
+      },{passive:false});
+      frag.appendChild(el);
+    });
+    list.appendChild(frag);
+
+    // 検索
+    const q=$('#langSearch');
+    if(q){ q.oninput=()=>{ const s=(q.value||'').toLowerCase();
+      list.querySelectorAll('.ls-item').forEach(el=>{
+        el.style.display = !s || (el.textContent||'').toLowerCase().includes(s) ? '' : 'none';
+      });
+    }}
+  }
+
+  const run=()=>{ bindToggles(); mountImportant(); buildLang(); };
+  document.readyState==='loading' ? document.addEventListener('DOMContentLoaded',run) : run();
+})();
+</script>
+<!-- ===== ▲ v1101c ここまで（追記のみ） ===== -->
+<!-- ===== ▼ v1101d FINAL（末尾追記のみ） ===== -->
+<style id="hotfix-1101d-css">
+  :root{ --icon-size:48px; --icon-gap:10px; }
+  /* 右上：🌐 → その左：☰ */
+  .lang-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px)) !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  .menu-button{
+    position:fixed !important; top:12px !important;
+    right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + var(--icon-gap)) !important;
+    z-index:10020 !important; width:48px;height:48px;border-radius:12px; pointer-events:auto !important;
+  }
+  /* ドロワー＝右出し & 最前面 & 被り回避 */
+  .menu-wrap{
+    position:fixed !important; top:0 !important; right:0 !important; left:auto !important; bottom:0 !important;
+    width:min(92vw,560px) !important; height:100vh !important;
+    transform:translateX(110%) !important; transition:transform .25s ease !important;
+    z-index:10030 !important; background:var(--panel,#fff);
+    padding-top:calc(16px + env(safe-area-inset-top,0px)) !important;
+  }
+  .menu-open .menu-wrap[aria-hidden="false"]{ transform:translateX(0) !important; }
+  .menu-wrap[aria-hidden="true"], .lang-wrap[aria-hidden="true"]{ display:none !important; }
+  .menu-backdrop{
+    position:fixed !important; inset:0 !important; background:rgba(0,0,0,.35) !important; z-index:10025 !important;
+  }
+  .menu-panel, .lang-panel{ position:relative; z-index:10031 !important; }
+  html.menu-open, body.menu-open{ overflow:hidden !important; }
+</style>
+
+<!-- 「重要なお知らせ」本文（どこに置いてもOK。JSが #disclaimer 内へ移設して<details>化） -->
+<div id="important-notice">
+  <p class="text-sm muted">最終更新：2025-11-01｜運営：Grena Group LLC（ジョージア法人）</p>
+  <h3>本サービスの位置づけ</h3>
+  <ul>
+    <li>本サイトは、ジョージア共和国における法人設立・個人事業登録・銀行口座開設に関する<strong>情報提供・紹介・実務支援</strong>を目的としています。</li>
+    <li><strong>金融商品取引法・資金決済法・銀行法</strong>等で定義される「勧誘・媒介・代理」行為や、預金・資金の受け入れ行為は一切行っておりません。</li>
+    <li>銀行口座開設は<strong>お客様本人と各銀行の直接契約</strong>により行われ、当社は手続支援のみで<strong>代理権・媒介権はありません。</strong></li>
+    <li>表示金額は<strong>サポート/情報提供サービスの料金</strong>であり、銀行・税務機関への支払いとは無関係です。</li>
+  </ul>
+  <h3>金利・為替・シミュレーションについて</h3>
+  <ul>
+    <li>掲載の金利・為替・試算は<strong>参考例</strong>であり、成果・利回り等を保証しません。</li>
+    <li>為替、税制、規制、各行方針の変更等により結果は大きく異なり得ます。</li>
+    <li>掲載情報は作成時点の一般的データに基づき、最新性は保証しません。</li>
+  </ul>
+  <h3>税務・法務に関する重要事項</h3>
+  <ul>
+    <li>当社は税務・法務・投資の<strong>助言や判断代行を行いません</strong>。必ず<strong>税理士・弁護士</strong>へご相談ください。</li>
+    <li>提出書類・契約書の最終判断と責任はお客様に帰属します。</li>
+  </ul>
+  <h3>KYC／AML・反社会的勢力排除</h3>
+  <ul>
+    <li>KYCや資金源確認を求める場合があります。虚偽/疑義がある場合はサポートを停止・解除します。</li>
+    <li>反社会的勢力等と判明した場合は提供を即時終了します。</li>
+  </ul>
+  <h3>翻訳と外部リンクについて</h3>
+  <ul>
+    <li>自動翻訳（Google Translate）を利用。法的効力・正確性は原文（日本語/英語）を優先します。</li>
+    <li>外部リンク/参考資料の内容は当社が保証・支持するものではありません。</li>
+  </ul>
+  <h3>料金・返金・変更について</h3>
+  <ul>
+    <li>料金・サポート内容は実務コスト等に応じて<strong>予告なく変更</strong>される場合があります。</li>
+    <li>返金条件は同ページ内の「キャンセルポリシー」に準じます。</li>
+  </ul>
+  <h3>準拠法と管轄</h3>
+  <ul>
+    <li>本サービスは<strong>ジョージア法</strong>に準拠し、専属的合意管轄は<strong>ジョージア共和国の裁判所</strong>です。</li>
+  </ul>
+  <h3>運営法人情報</h3>
+  <ul>
+    <li><strong>Grena Group LLC</strong>（ID: 400433768）</li>
+    <li>LEPL National Agency of Public Registry</li>
+    <li>Georgia, Tbilisi, Nadzaladevi district, Erosi Manjgaladze St. 75a</li>
+    <li>代表：Tetsuya Shirai（TZ1176900／日本）</li>
+  </ul>
+  <h3>お問い合わせ</h3>
+  <ul>
+    <li>LINE公式：<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">@georgia-tax</a></li>
+    <li>個別の税務・法務・投資判断は各専門家へご相談ください。</li>
+  </ul>
+</div>
+
+<script id="hotfix-1101d-js">
+(function(){
+  const $=(s,r=document)=>r.querySelector(s);
+  const html=document.documentElement;
+
+  /* 1) トグルの再配線（404/黒画面防止 & 右出し制御） */
+  function bind(){
+    const btnMenu=$('#menuBtn')||$('[data-role="menu-button"]')||$('.menu-button');
+    const drMenu=$('#menuDrawer')||$('.menu-wrap');
+    const bdMenu=$('#menuBackdrop')||drMenu?.querySelector('.menu-backdrop');
+    const xMenu=$('#menuClose')||drMenu?.querySelector('.menu-close');
+    const openMenu=(e)=>{ e?.preventDefault(); html.classList.add('menu-open'); drMenu?.setAttribute('aria-hidden','false'); btnMenu?.setAttribute('aria-expanded','true'); };
+    const closeMenu=(e)=>{ e?.preventDefault(); html.classList.remove('menu-open'); drMenu?.setAttribute('aria-hidden','true'); btnMenu?.setAttribute('aria-expanded','false'); };
+    btnMenu?.addEventListener('click', (e)=> (html.classList.contains('menu-open')?closeMenu:openMenu)(e), {passive:false});
+    btnMenu?.addEventListener('touchstart', (e)=> (html.classList.contains('menu-open')?closeMenu:openMenu)(e), {passive:false});
+    bdMenu?.addEventListener('click', closeMenu, {passive:true});
+    xMenu?.addEventListener('click', closeMenu, {passive:true});
+
+    const btnLang=$('#langBtn')||$('[data-role="lang-button"]')||$('.lang-button');
+    const drLang=$('#langDrawer')||$('.lang-wrap');
+    const bdLang=$('#langBackdrop')||drLang?.querySelector('.lang-backdrop');
+    const xLang=$('#langClose')||drLang?.querySelector('.lang-close');
+    const openLang=(e)=>{ e?.preventDefault(); html.classList.add('lang-open'); drLang?.setAttribute('aria-hidden','false'); btnLang?.setAttribute('aria-expanded','true'); };
+    const closeLang=(e)=>{ e?.preventDefault(); html.classList.remove('lang-open'); drLang?.setAttribute('aria-hidden','true'); btnLang?.setAttribute('aria-expanded','false'); };
+    btnLang?.addEventListener('click', (e)=> (html.classList.contains('lang-open')?closeLang:openLang)(e), {passive:false});
+    btnLang?.addEventListener('touchstart', (e)=> (html.classList.contains('lang-open')?closeLang:openLang)(e), {passive:false});
+    bdLang?.addEventListener('click', closeLang, {passive:true});
+    xLang?.addEventListener('click', closeLang, {passive:true});
+
+    ['resize','orientationchange','pageshow','visibilitychange'].forEach(ev=>{
+      addEventListener(ev,()=>{ setTimeout(()=>{closeMenu();closeLang();},120); },{passive:true});
+    });
+  }
+
+  /* 2) 重要なお知らせ → #disclaimer 内へ移設 & 目次にリンクを1本だけ追加 */
+  function mountNotice(){
+    const host=$('#disclaimer')||document.body;
+    const src=$('#important-notice'); if(!host||!src) return;
+    if($('#important-notice-details')) return;
+
+    const det=document.createElement('details'); det.id='important-notice-details'; det.open=true;
+    const sum=document.createElement('summary'); sum.textContent='重要なお知らせ';
+    const box=document.createElement('div'); box.className='content';
+    while(src.firstChild) box.appendChild(src.firstChild);
+    det.append(sum,box);
+
+    let acc=host.querySelector('.accordion'); if(!acc){ acc=document.createElement('div'); acc.className='accordion'; host.appendChild(acc); }
+    acc.appendChild(det); src.remove?.();
+
+    const groups=$('#menuGroups')||$('.menu-groups'); if(!groups) return;
+    // 既存の #disclaimer へのリンクがあるグループを使う（重複防止）
+    let ul=(groups.querySelector('a[href="#disclaimer"]')||{}).closest?.('.menu-list');
+    if(!ul){
+      const grp=document.createElement('div'); grp.className='menu-group';
+      const h4=document.createElement('h4'); h4.textContent='免責事項・キャンセル';
+      ul=document.createElement('ul'); ul.className='menu-list';
+      const li=document.createElement('li'), a=document.createElement('a'); a.href='#disclaimer'; a.textContent='免責事項・キャンセル'; a.addEventListener('click',()=>{html.classList.remove('menu-open');});
+      li.appendChild(a); ul.appendChild(li); grp.append(h4,ul); groups.appendChild(grp);
+    }
+    if(!ul.querySelector('a[href="#important-notice-details"]')){
+      const li=document.createElement('li'), a=document.createElement('a'); a.href='#important-notice-details'; a.textContent='重要なお知らせ';
+      a.addEventListener('click',()=>{ $('#important-notice-details')?.setAttribute('open',''); html.classList.remove('menu-open'); });
+      li.appendChild(a); ul.appendChild(li);
+    }
+  }
+
+  /* 3) 翻訳リスト：Google遅延時はフォールバックで即時表示 */
+  const FALLBACK = [['af','Afrikaans'],['am','Amharic'],['ar','Arabic'],['az','Azerbaijani'],['be','Belarusian'],['bg','Bulgarian'],['bn','Bengali'],['bs','Bosnian'],['ca','Catalan'],['ceb','Cebuano'],['cs','Czech'],['cy','Welsh'],['da','Danish'],['de','German'],['el','Greek'],['en','English'],['eo','Esperanto'],['es','Spanish'],['et','Estonian'],['eu','Basque'],['fa','Persian'],['fi','Finnish'],['fil','Filipino'],['fr','French'],['ga','Irish'],['gd','Scots Gaelic'],['gl','Galician'],['gu','Gujarati'],['he','Hebrew'],['hi','Hindi'],['hr','Croatian'],['hu','Hungarian'],['hy','Armenian'],['id','Indonesian'],['is','Icelandic'],['it','Italian'],['ja','Japanese'],['jv','Javanese'],['ka','Georgian'],['kk','Kazakh'],['km','Khmer'],['kn','Kannada'],['ko','Korean'],['ku','Kurdish'],['ky','Kyrgyz'],['la','Latin'],['lb','Luxembourgish'],['lo','Lao'],['lt','Lithuanian'],['lv','Latvian'],['mk','Macedonian'],['ml','Malayalam'],['mn','Mongolian'],['mr','Marathi'],['ms','Malay'],['mt','Maltese'],['my','Burmese'],['ne','Nepali'],['nl','Dutch'],['no','Norwegian'],['pa','Punjabi'],['pl','Polish'],['ps','Pashto'],['pt','Portuguese'],['ro','Romanian'],['ru','Russian'],['si','Sinhala'],['sk','Slovak'],['sl','Slovenian'],['sq','Albanian'],['sr','Serbian'],['su','Sundanese'],['sv','Swedish'],['sw','Swahili'],['ta','Tamil'],['te','Telugu'],['th','Thai'],['tr','Turkish'],['uk','Ukrainian'],['ur','Urdu'],['uz','Uzbek'],['vi','Vietnamese'],['zh-CN','Chinese (Simplified)'],['zh-TW','Chinese (Traditional)']];
+  function buildLang(){
+    const list=$('#langList'); if(!list) return;
+    if(list.childElementCount>0) return;
+    const sel=document.querySelector('#google_translate_element select.goog-te-combo')||document.querySelector('select.goog-te-combo');
+    let langs=[];
+    if(sel && sel.options.length>2){
+      langs=[...sel.options].filter(o=>o.value && o.value!=='auto').map(o=>[o.value,(o.textContent||o.value).trim()]);
+    }else{
+      langs=FALLBACK; setTimeout(buildLang,700); // 後から来ても既に埋まっていれば何もしない
+    }
+    const cur=decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
+    const frag=document.createDocumentFragment();
+    langs.sort((a,b)=>a[1].localeCompare(b[1])).forEach(([code,name])=>{
+      const el=document.createElement('div');
+      el.className='ls-item'+(cur.endsWith('/'+code)?' ls-active':'');
+      el.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
+      el.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(sel){ sel.value=code; sel.dispatchEvent(new Event('change',{bubbles:true})); }
+        document.cookie=`googtrans=/auto/${code};path=/`; // 表示の一貫性
+        html.classList.remove('lang-open');
+      },{passive:false});
+      frag.appendChild(el);
+    });
+    list.appendChild(frag);
+    const q=$('#langSearch'); if(q){ q.oninput=()=>{ const s=(q.value||'').toLowerCase(); list.querySelectorAll('.ls-item').forEach(el=>{ el.style.display=!s||(el.textContent||'').toLowerCase().includes(s)?'':'none'; }); }; }
+  }
+
+  const run=()=>{ bind(); mountNotice(); buildLang(); };
+  document.readyState==='loading'?document.addEventListener('DOMContentLoaded',run):run();
+  addEventListener('pageshow',run,{once:true,passive:true});
+})();
+</script>
+<!-- ===== ▲ v1101d FINAL（末尾追記のみ） ===== -->
 </body>
 </html>
