@@ -275,3 +275,22 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 
 /* 念のため：中身は前面に */
 .menu-panel, .lang-panel{ z-index: 10001; position: relative; }
+/* === PATCH 2025-11-01-c (append-only) ================================== */
+/* アイコン位置入れ替え＋前面＆タップ有効を強制 */
+.menu-button{
+  right: 12px !important; left: auto !important; top: 12px !important;
+  z-index: 10002 !important; pointer-events: auto !important;
+}
+.lang-button{
+  left: 12px !important; right: auto !important; top: 12px !important;
+  z-index: 10003 !important; pointer-events: auto !important;
+}
+/* 言語パネルは左上ボタンの下に出す */
+.lang-panel{
+  left: 10px !important; right: auto !important;
+}
+/* ドロワーは閉じている間はDOMに居てもクリックを奪わない */
+.menu-wrap[aria-hidden="true"],
+.lang-wrap[aria-hidden="true"]{
+  display: none !important;
+}
