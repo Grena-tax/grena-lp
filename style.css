@@ -1,6 +1,4 @@
-10/23 CSSコード
-
-/* ===== patch.css (10/12基準・完全置換) ===== */
+/* ===== patch.css (修正版) ===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -8,7 +6,7 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+  --menu-head-h: 56px;
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -53,7 +51,10 @@ th:first-child,td:first-child{text-align:left}
 
 /* --- 右上ハンバーガー（アイコン） --- */
 .menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
+  position:fixed;
+  top:calc(10px + var(--safe-top));
+  left:calc(10px + var(--safe-right)); /* 左上から左に配置 */
+  z-index:10002; /* z-indexを上げて前面に */
   display:inline-flex;align-items:center;justify-content:center;
   width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
   box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
@@ -65,12 +66,12 @@ th:first-child,td:first-child{text-align:left}
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
 /* --- ハンバーガー本体（被り根絶・縦分割） --- */
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
+.menu-wrap{position:fixed;inset:0;z-index:10001;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
-  background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
+  position:absolute;top:0;left:0;height:100%;width:min(420px,92vw); /* 左から開く */
+  background:#f5f7fa;color:#0b1220;border-right:1px solid #e5e7eb; /* 右ボーダー */
+  box-shadow:16px 0 40px rgba(0,0,0,.12);transform:translateX(-100%);transition:transform .22s ease; /* 左からのアニメーション */
   font-size:14px;line-height:1.38;
   display:flex;flex-direction:column;
 }
@@ -85,7 +86,6 @@ th:first-child,td:first-child{text-align:left}
   border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
 }
 .menu-close:hover{background:#f3f4f6}
-/* ←固定高をやめ、上に十分な余白＋scroll-padding-top を確保 */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto !important;
   padding: calc(var(--menu-head-h) + 10px) 0 12px;
@@ -110,7 +110,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
   padding-bottom:var(--safe-bottom)
 }
 .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
 .btn.neutral{background:#e5e7eb;color:#111827}
 .btn.secondary{background:#1f2937;color:#fff}
 .btn.success{background:#10b981;color:#fff}
@@ -118,18 +118,22 @@ html.menu-open,html.menu-open body{overflow:hidden}
 
 /* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
 .lang-button{
-  position:fixed;top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 10px);
-  z-index:10001; width:48px;height:48px;border-radius:12px;
+  position:fixed;
+  top:calc(10px + var(--safe-top));
+  left:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの右隣 */
+  z-index:10003; /* 最前面に */
+  width:48px;height:48px;border-radius:12px;
   background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
   display:inline-flex;align-items:center;justify-content:center;
   box-shadow:0 4px 14px rgba(0,0,0,.15)
 }
 .lang-button .globe{font-size:20px;line-height:1}
-.lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
+.lang-wrap{position:fixed;inset:0;z-index:10004;pointer-events:none}
 .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .lang-panel{
-  position:absolute;top:calc(64px + var(--safe-top));right:calc(10px + var(--safe-right));
+  position:absolute;
+  top:calc(64px + var(--safe-top));
+  left:calc(10px + var(--safe-right)); /* 左側に表示 */
   width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
   box-shadow:0 16px 40px rgba(0,0,0,.12);
   transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
@@ -152,7 +156,10 @@ html.menu-open,html.menu-open body{overflow:hidden}
 html.lang-open .lang-wrap{pointer-events:auto}
 html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
-@media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
+@media (max-width:480px){ 
+  .lang-button{transform:scale(.92);transform-origin:top left} /* 左上基準に変更 */
+  .menu-button{transform:scale(.92);transform-origin:top left} /* 左上基準に変更 */
+}
 
 /* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
@@ -181,52 +188,15 @@ html.gtbar body{ padding-top:44px; }
 /* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
 section[id], details[id]{ scroll-margin-top: 70px; }
 
-/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避・据置仕様） --- */
+/* --- スマホ時の上辺マージン（左上アイコンと本文の重なり回避・据置仕様） --- */
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
+  .lang-panel{ width:58vw; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
-/* ===== revert font to site default (append-only) ===== */
-/* これだけで、以前の font-family 指定に戻します。他への影響なし。 */
-html, body,
-button, input, select, textarea, summary, details,
-nav, a, .menu-panel, .menu-list, .lang-panel {
-  font-family: revert !important;
-}
 
-/* Safari 等で 'revert' が効かない場合のフォールバック */
-@supports not (font-family: revert) {
-  html, body,
-  button, input, select, textarea, summary, details,
-  nav, a, .menu-panel, .menu-list, .lang-panel {
-    font-family: inherit !important;
-  }
-}
-/* ==== revert fonts: fall back to the site's original stack ==== */
-/* 以前の「--font-jp を強制」より後ろで、元の指定に戻す */
-:root { --font-jp: initial; } /* 念のため無効化 */
-
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
-}
-/* === REVERT: フォントは元の style.css に戻す（こちらの強制指定を無効化） === */
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important; /* 既存の style.css の指定に戻す */
-}
-
-/* iOS が古くて revert 非対応な場合の保険（ほぼ使われません） */
-@supports not (font-family: revert) {
-  html { font-family: inherit !important; }
-  body { font-family: inherit !important; }
-  button, input, select, textarea, summary, details,
-  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
-}
-/* === revert to original JP/OS font stack (override only) === */
+/* === フォント指定（元の指定を維持） === */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
