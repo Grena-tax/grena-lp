@@ -1,4 +1,4 @@
-10/23 jsコード
+/* 既存のJSをすべて削除して、以下のコードで完全に置き換えてください */
 
 /* ===== script.js (10/12基準・完全置換) ===== */
 (function(){
@@ -201,12 +201,14 @@
   };
 
 })();
+
 /* ---- Hamburger: 非クリックの見出し「料金プラン」だけを削除（append-only） ---- */
 (function () {
   document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
     if ((h.textContent || '').trim() === '料金プラン') h.remove();
   });
 })();
+
 /* ==== remove only "（トップ）" items in hamburger ==== */
 (function () {
   const isTop = /（トップ）\s*$/; // 全角カッコの「（トップ）」で終わる
@@ -217,6 +219,7 @@
     if (isTop.test(label)) li.remove();
   });
 })();
+
 /* === MENU: （トップ）を消す + ネスト項目を除外して作り直す === */
 (() => {
   const wrap = document.getElementById('menuGroups');
@@ -298,6 +301,7 @@
     a.textContent = a.textContent.replace(/（トップ）/g, '');
   });
 })();
+
 /* === hamburger cleanup: remove "(トップ)" and duplicated group-title items === */
 (function () {
   const groups = document.querySelectorAll('#menuGroups .menu-group');
