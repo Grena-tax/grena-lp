@@ -4,13 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
+
+<!-- 自動翻訳の誘導を抑止（ウィジェットは動作します） -->
 <meta name="google" content="notranslate">
+
+<!-- 既存：差し替え確認用ピンクバー -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
+<!-- 既存のメインCSS -->
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
-<link rel="stylesheet" href="./patch.css?v=20251101">
 
-<!-- 初期英語化を防ぐ：/ja/ja 以外の googtrans を掃除 -->
+<!-- 追加（この回答で出す追補CSS） -->
+<link rel="stylesheet" href="./patch.css?v=20251012">
+
+<!-- ▼ 初期状態が英語化しないための“事前”クッキー掃除（/ja/ja以外なら消す） -->
 <script>
 (function(){
   try{
@@ -34,9 +41,10 @@
 </head>
 <body>
 
+<!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 言語ドロワー（🌐） -->
+<!-- 右上：言語スイッチ（ハンバーガー左に固定） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -51,14 +59,17 @@
       <div class="ls-search">
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
+      <!-- ★ リストはJSで全言語を自動生成 -->
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
+
+      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
   </aside>
 </div>
 
-<!-- メニュードロワー（☰） -->
+<!-- 右上ハンバーガー -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -73,11 +84,14 @@
   </aside>
 </nav>
 
-<!-- ========================= 法人設立 ========================= -->
+<!-- =========================
+  法人設立セクション
+========================== -->
 <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">
-    ジョージア法人設立｜<br>OECD・PwC準拠／MoU契約／完全オンライン
-  </h2>
+  ジョージア法人設立｜<br>
+  OECD・PwC準拠／MoU契約／完全オンライン
+</h2>
   <div class="space-y-3 accordion">
 
     <details>
@@ -219,7 +233,9 @@
   </div>
 </section>
 
-<!-- ========================= 料金プラン ========================= -->
+<!-- =========================
+  料金プラン
+========================== -->
 <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
   <div class="space-y-3 accordion">
     <details>
@@ -336,7 +352,9 @@
   </div>
 </section>
 
-<!-- ========================= 個人事業主 ========================= -->
+<!-- =========================
+  個人事業主（IE + SBS）
+========================== -->
 <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／完全オンライン</h2>
   <div class="space-y-3 accordion">
@@ -383,7 +401,7 @@
             <span class="now">¥248,000</span><span class="text-sm">（税込）</span>
           </div>
           <div class="meta">
-            <small>※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公的費用・実費がかかる場合があります。</small>
+            <small>※ 本料金は「紹介・サポート」等のサービス提供料金です。別途、公証・郵送などの公の費用・実費がかかる場合があります。</small>
             <small>※ 税務助言は含まれません（登録手続き支援）。</small>
           </div>
           <div class="proof">
@@ -408,11 +426,11 @@
       <div class="content">
         <table>
           <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>税率</th><th>条件</th></tr></thead>
-        <tbody>
-          <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
-          <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
-          <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
-        </tbody>
+          <tbody>
+            <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
+            <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
+            <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
+          </tbody>
         </table>
         <p>適用業種例：IT開発、コンサル、デザイン、翻訳、小規模輸出入 等</p>
         <p class="text-sm">※ 日本居住者は国外所得の申告義務があります。国税庁の案内等をご確認ください。</p>
@@ -459,7 +477,9 @@
   </div>
 </section>
 
-<!-- ========================= 個人口座（銀行） ========================= -->
+<!-- =========================
+  個人口座開設（銀行）
+========================== -->
 <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
   <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設<span></span>サポート（非居住者OK）</h2>
   <div class="space-y-3 accordion">
@@ -506,6 +526,20 @@
       </div>
     </details>
 
+    <details>
+      <summary>必要書類（日本在住・非居住者向け）</summary>
+      <div class="content">
+        <ul>
+          <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
+          <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
+          <li>署名（パスポートと一致の筆跡／公証書にも記載）</li>
+          <li>書類原本の国際郵送（PDF不可）</li>
+        </ul>
+        <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
+        <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
+      </div>
+    </details>
+
     <details open>
       <summary>開設サポートの中身と費用（先着特別価格）</summary>
       <div class="content">
@@ -531,16 +565,17 @@
       <summary>リスクと為替の考え方（簡易シミュレーション）</summary>
       <div class="content">
         <p class="muted">前提：GEL建て年利11.5%（税引前）／現地20%課税＝手取り約9.2%。元本 24,000 GEL（約¥1,320,000相当を想定）。</p>
+
         <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は特定の条件（金利・為替など）に基づいた仮定の計算例であり、将来の運用成果を約束・保証するものではありません。金利、為替レート、税制は変動します。</p>
 
         <table>
           <thead><tr><th>為替シナリオ</th><th>1GELの円価</th><th>満期残高（GEL）</th><th>円換算額</th><th>損益</th></tr></thead>
           <tbody>
             <tr><td>据え置き</td><td>¥55.0</td><td>31,252</td><td>¥1,718,860</td><td>+¥398,860</td></tr>
-            <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,546,974</td><td>+約¥227,000</td></tr>
-            <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375,088</td><td>+約¥55,000</td></tr>
-            <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,289,145</td><td>約▲¥30,000</td></tr>
-            <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,890,746</td><td>+約¥571,000</td></tr>
+            <tr><td>▲10%下落</td><td>¥49.5</td><td>31,252</td><td>¥1,547,000</td><td>+約¥227,000</td></tr>
+            <tr><td>▲20%下落</td><td>¥44.0</td><td>31,252</td><td>¥1,375,000</td><td>+約¥55,000</td></tr>
+            <tr><td>▲25%下落</td><td>¥41.25</td><td>31,252</td><td>¥1,290,000</td><td>約▲¥30,000</td></tr>
+            <tr><td>+10%上昇</td><td>¥60.5</td><td>31,252</td><td>¥1,889,000</td><td>+約¥569,000</td></tr>
           </tbody>
         </table>
 
@@ -558,6 +593,7 @@
       <summary>複利の力（年10%複利・概算）</summary>
       <div class="content">
         <p class="muted">元本100万円を<strong>年10%</strong>で複利運用した場合の目安。</p>
+
         <p class="text-sm muted" style="color:#dc2626;font-weight:bold;"><strong>※重要</strong> 下表は一定の前提条件に基づく参考例で、将来の結果を保証するものではありません。税・為替・商品条件により実績は異なります。</p>
 
         <table>
@@ -621,7 +657,9 @@
   </div>
 </section>
 
-<!-- ========================= 免責・キャンセル（重要なお知らせはJSで変換） ========================= -->
+<!-- =========================
+  免責事項・キャンセル（アコーディオン）
+========================== -->
 <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
   <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
@@ -638,6 +676,8 @@
           <li>表示利率・試算（為替・複利等）は参考値であり、<strong>将来の成果を保証しません</strong>。</li>
           <li>個人情報は提携法律事務所・実務連携先のみと共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
           <li>当サービスはジョージア法人による提供であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（別途利用規約に詳細）。</li>
+          <li>投資判断はお客様自身の責任で行ってください。過去の実績は将来の結果を保証するものではありません。</li>
+          <li>為替変動により元本が毀損するリスクがあります。預金保護制度はGEL 30,000までが対象です。</li>
         </ul>
         <p class="text-sm muted">※ MoUは業務連携の覚書であり、審査結果や開設成功を保証するものではありません。</p>
         <p class="text-sm muted">※ お客様の状況により、国外財産調書・国外送金等調書などの届出義務が生じる場合があります。</p>
@@ -664,71 +704,7 @@
   </div>
 </section>
 
-<!-- 重要なお知らせ（JSで #disclaimer に移動して<details>化。文言はそのまま） -->
-<div id="important-notice">
-  <p class="text-sm muted">最終更新：2025-11-01｜運営：Grena Group LLC（ジョージア法人）</p>
-
-  <h3>本サービスの位置づけ</h3>
-  <ul>
-    <li>本サイトは、ジョージア共和国における法人設立・個人事業登録・銀行口座開設に関する<strong>情報提供・紹介・実務支援</strong>を目的としています。</li>
-    <li><strong>金融商品取引法・資金決済法・銀行法</strong>等で定義される「勧誘・媒介・代理」行為や、預金・資金の受け入れ行為は一切行っておりません。</li>
-    <li>銀行口座開設は<strong>お客様本人と各銀行の直接契約</strong>により行われ、Grena Group LLCはその手続を支援する立場であり、<strong>代理権・媒介権はありません。</strong></li>
-    <li>表示金額はすべて<strong>サポート・情報提供サービスの料金</strong>であり、銀行や税務機関への支払いとは無関係です。</li>
-  </ul>
-
-  <h3>金利・為替・シミュレーションについて</h3>
-  <ul>
-    <li>掲載の金利・為替レート・数値試算は<strong>参考例</strong>であり、将来の成果・利回り・利益を保証するものではありません。</li>
-    <li>為替変動、税制改正、金融規制、各銀行の方針変更等により、実際の結果は大きく異なる可能性があります。</li>
-    <li>掲載情報は作成時点の一般的データに基づくもので、最新情報を保証するものではありません。</li>
-  </ul>
-
-  <h3>税務・法務に関する重要事項</h3>
-  <ul>
-    <li>当社は税務・法務・投資に関する<strong>助言（advice）や判断代行を行いません。</strong></li>
-    <li>各種制度の適用可否（例：CFCルール、移転価格、国外財産調書、PE認定等）は、居住国や所得区分により異なります。必ず<strong>専門家（税理士・弁護士）</strong>へご相談ください。</li>
-    <li>提出書類・契約書等の最終判断および責任は、お客様ご自身に帰属します。</li>
-  </ul>
-
-  <h3>KYC／AML・反社会的勢力排除</h3>
-  <ul>
-    <li>本人確認（KYC）や資金源確認（Source of Funds）を求められる場合があります。虚偽申告や合理的疑義がある場合、サポートを停止または契約を解除します。</li>
-    <li>反社会的勢力およびこれに準ずる行為への関与が判明した場合は、サービス提供を即時終了します。</li>
-  </ul>
-
-  <h3>翻訳と外部リンクについて</h3>
-  <ul>
-    <li>多言語対応部分には自動翻訳（Google Translate）を利用しています。法的効力・正確性については原文（日本語または英語）を優先します。</li>
-    <li>外部リンク・参考資料の内容は、当社が保証・支持するものではありません。</li>
-  </ul>
-
-  <h3>料金・返金・変更について</h3>
-  <ul>
-    <li>料金・サポート内容・掲載条件は、運営方針や為替・実務コストに応じて<strong>予告なく変更</strong>される場合があります。</li>
-    <li>返金条件は、同ページ内の「キャンセルポリシー」に準じます。</li>
-  </ul>
-
-  <h3>準拠法と管轄</h3>
-  <ul>
-    <li>本サービスおよび全ての契約関係は、<strong>ジョージア法（Law of Georgia）</strong>に準拠し、専属的合意管轄は<strong>ジョージア共和国の裁判所</strong>とします。</li>
-  </ul>
-
-  <h3>運営法人情報</h3>
-  <ul>
-    <li><strong>法人名：</strong>Grena Group LLC</li>
-    <li><strong>法人ID：</strong>400433768</li>
-    <li><strong>登録機関：</strong>LEPL National Agency of Public Registry（ジョージア司法省 登記庁）</li>
-    <li><strong>所在地：</strong>Georgia, Tbilisi, Nadzaladevi district, Erosi Manjgaladze street, N 75a</li>
-    <li><strong>代表者：</strong>Tetsuya Shirai（TZ1176900／日本）</li>
-  </ul>
-
-  <h3>お問い合わせ</h3>
-  <ul>
-    <li>本サイト・サービスに関するお問い合わせは、<a href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">LINE公式アカウント（@georgia-tax）</a>までご連絡ください。</li>
-    <li>個別の税務・法務・投資判断に関する質問は、各専門家へのご相談をお願いいたします。</li>
-  </ul>
-</div>
-
+<!-- 画面最下部 固定CTA -->
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
   <div class="row">
     <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -742,9 +718,12 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
 
-<script src="./script.js?v=20251101" defer></script>
+<!-- ===== 最小限のUI操作JS（外部化） ===== -->
+<script src="./script.js?v=20251012" defer></script>
+
+<!-- ===== Google翻訳 公式ウィジェット（読み込みは1回だけ） ※</body>直前 ===== -->
 <script>
-  /* グローバル関数は script.js 内で定義（window.googleTranslateElementInit） */
+  // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
