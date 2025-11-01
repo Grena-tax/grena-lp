@@ -1,6 +1,4 @@
-/* 既存のJSをすべて削除して、以下のコードで完全に置き換えてください */
-
-/* ===== script.js (10/12基準・完全置換) ===== */
+/* ===== script.js (完全版) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -200,6 +198,23 @@
     }
   };
 
+  /* ---------- 4) テーブルの横スクロール対応（追加） ---------- */
+  function wrapTablesForScroll() {
+    document.querySelectorAll('table').forEach(table => {
+      // すでにラッパーがある場合はスキップ
+      if (table.parentElement.classList.contains('table-scroll-wrapper')) return;
+      
+      const wrapper = document.createElement('div');
+      wrapper.className = 'table-scroll-wrapper';
+      table.parentNode.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+    });
+  }
+
+  // ページ読み込み時に実行
+  document.addEventListener('DOMContentLoaded', wrapTablesForScroll);
+  window.addEventListener('load', wrapTablesForScroll);
+
 })();
 
 /* ---- Hamburger: 非クリックの見出し「料金プラン」だけを削除（append-only） ---- */
@@ -211,94 +226,12 @@
 
 /* ==== remove only "（トップ）" items in hamburger ==== */
 (function () {
-  const isTop = /（トップ）\s*$/; // 全角カッコの「（トップ）」で終わる
+  const isTop = /（トップ）\s*$/;
   document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
     const a = li.querySelector('a');
     if (!a) return;
     const label = (a.textContent || '').trim();
     if (isTop.test(label)) li.remove();
-  });
-})();
-
-/* === MENU: （トップ）を消す + ネスト項目を除外して作り直す === */
-(() => {
-  const wrap = document.getElementById('menuGroups');
-  if (!wrap) return;
-
-  // 対象セクション（既存の並びそのまま）
-  const SECTIONS = [
-    ['corp-setup',       '法人設立'],
-    ['plans',            '料金プラン'],
-    ['sole-setup',       '個人事業主（IE/SBS）'],
-    ['personal-account', '個人口座開設（銀行）'],
-    ['disclaimer',       '免責事項・キャンセル'],
-  ];
-
-  const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
-  const closeMenu = () => {
-    const html = document.documentElement;
-    html.classList.remove('menu-open');
-    document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
-    document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
-  };
-
-  /* いったん空にしてから、トップレベルだけで再構築 */
-  wrap.innerHTML = '';
-
-  SECTIONS.forEach(([secId, label]) => {
-    const sec = document.getElementById(secId);
-    if (!sec) return;
-
-    const group = document.createElement('div');
-    group.className = 'menu-group';
-
-    // 「料金プラン」の見出し(h4)は出さない
-    if (secId !== 'plans') {
-      const h4 = document.createElement('h4');
-      h4.textContent = label;
-      group.appendChild(h4);
-    }
-
-    const ul = document.createElement('ul');
-    ul.className = 'menu-list';
-
-    // セクションのトップ（※「（トップ）」は付けない）
-    const liTop = document.createElement('li');
-    const aTop = document.createElement('a');
-    aTop.href = `#${secId}`;
-    aTop.textContent = label;
-    aTop.addEventListener('click', closeMenu);
-    liTop.appendChild(aTop);
-    ul.appendChild(liTop);
-
-    // 直下の <details> だけを採用（ネストは除外）
-    sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx) => {
-      const det = sum.closest('details');
-      if (!det) return;
-
-      // idが無ければユニークidを振る（既存はそのまま）
-      if (!det.id) {
-        let id = `${secId}-d-${idx+1}`, n = 2;
-        while (document.getElementById(id)) id = `${secId}-d-${idx+1}-${n++}`;
-        det.id = id;
-      }
-
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href = `#${det.id}`;
-      a.textContent = sanitize(sum.textContent);
-      a.addEventListener('click', () => { det.open = true; closeMenu(); });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-
-    group.appendChild(ul);
-    wrap.appendChild(group);
-  });
-
-  // 念のため：残っている「（トップ）」表記はすべて削除
-  document.querySelectorAll('#menuGroups a').forEach(a => {
-    a.textContent = a.textContent.replace(/（トップ）/g, '');
   });
 })();
 
@@ -313,14 +246,12 @@
 
     links.forEach(a => {
       const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
-      // 末尾が（トップ）/ (トップ) の項目、または見出しと同じ文言の項目を削除
       if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
         a.closest('li')?.remove();
       }
     });
   });
 
-  // 保険：h4 が「料金プラン」の見出しは非表示（既に実施済みでもOK）
   document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
     const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
     if (t === '料金プラン') h.remove();
