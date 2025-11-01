@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
 <link rel="stylesheet" href="./patch.css?v=20251101">
 
-<!-- ▼ 初期状態が英語化しないための“事前”クッキー掃除（/ja/ja以外なら消す） -->
+<!-- 初期英語化を防ぐ：/ja/ja 以外の googtrans を掃除 -->
 <script>
 (function(){
   try{
@@ -36,6 +36,7 @@
 
 <div id="page-top" aria-hidden="true"></div>
 
+<!-- 言語ドロワー（🌐） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -57,6 +58,7 @@
   </aside>
 </div>
 
+<!-- メニュードロワー（☰） -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -406,11 +408,11 @@
       <div class="content">
         <table>
           <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>税率</th><th>条件</th></tr></thead>
-          <tbody>
-            <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
-            <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
-            <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
-          </tbody>
+        <tbody>
+          <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
+          <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
+          <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
+        </tbody>
         </table>
         <p>適用業種例：IT開発、コンサル、デザイン、翻訳、小規模輸出入 等</p>
         <p class="text-sm">※ 日本居住者は国外所得の申告義務があります。国税庁の案内等をご確認ください。</p>
@@ -662,62 +664,7 @@
   </div>
 </section>
 
-<div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
-  <div class="row">
-    <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-    <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
-    <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
-  </div>
-</div>
-
-<footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
-  <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
-</footer>
-
-<script src="./script.js?v=20251101" defer></script>
-<script>
-  // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
-</script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
-
-<!-- ======= 単一ホットフィックス（競合統合版） v241101C ======= -->
-<style id="hf-241101c-css">
-  :root{ --icon-size:48px; --icon-gap:10px; }
-  /* 右上：右=🌐 ／ 左=☰（位置固定・タップ保険・最前面） */
-  .lang-button{
-    position:fixed !important;
-    top:calc(10px + env(safe-area-inset-top,0px)) !important;
-    right:calc(10px + env(safe-area-inset-right,0px)) !important;
-    left:auto !important; width:48px;height:48px;border-radius:12px;
-    z-index:2147483000 !important; pointer-events:auto !important;
-    -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-  }
-  .menu-button{
-    position:fixed !important;
-    top:calc(10px + env(safe-area-inset-top,0px)) !important;
-    right:calc(10px + env(safe-area-inset-right,0px) + var(--icon-size) + var(--icon-gap)) !important;
-    left:auto !important; width:48px;height:48px;border-radius:12px;
-    z-index:2147483000 !important; pointer-events:auto !important;
-    -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-  }
-  /* ドロワー非表示時は完全に消して背面タップを塞がない */
-  .menu-wrap[aria-hidden="true"], .lang-wrap[aria-hidden="true"]{ display:none !important; }
-
-  /* メニューを右スライドに統一（見た目は既存レイアウトのまま） */
-  #menuDrawer, .menu-wrap { justify-content:flex-end !important; }
-  #menuDrawer .menu-panel, .menu-wrap .menu-panel{
-    position:relative; left:auto !important; right:0 !important;
-    transform:translateX(100%); transition:transform .28s ease; width:min(92vw,560px);
-    box-shadow:0 10px 30px rgba(0,0,0,.18); z-index:2147483001;
-  }
-  .menu-open #menuDrawer .menu-panel, .menu-open .menu-wrap .menu-panel{ transform:translateX(0); }
-  .menu-panel, .lang-panel{ position:relative; z-index:2147483001 !important; }
-  html.menu-open, body.menu-open{ overflow:hidden !important; }
-  @media (max-width:480px){ body{ padding-top:66px; } }
-</style>
-
-<!-- 重要なお知らせ（文言は変更なし。JSで #disclaimer 内へ<details>として移動） -->
+<!-- 重要なお知らせ（JSで #disclaimer に移動して<details>化。文言はそのまま） -->
 <div id="important-notice">
   <p class="text-sm muted">最終更新：2025-11-01｜運営：Grena Group LLC（ジョージア法人）</p>
 
@@ -782,274 +729,23 @@
   </ul>
 </div>
 
-<script id="hf-241101c-js">
-(function(){
-  const html=document.documentElement;
-  const $=(s,r=document)=>r.querySelector(s);
-  const on=(el,ev,fn,cap=true)=>el&&['touchstart','click'].forEach(e=>el.addEventListener(e,(evt)=>{evt.preventDefault();evt.stopPropagation();fn();},{capture:cap}));
+<div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
+  <div class="row">
+    <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
+    <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener">相談はこちら</a>
+    <a class="btn success" id="applyNow" href="#" rel="noopener">今すぐ申し込み</a>
+  </div>
+</div>
 
-  // --- 1) トグル（captureで競合回避） ---
-  const menuBtn=$('#menuBtn'), menuDrawer=$('#menuDrawer'), menuBackdrop=$('#menuBackdrop'), menuClose=$('#menuClose');
-  const langBtn=$('#langBtn'), langDrawer=$('#langDrawer'), langBackdrop=$('#langBackdrop'), langClose=$('#langClose');
+<footer class="site-foot" role="contentinfo">
+  <small class="foot-pc">© 2025 THE GEORGIAN TIMES｜Since 2025｜ジョージア法人ID：406365525｜本サイトは情報提供であり、勧誘・媒介ではありません。</small>
+  <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
+</footer>
 
-  const setOpen=(k,v)=>{ const btn=(k==='menu'?menuBtn:langBtn), dr=(k==='menu'?menuDrawer:langDrawer);
-    html.classList.toggle(k+'-open',v); dr?.setAttribute('aria-hidden',String(!v)); btn?.setAttribute('aria-expanded',String(v)); };
-  const toggle=(k)=>setOpen(k,!html.classList.contains(k+'-open'));
-  const closeAll=()=>{ setOpen('menu',false); setOpen('lang',false); };
-
-  on(menuBtn,'click',()=>toggle('menu'));
-  on(menuBackdrop,'click',()=>setOpen('menu',false));
-  on(menuClose,'click',()=>setOpen('menu',false));
-  on(langBtn,'click',()=>toggle('lang'));
-  on(langBackdrop,'click',()=>setOpen('lang',false));
-  on(langClose,'click',()=>setOpen('lang',false));
-
-  ['resize','orientationchange','pageshow','visibilitychange'].forEach(ev=>{
-    addEventListener(ev,()=>{ closeAll(); },{passive:true});
-  });
-
-  // --- 2) Google翻訳の青バー等の干渉除去（安全に繰り返し） ---
-  (function killGoogleUI(){
-    try{
-      document.body.style.top='0px';
-      document.getElementById('goog-gt-tt')?.remove();
-      document.querySelector('iframe#goog-te-banner-frame')?.remove();
-      document.querySelector('.goog-te-banner-frame')?.remove();
-      const sk=document.querySelector('body > .skiptranslate'); if(sk) sk.style.display='none';
-    }catch(_){}
-    setTimeout(killGoogleUI,1500);
-  })();
-
-  // --- 3) 重要なお知らせ：#disclaimer 内へ移動し <details> 化（文言はそのまま） ---
-  (function mountImportant(){
-    const host=$('#disclaimer')||document.body, src=$('#important-notice'); if(!host||!src) return;
-    if($('#important-notice-details')) return;
-    const det=document.createElement('details'); det.id='important-notice-details'; det.open=true;
-    const sum=document.createElement('summary'); sum.textContent='重要なお知らせ';
-    const content=document.createElement('div'); content.className='content';
-    while(src.firstChild) content.appendChild(src.firstChild);
-    det.append(sum,content);
-    let acc=host.querySelector('.accordion'); if(!acc){ acc=document.createElement('div'); acc.className='accordion'; host.appendChild(acc); }
-    acc.appendChild(det); src.remove?.();
-  })();
-
-  // --- 4) メニュー項目の自動生成（空っぽの場合だけ） ---
-  (function ensureMenu(){
-    const groups=$('#menuGroups'); if(!groups) return;
-    if(groups.querySelector('a')) return;
-    const SECTIONS = [
-      ['corp-setup','法人設立'],
-      ['plans','料金プラン'],
-      ['sole-setup','個人事業主（IE/SBS）'],
-      ['personal-account','個人口座開設（銀行）'],
-      ['disclaimer','免責事項・キャンセル'],
-    ];
-    groups.innerHTML='';
-    const addGroup=(title)=>{const g=document.createElement('div');g.className='menu-group';
-      const h4=document.createElement('h4');h4.textContent=title;
-      const ul=document.createElement('ul');ul.className='menu-list';g.append(h4,ul);groups.appendChild(g);return ul;};
-    SECTIONS.forEach(([id,label])=>{
-      const sec=document.getElementById(id); if(!sec) return;
-      const ul=addGroup(label);
-      const li0=document.createElement('li'); const a0=document.createElement('a'); a0.href=`#${id}`; a0.textContent=label;
-      a0.addEventListener('click',closeAll,{passive:true}); li0.appendChild(a0); ul.appendChild(li0);
-      sec.querySelectorAll(':scope .accordion > details').forEach((det,i)=>{
-        if(!det.id) det.id=`${id}-d-${i+1}`;
-        const sm=det.querySelector('summary'); if(!sm) return;
-        const li=document.createElement('li'); const a=document.createElement('a');
-        a.href=`#${det.id}`; a.textContent=(sm.textContent||'').trim();
-        a.addEventListener('click',()=>{ det.open=true; closeAll(); },{passive:true});
-        li.appendChild(a); ul.appendChild(li);
-      });
-    });
-    if($('#important-notice-details')){
-      const ul=addGroup('免責事項・キャンセル');
-      const li1=document.createElement('li'), a1=document.createElement('a');
-      a1.href='#disclaimer'; a1.textContent='免責事項・キャンセル'; a1.addEventListener('click',closeAll,{passive:true});
-      li1.appendChild(a1); ul.appendChild(li1);
-      const li2=document.createElement('li'), a2=document.createElement('a');
-      a2.href='#important-notice-details'; a2.textContent='重要なお知らせ';
-      a2.addEventListener('click',()=>{ $('#important-notice-details')?.setAttribute('open',''); closeAll(); },{passive:true});
-      li2.appendChild(a2); ul.appendChild(li2);
-    }
-  })();
-
-  // --- 5) 言語リストの復旧（Googleのselectからミラー。来なければ再試行） ---
-  function buildLangList(){
-    const list=$('#langList'); if(!list) return;
-    const sel=document.querySelector('#google_translate_element select.goog-te-combo') || document.querySelector('select.goog-te-combo');
-    if(!sel || sel.options.length<2){ setTimeout(buildLangList,700); return; }
-    if(list.childElementCount>0) return;
-    const cur=decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1]||'');
-    const frag=document.createDocumentFragment();
-    Array.from(sel.options).filter(o=>o.value && o.value!=='auto').sort((a,b)=>(a.textContent||'').localeCompare(b.textContent||''))
-    .forEach(o=>{
-      const code=o.value.trim(), name=(o.textContent||code).trim();
-      const el=document.createElement('div'); el.className='ls-item'+(cur.endsWith('/'+code)?' ls-active':'');
-      el.innerHTML=`<span>${name}</span><span class="ls-code">${code}</span>`;
-      el.addEventListener('click',()=>{ sel.value=code; sel.dispatchEvent(new Event('change',{bubbles:true})); closeAll(); },{passive:true});
-      frag.appendChild(el);
-    });
-    list.appendChild(frag);
-    const q=$('#langSearch'); if(q){ q.oninput=()=>{ const s=(q.value||'').toLowerCase();
-      list.querySelectorAll('.ls-item').forEach(el=>{ el.style.display = !s || (el.textContent||'').toLowerCase().includes(s) ? '' : 'none'; });
-    }; }
-  }
-  // ウィジェットが無い環境でも生成
-  (function ensureGT(){
-    if(!document.getElementById('google_translate_element')){
-      const host=document.createElement('div'); host.id='google_translate_element'; host.style.cssText='position:fixed;left:-9999px;top:-9999px;visibility:hidden;';
-      document.body.appendChild(host);
-    }
-    buildLangList();
-  })();
-
-})();
+<script src="./script.js?v=20251101" defer></script>
+<script>
+  /* グローバル関数は script.js 内で定義（window.googleTranslateElementInit） */
 </script>
-<!-- ======= /単一ホットフィックス ======= -->
-
-<!-- ======= Hotfix v241101f (drawer scroll / right slide / translate click) ======= -->
-<style id="hf-241101f-css">
-  /* ドロワー外枠：常に最前面＆右寄せ */
-  .menu-wrap{ position:fixed; inset:0; display:flex; justify-content:flex-end !important; z-index:2147483000; }
-  .menu-wrap[aria-hidden="true"]{ display:none !important; }
-
-  /* ドロワー本体：右からIN、iOSでも高さ正確 */
-  .menu-panel{
-    position:relative;
-    left:auto !important; right:0 !important;
-    width:min(92vw,560px) !important;
-    height:100svh !important; max-height:100svh !important;
-    transform:translateX(100%) !important;
-    transition:transform .28s ease !important;
-    display:flex; flex-direction:column; background:inherit; box-shadow:0 10px 30px rgba(0,0,0,.18);
-  }
-  @supports not (height:100svh){
-    .menu-panel{
-      height:calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-      max-height:calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
-    }
-  }
-  .menu-open .menu-panel{ transform:translateX(0) !important; }
-
-  /* ヘッダは固定、高さを食わない */
-  .menu-head{ flex:0 0 auto; }
-
-  /* 中身（リスト）だけをスクロールさせる */
-  #menuGroups, .menu-body, .drawer-body, .menu-inner, .offcanvas-body{
-    flex:1 1 auto; overflow-y:auto !important;
-    -webkit-overflow-scrolling:touch; overscroll-behavior:contain;
-    padding-bottom:22px;
-  }
-  @supports (padding:max(0px)){
-    #menuGroups, .menu-body, .drawer-body, .menu-inner, .offcanvas-body{
-      padding-bottom:max(22px, env(safe-area-inset-bottom));
-    }
-  }
-
-  /* 旧スタイルの左寄せやpointer-events:noneの上書き */
-  .menu-wrap, .menu-panel, #menuGroups, .menu-body, .drawer-body, .menu-inner, .offcanvas-body, 
-  #menuGroups *, .menu-body *{ pointer-events:auto !important; }
-</style>
-
-<script id="hf-241101f-js">
-(function(){
-  /*** 1) 右スライド & スクロール到達の保証 ***/
-  const panel = document.querySelector('.menu-panel') 
-             || document.querySelector('[data-menu-panel]') 
-             || document.querySelector('.drawer, .offcanvas, .side-menu');
-  if(panel){
-    panel.style.left = 'auto';
-    panel.style.right = '0';
-  }
-  const scrollable = document.getElementById('menuGroups')
-                   || panel?.querySelector('.menu-body, .drawer-body, .menu-inner, .offcanvas-body')
-                   || panel;
-  if(scrollable){
-    // 中身はスクロールOK、背景は止める
-    scrollable.addEventListener('touchmove', e => e.stopPropagation(), {passive:true});
-  }
-
-  /*** 2) 翻訳：初期化補完＋クリックで確実に切替 ***/
-  // 初期化関数が無い場合でも定義
-  window.googleTranslateElementInit = window.googleTranslateElementInit || function(){
-    try{
-      new google.translate.TranslateElement({
-        pageLanguage:'ja',
-        includedLanguages:'ar,de,en,es,fr,id,it,ko,pt,ru,th,tr,vi,zh-CN,zh-TW,ja',
-        autoDisplay:false,
-        multilanguagePage:true,
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      }, 'google_translate_element');
-    }catch(_){}
-  };
-
-  // 翻訳スクリプトが無ければ動的ロード
-  (function ensureGTE(){
-    const has = (window.google && google.translate && google.translate.TranslateElement);
-    if(!has){
-      const s = document.createElement('script');
-      s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-      s.async = true;
-      document.head.appendChild(s);
-    }
-  })();
-
-  function setLangViaCookie(code){
-    try{
-      const host = location.hostname.replace(/^www\./,'');
-      const val  = '/ja/'+code;
-      const exp  = new Date(Date.now()+365*24*60*60*1000).toUTCString();
-      // domainの差異に強い三段焼き
-      document.cookie = 'googtrans='+encodeURIComponent(val)+'; expires='+exp+'; path=/';
-      document.cookie = 'googtrans='+encodeURIComponent(val)+'; expires='+exp+'; path=/; domain=.'+host;
-      document.cookie = 'googtrans='+encodeURIComponent(val)+'; expires='+exp+'; path=/; domain='+host;
-    }catch(e){}
-  }
-
-  function switchLang(code){
-    setLangViaCookie(code);
-    // ウィジェットがいればchange、無ければリロード
-    const sel = document.querySelector('#google_translate_element select.goog-te-combo')
-             || document.querySelector('select.goog-te-combo');
-    if(sel){
-      sel.value = code;
-      sel.dispatchEvent(new Event('change', {bubbles:true}));
-    }else{
-      location.reload();
-    }
-  }
-
-  // クリック委任：.ls-item .ls-code、[data-lang-code]、a[href="#en"] などを拾う
-  document.addEventListener('click', function(e){
-    let code = null;
-
-    const hit1 = e.target.closest('.ls-item');
-    if(hit1){ code = hit1.querySelector('.ls-code')?.textContent?.trim(); }
-
-    const hit2 = !code ? e.target.closest('[data-lang-code]') : null;
-    if(hit2){ code = hit2.getAttribute('data-lang-code'); }
-
-    const a = !code ? e.target.closest('a[href^="#"]') : null;
-    if(a){
-      const m = a.getAttribute('href').match(/^#([a-z]{2}(?:-[A-Z]{2})?)$/);
-      if(m) code = m[1];
-    }
-
-    if(!code){
-      // テキストで English / 日本語 等のみの単純ボタンも拾う
-      const t = (e.target.textContent || '').trim().toLowerCase();
-      if(t === 'english') code = 'en';
-      if(t === '日本語') code = 'ja';
-    }
-
-    if(code){
-      e.preventDefault();
-      switchLang(code);
-    }
-  }, {capture:true});
-})();
-</script>
-<!-- ======= /Hotfix v241101f ======= -->
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
