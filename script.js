@@ -45,13 +45,11 @@
       html.classList.add('menu-open');
       menuDrawer?.setAttribute('aria-hidden', 'false');
       menuBtn?.setAttribute('aria-expanded', 'true');
-      // スクロールを無効化
       document.body.style.overflow = 'hidden';
     } else {
       html.classList.remove('menu-open');
       menuDrawer?.setAttribute('aria-hidden', 'true');
       menuBtn?.setAttribute('aria-expanded', 'false');
-      // スクロールを再有効化
       document.body.style.overflow = '';
     }
   }
@@ -127,9 +125,6 @@
   });
 
   /* ---------- 3) 言語リスト構築 ---------- */
-  const dn = (window.Intl && Intl.DisplayNames) ? 
-    new Intl.DisplayNames(['en'], {type: 'language'}) : null;
-
   function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
     if (!sel || !langList){ 
@@ -141,25 +136,13 @@
       (document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/) || [])[1] || ''
     );
 
-    // すべての言語オプションを取得（auto以外）
+    // すべての言語オプションを取得
     const items = Array.from(sel.options)
       .filter(o => o.value && o.value !== 'auto')
       .map(o => {
         const code = o.value.trim();
-        let name = '';
-        
-        try {
-          if (dn) {
-            const langCode = code.split('_')[0];
-            name = dn.of(langCode) || o.textContent || code;
-          } else {
-            name = o.textContent || code;
-          }
-        } catch (e) {
-          name = o.textContent || code;
-        }
-        
-        return {code, name: name.trim()};
+        const name = (o.textContent || code).trim();
+        return {code, name};
       })
       .sort((a, b) => a.name.localeCompare(b.name, 'en', {sensitivity: 'base'}));
 
@@ -170,7 +153,6 @@
       const el = document.createElement('div');
       el.className = 'ls-item' + (curCookie.endsWith('/' + code) ? ' ls-active' : '');
       el.setAttribute('role', 'option');
-      el.setAttribute('data-lang', code);
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
       
       el.addEventListener('click', () => {
@@ -178,14 +160,11 @@
         if (!select) return;
         
         select.value = code;
-        const event = new Event('change', { bubbles: true });
-        select.dispatchEvent(event);
-        
+        select.dispatchEvent(new Event('change', {bubbles: true}));
         closeLang();
         killGoogleBar();
         
         setTimeout(() => {
-          document.documentElement.lang = code.split('_')[0] || code;
           window.location.reload();
         }, 100);
       });
@@ -220,27 +199,21 @@
       }
     }catch(e){}
     
-    let retryCount = 0;
-    const maxRetries = 10;
+    // 言語リスト構築を確実に行う
+    let attempts = 0;
+    const maxAttempts = 10;
     
     function tryBuildList() {
       const sel = document.querySelector('#google_translate_element select.goog-te-combo');
       if (sel && sel.options.length > 1) {
         buildLangList();
-      } else if (retryCount < maxRetries) {
-        retryCount++;
+      } else if (attempts < maxAttempts) {
+        attempts++;
         setTimeout(tryBuildList, 500);
       }
     }
     
     setTimeout(tryBuildList, 1000);
-    
-    const host = $('#google_translate_element');
-    if(host){
-      new MutationObserver(() => {
-        setTimeout(buildLangList, 0);
-      }).observe(host, {childList: true, subtree: true});
-    }
   };
 
   /* ---------- 5) 目次自動生成 ---------- */
@@ -273,16 +246,7 @@
       const ul = document.createElement('ul');
       ul.className = 'menu-list';
 
-      // セクショントップリンク
-      const liTop = document.createElement('li');
-      const aTop = document.createElement('a');
-      aTop.href = `#${secId}`;
-      aTop.textContent = secLabel;
-      aTop.addEventListener('click', closeMenu);
-      liTop.appendChild(aTop);
-      ul.appendChild(liTop);
-
-      // 詳細リンク（インデント追加）
+      // 詳細リンクのみ表示（セクショントップリンクを削除）
       sec.querySelectorAll('.accordion summary').forEach((sum, idx) => {
         const det = sum.closest('details');
         if (!det) return;
@@ -299,7 +263,6 @@
         const a = document.createElement('a');
         a.href = `#${id}`;
         a.textContent = sanitize(sum.textContent);
-        a.style.paddingLeft = '20px';
         a.addEventListener('click', () => {
           let parent = det;
           while (parent) {
@@ -312,7 +275,7 @@
         ul.appendChild(li);
       });
 
-      if(secId !== 'plans') group.appendChild(h4);
+      group.appendChild(h4);
       group.appendChild(ul);
       groups.appendChild(group);
     });
@@ -339,12 +302,6 @@
     document.querySelectorAll('#menuGroups a').forEach(link => {
       link.addEventListener('click', closeMenu);
     });
-    
-    document.addEventListener('click', function(e) {
-      if(e.target.closest('.menu-button') || e.target.closest('.lang-button')){
-        e.stopPropagation();
-      }
-    });
   });
 
   window.addEventListener('load', function() {
@@ -357,10 +314,7 @@
 /* === メニュークリーニング === */
 (function(){
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('#menuGroups a').forEach(a => {
-      a.textContent = a.textContent.replace(/（トップ）\s*$/g, '');
-    });
-    
+    // 重複タイトルを削除
     const groups = document.querySelectorAll('#menuGroups .menu-group');
     groups.forEach(g => {
       const title = (g.querySelector('h4')?.textContent || '').trim();
