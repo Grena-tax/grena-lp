@@ -133,7 +133,7 @@
   function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
     if (!sel || !langList){ 
-      setTimeout(buildLangList, 200); 
+      setTimeout(buildLangList, 500);
       return; 
     }
 
@@ -146,9 +146,20 @@
       .filter(o => o.value && o.value !== 'auto')
       .map(o => {
         const code = o.value.trim();
-        const name = (dn && dn.of(code.replace('_','-'))) || 
-                    (o.textContent || code).trim();
-        return {code, name};
+        let name = '';
+        
+        try {
+          if (dn) {
+            const langCode = code.split('_')[0];
+            name = dn.of(langCode) || o.textContent || code;
+          } else {
+            name = o.textContent || code;
+          }
+        } catch (e) {
+          name = o.textContent || code;
+        }
+        
+        return {code, name: name.trim()};
       })
       .sort((a, b) => a.name.localeCompare(b.name, 'en', {sensitivity: 'base'}));
 
@@ -159,6 +170,7 @@
       const el = document.createElement('div');
       el.className = 'ls-item' + (curCookie.endsWith('/' + code) ? ' ls-active' : '');
       el.setAttribute('role', 'option');
+      el.setAttribute('data-lang', code);
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
       
       el.addEventListener('click', () => {
@@ -166,13 +178,15 @@
         if (!select) return;
         
         select.value = code;
-        select.dispatchEvent(new Event('change', {bubbles: true}));
+        const event = new Event('change', { bubbles: true });
+        select.dispatchEvent(event);
+        
         closeLang();
         killGoogleBar();
         
-        // 言語変更後の処理
         setTimeout(() => {
           document.documentElement.lang = code.split('_')[0] || code;
+          window.location.reload();
         }, 100);
       });
       
@@ -200,17 +214,27 @@
       if(window.google && google.translate){
         new google.translate.TranslateElement({
           pageLanguage: 'ja',
-          // includedLanguages を削除して全世界の言語を許可
           autoDisplay: false,
           layout: google.translate.TranslateElement.InlineLayout.SIMPLE
         }, 'google_translate_element');
       }
     }catch(e){}
     
-    // 言語リスト構築
-    setTimeout(buildLangList, 600);
+    let retryCount = 0;
+    const maxRetries = 10;
     
-    // 変更監視
+    function tryBuildList() {
+      const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+      if (sel && sel.options.length > 1) {
+        buildLangList();
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(tryBuildList, 500);
+      }
+    }
+    
+    setTimeout(tryBuildList, 1000);
+    
     const host = $('#google_translate_element');
     if(host){
       new MutationObserver(() => {
@@ -258,7 +282,7 @@
       liTop.appendChild(aTop);
       ul.appendChild(liTop);
 
-      // 詳細リンク
+      // 詳細リンク（インデント追加）
       sec.querySelectorAll('.accordion summary').forEach((sum, idx) => {
         const det = sum.closest('details');
         if (!det) return;
@@ -275,8 +299,8 @@
         const a = document.createElement('a');
         a.href = `#${id}`;
         a.textContent = sanitize(sum.textContent);
+        a.style.paddingLeft = '20px';
         a.addEventListener('click', () => {
-          // 親detailsを開く
           let parent = det;
           while (parent) {
             if (parent.tagName === 'DETAILS') parent.open = true;
@@ -316,7 +340,6 @@
       link.addEventListener('click', closeMenu);
     });
     
-    // クリックイベントの伝播を防止
     document.addEventListener('click', function(e) {
       if(e.target.closest('.menu-button') || e.target.closest('.lang-button')){
         e.stopPropagation();
@@ -334,12 +357,10 @@
 /* === メニュークリーニング === */
 (function(){
   document.addEventListener('DOMContentLoaded', function() {
-    // 「（トップ）」を削除
     document.querySelectorAll('#menuGroups a').forEach(a => {
       a.textContent = a.textContent.replace(/（トップ）\s*$/g, '');
     });
     
-    // 重複タイトルを削除
     const groups = document.querySelectorAll('#menuGroups .menu-group');
     groups.forEach(g => {
       const title = (g.querySelector('h4')?.textContent || '').trim();
