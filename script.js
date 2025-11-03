@@ -45,10 +45,14 @@
       html.classList.add('menu-open');
       menuDrawer?.setAttribute('aria-hidden', 'false');
       menuBtn?.setAttribute('aria-expanded', 'true');
+      // スクロールを無効化
+      document.body.style.overflow = 'hidden';
     } else {
       html.classList.remove('menu-open');
       menuDrawer?.setAttribute('aria-hidden', 'true');
       menuBtn?.setAttribute('aria-expanded', 'false');
+      // スクロールを再有効化
+      document.body.style.overflow = '';
     }
   }
 
@@ -137,6 +141,7 @@
       (document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/) || [])[1] || ''
     );
 
+    // すべての言語オプションを取得（auto以外）
     const items = Array.from(sel.options)
       .filter(o => o.value && o.value !== 'auto')
       .map(o => {
@@ -195,7 +200,7 @@
       if(window.google && google.translate){
         new google.translate.TranslateElement({
           pageLanguage: 'ja',
-          includedLanguages: 'en,ja,ko,zh-CN,zh-TW,ru,fr,de,es,pt,it,ar,hi',
+          // includedLanguages を削除して全世界の言語を許可
           autoDisplay: false,
           layout: google.translate.TranslateElement.InlineLayout.SIMPLE
         }, 'google_translate_element');
@@ -305,6 +310,11 @@
   document.addEventListener('DOMContentLoaded', function() {
     buildMenu();
     wrapTablesForScroll();
+    
+    // メニュー内のリンククリックで閉じる
+    document.querySelectorAll('#menuGroups a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
     
     // クリックイベントの伝播を防止
     document.addEventListener('click', function(e) {
