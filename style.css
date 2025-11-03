@@ -192,12 +192,11 @@ td:nth-child(5):contains('▲') {
   border-bottom: none;
 }
 .menu-group h4{
-  margin:0 0 8px;
+  margin:0 0 12px;
   padding:0 6px;
-  font-size:.92rem;
+  font-size:.95rem;
   color:#111827;
   font-weight:700;
-  opacity:.9
 }
 .menu-list{
   list-style:none;
@@ -208,7 +207,7 @@ td:nth-child(5):contains('▲') {
 /* メニューリストのインデント調整 */
 .menu-list li a{
   display:block;
-  padding:7px 10px 7px 16px;
+  padding:8px 12px;
   margin:0 6px 6px;
   border-radius:8px;
   text-decoration:none;
@@ -217,6 +216,7 @@ td:nth-child(5):contains('▲') {
   border:1px solid #e5e7eb;
   cursor: pointer;
   transition: all 0.2s ease;
+  font-size: 0.9em;
 }
 .menu-list li a:hover{
   background:#eef2f7;
