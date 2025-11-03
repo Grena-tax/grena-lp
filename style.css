@@ -10,7 +10,7 @@ body {
   line-height: 1.6;
   color: #333;
   background-color: #fff;
-  padding-top: 0 !important; /* トップの隙間を解消 */
+  padding-top: 0 !important;
 }
 
 .container {
@@ -52,7 +52,7 @@ html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
 body{ 
   padding-bottom: calc(var(--cta-h) + var(--safe-bottom));
-  padding-top: 0 !important; /* トップの隙間を強制解除 */
+  padding-top: 0 !important;
 }
 
 /* --- アコーディオン（既存） --- */
@@ -140,7 +140,7 @@ td:nth-child(5):contains('▲') {
 .menu-button{
   position:fixed;
   top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right)); /* 右上に固定 */
+  right:calc(10px + var(--safe-right));
   z-index:10002;
   display:inline-flex;align-items:center;justify-content:center;
   width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
@@ -182,11 +182,46 @@ td:nth-child(5):contains('▲') {
   scroll-padding-top: calc(var(--menu-head-h) + 8px);
   -webkit-overflow-scrolling: touch;
 }
-.menu-group{padding:8px 10px 6px}
-.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
-.menu-list{list-style:none;margin:0;padding:0}
-.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb;cursor: pointer;}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
+
+/* メニューグループのスタイル修正 */
+.menu-group{
+  padding:12px 10px 8px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.menu-group:last-child{
+  border-bottom: none;
+}
+.menu-group h4{
+  margin:0 0 8px;
+  padding:0 6px;
+  font-size:.92rem;
+  color:#111827;
+  font-weight:700;
+  opacity:.9
+}
+.menu-list{
+  list-style:none;
+  margin:0;
+  padding:0
+}
+
+/* メニューリストのインデント調整 */
+.menu-list li a{
+  display:block;
+  padding:7px 10px 7px 16px;
+  margin:0 6px 6px;
+  border-radius:8px;
+  text-decoration:none;
+  color:#334155;
+  background:#fff;
+  border:1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.menu-list li a:hover{
+  background:#eef2f7;
+  border-color:#d4d8de
+}
 
 html.menu-open .menu-wrap{pointer-events:auto}
 html.menu-open .menu-backdrop{opacity:1}
@@ -210,7 +245,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
 .lang-button{
   position:fixed;
   top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 10px); /* ハンバーガーの左隣 */
+  right:calc(10px + var(--safe-right) + 48px + 10px);
   z-index:10003;
   width:48px;height:48px;border-radius:12px;
   background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
@@ -292,9 +327,9 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
   .lang-panel{ width:58vw; }
-  body{ padding-top: 0 !important; } /* スマホでも隙間なし */
+  body{ padding-top: 0 !important; }
   .lang-button, .menu-button {
     transform: scale(.92);
-    transform-origin: top right; /* 右上基準 */
+    transform-origin: top right;
   }
 }
