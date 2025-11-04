@@ -333,3 +333,10 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
     transform-origin: top right;
   }
 }
+/* ===== 追記部分 ===== */
+/* 見えない時の当たり判定ゼロ化 */
+.menu-wrap[aria-hidden="true"],
+.lang-wrap[aria-hidden="true"]{
+  display:none !important;
+  pointer-events:none !important;
+}
