@@ -5,19 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 自動翻訳の誘導を抑止（ウィジェットは動作します） -->
+<!-- 自動翻訳の誘導を抑止 -->
 <meta name="google" content="notranslate">
 
 <!-- 既存：差し替え確認用ピンクバー -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- 既存のメインCSS -->
-<link rel="stylesheet" href="./style.css?v=20250912-gt" id="main-css">
+<!-- キャッシュバスター更新 -->
+<link rel="stylesheet" href="./style.css?v=20251103a">
+<link rel="stylesheet" href="./patch.css?v=20251103a">
 
-<!-- 追加（この回答で出す追補CSS） -->
-<link rel="stylesheet" href="./patch.css?v=20251012">
-
-<!-- ▼ 初期状態が英語化しないための“事前”クッキー掃除（/ja/ja以外なら消す） -->
+<!-- ▼ 初期状態が英語化しないための事前クッキー掃除 -->
 <script>
 (function(){
   try{
@@ -44,7 +42,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ（ハンバーガー左に固定） -->
+<!-- 右上：言語スイッチ -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -59,10 +57,7 @@
       <div class="ls-search">
         <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
       </div>
-      <!-- ★ リストはJSで全言語を自動生成 -->
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-
-      <!-- Google公式ウィジェット（画面外・プログラム操作用） -->
       <div id="google_translate_element"></div>
       <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
@@ -695,7 +690,7 @@
               <li>当社が現地パートナーへの業務依頼を開始後：お支払いいただいた金額の100%</li>
             </ul>
           </li>
-          <li>当社の明確な不履行（書類送付漏れ等）がある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
+          <li>当社の明確な不履行（書類送付漏れ等）ある場合は、<strong>返金・再対応</strong>など適切な措置を講じます。</li>
           <li>AML/CFT対応：虚偽申告・反社会的勢力に該当する場合は支援不可。疑義により凍結・調査が発生しても当社は責任を負いかねます。</li>
           <li>当社はジョージア法人であり、日本の特定商取引法のクーリングオフ制度は適用対象外です。</li>
         </ul>
@@ -718,13 +713,8 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜情報提供のみ</small>
 </footer>
 
-<!-- ===== 最小限のUI操作JS（外部化） ===== -->
-<script src="./script.js?v=20251012" defer></script>
-
-<!-- ===== Google翻訳 公式ウィジェット（読み込みは1回だけ） ※</body>直前 ===== -->
-<script>
-  // グローバル関数は script.js 内で定義（window.googleTranslateElementInit）
-</script>
+<!-- キャッシュバスター更新 -->
+<script src="./script.js?v=20251103a" defer></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
