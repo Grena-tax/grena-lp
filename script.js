@@ -1,4 +1,4 @@
-/* ===== script.js (完全修正版) ===== */
+/* ===== script.js (修正完了版) ===== */
 (function(){
   'use strict';
   
@@ -66,10 +66,10 @@
     setMenu(false); 
   }
 
-  // イベントリスナー登録
+  // イベントリスナー登録（touchstart削除）
   if(menuBtn){
     menuBtn.addEventListener('click', toggleMenu);
-    menuBtn.addEventListener('touchstart', toggleMenu, {passive: true});
+    // touchstart 削除
   }
   if(menuBackdrop) menuBackdrop.addEventListener('click', closeMenu);
   if(menuClose) menuClose.addEventListener('click', closeMenu);
@@ -111,10 +111,10 @@
     setLang(false); 
   }
 
-  // イベントリスナー登録
+  // イベントリスナー登録（touchstart削除）
   if(langBtn){
     langBtn.addEventListener('click', openLang);
-    langBtn.addEventListener('touchstart', openLang, {passive: true});
+    // touchstart 削除
   }
   if(langBackdrop) langBackdrop.addEventListener('click', closeLang);
   if(langClose) langClose.addEventListener('click', closeLang);
@@ -127,10 +127,9 @@
   /* ---------- 3) 言語リスト構築 ---------- */
   function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (!sel || !langList){ 
-      setTimeout(buildLangList, 500);
-      return; 
-    }
+    if (!sel || !langList){ setTimeout(buildLangList, 400); return; }
+    // 言語が少ない間は再試行（目安：50未満）
+    if (sel.options.length < 50){ setTimeout(buildLangList, 400); return; }
 
     const curCookie = decodeURIComponent(
       (document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/) || [])[1] || ''
@@ -199,85 +198,64 @@
       }
     }catch(e){}
     
-    // 言語リスト構築を確実に行う
-    let attempts = 0;
-    const maxAttempts = 10;
-    
-    function tryBuildList() {
+    // 初回ビルド
+    setTimeout(buildLangList, 800);
+    // 以後、select の子が増えたら自動で再ビルド
+    (function observeTranslateSelect(){
       const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-      if (sel && sel.options.length > 1) {
-        buildLangList();
-      } else if (attempts < maxAttempts) {
-        attempts++;
-        setTimeout(tryBuildList, 500);
-      }
-    }
-    
-    setTimeout(tryBuildList, 1000);
+      if(!sel){ setTimeout(observeTranslateSelect, 500); return; }
+      new MutationObserver(()=> buildLangList())
+        .observe(sel, {childList:true, subtree:false});
+    })();
   };
 
-  /* ---------- 5) 目次自動生成 ---------- */
+  /* ---------- 5) 目次自動生成（二層対応＋重複排除） ---------- */
   function buildMenu(){
-    const groups = $('#menuGroups');
-    if (!groups) return;
-
+    const groups = $('#menuGroups'); if(!groups) return;
     const sections = [
-      ['corp-setup', '法人設立'],
-      ['plans', '料金プラン'],
-      ['sole-setup', '個人事業主（IE/SBS）'],
-      ['personal-account', '個人口座開設（銀行）'],
-      ['disclaimer', '免責事項・キャンセル']
+      ['corp-setup','法人設立'],
+      ['plans','料金プラン'],
+      ['sole-setup','個人事業主（IE/SBS）'],
+      ['personal-account','個人口座開設（銀行）'],
+      ['disclaimer','免責事項・キャンセル']
     ];
+    const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
+    groups.innerHTML='';
+    sections.forEach(([secId,secLabel])=>{
+      const sec = document.getElementById(secId); if(!sec) return;
+      const group = document.createElement('div'); group.className='menu-group';
+      const h4=document.createElement('h4'); h4.textContent=secLabel;
+      const ul=document.createElement('ul'); ul.className='menu-list';
+      const seen = new Set();
 
-    const sanitize = s => (s || '').trim().replace(/\s+/g, ' ').slice(0, 120);
-    
-    groups.innerHTML = '';
-    
-    sections.forEach(([secId, secLabel]) => {
-      const sec = document.getElementById(secId);
-      if (!sec) return;
-
-      const group = document.createElement('div');
-      group.className = 'menu-group';
-      
-      const h4 = document.createElement('h4');
-      h4.textContent = secLabel;
-      
-      const ul = document.createElement('ul');
-      ul.className = 'menu-list';
-
-      // 詳細リンクのみ表示（セクショントップリンクを削除）
-      sec.querySelectorAll('.accordion summary').forEach((sum, idx) => {
-        const det = sum.closest('details');
-        if (!det) return;
-        
-        let id = det.id;
-        if (!id) {
-          id = `${secId}-d-${idx + 1}`;
-          let n = 2;
-          while (document.getElementById(id)) id = `${secId}-d-${idx + 1}-${n++}`;
-          det.id = id;
-        }
-
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `#${id}`;
-        a.textContent = sanitize(sum.textContent);
-        a.addEventListener('click', () => {
-          let parent = det;
-          while (parent) {
-            if (parent.tagName === 'DETAILS') parent.open = true;
-            parent = parent.parentElement;
+      // 直下の <details> を列挙
+      sec.querySelectorAll(':scope .accordion > details').forEach((topDet, tIdx)=>{
+        const childSums = topDet.querySelectorAll(':scope .content > details > summary');
+        const addItem = (det, sum, idSeed) => {
+          if(!det.id){
+            let id = `${secId}-d-${idSeed}`; let n=2;
+            while(document.getElementById(id)) id = `${secId}-d-${idSeed}-${n++}`;
+            det.id=id;
           }
-          setTimeout(closeMenu, 100);
-        });
-        li.appendChild(a);
-        ul.appendChild(li);
+          const title = sanitize(sum.textContent);
+          if(seen.has(title)) return; seen.add(title);
+          const a=document.createElement('a'); a.href=`#${det.id}`; a.textContent=title;
+          a.addEventListener('click', ()=>{
+            // 自分と祖先のdetailsをすべてopen
+            let p=det; while(p){ if(p.tagName==='DETAILS') p.open=true; p=p.parentElement; }
+            closeMenu();
+          });
+          const li=document.createElement('li'); li.appendChild(a); ul.appendChild(li);
+        };
+        if(childSums.length){
+          // 親はスキップして子を並べる（例：料金プランの下位アイテム）
+          childSums.forEach((sum, cIdx)=> addItem(sum.parentElement, sum, `${tIdx+1}-${cIdx+1}`));
+        }else{
+          const sum = topDet.querySelector(':scope > summary'); if(sum) addItem(topDet, sum, `${tIdx+1}`);
+        }
       });
 
-      group.appendChild(h4);
-      group.appendChild(ul);
-      groups.appendChild(group);
+      group.appendChild(h4); group.appendChild(ul); groups.appendChild(group);
     });
   }
 
@@ -309,23 +287,4 @@
     killGoogleBar();
   });
 
-})();
-
-/* === メニュークリーニング === */
-(function(){
-  document.addEventListener('DOMContentLoaded', function() {
-    // 重複タイトルを削除
-    const groups = document.querySelectorAll('#menuGroups .menu-group');
-    groups.forEach(g => {
-      const title = (g.querySelector('h4')?.textContent || '').trim();
-      const links = g.querySelectorAll('.menu-list a');
-      
-      links.forEach(a => {
-        const txt = a.textContent.trim();
-        if (txt === title) {
-          a.closest('li')?.remove();
-        }
-      });
-    });
-  });
 })();
