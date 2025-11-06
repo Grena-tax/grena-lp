@@ -233,3 +233,16 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
                "Yu Gothic", Meiryo, "Noto Sans JP",
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
+
+/* === ここから今回の追記：FXシミュレーション表だけ読みやすく === */
+table.fx-sim{ table-layout:fixed; width:100%; }
+table.fx-sim th:nth-last-child(-n+2),
+table.fx-sim td:nth-last-child(-n+2){
+  white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums;
+}
+table.fx-sim th:first-child,
+table.fx-sim td:first-child{ text-align:left; }
+/* モバイルでは横スクロールで全桁を見せる */
+@media (max-width:480px){
+  table.fx-sim{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; min-width:560px; }
+}
