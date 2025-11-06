@@ -186,14 +186,11 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 /* ===== revert font to site default (append-only) ===== */
-/* これだけで、以前の font-family 指定に戻します。他への影響なし。 */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
   font-family: revert !important;
 }
-
-/* Safari 等で 'revert' が効かない場合のフォールバック */
 @supports not (font-family: revert) {
   html, body,
   button, input, select, textarea, summary, details,
@@ -201,30 +198,23 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
     font-family: inherit !important;
   }
 }
-/* ==== revert fonts: fall back to the site's original stack ==== */
-/* 以前の「--font-jp を強制」より後ろで、元の指定に戻す */
-:root { --font-jp: initial; } /* 念のため無効化 */
-
+:root { --font-jp: initial; }
 html, body,
 button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
+  font-family: revert !important;
 }
-/* === REVERT: フォントは元の style.css に戻す（こちらの強制指定を無効化） === */
 html, body,
 button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important; /* 既存の style.css の指定に戻す */
+  font-family: revert !important;
 }
-
-/* iOS が古くて revert 非対応な場合の保険（ほぼ使われません） */
 @supports not (font-family: revert) {
   html { font-family: inherit !important; }
   body { font-family: inherit !important; }
   button, input, select, textarea, summary, details,
   .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
 }
-/* === revert to original JP/OS font stack (override only) === */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
@@ -234,7 +224,7 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* === ここから今回の追記：FXシミュレーション表だけ読みやすく === */
+/* === FXシミュ表だけ読みやすく（ラッパーで隔離スクロール） === */
 table.fx-sim{ table-layout:fixed; width:100%; }
 table.fx-sim th:nth-last-child(-n+2),
 table.fx-sim td:nth-last-child(-n+2){
@@ -242,7 +232,17 @@ table.fx-sim td:nth-last-child(-n+2){
 }
 table.fx-sim th:first-child,
 table.fx-sim td:first-child{ text-align:left; }
-/* モバイルでは横スクロールで全桁を見せる */
-@media (max-width:480px){
-  table.fx-sim{ display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; min-width:560px; }
+
+/* ラッパー：ここだけ横スクロール。ページ本体ははみ出さない */
+.fx-wrap{
+  display:block; max-width:100%;
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
 }
+.fx-wrap > table.fx-sim{
+  min-width:560px; /* 必要幅だけ確保し、はみ出しはラッパー内でスクロール */
+  width:100%;
+}
+/* 視覚的なヒント（任意・地味） */
+.fx-wrap::-webkit-scrollbar{ height:8px }
+.fx-wrap::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.15); border-radius:999px }
