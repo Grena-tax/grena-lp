@@ -320,3 +320,25 @@
     if (t === '料金プラン') h.remove();
   });
 })();
+
+/* === ここから今回の追記：為替表を自動検出して .fx-sim を付与 === */
+(function () {
+  function markFxTable(){
+    try{
+      document.querySelectorAll('table').forEach(tbl=>{
+        if (tbl.classList.contains('fx-sim')) return;
+        const heads = Array.from(tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td'))
+          .map(th => (th.textContent || '').trim());
+        // 見出しの一部に下記キーワードが含まれていれば対象とみなす
+        const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
+        const hit  = need.every(k => heads.some(h => h.includes(k)));
+        if (hit) tbl.classList.add('fx-sim');
+      });
+    }catch(_){}
+  }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', markFxTable);
+  }else{
+    markFxTable();
+  }
+})();
