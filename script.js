@@ -15,7 +15,6 @@
       });
       const ifr = document.querySelector('iframe.goog-te-banner-frame');
       if (ifr){ if (ifr.remove) ifr.remove(); else ifr.style.display='none'; }
-      // 出ているかの簡易判定（CSSバッファ用）
       const showing = !!ifr && ifr.offsetHeight > 0;
       html.classList.toggle('gtbar', !!showing);
     }catch(_){}
@@ -24,7 +23,7 @@
   window.addEventListener('load', killGoogleBar, {once:true});
   setInterval(killGoogleBar, 1500);
 
-  /* ---------- 1) ハンバーガー開閉（クリック不能対策を整理） ---------- */
+  /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
   const menuDrawer   = $('#menuDrawer');
   const menuBackdrop = $('#menuBackdrop');
@@ -84,7 +83,6 @@
       const h4    = document.createElement('h4');  h4.textContent = secLabel;
       const ul    = document.createElement('ul');  ul.className   ='menu-list';
 
-      // セクションのトップ
       const liTop = document.createElement('li');
       const aTop  = document.createElement('a');
       aTop.href = `#${secId}`;
@@ -92,7 +90,6 @@
       aTop.addEventListener('click', closeMenu);
       liTop.appendChild(aTop); ul.appendChild(liTop);
 
-      // そのセクション内の summary をすべて列挙
       sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
         const det   = sum.closest('details'); if (!det) return;
         const label = sanitize(sum.textContent);
@@ -114,7 +111,7 @@
     });
   })();
 
-  /* ---------- 3) 言語ドロワー（英語名で全言語） ---------- */
+  /* ---------- 3) 言語ドロワー ---------- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -135,7 +132,6 @@
   langClose && langClose.addEventListener('click', closeLang);
   document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeLang(); });
 
-  // Google公式 <select> から英語名で自前リストを構築
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
 
   function buildLangList(){
@@ -171,7 +167,6 @@
     });
     langList.appendChild(frag);
 
-    // 検索
     if (langSearch){
       langSearch.value = '';
       langSearch.oninput = ()=> {
@@ -184,14 +179,11 @@
     }
   }
 
-  // 公式ウィジェットの初期化（HTMLの cb と一致）
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     }catch(_){}
-    // select が生えたらリストを作る
     setTimeout(buildLangList, 600);
-    // 以後も変化を監視
     const host = $('#google_translate_element');
     if (host){
       new MutationObserver(()=>setTimeout(buildLangList,0)).observe(host,{childList:true,subtree:true});
@@ -207,7 +199,7 @@
 })();
 /* ==== remove only "（トップ）" items in hamburger ==== */
 (function () {
-  const isTop = /（トップ）\s*$/; // 全角カッコの「（トップ）」で終わる
+  const isTop = /（トップ）\s*$/;
   document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
     const a = li.querySelector('a');
     if (!a) return;
@@ -220,7 +212,6 @@
   const wrap = document.getElementById('menuGroups');
   if (!wrap) return;
 
-  // 対象セクション（既存の並びそのまま）
   const SECTIONS = [
     ['corp-setup',       '法人設立'],
     ['plans',            '料金プラン'],
@@ -237,7 +228,6 @@
     document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
   };
 
-  /* いったん空にしてから、トップレベルだけで再構築 */
   wrap.innerHTML = '';
 
   SECTIONS.forEach(([secId, label]) => {
@@ -247,7 +237,6 @@
     const group = document.createElement('div');
     group.className = 'menu-group';
 
-    // 「料金プラン」の見出し(h4)は出さない
     if (secId !== 'plans') {
       const h4 = document.createElement('h4');
       h4.textContent = label;
@@ -257,7 +246,6 @@
     const ul = document.createElement('ul');
     ul.className = 'menu-list';
 
-    // セクションのトップ（※「（トップ）」は付けない）
     const liTop = document.createElement('li');
     const aTop = document.createElement('a');
     aTop.href = `#${secId}`;
@@ -266,12 +254,10 @@
     liTop.appendChild(aTop);
     ul.appendChild(liTop);
 
-    // 直下の <details> だけを採用（ネストは除外）
     sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx) => {
       const det = sum.closest('details');
       if (!det) return;
 
-      // idが無ければユニークidを振る（既存はそのまま）
       if (!det.id) {
         let id = `${secId}-d-${idx+1}`, n = 2;
         while (document.getElementById(id)) id = `${secId}-d-${idx+1}-${n++}`;
@@ -291,7 +277,6 @@
     wrap.appendChild(group);
   });
 
-  // 念のため：残っている「（トップ）」表記はすべて削除
   document.querySelectorAll('#menuGroups a').forEach(a => {
     a.textContent = a.textContent.replace(/（トップ）/g, '');
   });
@@ -307,32 +292,43 @@
 
     links.forEach(a => {
       const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
-      // 末尾が（トップ）/ (トップ) の項目、または見出しと同じ文言の項目を削除
       if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
         a.closest('li')?.remove();
       }
     });
   });
 
-  // 保険：h4 が「料金プラン」の見出しは非表示（既に実施済みでもOK）
   document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
     const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
     if (t === '料金プラン') h.remove();
   });
 })();
 
-/* === ここから今回の追記：為替表を自動検出して .fx-sim を付与 === */
+/* === ここから今回の追記：為替表を検出し、ラッパーで隔離スクロール === */
 (function () {
   function markFxTable(){
     try{
       document.querySelectorAll('table').forEach(tbl=>{
         if (tbl.classList.contains('fx-sim')) return;
-        const heads = Array.from(tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td'))
-          .map(th => (th.textContent || '').trim());
-        // 見出しの一部に下記キーワードが含まれていれば対象とみなす
+
+        const heads = Array.from(
+          tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
+        ).map(th => (th.textContent || '').trim());
+
         const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
         const hit  = need.every(k => heads.some(h => h.includes(k)));
-        if (hit) tbl.classList.add('fx-sim');
+        if (!hit) return;
+
+        // 1) クラス付与
+        tbl.classList.add('fx-sim');
+
+        // 2) まだ包まれていなければ .fx-wrap で包む（この中だけ横スクロール）
+        if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
+          const wrap = document.createElement('div');
+          wrap.className = 'fx-wrap';
+          tbl.parentNode.insertBefore(wrap, tbl);
+          wrap.appendChild(tbl);
+        }
       });
     }catch(_){}
   }
