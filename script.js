@@ -1,10 +1,10 @@
-/* ===== script.js (10/12基準・完全置換) ===== */
+/* ===== script.js (置換用・今回分) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止 ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（二重対策） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -22,6 +22,26 @@
   new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
   window.addEventListener('load', killGoogleBar, {once:true});
   setInterval(killGoogleBar, 1500);
+
+  /* ---------- 0.5) 見出しの不自然な改行を抑止（オンライ↵ン等） ---------- */
+  (function fixHeroHeading(){
+    function patch(el){
+      if (!el || el.dataset.jpFixed) return;
+      const raw = el.textContent || '';
+      if (!raw) return;
+      // 区切り記号の直後だけ改行を許可（ZWSPを注入）
+      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
+      // DOMにテキストのみが入っている前提（他ノードは触らない）
+      el.textContent = '';            // 一旦クリア
+      el.insertAdjacentText('afterbegin', withBreakPoints);
+      el.classList.add('no-jp-break'); // CSSで語中改行を抑止
+      el.dataset.jpFixed = '1';
+    }
+    const targets = $$('main h1, main h2'); // ヒーロー周りのみ
+    targets.forEach(patch);
+    // 翻訳等で書き換わった場合に再適用
+    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
+  })();
 
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
@@ -111,7 +131,7 @@
     });
   })();
 
-  /* ---------- 3) 言語ドロワー（フォールバック付き） ---------- */
+  /* ---------- 3) 言語ドロワー ---------- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -134,65 +154,35 @@
 
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-  const FALLBACK_LANGS = [
-    {code:'en',name:'English'},{code:'ja',name:'Japanese'},{code:'zh-CN',name:'Chinese (Simplified)'},
-    {code:'zh-TW',name:'Chinese (Traditional)'},{code:'ko',name:'Korean'},{code:'es',name:'Spanish'},
-    {code:'fr',name:'French'},{code:'de',name:'German'},{code:'it',name:'Italian'},{code:'pt',name:'Portuguese'},
-    {code:'ru',name:'Russian'},{code:'ar',name:'Arabic'},{code:'hi',name:'Hindi'},{code:'id',name:'Indonesian'},
-    {code:'vi',name:'Vietnamese'},{code:'th',name:'Thai'},{code:'tr',name:'Turkish'},{code:'ms',name:'Malay'},
-    {code:'fil',name:'Filipino'},{code:'bn',name:'Bengali'},{code:'uk',name:'Ukrainian'},{code:'pl',name:'Polish'},
-    {code:'nl',name:'Dutch'},{code:'sv',name:'Swedish'},{code:'fi',name:'Finnish'},{code:'no',name:'Norwegian'},
-    {code:'da',name:'Danish'},{code:'cs',name:'Czech'},{code:'ro',name:'Romanian'},{code:'hu',name:'Hungarian'},
-    {code:'he',name:'Hebrew'},{code:'el',name:'Greek'}
-  ];
-
-  function applyLang(code){
-    try{
-      const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-      if (sel && sel.options && sel.options.length){
-        sel.value = code;
-        sel.dispatchEvent(new Event('change', {bubbles:true}));
-        closeLang();
-        killGoogleBar();
-        return;
-      }
-    }catch(_){}
-    document.cookie = 'googtrans=' + encodeURIComponent('/auto/' + code) + '; path=/';
-    location.reload();
-  }
-
-  let buildTries = 0;
-  function buildLangList(forceFallback){
+  function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if ((!sel || !sel.options || sel.options.length <= 1) && !forceFallback){
-      if (buildTries++ < 60){ setTimeout(buildLangList, 300); return; }
-      else { forceFallback = true; }
-    }
-    let items;
-    if (!forceFallback && sel){
-      items = Array.from(sel.options)
-        .filter(o => o.value && o.value !== 'auto')
-        .map(o => {
-          const code = o.value.trim();
-          const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
-          return {code, name};
-        })
-        .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
-    }else{
-      items = FALLBACK_LANGS.slice();
-    }
+    if (!sel || !langList){ setTimeout(buildLangList, 200); return; }
 
-    if (!langList) return;
+    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== 'auto')
+      .map(o => {
+        const code = o.value.trim();
+        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
+        return {code, name};
+      })
+      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+
     langList.innerHTML = '';
     const frag = document.createDocumentFragment();
-    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
-
     items.forEach(({code,name})=>{
       const el = document.createElement('div');
       el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
-      el.addEventListener('click', ()=> applyLang(code));
+      el.addEventListener('click', ()=>{
+        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!sel) return;
+        sel.value = code;
+        sel.dispatchEvent(new Event('change', {bubbles:true}));
+        closeLang();
+        killGoogleBar();
+      });
       frag.appendChild(el);
     });
     langList.appendChild(frag);
@@ -221,13 +211,15 @@
   };
 
 })();
-/* ---- Hamburger: 非クリックの見出し「料金プラン」を削除 ---- */
+
+/* ---- Hamburger: 見出し「料金プラン」を削除（残し） ---- */
 (function () {
   document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
     if ((h.textContent || '').trim() === '料金プラン') h.remove();
   });
 })();
-/* ==== ハンバーガー中の「（トップ）」だけ除去 ==== */
+
+/* ==== remove only "（トップ）" items in hamburger ==== */
 (function () {
   const isTop = /（トップ）\s*$/;
   document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
@@ -237,6 +229,7 @@
     if (isTop.test(label)) li.remove();
   });
 })();
+
 /* === MENU: （トップ）を消す + ネスト項目を除外して作り直す === */
 (() => {
   const wrap = document.getElementById('menuGroups');
@@ -312,7 +305,30 @@
   });
 })();
 
-/* === 為替表だけを横スクロールに隔離（他へは非干渉） === */
+/* === hamburger cleanup: remove "(トップ)" and duplicated group-title items === */
+(function () {
+  const groups = document.querySelectorAll('#menuGroups .menu-group');
+
+  groups.forEach(g => {
+    const title = (g.querySelector('h4')?.textContent || '')
+                    .trim().replace(/\s+/g, ' ');
+    const links = g.querySelectorAll('.menu-list a');
+
+    links.forEach(a => {
+      const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
+      if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
+        a.closest('li')?.remove();
+      }
+    });
+  });
+
+  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+    const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+    if (t === '料金プラン') h.remove();
+  });
+})();
+
+/* === ここから為替表の横はみ出し対策（既存） === */
 (function () {
   function markFxTable(){
     try{
@@ -343,28 +359,4 @@
   }else{
     markFxTable();
   }
-})();
-
-/* === ここから今回の“見出しだけ”の微調整（DOMは最小限） === */
-(function(){
-  // 最初のH1を見出しとして扱い、次要素をサブ行として扱う
-  const h1 = document.querySelector('main h1, body h1');
-  if (!h1) return;
-  h1.classList.add('lead-title');
-
-  // H1の次のブロック要素があればサブ行化（見出し直後のpなど）
-  const sub = h1.nextElementSibling;
-  if (sub && !/^H\d$/i.test(sub.tagName)) {
-    sub.classList.add('lead-sub');
-  }
-
-  // 改行させたくない語句を保護
-  const phrases = ['完全オンライン', 'MoU契約', 'OECD', 'PwC'];
-  [h1, sub].filter(Boolean).forEach(el=>{
-    let html = el.innerHTML;
-    phrases.forEach(ph=>{
-      html = html.replaceAll(ph, '<span class="nowrap">'+ph+'</span>');
-    });
-    el.innerHTML = html;
-  });
 })();
