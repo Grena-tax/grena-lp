@@ -4,7 +4,7 @@
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止（二重対策） ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止 ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -134,43 +134,18 @@
 
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-  // ▼ フォールバック用リスト（最低限＋主要言語）
   const FALLBACK_LANGS = [
-    {code:'en',name:'English'},
-    {code:'ja',name:'Japanese'},
-    {code:'zh-CN',name:'Chinese (Simplified)'},
-    {code:'zh-TW',name:'Chinese (Traditional)'},
-    {code:'ko',name:'Korean'},
-    {code:'es',name:'Spanish'},
-    {code:'fr',name:'French'},
-    {code:'de',name:'German'},
-    {code:'it',name:'Italian'},
-    {code:'pt',name:'Portuguese'},
-    {code:'ru',name:'Russian'},
-    {code:'ar',name:'Arabic'},
-    {code:'hi',name:'Hindi'},
-    {code:'id',name:'Indonesian'},
-    {code:'vi',name:'Vietnamese'},
-    {code:'th',name:'Thai'},
-    {code:'tr',name:'Turkish'},
-    {code:'ms',name:'Malay'},
-    {code:'fil',name:'Filipino'},
-    {code:'bn',name:'Bengali'},
-    {code:'uk',name:'Ukrainian'},
-    {code:'pl',name:'Polish'},
-    {code:'nl',name:'Dutch'},
-    {code:'sv',name:'Swedish'},
-    {code:'fi',name:'Finnish'},
-    {code:'no',name:'Norwegian'},
-    {code:'da',name:'Danish'},
-    {code:'cs',name:'Czech'},
-    {code:'ro',name:'Romanian'},
-    {code:'hu',name:'Hungarian'},
-    {code:'he',name:'Hebrew'},
-    {code:'el',name:'Greek'}
+    {code:'en',name:'English'},{code:'ja',name:'Japanese'},{code:'zh-CN',name:'Chinese (Simplified)'},
+    {code:'zh-TW',name:'Chinese (Traditional)'},{code:'ko',name:'Korean'},{code:'es',name:'Spanish'},
+    {code:'fr',name:'French'},{code:'de',name:'German'},{code:'it',name:'Italian'},{code:'pt',name:'Portuguese'},
+    {code:'ru',name:'Russian'},{code:'ar',name:'Arabic'},{code:'hi',name:'Hindi'},{code:'id',name:'Indonesian'},
+    {code:'vi',name:'Vietnamese'},{code:'th',name:'Thai'},{code:'tr',name:'Turkish'},{code:'ms',name:'Malay'},
+    {code:'fil',name:'Filipino'},{code:'bn',name:'Bengali'},{code:'uk',name:'Ukrainian'},{code:'pl',name:'Polish'},
+    {code:'nl',name:'Dutch'},{code:'sv',name:'Swedish'},{code:'fi',name:'Finnish'},{code:'no',name:'Norwegian'},
+    {code:'da',name:'Danish'},{code:'cs',name:'Czech'},{code:'ro',name:'Romanian'},{code:'hu',name:'Hungarian'},
+    {code:'he',name:'Hebrew'},{code:'el',name:'Greek'}
   ];
 
-  // ▼ 言語適用（select が無い場合はクッキー直書き→再読込）
   function applyLang(code){
     try{
       const sel = document.querySelector('#google_translate_element select.goog-te-combo');
@@ -189,17 +164,10 @@
   let buildTries = 0;
   function buildLangList(forceFallback){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-
-    // selectが未生成/空ならリトライ、一定回数超でフォールバック
     if ((!sel || !sel.options || sel.options.length <= 1) && !forceFallback){
-      if (buildTries++ < 60){        // ≒ 60 * 300ms = 最大18秒待つ
-        setTimeout(buildLangList, 300);
-        return;
-      }else{
-        forceFallback = true;
-      }
+      if (buildTries++ < 60){ setTimeout(buildLangList, 300); return; }
+      else { forceFallback = true; }
     }
-
     let items;
     if (!forceFallback && sel){
       items = Array.from(sel.options)
@@ -241,7 +209,6 @@
     }
   }
 
-  // Google公式ウィジェットの初期化（HTMLの cb と一致）
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
@@ -254,13 +221,13 @@
   };
 
 })();
-/* ---- Hamburger: 非クリックの見出し「料金プラン」だけを削除（append-only） ---- */
+/* ---- Hamburger: 非クリックの見出し「料金プラン」を削除 ---- */
 (function () {
   document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
     if ((h.textContent || '').trim() === '料金プラン') h.remove();
   });
 })();
-/* ==== remove only "（トップ）" items in hamburger ==== */
+/* ==== ハンバーガー中の「（トップ）」だけ除去 ==== */
 (function () {
   const isTop = /（トップ）\s*$/;
   document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
@@ -345,7 +312,7 @@
   });
 })();
 
-/* === 最後：為替表だけを横スクロールに隔離（他へは非干渉） === */
+/* === 為替表だけを横スクロールに隔離（他へは非干渉） === */
 (function () {
   function markFxTable(){
     try{
@@ -376,4 +343,28 @@
   }else{
     markFxTable();
   }
+})();
+
+/* === ここから今回の“見出しだけ”の微調整（DOMは最小限） === */
+(function(){
+  // 最初のH1を見出しとして扱い、次要素をサブ行として扱う
+  const h1 = document.querySelector('main h1, body h1');
+  if (!h1) return;
+  h1.classList.add('lead-title');
+
+  // H1の次のブロック要素があればサブ行化（見出し直後のpなど）
+  const sub = h1.nextElementSibling;
+  if (sub && !/^H\d$/i.test(sub.tagName)) {
+    sub.classList.add('lead-sub');
+  }
+
+  // 改行させたくない語句を保護
+  const phrases = ['完全オンライン', 'MoU契約', 'OECD', 'PwC'];
+  [h1, sub].filter(Boolean).forEach(el=>{
+    let html = el.innerHTML;
+    phrases.forEach(ph=>{
+      html = html.replaceAll(ph, '<span class="nowrap">'+ph+'</span>');
+    });
+    el.innerHTML = html;
+  });
 })();
