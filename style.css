@@ -244,3 +244,9 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 /* フォーカス輪郭（控えめに可視化） */
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+/* === 追記：必要最小限・他要素に干渉しないクラス === */
+
+/* ヒーロー見出しなどで完全に改行させたくない語がある場合に使用 */
+.nowrap { white-space: nowrap; }
+
+/* 既に定義済みの .text-sm / .muted を使うため新規スタイルは最小限 */
