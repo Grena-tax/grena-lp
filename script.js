@@ -1,30 +1,41 @@
-/* ===== script.js (11/09 安定版・完全置換用) ===== */
+/* ===== script.js (11/09 Strict・完全置換) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止（自動停止つき） ---------- */
+  /* === 安全スイッチ（必要に応じて true/false を変更） ===================== */
+  const NO_DELETE           = true;  // メニューの「(トップ)」等の“削除/非表示”をしない
+  const HIDE_GOOGLE_BAR     = true;  // Google青バナー/吹き出しを消す（falseで何もしない）
+  const INSERT_LEGAL_NOTES  = true;  // 注意文/フッターの1行を自動追加（falseで追加しない）
+
+  /* ---------- 0) Google青バナー/吹き出しの抑止（任意） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
       const ids = ['goog-gt-tt','google_translate_element'];
       ids.forEach(id=>{
         const el = document.getElementById(id);
-        if (el && id==='goog-gt-tt'){ if (el.remove) el.remove(); else el.style.display='none'; }
+        if (el && id==='goog-gt-tt'){
+          // “削除”ではなく非表示で十分：より非破壊に
+          el.style.display='none';
+        }
       });
       const ifr = document.querySelector('iframe.goog-te-banner-frame');
-      if (ifr){ if (ifr.remove) ifr.remove(); else ifr.style.display='none'; }
+      if (ifr){ ifr.style.display='none'; }
       const showing = !!ifr && ifr.offsetHeight > 0;
       html.classList.toggle('gtbar', !!showing);
     }catch(_){}
   }
-  new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
-  window.addEventListener('load', killGoogleBar, {once:true});
-  /* 12秒後に監視タイマーを停止（CPU節約） */
-  window.__gtBarTmr = setInterval(killGoogleBar, 1500);
-  setTimeout(()=>{ try{ clearInterval(window.__gtBarTmr); }catch(_){ } }, 12000);
-  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) killGoogleBar(); });
+  if (HIDE_GOOGLE_BAR){
+    const obs = new MutationObserver(killGoogleBar);
+    obs.observe(document.documentElement,{childList:true,subtree:true});
+    window.addEventListener('load', killGoogleBar, {once:true});
+    // 負荷を抑えるため一定時間で監視ループを緩める
+    window.__gtBarTmr = setInterval(killGoogleBar, 1500);
+    setTimeout(()=>{ try{ clearInterval(window.__gtBarTmr); }catch(_){ } }, 12000);
+    document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) killGoogleBar(); });
+  }
 
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
@@ -86,7 +97,7 @@
       const h4    = document.createElement('h4');  h4.textContent = secLabel;
       const ul    = document.createElement('ul');  ul.className   ='menu-list';
 
-      /* セクショントップ */
+      // セクション先頭へのリンク（削除しない）
       const liTop = document.createElement('li');
       const aTop  = document.createElement('a');
       aTop.href = `#${secId}`;
@@ -94,7 +105,7 @@
       aTop.addEventListener('click', closeMenu);
       liTop.appendChild(aTop); ul.appendChild(liTop);
 
-      /* アコーディオン見出しを項目化 */
+      // 各アコーディオン項目
       sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
         const det   = sum.closest('details'); if (!det) return;
         const label = sanitize(sum.textContent);
@@ -112,29 +123,31 @@
         li.appendChild(a); ul.appendChild(li);
       });
 
-      if (secId !== 'plans') group.appendChild(h4);
+      // 見出しは常に残す（NO_DELETE の意図）
+      group.appendChild(h4);
       group.appendChild(ul);
       groups.appendChild(group);
     });
 
-    /* 余分な "(トップ)" と重複タイトルの削除＋「料金プラン」の見出し非表示 */
-    (function cleanup(){
-      const groups = document.querySelectorAll('#menuGroups .menu-group');
-      groups.forEach(g => {
-        const title = (g.querySelector('h4')?.textContent || '')
-                        .trim().replace(/\s+/g, ' ');
-        g.querySelectorAll('.menu-list a').forEach(a => {
-          const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
-          if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
-            a.closest('li')?.remove();
-          }
+    // ★STRICT：いかなる“削除・非表示のクリーンアップ”も行わない
+    if (!NO_DELETE){
+      (function cleanup(){
+        const groups = document.querySelectorAll('#menuGroups .menu-group');
+        groups.forEach(g => {
+          const title = (g.querySelector('h4')?.textContent || '').trim().replace(/\s+/g, ' ');
+          g.querySelectorAll('.menu-list a').forEach(a => {
+            const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
+            if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
+              a.closest('li')?.remove();
+            }
+          });
         });
-      });
-      document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
-        const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
-        if (t === '料金プラン') h.remove();
-      });
-    })();
+        document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+          const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+          if (t === '料金プラン') h.remove();
+        });
+      })();
+    }
   })();
 
   /* ---------- 3) 言語ドロワー ---------- */
@@ -187,7 +200,7 @@
         sel.value = code;
         sel.dispatchEvent(new Event('change', {bubbles:true}));
         closeLang();
-        killGoogleBar();
+        if (HIDE_GOOGLE_BAR) killGoogleBar();
       });
       frag.appendChild(el);
     });
@@ -216,9 +229,8 @@
     }
   };
 
-  /* === A11y & 微最適化（append-only, safe） ============================= */
+  /* === A11y & 微最適化（append-only） ============================= */
   (function(){
-    /* ダイアログARIA（HTMLに既にある場合は上書きせず） */
     const menuPanel = document.getElementById('menuDrawer')?.querySelector('.menu-panel');
     const langPanel = document.getElementById('langDrawer')?.querySelector('.lang-panel');
     if (menuPanel){
@@ -232,7 +244,7 @@
       if (!langPanel.getAttribute('aria-label')) langPanel.setAttribute('aria-label','Select language');
     }
 
-    /* フォーカストラップ（開いている間だけTab移動をパネル内に限定） */
+    // フォーカストラップ
     let lastFocus = null;
     function getFocusable(root){
       return Array.from(root.querySelectorAll(
@@ -269,17 +281,17 @@
     new MutationObserver(syncTrap).observe(html, {attributes:true, attributeFilter:['class']});
     window.addEventListener('load', syncTrap, {once:true});
 
-    /* 画像の遅延読込（LCP回避のため最初の1枚は対象外） */
+    // 画像の遅延読込（LCP配慮：最初の1枚は除外）
     try{
       const imgs = document.querySelectorAll('img');
       imgs.forEach((img, i)=>{
-        if (i === 0) return;                       // 最初の画像はLCP配慮で除外
+        if (i === 0) return;
         if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
         if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
       });
     }catch(_){}
 
-    /* iOSのダーク切替で配色が崩れないよう宣言を追加（ライト固定） */
+    // iOSのダーク自動切替の影響を抑止
     try{
       if (!document.querySelector('meta[name="color-scheme"]')){
         const m = document.createElement('meta');
@@ -289,52 +301,54 @@
     }catch(_){}
   })();
 
-  /* === 4) 法務系“文言”の自動挿入（本文に軽く追記／二重挿入防止） === */
-  (function legalPatches(){
-    function insertOnceBefore(target, key, node){
-      if (!target) return;
-      const parent = target.parentNode;
-      if (!parent || parent.dataset[key]) return;
-      parent.insertBefore(node, target);
-      parent.dataset[key] = '1';
-    }
-    function makeNote(htmlStr){
-      const p = document.createElement('p');
-      p.className = 'text-sm muted';
-      p.style.margin = '6px 0';
-      p.innerHTML = htmlStr;
-      return p;
-    }
-
-    /* a) 為替シミュレーション表の直上に非勧誘ディスクレーマを自動追記 */
-    $$('#personal-account details').forEach(det=>{
-      const sumTxt = (det.querySelector('summary')?.textContent || '').trim();
-      if (/リスクと為替の考え方/.test(sumTxt)){
-        const firstTable = det.querySelector('.content table');
-        if (firstTable){
-          const p = makeNote('<strong>※重要：</strong> 下表は特定条件に基づく仮定例であり、金融商品の勧誘・媒介・助言ではありません。金利・為替・税制は変動し、将来の成果は保証されません。');
-          insertOnceBefore(firstTable, 'disc_fx_once', p);
-        }
+  /* === 4) 法務系“文言”の自動挿入（append-only／任意） === */
+  if (INSERT_LEGAL_NOTES){
+    (function legalPatches(){
+      function insertOnceBefore(target, key, node){
+        if (!target) return;
+        const parent = target.parentNode;
+        if (!parent || parent.dataset[key]) return;
+        parent.insertBefore(node, target);
+        parent.dataset[key] = '1';
       }
-      if (/複利の力/.test(sumTxt)){
-        const firstTable = det.querySelector('.content table');
-        if (firstTable){
-          const p = makeNote('<strong>※参考：</strong> 以下は単純計算の目安です。税・為替・商品条件により実績は異なります。投資判断はご自身で行い、必要に応じて有資格者へご相談ください。');
-          insertOnceBefore(firstTable, 'disc_comp_once', p);
-        }
+      function makeNote(htmlStr){
+        const p = document.createElement('p');
+        p.className = 'text-sm muted';
+        p.style.margin = '6px 0';
+        p.innerHTML = htmlStr;
+        return p;
       }
-    });
 
-    /* b) フッターに「やらないことリスト」を1行だけ追記（存在チェック） */
-    const foot = document.querySelector('footer.site-foot');
-    if (foot && !foot.querySelector('.foot-policyline')){
-      const line = document.createElement('small');
-      line.className = 'foot-policyline';
-      line.style.display = 'block';
-      line.style.marginTop = '6px';
-      line.innerHTML = '【やらないこと】銀行口座の<strong>代理開設</strong>・<strong>送金指示</strong>・<strong>投資助言</strong>は行いません。';
-      foot.appendChild(line);
-    }
-  })();
+      // a) 「リスクと為替の考え方」/「複利の力」だけに注意文を“追加”
+      $$('#personal-account details').forEach(det=>{
+        const sumTxt = (det.querySelector('summary')?.textContent || '').trim();
+        if (/リスクと為替の考え方/.test(sumTxt)){
+          const firstTable = det.querySelector('.content table');
+          if (firstTable){
+            const p = makeNote('<strong>※重要：</strong> 下表は特定条件に基づく仮定例であり、金融商品の勧誘・媒介・助言ではありません。金利・為替・税制は変動し、将来の成果は保証されません。');
+            insertOnceBefore(firstTable, 'disc_fx_once', p);
+          }
+        }
+        if (/複利の力/.test(sumTxt)){
+          const firstTable = det.querySelector('.content table');
+          if (firstTable){
+            const p = makeNote('<strong>※参考：</strong> 以下は単純計算の目安です。税・為替・商品条件により実績は異なります。投資判断はご自身で行い、必要に応じて有資格者へご相談ください。');
+            insertOnceBefore(firstTable, 'disc_comp_once', p);
+          }
+        }
+      });
+
+      // b) フッター末尾に1行“追加”（既にあれば何もしない）
+      const foot = document.querySelector('footer.site-foot');
+      if (foot && !foot.querySelector('.foot-policyline')){
+        const line = document.createElement('small');
+        line.className = 'foot-policyline';
+        line.style.display = 'block';
+        line.style.marginTop = '6px';
+        line.innerHTML = '【やらないこと】銀行口座の<strong>代理開設</strong>・<strong>送金指示</strong>・<strong>投資助言</strong>は行いません。';
+        foot.appendChild(line);
+      }
+    })();
+  }
 
 })();
