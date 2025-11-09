@@ -38,9 +38,17 @@ details .content{
 .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
 .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
 .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+
+/* --- 表（共通） --- */
 table{width:100%;border-collapse:collapse;margin:.5rem 0}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
+
+/* ==== 為替シミュの横スクロール専用ラッパ（他表は非干渉） ==== */
+.fx-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fx-wrap > table.fx-sim{min-width:560px}
+
+/* 見出しサイズ（スマホ時） */
 @media (max-width:480px){
   h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
 }
@@ -62,15 +70,14 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* --- ハンバーガー本体（被り根絶・縦分割） --- */
+/* --- ハンバーガー本体 --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38;
-  display:flex;flex-direction:column;
+  font-size:14px;line-height:1.38;display:flex;flex-direction:column;
 }
 .menu-head{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -83,7 +90,6 @@ th:first-child,td:first-child{text-align:left}
   border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
 }
 .menu-close:hover{background:#f3f4f6}
-/* ←固定高をやめ、上に十分な余白＋scroll-padding-top を確保 */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto !important;
   padding: calc(var(--menu-head-h) + 10px) 0 12px;
@@ -101,20 +107,23 @@ html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 html.menu-open,html.menu-open body{overflow:hidden}
 
-/* --- 画面最下部 固定CTA（既存） --- */
+/* --- 画面最下部 固定CTA --- */
 .fixed-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
   backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
   padding-bottom:var(--safe-bottom)
 }
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
+.fixed-cta .row{
+  max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;
+  justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)
+}
 .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
 .btn.neutral{background:#e5e7eb;color:#111827}
 .btn.secondary{background:#1f2937;color:#fff}
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
+/* --- 言語スイッチ --- */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
@@ -152,19 +161,15 @@ html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
 @media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
+/* --- Google翻訳：青バナー等を隠す --- */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
-/* 公式ウィジェット自体は画面外へ退避（JSが操作する） */
-#google_translate_element{
-  position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
-}
-/* 青バーが出た端末向けのバッファ */
+#google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
 html.gtbar body{ padding-top:44px; }
 
-/* --- フッターは常に黒（翻訳で白化しない） --- */
+/* --- フッターは常に黒 --- */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
   background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
@@ -176,16 +181,17 @@ html.gtbar body{ padding-top:44px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
+/* --- アンカー停止位置 --- */
 section[id], details[id]{ scroll-margin-top: 70px; }
 
-/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避・据置仕様） --- */
+/* --- スマホ時の上辺マージン調整 --- */
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
-/* ===== revert font to site default (append-only) ===== */
+
+/* ===== フォントを元に戻す（既存） ===== */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
@@ -207,42 +213,23 @@ button, input, select, textarea, summary, details,
 html, body,
 button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-@supports not (font-family: revert) {
-  html { font-family: inherit !important; }
-  body { font-family: inherit !important; }
-  button, input, select, textarea, summary, details,
-  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
-}
-html, body,
-button, input, select, textarea, summary, details,
-nav, a, .menu-panel, .menu-list, .lang-panel {
   font-family: -apple-system, BlinkMacSystemFont,
                "Hiragino Sans", "Hiragino Kaku Gothic ProN",
                "Yu Gothic", Meiryo, "Noto Sans JP",
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* === FXシミュ表だけ読みやすく（ラッパーで隔離スクロール） === */
-table.fx-sim{ table-layout:fixed; width:100%; }
-table.fx-sim th:nth-last-child(-n+2),
-table.fx-sim td:nth-last-child(-n+2){
-  white-space:nowrap; text-align:right; font-variant-numeric:tabular-nums;
-}
-table.fx-sim th:first-child,
-table.fx-sim td:first-child{ text-align:left; }
+/* === ここから今回の“見た目だけ”の追記（他要素は非干渉） === */
 
-/* ラッパー：ここだけ横スクロール。ページ本体ははみ出さない */
-.fx-wrap{
-  display:block; max-width:100%;
-  overflow-x:auto; -webkit-overflow-scrolling:touch;
-  overscroll-behavior-x:contain;
+/* 改行禁止用の簡易ユーティリティ */
+.nowrap{ white-space:nowrap }
+
+/* JSで付与する見出し用クラス（スマホでだけ軽く寄せる） */
+.lead-title{ letter-spacing:.01em }
+.lead-sub{ font-weight:800 }
+@media (max-width:480px){
+  .lead-title{ font-size:clamp(20px,5.2vw,26px); line-height:1.28; margin:.25rem 0 .2rem }
+  .lead-sub{ font-size:clamp(14px,3.6vw,16px); line-height:1.35; margin-top:2px }
+  /* CTA：左右の空白バランスをわずかに最適化 */
+  .fixed-cta .row{ justify-content:space-between }
 }
-.fx-wrap > table.fx-sim{
-  min-width:560px; /* 必要幅だけ確保し、はみ出しはラッパー内でスクロール */
-  width:100%;
-}
-/* 視覚的なヒント（任意・地味） */
-.fx-wrap::-webkit-scrollbar{ height:8px }
-.fx-wrap::-webkit-scrollbar-thumb{ background:rgba(0,0,0,.15); border-radius:999px }
