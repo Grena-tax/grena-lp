@@ -1,17 +1,20 @@
-/* ===== script.js (11/09 SAFE・完全置換) ===== */
+/* ===== script.js (2025-11-09 no-top-links) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止（非破壊：非表示のみ） ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（二重対策） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
-      const tt = document.getElementById('goog-gt-tt');
-      if (tt){ tt.style.display = 'none'; }
+      const ids = ['goog-gt-tt','google_translate_element'];
+      ids.forEach(id=>{
+        const el = document.getElementById(id);
+        if (el && id==='goog-gt-tt'){ if (el.remove) el.remove(); else el.style.display='none'; }
+      });
       const ifr = document.querySelector('iframe.goog-te-banner-frame');
-      if (ifr){ ifr.style.display = 'none'; }
+      if (ifr){ if (ifr.remove) ifr.remove(); else ifr.style.display='none'; }
       const showing = !!ifr && ifr.offsetHeight > 0;
       html.classList.toggle('gtbar', !!showing);
     }catch(_){}
@@ -19,6 +22,23 @@
   new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
   window.addEventListener('load', killGoogleBar, {once:true});
   setInterval(killGoogleBar, 1500);
+
+  /* ---------- 0.5) 見出しの不自然な改行を抑止（オンライ↵ン等） ---------- */
+  (function fixHeroHeading(){
+    function patch(el){
+      if (!el || el.dataset.jpFixed) return;
+      const raw = el.textContent || '';
+      if (!raw) return;
+      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
+      el.textContent = '';
+      el.insertAdjacentText('afterbegin', withBreakPoints);
+      el.classList.add('no-jp-break');
+      el.dataset.jpFixed = '1';
+    }
+    const targets = $$('main h1, main h2');
+    targets.forEach(patch);
+    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
+  })();
 
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
@@ -39,12 +59,12 @@
   menuClose && menuClose.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 
-  /* ---------- 2) 目次（各セクション＋全summaryを自動生成｜削除は一切しない） ---------- */
-  (function buildMenu(){
-    const groups = $('#menuGroups');
-    if (!groups) return;
+  /* ---------- 2) 目次（トップ項目は作らない＝重複解消） ---------- */
+  (function buildMenuNoTop(){
+    const wrap = $('#menuGroups');
+    if (!wrap) return;
 
-    const sections = [
+    const SECTIONS = [
       ['corp-setup',       '法人設立'],
       ['plans',            '料金プラン'],
       ['sole-setup',       '個人事業主（IE/SBS）'],
@@ -53,64 +73,63 @@
     ];
 
     const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
-    const mkId = base => base.toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
 
     function ensureId(detailsEl, secId, label, idx){
       if (detailsEl.id) return detailsEl.id;
-      const base = mkId(`${secId}-${label||'item'}-${idx+1}`) || `${secId}-d-${idx+1}`;
-      let id = base, n=2;
+      const base = (secId + '-' + (label||'item') + '-' + (idx+1))
+                    .toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+      let id = base || `${secId}-d-${idx+1}`, n=2;
       while (document.getElementById(id)) id = `${base}-${n++}`;
       detailsEl.id = id;
       return id;
     }
-    function openAncestors(el){
-      let cur = el && el.parentElement;
-      while (cur){
-        if (cur.tagName && cur.tagName.toLowerCase()==='details') cur.open = true;
-        cur = cur.parentElement;
-      }
+
+    function closeMenuSoft(){
+      html.classList.remove('menu-open');
+      menuDrawer?.setAttribute('aria-hidden','true');
+      menuBtn?.setAttribute('aria-expanded','false');
     }
 
-    groups.innerHTML = '';
-    sections.forEach(([secId, secLabel])=>{
+    wrap.innerHTML = '';
+
+    SECTIONS.forEach(([secId, label])=>{
       const sec = document.getElementById(secId);
       if (!sec) return;
 
-      const group = document.createElement('div'); group.className='menu-group';
-      const h4    = document.createElement('h4');  h4.textContent = secLabel;
-      const ul    = document.createElement('ul');  ul.className   ='menu-list';
+      const group = document.createElement('div');
+      group.className = 'menu-group';
 
-      // セクション先頭リンク（「（トップ）」は付けず、テキスト変更もしない）
-      const liTop = document.createElement('li');
-      const aTop  = document.createElement('a');
-      aTop.href = `#${secId}`;
-      aTop.textContent = `${secLabel}`;
-      aTop.addEventListener('click', closeMenu);
-      liTop.appendChild(aTop); ul.appendChild(liTop);
+      // 「料金プラン」は見出しを表示しない（既存仕様を維持）
+      if (secId !== 'plans') {
+        const h4 = document.createElement('h4');
+        h4.textContent = label;
+        group.appendChild(h4);
+      }
 
-      // 各アコーディオン項目
-      sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
-        const det   = sum.closest('details'); if (!det) return;
-        const label = sanitize(sum.textContent);
-        const id    = ensureId(det, secId, label, idx);
+      const ul = document.createElement('ul');
+      ul.className = 'menu-list';
+
+      // ★トップ項目（=セクション名リンク）は生成しない
+      // サマリー項目のみ列挙
+      sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx)=>{
+        const det = sum.closest('details'); if (!det) return;
+        const id  = ensureId(det, secId, sum.textContent, idx);
 
         const li = document.createElement('li');
         const a  = document.createElement('a');
         a.href = `#${id}`;
-        a.textContent = label;
-        a.addEventListener('click', ()=>{
-          const t = document.getElementById(id);
-          if (t){ openAncestors(t); }
-          setTimeout(closeMenu, 0);
-        });
-        li.appendChild(a); ul.appendChild(li);
+        a.textContent = sanitize(sum.textContent);
+        a.addEventListener('click', ()=>{ det.open = true; closeMenuSoft(); });
+        li.appendChild(a);
+        ul.appendChild(li);
       });
 
-      group.appendChild(h4); group.appendChild(ul); groups.appendChild(group);
+      group.appendChild(ul);
+      wrap.appendChild(group);
     });
   })();
 
-  /* ---------- 3) 言語ドロワー（ウィジェット不在時はフォールバック） ---------- */
+  /* ---------- 3) 言語ドロワー ---------- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -132,48 +151,36 @@
   document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeLang(); });
 
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
-  const LANG_FALLBACK = ['en','zh-CN','zh-TW','ko','es','fr','de','pt','ru','id','hi','ar','tr','th','vi'];
 
-  function currentHost(){
-    try{ return location.hostname.replace(/^www\./,''); }catch(_){ return ''; }
-  }
-  function setGoogTransCookie(dst){
-    const host = currentHost();
-    const val  = `/ja/${dst}`;
-    const attrs = `; path=/`;
-    document.cookie = `googtrans=${val}${attrs}`;
-    if (host){
-      document.cookie = `googtrans=${val}${attrs}; domain=.${host}`;
-      document.cookie = `googtrans=${val}${attrs}; domain=${host}`;
-    }
-  }
-  function applyLanguage(code){
+  function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (sel){
-      sel.value = code;
-      sel.dispatchEvent(new Event('change', {bubbles:true}));
-      killGoogleBar();
-      closeLang();
-      return;
-    }
-    // フォールバック：cookie→再読込で適用
-    setGoogTransCookie(code);
-    location.reload();
-  }
+    if (!sel || !langList){ setTimeout(buildLangList, 200); return; }
 
-  function fillList(items){
-    if (!langList) return;
+    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== 'auto')
+      .map(o => {
+        const code = o.value.trim();
+        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
+        return {code, name};
+      })
+      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+
     langList.innerHTML = '';
     const frag = document.createDocumentFragment();
-    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
-    const curCode = (curCookie.split('/').pop() || '').toLowerCase();
-
     items.forEach(({code,name})=>{
       const el = document.createElement('div');
-      el.className = 'ls-item' + (curCode === code.toLowerCase() ? ' ls-active' : '');
+      el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
-      el.addEventListener('click', ()=> applyLanguage(code));
+      el.addEventListener('click', ()=>{
+        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (!sel) return;
+        sel.value = code;
+        sel.dispatchEvent(new Event('change', {bubbles:true}));
+        closeLang();
+        killGoogleBar();
+      });
       frag.appendChild(el);
     });
     langList.appendChild(frag);
@@ -190,78 +197,48 @@
     }
   }
 
-  function buildFromSelect(){
-    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (!sel) return false;
-    const items = Array.from(sel.options)
-      .filter(o => o.value && o.value !== 'auto')
-      .map(o => {
-        const code = o.value.trim();
-        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
-        return {code, name};
-      })
-      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
-    fillList(items);
-    return true;
-  }
-  function buildFallback(){
-    const items = LANG_FALLBACK.map(code=>{
-      const name = (dn && dn.of(code)) || code;
-      return {code, name};
-    });
-    fillList(items);
-  }
-  function buildLangList(){
-    let tries = 0;
-    const tmr = setInterval(()=>{
-      tries++;
-      if (buildFromSelect()){ clearInterval(tmr); return; }
-      if (tries >= 10){ clearInterval(tmr); buildFallback(); }
-    }, 300);
-  }
-
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     }catch(_){}
-    setTimeout(buildLangList, 300);
+    setTimeout(buildLangList, 600);
     const host = $('#google_translate_element');
     if (host){
       new MutationObserver(()=>setTimeout(buildLangList,0)).observe(host,{childList:true,subtree:true});
     }
   };
 
-  /* ---------- 4) 為替表の横はみ出し対策（非破壊） ---------- */
-  (function () {
-    function markFxTable(){
-      try{
-        document.querySelectorAll('table').forEach(tbl=>{
-          if (tbl.classList.contains('fx-sim')) return;
+})();
 
-          const heads = Array.from(
-            tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
-          ).map(th => (th.textContent || '').trim());
+/* === ここから為替表の横はみ出し対策（既存） === */
+(function () {
+  function markFxTable(){
+    try{
+      document.querySelectorAll('table').forEach(tbl=>{
+        if (tbl.classList.contains('fx-sim')) return;
 
-          const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
-          const hit  = need.every(k => heads.some(h => h.includes(k)));
-          if (!hit) return;
+        const heads = Array.from(
+          tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
+        ).map(th => (th.textContent || '').trim());
 
-          tbl.classList.add('fx-sim');
+        const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
+        const hit  = need.every(k => heads.some(h => h.includes(k)));
+        if (!hit) return;
 
-          if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
-            const wrap = document.createElement('div');
-            wrap.className = 'fx-wrap';
-            tbl.parentNode.insertBefore(wrap, tbl);
-            wrap.appendChild(tbl);
-          }
-        });
-      }catch(_){}
-    }
-    if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', markFxTable);
-    }else{
-      markFxTable();
-    }
-  })();
+        tbl.classList.add('fx-sim');
 
+        if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
+          const wrap = document.createElement('div');
+          wrap.className = 'fx-wrap';
+          tbl.parentNode.insertBefore(wrap, tbl);
+          wrap.appendChild(tbl);
+        }
+      });
+    }catch(_){}
+  }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', markFxTable);
+  }else{
+    markFxTable();
+  }
 })();
