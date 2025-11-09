@@ -1,4 +1,4 @@
-/* ===== patch.css (10/12基準・完全置換) ===== */
+/* ===== patch.css (置換用・今回分) ===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -6,7 +6,7 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+  --menu-head-h: 56px; /* ハンバーガーの上部見出しの高さ（実測ベース） */
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -38,17 +38,9 @@ details .content{
 .progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
 .progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
 .progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
-
-/* --- 表（共通） --- */
 table{width:100%;border-collapse:collapse;margin:.5rem 0}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
-
-/* ==== 為替シミュの横スクロール専用ラッパ（他表は非干渉） ==== */
-.fx-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.fx-wrap > table.fx-sim{min-width:560px}
-
-/* 見出しサイズ（スマホ時） */
 @media (max-width:480px){
   h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
 }
@@ -70,14 +62,17 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* --- ハンバーガー本体 --- */
+/* --- ハンバーガー本体（“スクロール不能”対策を強化） --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
+  position:absolute;top:0;right:0;height:100dvh; /* ← 100% → 100dvh に変更（iOSでの固定高崩れ防止） */
+  width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38;display:flex;flex-direction:column;
+  font-size:14px;line-height:1.38;
+  display:flex;flex-direction:column;
+  overscroll-behavior:contain; /* バックグラウンドへのスクロール伝播を遮断 */
 }
 .menu-head{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -90,11 +85,17 @@ th:first-child,td:first-child{text-align:left}
   border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
 }
 .menu-close:hover{background:#f3f4f6}
+/* スクロール不能の主因に対処：高さを数式で上限化＋慣性スクロール */
 .menu-groups{
-  flex:1 1 auto; overflow:auto; height:auto !important;
+  flex:1 1 auto;
+  overflow:auto;
+  height:auto !important;
+  max-height: calc(100dvh - var(--menu-head-h) - 12px); /* ← 明示的に可視高を確保 */
   padding: calc(var(--menu-head-h) + 10px) 0 12px;
   scroll-padding-top: calc(var(--menu-head-h) + 8px);
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
 }
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -107,23 +108,20 @@ html.menu-open .menu-backdrop{opacity:1}
 html.menu-open .menu-panel{transform:none}
 html.menu-open,html.menu-open body{overflow:hidden}
 
-/* --- 画面最下部 固定CTA --- */
+/* --- 画面最下部 固定CTA（既存） --- */
 .fixed-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
   backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
   padding-bottom:var(--safe-bottom)
 }
-.fixed-cta .row{
-  max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;
-  justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)
-}
+.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
 .btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
 .btn.neutral{background:#e5e7eb;color:#111827}
 .btn.secondary{background:#1f2937;color:#fff}
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* --- 言語スイッチ --- */
+/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
@@ -161,15 +159,19 @@ html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
 @media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* --- Google翻訳：青バナー等を隠す --- */
+/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
-#google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
+/* 公式ウィジェット自体は画面外へ退避（JSが操作する） */
+#google_translate_element{
+  position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+}
+/* 青バーが出た端末向けのバッファ */
 html.gtbar body{ padding-top:44px; }
 
-/* --- フッターは常に黒 --- */
+/* --- フッターは常に黒（翻訳で白化しない） --- */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
   background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
@@ -181,55 +183,50 @@ html.gtbar body{ padding-top:44px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- アンカー停止位置 --- */
+/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
 section[id], details[id]{ scroll-margin-top: 70px; }
 
-/* --- スマホ時の上辺マージン調整 --- */
+/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避・据置仕様） --- */
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 
-/* ===== フォントを元に戻す（既存） ===== */
+/* ===== フォント指定の原状回復（既存） ===== */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
-  font-family: revert !important;
-}
-@supports not (font-family: revert) {
-  html, body,
-  button, input, select, textarea, summary, details,
-  nav, a, .menu-panel, .menu-list, .lang-panel {
-    font-family: inherit !important;
-  }
-}
-:root { --font-jp: initial; }
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
   font-family: -apple-system, BlinkMacSystemFont,
                "Hiragino Sans", "Hiragino Kaku Gothic ProN",
                "Yu Gothic", Meiryo, "Noto Sans JP",
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* === ここから今回の“見た目だけ”の追記（他要素は非干渉） === */
-
-/* 改行禁止用の簡易ユーティリティ */
-.nowrap{ white-space:nowrap }
-
-/* JSで付与する見出し用クラス（スマホでだけ軽く寄せる） */
-.lead-title{ letter-spacing:.01em }
-.lead-sub{ font-weight:800 }
-@media (max-width:480px){
-  .lead-title{ font-size:clamp(20px,5.2vw,26px); line-height:1.28; margin:.25rem 0 .2rem }
-  .lead-sub{ font-size:clamp(14px,3.6vw,16px); line-height:1.35; margin-top:2px }
-  /* CTA：左右の空白バランスをわずかに最適化 */
-  .fixed-cta .row{ justify-content:space-between }
+/* =========================
+   1) ヒーロー見出しの“変な割れ”防止（オンライ↵ンなど）
+   ========================= */
+.no-jp-break{
+  /* 単語内・語中の任意改行を抑止 */
+  word-break: keep-all;
+  overflow-wrap: normal;
+  white-space: normal;
+  line-break: strict;
 }
+@supports (text-wrap: balance){
+  .no-jp-break{ text-wrap: balance; }
+}
+
+/* =========================
+   2) 為替シミュ表の横はみ出し防止（前回導入）
+   ========================= */
+.fx-wrap{
+  overflow-x:auto; -webkit-overflow-scrolling:touch;
+  border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+}
+.fx-sim{ min-width:560px; }
+.fx-sim th, .fx-sim td{ white-space:nowrap; }
+.fx-sim th:nth-child(2), .fx-sim td:nth-child(2){ text-align:right; }
+.fx-sim th:nth-child(3), .fx-sim td:nth-child(3){ text-align:right; }
+.fx-sim th:nth-child(4), .fx-sim td:nth-child(4){ text-align:right; }
+.fx-sim th:last-child,  .fx-sim td:last-child{ text-align:right; }
