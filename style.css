@@ -1,4 +1,4 @@
-/* ===== patch.css (置換用・今回分) ===== */
+/* ===== patch.css (10/12基準・完全置換) ===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -6,7 +6,7 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガーの上部見出しの高さ（実測ベース） */
+  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -62,17 +62,15 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* --- ハンバーガー本体（“スクロール不能”対策を強化） --- */
+/* --- ハンバーガー本体（被り根絶・縦分割） --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
-  position:absolute;top:0;right:0;height:100dvh; /* ← 100% → 100dvh に変更（iOSでの固定高崩れ防止） */
-  width:min(420px,92vw);
+  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
   font-size:14px;line-height:1.38;
   display:flex;flex-direction:column;
-  overscroll-behavior:contain; /* バックグラウンドへのスクロール伝播を遮断 */
 }
 .menu-head{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -85,17 +83,12 @@ th:first-child,td:first-child{text-align:left}
   border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
 }
 .menu-close:hover{background:#f3f4f6}
-/* スクロール不能の主因に対処：高さを数式で上限化＋慣性スクロール */
+/* ←固定高をやめ、上に十分な余白＋scroll-padding-top を確保 */
 .menu-groups{
-  flex:1 1 auto;
-  overflow:auto;
-  height:auto !important;
-  max-height: calc(100dvh - var(--menu-head-h) - 12px); /* ← 明示的に可視高を確保 */
+  flex:1 1 auto; overflow:auto; height:auto !important;
   padding: calc(var(--menu-head-h) + 10px) 0 12px;
   scroll-padding-top: calc(var(--menu-head-h) + 8px);
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
 }
 .menu-group{padding:8px 10px 6px}
 .menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
@@ -174,7 +167,7 @@ html.gtbar body{ padding-top:44px; }
 /* --- フッターは常に黒（翻訳で白化しない） --- */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
-  background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
+  background:var(--foot-bg) !important; color:#cbd5e1 !important; border-top:1px solid var(--foot-border) !important;
   text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
   font-size:13px; line-height:1.7;
 }
@@ -193,7 +186,46 @@ section[id], details[id]{ scroll-margin-top: 70px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 
-/* ===== フォント指定の原状回復（既存） ===== */
+/* ===== revert font to site default (append-only) ===== */
+/* これだけで、以前の font-family 指定に戻します。他への影響なし。 */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a, .menu-panel, .menu-list, .lang-panel {
+  font-family: revert !important;
+}
+
+/* Safari 等で 'revert' が効かない場合のフォールバック */
+@supports not (font-family: revert) {
+  html, body,
+  button, input, select, textarea, summary, details,
+  nav, a, .menu-panel, .menu-list, .lang-panel {
+    font-family: inherit !important;
+  }
+}
+/* ==== revert fonts: fall back to the site's original stack ==== */
+/* 以前の「--font-jp を強制」より後ろで、元の指定に戻す */
+:root { --font-jp: initial; } /* 念のため無効化 */
+
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* ← メインCSSの指定へ“原状回復” */
+}
+/* === REVERT: フォントは元の style.css に戻す（こちらの強制指定を無効化） === */
+html, body,
+button, input, select, textarea, summary, details,
+.menu-panel, .menu-list, .lang-panel, nav, a {
+  font-family: revert !important; /* 既存の style.css の指定に戻す */
+}
+
+/* iOS が古くて revert 非対応な場合の保険（ほぼ使われません） */
+@supports not (font-family: revert) {
+  html { font-family: inherit !important; }
+  body { font-family: inherit !important; }
+  button, input, select, textarea, summary, details,
+  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
+}
+/* === revert to original JP/OS font stack (override only) === */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
@@ -203,30 +235,27 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* =========================
-   1) ヒーロー見出しの“変な割れ”防止（オンライ↵ンなど）
-   ========================= */
-.no-jp-break{
-  /* 単語内・語中の任意改行を抑止 */
-  word-break: keep-all;
-  overflow-wrap: normal;
-  white-space: normal;
-  line-break: strict;
-}
-@supports (text-wrap: balance){
-  .no-jp-break{ text-wrap: balance; }
+/* === ここから 追記：UXポリッシュ（append-only, safe） =================== */
+
+/* 見出しの禁則・割れ対策（オンライ\nン 等を抑止） */
+h1, .hero h1, .page-title, .hero .lead {
+  word-break: keep-all;        /* 日本語の単語内改行を避ける */
+  overflow-wrap: anywhere;     /* 狭い端末でも箱からはみ出さない */
+  line-break: strict;          /* 句読点ぶらし等の禁則を強める */
+  text-wrap: balance;          /* 対応ブラウザで段落の行分割を最適化 */
 }
 
-/* =========================
-   2) 為替シミュ表の横はみ出し防止（前回導入）
-   ========================= */
-.fx-wrap{
-  overflow-x:auto; -webkit-overflow-scrolling:touch;
-  border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+/* 為替シミュレーション表：ヘッダー固定＆視認性アップ（横スク時に効く） */
+.fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
+.fx-sim thead th{
+  position: sticky; top: 0; z-index: 1;
+  background: #ffffff; /* 下地が透けないよう白で固定 */
 }
-.fx-sim{ min-width:560px; }
-.fx-sim th, .fx-sim td{ white-space:nowrap; }
-.fx-sim th:nth-child(2), .fx-sim td:nth-child(2){ text-align:right; }
-.fx-sim th:nth-child(3), .fx-sim td:nth-child(3){ text-align:right; }
-.fx-sim th:nth-child(4), .fx-sim td:nth-child(4){ text-align:right; }
-.fx-sim th:last-child,  .fx-sim td:last-child{ text-align:right; }
+
+/* 動きに弱い利用者への配慮：アニメ/トランジション最小化 */
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* iOSでのフォーカス輪郭（アクセシブルに・主張し過ぎない） */
+:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
