@@ -360,3 +360,69 @@
     markFxTable();
   }
 })();
+/* === A11y & 微最適化（append-only, safe） ============================= */
+(function(){
+  /* ダイアログのARIAを後付け */
+  const menuPanel = document.getElementById('menuDrawer');
+  const langPanel = document.getElementById('langDrawer');
+  if (menuPanel){ menuPanel.setAttribute('role','dialog'); menuPanel.setAttribute('aria-modal','true'); menuPanel.setAttribute('aria-label','目次（各セクションへ移動）'); }
+  if (langPanel){ langPanel.setAttribute('role','dialog'); langPanel.setAttribute('aria-modal','true'); langPanel.setAttribute('aria-label','Select language'); }
+
+  /* フォーカストラップ（開いている間だけTab移動をパネル内に限定） */
+  const html = document.documentElement;
+  let lastFocus = null;
+
+  function getFocusable(root){
+    return Array.from(root.querySelectorAll(
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+    )).filter(el => el.offsetParent !== null);
+  }
+  function enableTrap(panel){
+    if (!panel) return;
+    const list = getFocusable(panel);
+    if (!list.length) return;
+    const first = list[0], last = list[list.length - 1];
+    panel.__trapHandler = (e)=>{
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    };
+    panel.addEventListener('keydown', panel.__trapHandler);
+    if (!panel.contains(document.activeElement)) first.focus();
+  }
+  function disableTrap(panel){
+    if (panel && panel.__trapHandler){
+      panel.removeEventListener('keydown', panel.__trapHandler);
+      delete panel.__trapHandler;
+    }
+  }
+  function syncTrap(){
+    const mOpen = html.classList.contains('menu-open');
+    const lOpen = html.classList.contains('lang-open');
+    if (mOpen){ lastFocus = document.activeElement; enableTrap(menuPanel); }
+    else { disableTrap(menuPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
+    if (lOpen){ lastFocus = document.activeElement; enableTrap(langPanel); }
+    else { disableTrap(langPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
+  }
+  new MutationObserver(syncTrap).observe(html, {attributes:true, attributeFilter:['class']});
+  window.addEventListener('load', syncTrap, {once:true});
+
+  /* 画像の遅延読込（LCP回避のため最初の1枚は対象外） */
+  try{
+    const imgs = document.querySelectorAll('img');
+    imgs.forEach((img, i)=>{
+      if (i === 0) return;                       // 最初の画像はLCP配慮で除外
+      if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
+      if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+    });
+  }catch(_){}
+
+  /* iOSのダーク切替で配色が崩れないよう宣言を追加 */
+  try{
+    if (!document.querySelector('meta[name="color-scheme"]')){
+      const m = document.createElement('meta');
+      m.name = 'color-scheme'; m.content = 'light dark';
+      document.head.appendChild(m);
+    }
+  }catch(_){}
+})();
