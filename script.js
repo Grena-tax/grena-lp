@@ -1,10 +1,10 @@
-/* ===== script.js (置換用・今回分) ===== */
+/* ===== script.js (11/09 安定版・完全置換用) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止（二重対策） ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（自動停止つき） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -21,7 +21,10 @@
   }
   new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
   window.addEventListener('load', killGoogleBar, {once:true});
-  setInterval(killGoogleBar, 1500);
+  /* 12秒後に監視タイマーを停止（CPU節約） */
+  window.__gtBarTmr = setInterval(killGoogleBar, 1500);
+  setTimeout(()=>{ try{ clearInterval(window.__gtBarTmr); }catch(_){ } }, 12000);
+  document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) killGoogleBar(); });
 
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
@@ -83,13 +86,15 @@
       const h4    = document.createElement('h4');  h4.textContent = secLabel;
       const ul    = document.createElement('ul');  ul.className   ='menu-list';
 
+      /* セクショントップ */
       const liTop = document.createElement('li');
       const aTop  = document.createElement('a');
       aTop.href = `#${secId}`;
-      aTop.textContent = `${secLabel}（トップ）`;
+      aTop.textContent = `${secLabel}`;
       aTop.addEventListener('click', closeMenu);
       liTop.appendChild(aTop); ul.appendChild(liTop);
 
+      /* アコーディオン見出しを項目化 */
       sec.querySelectorAll('.accordion summary').forEach((sum, idx)=>{
         const det   = sum.closest('details'); if (!det) return;
         const label = sanitize(sum.textContent);
@@ -107,8 +112,29 @@
         li.appendChild(a); ul.appendChild(li);
       });
 
-      group.appendChild(h4); group.appendChild(ul); groups.appendChild(group);
+      if (secId !== 'plans') group.appendChild(h4);
+      group.appendChild(ul);
+      groups.appendChild(group);
     });
+
+    /* 余分な "(トップ)" と重複タイトルの削除＋「料金プラン」の見出し非表示 */
+    (function cleanup(){
+      const groups = document.querySelectorAll('#menuGroups .menu-group');
+      groups.forEach(g => {
+        const title = (g.querySelector('h4')?.textContent || '')
+                        .trim().replace(/\s+/g, ' ');
+        g.querySelectorAll('.menu-list a').forEach(a => {
+          const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
+          if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
+            a.closest('li')?.remove();
+          }
+        });
+      });
+      document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
+        const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
+        if (t === '料金プラン') h.remove();
+      });
+    })();
   })();
 
   /* ---------- 3) 言語ドロワー ---------- */
@@ -190,220 +216,125 @@
     }
   };
 
-})();
-
-/* ---- Hamburger: 見出し「料金プラン」を削除（残し） ---- */
-(function () {
-  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
-    if ((h.textContent || '').trim() === '料金プラン') h.remove();
-  });
-})();
-
-/* ==== remove only "（トップ）" items in hamburger ==== */
-(function () {
-  const isTop = /（トップ）\s*$/;
-  document.querySelectorAll('#menuGroups .menu-list li').forEach(li => {
-    const a = li.querySelector('a');
-    if (!a) return;
-    const label = (a.textContent || '').trim();
-    if (isTop.test(label)) li.remove();
-  });
-})();
-
-/* === MENU: （トップ）を消す + ネスト項目を除外して作り直す === */
-(() => {
-  const wrap = document.getElementById('menuGroups');
-  if (!wrap) return;
-
-  const SECTIONS = [
-    ['corp-setup',       '法人設立'],
-    ['plans',            '料金プラン'],
-    ['sole-setup',       '個人事業主（IE/SBS）'],
-    ['personal-account', '個人口座開設（銀行）'],
-    ['disclaimer',       '免責事項・キャンセル'],
-  ];
-
-  const sanitize = s => (s||'').trim().replace(/\s+/g, ' ').slice(0,120);
-  const closeMenu = () => {
-    const html = document.documentElement;
-    html.classList.remove('menu-open');
-    document.getElementById('menuDrawer')?.setAttribute('aria-hidden','true');
-    document.getElementById('menuBtn')?.setAttribute('aria-expanded','false');
-  };
-
-  wrap.innerHTML = '';
-
-  SECTIONS.forEach(([secId, label]) => {
-    const sec = document.getElementById(secId);
-    if (!sec) return;
-
-    const group = document.createElement('div');
-    group.className = 'menu-group';
-
-    if (secId !== 'plans') {
-      const h4 = document.createElement('h4');
-      h4.textContent = label;
-      group.appendChild(h4);
+  /* === A11y & 微最適化（append-only, safe） ============================= */
+  (function(){
+    /* ダイアログARIA（HTMLに既にある場合は上書きせず） */
+    const menuPanel = document.getElementById('menuDrawer')?.querySelector('.menu-panel');
+    const langPanel = document.getElementById('langDrawer')?.querySelector('.lang-panel');
+    if (menuPanel){
+      if (!menuPanel.getAttribute('role')) menuPanel.setAttribute('role','dialog');
+      menuPanel.setAttribute('aria-modal','true');
+      if (!menuPanel.getAttribute('aria-label')) menuPanel.setAttribute('aria-label','目次（各セクションへ移動）');
+    }
+    if (langPanel){
+      if (!langPanel.getAttribute('role')) langPanel.setAttribute('role','dialog');
+      langPanel.setAttribute('aria-modal','true');
+      if (!langPanel.getAttribute('aria-label')) langPanel.setAttribute('aria-label','Select language');
     }
 
-    const ul = document.createElement('ul');
-    ul.className = 'menu-list';
-
-    const liTop = document.createElement('li');
-    const aTop = document.createElement('a');
-    aTop.href = `#${secId}`;
-    aTop.textContent = label;
-    aTop.addEventListener('click', closeMenu);
-    liTop.appendChild(aTop);
-    ul.appendChild(liTop);
-
-    sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx) => {
-      const det = sum.closest('details');
-      if (!det) return;
-
-      if (!det.id) {
-        let id = `${secId}-d-${idx+1}`, n = 2;
-        while (document.getElementById(id)) id = `${secId}-d-${idx+1}-${n++}`;
-        det.id = id;
+    /* フォーカストラップ（開いている間だけTab移動をパネル内に限定） */
+    let lastFocus = null;
+    function getFocusable(root){
+      return Array.from(root.querySelectorAll(
+        'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+      )).filter(el => el.offsetParent !== null);
+    }
+    function enableTrap(panel){
+      if (!panel) return;
+      const list = getFocusable(panel);
+      if (!list.length) return;
+      const first = list[0], last = list[list.length - 1];
+      panel.__trapHandler = (e)=>{
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      };
+      panel.addEventListener('keydown', panel.__trapHandler);
+      if (!panel.contains(document.activeElement)) first.focus();
+    }
+    function disableTrap(panel){
+      if (panel && panel.__trapHandler){
+        panel.removeEventListener('keydown', panel.__trapHandler);
+        delete panel.__trapHandler;
       }
+    }
+    function syncTrap(){
+      const mOpen = html.classList.contains('menu-open');
+      const lOpen = html.classList.contains('lang-open');
+      if (mOpen){ lastFocus = document.activeElement; enableTrap(menuPanel); }
+      else { disableTrap(menuPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
+      if (lOpen){ lastFocus = document.activeElement; enableTrap(langPanel); }
+      else { disableTrap(langPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
+    }
+    new MutationObserver(syncTrap).observe(html, {attributes:true, attributeFilter:['class']});
+    window.addEventListener('load', syncTrap, {once:true});
 
-      const li = document.createElement('li');
-      const a  = document.createElement('a');
-      a.href = `#${det.id}`;
-      a.textContent = sanitize(sum.textContent);
-      a.addEventListener('click', () => { det.open = true; closeMenu(); });
-      li.appendChild(a);
-      ul.appendChild(li);
-    });
-
-    group.appendChild(ul);
-    wrap.appendChild(group);
-  });
-
-  document.querySelectorAll('#menuGroups a').forEach(a => {
-    a.textContent = a.textContent.replace(/（トップ）/g, '');
-  });
-})();
-
-/* === hamburger cleanup: remove "(トップ)" and duplicated group-title items === */
-(function () {
-  const groups = document.querySelectorAll('#menuGroups .menu-group');
-
-  groups.forEach(g => {
-    const title = (g.querySelector('h4')?.textContent || '')
-                    .trim().replace(/\s+/g, ' ');
-    const links = g.querySelectorAll('.menu-list a');
-
-    links.forEach(a => {
-      const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
-      if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
-        a.closest('li')?.remove();
-      }
-    });
-  });
-
-  document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
-    const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
-    if (t === '料金プラン') h.remove();
-  });
-})();
-
-/* === ここから為替表の横はみ出し対策（既存） === */
-(function () {
-  function markFxTable(){
+    /* 画像の遅延読込（LCP回避のため最初の1枚は対象外） */
     try{
-      document.querySelectorAll('table').forEach(tbl=>{
-        if (tbl.classList.contains('fx-sim')) return;
-
-        const heads = Array.from(
-          tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
-        ).map(th => (th.textContent || '').trim());
-
-        const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
-        const hit  = need.every(k => heads.some(h => h.includes(k)));
-        if (!hit) return;
-
-        tbl.classList.add('fx-sim');
-
-        if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
-          const wrap = document.createElement('div');
-          wrap.className = 'fx-wrap';
-          tbl.parentNode.insertBefore(wrap, tbl);
-          wrap.appendChild(tbl);
-        }
+      const imgs = document.querySelectorAll('img');
+      imgs.forEach((img, i)=>{
+        if (i === 0) return;                       // 最初の画像はLCP配慮で除外
+        if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
+        if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
       });
     }catch(_){}
-  }
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', markFxTable);
-  }else{
-    markFxTable();
-  }
-})();
 
-/* === A11y & 微最適化（append-only, safe） ============================= */
-(function(){
-  /* ダイアログのARIAを後付け */
-  const menuPanel = document.getElementById('menuDrawer');
-  const langPanel = document.getElementById('langDrawer');
-  if (menuPanel){ menuPanel.setAttribute('role','dialog'); menuPanel.setAttribute('aria-modal','true'); menuPanel.setAttribute('aria-label','目次（各セクションへ移動）'); }
-  if (langPanel){ langPanel.setAttribute('role','dialog'); langPanel.setAttribute('aria-modal','true'); langPanel.setAttribute('aria-label','Select language'); }
+    /* iOSのダーク切替で配色が崩れないよう宣言を追加（ライト固定） */
+    try{
+      if (!document.querySelector('meta[name="color-scheme"]')){
+        const m = document.createElement('meta');
+        m.name = 'color-scheme'; m.content = 'light';
+        document.head.appendChild(m);
+      }
+    }catch(_){}
+  })();
 
-  /* フォーカストラップ（開いている間だけTab移動をパネル内に限定） */
-  const html = document.documentElement;
-  let lastFocus = null;
-
-  function getFocusable(root){
-    return Array.from(root.querySelectorAll(
-      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
-    )).filter(el => el.offsetParent !== null);
-  }
-  function enableTrap(panel){
-    if (!panel) return;
-    const list = getFocusable(panel);
-    if (!list.length) return;
-    const first = list[0], last = list[list.length - 1];
-    panel.__trapHandler = (e)=>{
-      if (e.key !== 'Tab') return;
-      if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-    };
-    panel.addEventListener('keydown', panel.__trapHandler);
-    if (!panel.contains(document.activeElement)) first.focus();
-  }
-  function disableTrap(panel){
-    if (panel && panel.__trapHandler){
-      panel.removeEventListener('keydown', panel.__trapHandler);
-      delete panel.__trapHandler;
+  /* === 4) 法務系“文言”の自動挿入（本文に軽く追記／二重挿入防止） === */
+  (function legalPatches(){
+    function insertOnceBefore(target, key, node){
+      if (!target) return;
+      const parent = target.parentNode;
+      if (!parent || parent.dataset[key]) return;
+      parent.insertBefore(node, target);
+      parent.dataset[key] = '1';
     }
-  }
-  function syncTrap(){
-    const mOpen = html.classList.contains('menu-open');
-    const lOpen = html.classList.contains('lang-open');
-    if (mOpen){ lastFocus = document.activeElement; enableTrap(menuPanel); }
-    else { disableTrap(menuPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
-    if (lOpen){ lastFocus = document.activeElement; enableTrap(langPanel); }
-    else { disableTrap(langPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
-  }
-  new MutationObserver(syncTrap).observe(html, {attributes:true, attributeFilter:['class']});
-  window.addEventListener('load', syncTrap, {once:true});
+    function makeNote(htmlStr){
+      const p = document.createElement('p');
+      p.className = 'text-sm muted';
+      p.style.margin = '6px 0';
+      p.innerHTML = htmlStr;
+      return p;
+    }
 
-  /* 画像の遅延読込（LCP回避のため最初の1枚は対象外） */
-  try{
-    const imgs = document.querySelectorAll('img');
-    imgs.forEach((img, i)=>{
-      if (i === 0) return;
-      if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
-      if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
+    /* a) 為替シミュレーション表の直上に非勧誘ディスクレーマを自動追記 */
+    $$('#personal-account details').forEach(det=>{
+      const sumTxt = (det.querySelector('summary')?.textContent || '').trim();
+      if (/リスクと為替の考え方/.test(sumTxt)){
+        const firstTable = det.querySelector('.content table');
+        if (firstTable){
+          const p = makeNote('<strong>※重要：</strong> 下表は特定条件に基づく仮定例であり、金融商品の勧誘・媒介・助言ではありません。金利・為替・税制は変動し、将来の成果は保証されません。');
+          insertOnceBefore(firstTable, 'disc_fx_once', p);
+        }
+      }
+      if (/複利の力/.test(sumTxt)){
+        const firstTable = det.querySelector('.content table');
+        if (firstTable){
+          const p = makeNote('<strong>※参考：</strong> 以下は単純計算の目安です。税・為替・商品条件により実績は異なります。投資判断はご自身で行い、必要に応じて有資格者へご相談ください。');
+          insertOnceBefore(firstTable, 'disc_comp_once', p);
+        }
+      }
     });
-  }catch(_){}
 
-  /* iOSのダーク切替で配色が崩れないよう宣言を追加（ライト固定） */
-  try{
-    if (!document.querySelector('meta[name="color-scheme"]')){
-      const m = document.createElement('meta');
-      m.name = 'color-scheme'; m.content = 'light';
-      document.head.appendChild(m);
+    /* b) フッターに「やらないことリスト」を1行だけ追記（存在チェック） */
+    const foot = document.querySelector('footer.site-foot');
+    if (foot && !foot.querySelector('.foot-policyline')){
+      const line = document.createElement('small');
+      line.className = 'foot-policyline';
+      line.style.display = 'block';
+      line.style.marginTop = '6px';
+      line.innerHTML = '【やらないこと】銀行口座の<strong>代理開設</strong>・<strong>送金指示</strong>・<strong>投資助言</strong>は行いません。';
+      foot.appendChild(line);
     }
-  }catch(_){}
+  })();
+
 })();
