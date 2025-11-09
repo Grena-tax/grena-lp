@@ -23,26 +23,6 @@
   window.addEventListener('load', killGoogleBar, {once:true});
   setInterval(killGoogleBar, 1500);
 
-  /* ---------- 0.5) 見出しの不自然な改行を抑止（オンライ↵ン等） ---------- */
-  (function fixHeroHeading(){
-    function patch(el){
-      if (!el || el.dataset.jpFixed) return;
-      const raw = el.textContent || '';
-      if (!raw) return;
-      // 区切り記号の直後だけ改行を許可（ZWSPを注入）
-      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
-      // DOMにテキストのみが入っている前提（他ノードは触らない）
-      el.textContent = '';            // 一旦クリア
-      el.insertAdjacentText('afterbegin', withBreakPoints);
-      el.classList.add('no-jp-break'); // CSSで語中改行を抑止
-      el.dataset.jpFixed = '1';
-    }
-    const targets = $$('main h1, main h2'); // ヒーロー周りのみ
-    targets.forEach(patch);
-    // 翻訳等で書き換わった場合に再適用
-    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
-  })();
-
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
   const menuDrawer   = $('#menuDrawer');
@@ -243,7 +223,7 @@
     ['disclaimer',       '免責事項・キャンセル'],
   ];
 
-  const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
+  const sanitize = s => (s||'').trim().replace(/\s+/g, ' ').slice(0,120);
   const closeMenu = () => {
     const html = document.documentElement;
     html.classList.remove('menu-open');
@@ -360,6 +340,7 @@
     markFxTable();
   }
 })();
+
 /* === A11y & 微最適化（append-only, safe） ============================= */
 (function(){
   /* ダイアログのARIAを後付け */
@@ -411,17 +392,17 @@
   try{
     const imgs = document.querySelectorAll('img');
     imgs.forEach((img, i)=>{
-      if (i === 0) return;                       // 最初の画像はLCP配慮で除外
+      if (i === 0) return;
       if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
       if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
     });
   }catch(_){}
 
-  /* iOSのダーク切替で配色が崩れないよう宣言を追加 */
+  /* iOSのダーク切替で配色が崩れないよう宣言を追加（ライト固定） */
   try{
     if (!document.querySelector('meta[name="color-scheme"]')){
       const m = document.createElement('meta');
-      m.name = 'color-scheme'; m.content = 'light dark';
+      m.name = 'color-scheme'; m.content = 'light';
       document.head.appendChild(m);
     }
   }catch(_){}
