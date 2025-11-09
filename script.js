@@ -1,41 +1,24 @@
-/* ===== script.js (11/09 Strict・完全置換) ===== */
+/* ===== script.js (11/09 SAFE・完全置換) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* === 安全スイッチ（必要に応じて true/false を変更） ===================== */
-  const NO_DELETE           = true;  // メニューの「(トップ)」等の“削除/非表示”をしない
-  const HIDE_GOOGLE_BAR     = true;  // Google青バナー/吹き出しを消す（falseで何もしない）
-  const INSERT_LEGAL_NOTES  = true;  // 注意文/フッターの1行を自動追加（falseで追加しない）
-
-  /* ---------- 0) Google青バナー/吹き出しの抑止（任意） ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（非破壊：非表示のみ） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
-      const ids = ['goog-gt-tt','google_translate_element'];
-      ids.forEach(id=>{
-        const el = document.getElementById(id);
-        if (el && id==='goog-gt-tt'){
-          // “削除”ではなく非表示で十分：より非破壊に
-          el.style.display='none';
-        }
-      });
+      const tt = document.getElementById('goog-gt-tt');
+      if (tt){ tt.style.display = 'none'; }
       const ifr = document.querySelector('iframe.goog-te-banner-frame');
-      if (ifr){ ifr.style.display='none'; }
+      if (ifr){ ifr.style.display = 'none'; }
       const showing = !!ifr && ifr.offsetHeight > 0;
       html.classList.toggle('gtbar', !!showing);
     }catch(_){}
   }
-  if (HIDE_GOOGLE_BAR){
-    const obs = new MutationObserver(killGoogleBar);
-    obs.observe(document.documentElement,{childList:true,subtree:true});
-    window.addEventListener('load', killGoogleBar, {once:true});
-    // 負荷を抑えるため一定時間で監視ループを緩める
-    window.__gtBarTmr = setInterval(killGoogleBar, 1500);
-    setTimeout(()=>{ try{ clearInterval(window.__gtBarTmr); }catch(_){ } }, 12000);
-    document.addEventListener('visibilitychange', ()=>{ if (!document.hidden) killGoogleBar(); });
-  }
+  new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
+  window.addEventListener('load', killGoogleBar, {once:true});
+  setInterval(killGoogleBar, 1500);
 
   /* ---------- 1) ハンバーガー開閉 ---------- */
   const menuBtn      = $('#menuBtn');
@@ -56,7 +39,7 @@
   menuClose && menuClose.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 
-  /* ---------- 2) 目次（各セクション＋全summaryを自動生成） ---------- */
+  /* ---------- 2) 目次（各セクション＋全summaryを自動生成｜削除は一切しない） ---------- */
   (function buildMenu(){
     const groups = $('#menuGroups');
     if (!groups) return;
@@ -97,7 +80,7 @@
       const h4    = document.createElement('h4');  h4.textContent = secLabel;
       const ul    = document.createElement('ul');  ul.className   ='menu-list';
 
-      // セクション先頭へのリンク（削除しない）
+      // セクション先頭リンク（「（トップ）」は付けず、テキスト変更もしない）
       const liTop = document.createElement('li');
       const aTop  = document.createElement('a');
       aTop.href = `#${secId}`;
@@ -123,34 +106,11 @@
         li.appendChild(a); ul.appendChild(li);
       });
 
-      // 見出しは常に残す（NO_DELETE の意図）
-      group.appendChild(h4);
-      group.appendChild(ul);
-      groups.appendChild(group);
+      group.appendChild(h4); group.appendChild(ul); groups.appendChild(group);
     });
-
-    // ★STRICT：いかなる“削除・非表示のクリーンアップ”も行わない
-    if (!NO_DELETE){
-      (function cleanup(){
-        const groups = document.querySelectorAll('#menuGroups .menu-group');
-        groups.forEach(g => {
-          const title = (g.querySelector('h4')?.textContent || '').trim().replace(/\s+/g, ' ');
-          g.querySelectorAll('.menu-list a').forEach(a => {
-            const txt = (a.textContent || '').trim().replace(/\s+/g, ' ');
-            if (/（トップ）$|\(トップ\)$/.test(txt) || (title && txt === title)) {
-              a.closest('li')?.remove();
-            }
-          });
-        });
-        document.querySelectorAll('#menuGroups .menu-group h4').forEach(h => {
-          const t = (h.textContent || '').trim().replace(/\s+/g, ' ');
-          if (t === '料金プラン') h.remove();
-        });
-      })();
-    }
   })();
 
-  /* ---------- 3) 言語ドロワー ---------- */
+  /* ---------- 3) 言語ドロワー（ウィジェット不在時はフォールバック） ---------- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -172,36 +132,48 @@
   document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeLang(); });
 
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
+  const LANG_FALLBACK = ['en','zh-CN','zh-TW','ko','es','fr','de','pt','ru','id','hi','ar','tr','th','vi'];
 
-  function buildLangList(){
+  function currentHost(){
+    try{ return location.hostname.replace(/^www\./,''); }catch(_){ return ''; }
+  }
+  function setGoogTransCookie(dst){
+    const host = currentHost();
+    const val  = `/ja/${dst}`;
+    const attrs = `; path=/`;
+    document.cookie = `googtrans=${val}${attrs}`;
+    if (host){
+      document.cookie = `googtrans=${val}${attrs}; domain=.${host}`;
+      document.cookie = `googtrans=${val}${attrs}; domain=${host}`;
+    }
+  }
+  function applyLanguage(code){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (!sel || !langList){ setTimeout(buildLangList, 200); return; }
+    if (sel){
+      sel.value = code;
+      sel.dispatchEvent(new Event('change', {bubbles:true}));
+      killGoogleBar();
+      closeLang();
+      return;
+    }
+    // フォールバック：cookie→再読込で適用
+    setGoogTransCookie(code);
+    location.reload();
+  }
 
-    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
-    const items = Array.from(sel.options)
-      .filter(o => o.value && o.value !== 'auto')
-      .map(o => {
-        const code = o.value.trim();
-        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
-        return {code, name};
-      })
-      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
-
+  function fillList(items){
+    if (!langList) return;
     langList.innerHTML = '';
     const frag = document.createDocumentFragment();
+    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
+    const curCode = (curCookie.split('/').pop() || '').toLowerCase();
+
     items.forEach(({code,name})=>{
       const el = document.createElement('div');
-      el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
+      el.className = 'ls-item' + (curCode === code.toLowerCase() ? ' ls-active' : '');
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
-      el.addEventListener('click', ()=>{
-        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (!sel) return;
-        sel.value = code;
-        sel.dispatchEvent(new Event('change', {bubbles:true}));
-        closeLang();
-        if (HIDE_GOOGLE_BAR) killGoogleBar();
-      });
+      el.addEventListener('click', ()=> applyLanguage(code));
       frag.appendChild(el);
     });
     langList.appendChild(frag);
@@ -218,137 +190,78 @@
     }
   }
 
+  function buildFromSelect(){
+    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+    if (!sel) return false;
+    const items = Array.from(sel.options)
+      .filter(o => o.value && o.value !== 'auto')
+      .map(o => {
+        const code = o.value.trim();
+        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
+        return {code, name};
+      })
+      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
+    fillList(items);
+    return true;
+  }
+  function buildFallback(){
+    const items = LANG_FALLBACK.map(code=>{
+      const name = (dn && dn.of(code)) || code;
+      return {code, name};
+    });
+    fillList(items);
+  }
+  function buildLangList(){
+    let tries = 0;
+    const tmr = setInterval(()=>{
+      tries++;
+      if (buildFromSelect()){ clearInterval(tmr); return; }
+      if (tries >= 10){ clearInterval(tmr); buildFallback(); }
+    }, 300);
+  }
+
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     }catch(_){}
-    setTimeout(buildLangList, 600);
+    setTimeout(buildLangList, 300);
     const host = $('#google_translate_element');
     if (host){
       new MutationObserver(()=>setTimeout(buildLangList,0)).observe(host,{childList:true,subtree:true});
     }
   };
 
-  /* === A11y & 微最適化（append-only） ============================= */
-  (function(){
-    const menuPanel = document.getElementById('menuDrawer')?.querySelector('.menu-panel');
-    const langPanel = document.getElementById('langDrawer')?.querySelector('.lang-panel');
-    if (menuPanel){
-      if (!menuPanel.getAttribute('role')) menuPanel.setAttribute('role','dialog');
-      menuPanel.setAttribute('aria-modal','true');
-      if (!menuPanel.getAttribute('aria-label')) menuPanel.setAttribute('aria-label','目次（各セクションへ移動）');
-    }
-    if (langPanel){
-      if (!langPanel.getAttribute('role')) langPanel.setAttribute('role','dialog');
-      langPanel.setAttribute('aria-modal','true');
-      if (!langPanel.getAttribute('aria-label')) langPanel.setAttribute('aria-label','Select language');
-    }
+  /* ---------- 4) 為替表の横はみ出し対策（非破壊） ---------- */
+  (function () {
+    function markFxTable(){
+      try{
+        document.querySelectorAll('table').forEach(tbl=>{
+          if (tbl.classList.contains('fx-sim')) return;
 
-    // フォーカストラップ
-    let lastFocus = null;
-    function getFocusable(root){
-      return Array.from(root.querySelectorAll(
-        'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
-      )).filter(el => el.offsetParent !== null);
-    }
-    function enableTrap(panel){
-      if (!panel) return;
-      const list = getFocusable(panel);
-      if (!list.length) return;
-      const first = list[0], last = list[list.length - 1];
-      panel.__trapHandler = (e)=>{
-        if (e.key !== 'Tab') return;
-        if (e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
-      };
-      panel.addEventListener('keydown', panel.__trapHandler);
-      if (!panel.contains(document.activeElement)) first.focus();
-    }
-    function disableTrap(panel){
-      if (panel && panel.__trapHandler){
-        panel.removeEventListener('keydown', panel.__trapHandler);
-        delete panel.__trapHandler;
-      }
-    }
-    function syncTrap(){
-      const mOpen = html.classList.contains('menu-open');
-      const lOpen = html.classList.contains('lang-open');
-      if (mOpen){ lastFocus = document.activeElement; enableTrap(menuPanel); }
-      else { disableTrap(menuPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
-      if (lOpen){ lastFocus = document.activeElement; enableTrap(langPanel); }
-      else { disableTrap(langPanel); if (lastFocus) try{ lastFocus.focus(); }catch(_){} }
-    }
-    new MutationObserver(syncTrap).observe(html, {attributes:true, attributeFilter:['class']});
-    window.addEventListener('load', syncTrap, {once:true});
+          const heads = Array.from(
+            tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
+          ).map(th => (th.textContent || '').trim());
 
-    // 画像の遅延読込（LCP配慮：最初の1枚は除外）
-    try{
-      const imgs = document.querySelectorAll('img');
-      imgs.forEach((img, i)=>{
-        if (i === 0) return;
-        if (!img.hasAttribute('loading'))  img.setAttribute('loading','lazy');
-        if (!img.hasAttribute('decoding')) img.setAttribute('decoding','async');
-      });
-    }catch(_){}
+          const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
+          const hit  = need.every(k => heads.some(h => h.includes(k)));
+          if (!hit) return;
 
-    // iOSのダーク自動切替の影響を抑止
-    try{
-      if (!document.querySelector('meta[name="color-scheme"]')){
-        const m = document.createElement('meta');
-        m.name = 'color-scheme'; m.content = 'light';
-        document.head.appendChild(m);
-      }
-    }catch(_){}
+          tbl.classList.add('fx-sim');
+
+          if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
+            const wrap = document.createElement('div');
+            wrap.className = 'fx-wrap';
+            tbl.parentNode.insertBefore(wrap, tbl);
+            wrap.appendChild(tbl);
+          }
+        });
+      }catch(_){}
+    }
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', markFxTable);
+    }else{
+      markFxTable();
+    }
   })();
-
-  /* === 4) 法務系“文言”の自動挿入（append-only／任意） === */
-  if (INSERT_LEGAL_NOTES){
-    (function legalPatches(){
-      function insertOnceBefore(target, key, node){
-        if (!target) return;
-        const parent = target.parentNode;
-        if (!parent || parent.dataset[key]) return;
-        parent.insertBefore(node, target);
-        parent.dataset[key] = '1';
-      }
-      function makeNote(htmlStr){
-        const p = document.createElement('p');
-        p.className = 'text-sm muted';
-        p.style.margin = '6px 0';
-        p.innerHTML = htmlStr;
-        return p;
-      }
-
-      // a) 「リスクと為替の考え方」/「複利の力」だけに注意文を“追加”
-      $$('#personal-account details').forEach(det=>{
-        const sumTxt = (det.querySelector('summary')?.textContent || '').trim();
-        if (/リスクと為替の考え方/.test(sumTxt)){
-          const firstTable = det.querySelector('.content table');
-          if (firstTable){
-            const p = makeNote('<strong>※重要：</strong> 下表は特定条件に基づく仮定例であり、金融商品の勧誘・媒介・助言ではありません。金利・為替・税制は変動し、将来の成果は保証されません。');
-            insertOnceBefore(firstTable, 'disc_fx_once', p);
-          }
-        }
-        if (/複利の力/.test(sumTxt)){
-          const firstTable = det.querySelector('.content table');
-          if (firstTable){
-            const p = makeNote('<strong>※参考：</strong> 以下は単純計算の目安です。税・為替・商品条件により実績は異なります。投資判断はご自身で行い、必要に応じて有資格者へご相談ください。');
-            insertOnceBefore(firstTable, 'disc_comp_once', p);
-          }
-        }
-      });
-
-      // b) フッター末尾に1行“追加”（既にあれば何もしない）
-      const foot = document.querySelector('footer.site-foot');
-      if (foot && !foot.querySelector('.foot-policyline')){
-        const line = document.createElement('small');
-        line.className = 'foot-policyline';
-        line.style.display = 'block';
-        line.style.marginTop = '6px';
-        line.innerHTML = '【やらないこと】銀行口座の<strong>代理開設</strong>・<strong>送金指示</strong>・<strong>投資助言</strong>は行いません。';
-        foot.appendChild(line);
-      }
-    })();
-  }
 
 })();
