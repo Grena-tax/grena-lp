@@ -1,9 +1,9 @@
-/* ===== patch.css（完全置換版 v2）========================================
+/* ===== patch.css（完全置換版 v3：見出し統一＋翻訳復旧）====================
  * 変更点（最小差分）
  * - FIX-001: #corp-setup 内で .accordion の直前にある重複見出しだけ非表示
- * - FIX-002: Google翻訳ウィジェットの pointer-events を許可（JS操作のため）
- * - ※アコーディオン本体は非表示にしない（details は触らない）
- * ===================================================================== */
+ * - FIX-002: 「地球アイコン」押下時に Google翻訳ウィジェットを画面内に表示
+ * - FIX-003: .accordion直前見出しの文字サイズを全ページで統一
+ * ======================================================================= */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -162,9 +162,10 @@ html.lang-open .lang-panel{transform:none;opacity:1}
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
+/* 公式ウィジェット自体は通常は画面外へ退避 */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;
-  pointer-events:auto !important; /* FIX-002: JSからの操作を許可 */
+  pointer-events:auto !important;
 }
 /* 青バーが出た端末向けのバッファ */
 html.gtbar body{ padding-top:44px; }
@@ -231,33 +232,41 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 }
 
 /* === ここから：UXポリッシュ（append-only, safe） =================== */
-/* 見出しの禁則・割れ対策（オンライ\nン 等を抑止） */
 h1, .hero h1, .page-title, .hero .lead {
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-break: strict;
   text-wrap: balance;
 }
-/* 為替シミュレーション表：横スク時にヘッダー固定 */
 .fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
 .fx-sim thead th{
   position: sticky; top: 0; z-index: 1;
   background: #ffffff;
 }
-/* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
-/* フォーカス輪郭（控えめに可視化） */
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-
-/* ヒーロー見出しなどで完全に改行させたくない語がある場合に使用 */
 .nowrap { white-space: nowrap; }
-
-/* 既に定義済みの .text-sm / .muted を使うため新規スタイルは最小限 */
-
 
 /* === FIX-001: #corp-setup 直下の重複見出しのみ非表示（アコーディオンは残す） === */
 #corp-setup > :is(h1,h2,h3):has(+ .accordion){
   display: none !important;
 }
+
+/* === FIX-003: .accordion 直前の見出しサイズを統一（ページ全体） === */
+:is(h1,h2,h3):has(+ .accordion){
+  font-size: clamp(20px, 5.6vw, 22px) !important;
+  line-height: 1.28 !important;
+  margin: 0 0 .8rem !important;
+  font-weight: 800 !important;
+}
+
+/* === FIX-002: 言語選択できない暫定対処（公式ウィジェットを表示） === */
+html.lang-open #google_translate_element{
+  position: fixed; top: calc(64px + var(--safe-top)); right: calc(10px + var(--safe-right));
+  left: auto; width: auto; height: auto; opacity: 1 !important;
+  pointer-events: auto !important; z-index: 10005;
+}
+/* 自作の空パネルは隠す（二重UI防止） */
+html.lang-open .lang-panel{ display: none !important; }
