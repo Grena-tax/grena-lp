@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版）===== */
+/* ===== patch.css（完全置換）===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -6,7 +6,7 @@
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+  --menu-head-h: 56px;
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -62,15 +62,14 @@ th:first-child,td:first-child{text-align:left}
 }
 .menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
 
-/* --- ハンバーガー本体（被り根絶・縦分割） --- */
+/* --- ハンバーガー本体 --- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
 .menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
 .menu-panel{
   position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
   background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
   box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38;
-  display:flex;flex-direction:column;
+  font-size:14px;line-height:1.38;display:flex;flex-direction:column;
 }
 .menu-head{
   display:flex;align-items:center;justify-content:space-between;gap:8px;
@@ -113,7 +112,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
 .btn.success{background:#10b981;color:#fff}
 .btn:hover{opacity:.92}
 
-/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
+/* --- 言語スイッチ --- */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
   right:calc(10px + var(--safe-right) + 48px + 10px);
@@ -151,19 +150,17 @@ html.lang-open .lang-backdrop{opacity:1}
 html.lang-open .lang-panel{transform:none;opacity:1}
 @media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
 
-/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
+/* --- Google翻訳の青バナー非表示 --- */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
-/* 公式ウィジェット自体は画面外へ退避（JSが操作する） */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
 }
-/* 青バーが出た端末向けのバッファ */
 html.gtbar body{ padding-top:44px; }
 
-/* --- フッターは常に黒（翻訳で白化しない） --- */
+/* --- フッター --- */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
   background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
@@ -175,17 +172,17 @@ html.gtbar body{ padding-top:44px; }
 .site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
 @media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
+/* --- アンカー停止位置 --- */
 section[id], details[id]{ scroll-margin-top: 70px; }
 
-/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避） --- */
+/* --- スマホ時の上辺マージン --- */
 @media (max-width: 480px){
   .menu-panel{ width:58vw; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
 
-/* ===== フォントの原状回復（サイト既定に戻す） ===== */
+/* ===== フォント原状回復 ===== */
 html, body,
 button, input, select, textarea, summary, details,
 nav, a, .menu-panel, .menu-list, .lang-panel {
@@ -202,55 +199,35 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 html, body,
 button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-@supports not (font-family: revert) {
-  html { font-family: inherit !important; }
-  body { font-family: inherit !important; }
-  button, input, select, textarea, summary, details,
-  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
-}
-html, body,
-button, input, select, textarea, summary, details,
-nav, a, .menu-panel, .menu-list, .lang-panel {
   font-family: -apple-system, BlinkMacSystemFont,
                "Hiragino Sans", "Hiragino Kaku Gothic ProN",
                "Yu Gothic", Meiryo, "Noto Sans JP",
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* === ここから：UXポリッシュ（append-only, safe） =================== */
-/* 見出しの禁則・割れ対策（オンライ\nン 等を抑止） */
+/* === UXポリッシュ（安全） === */
 h1, .hero h1, .page-title, .hero .lead {
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-break: strict;
   text-wrap: balance;
 }
-/* 為替シミュレーション表：横スク時にヘッダー固定 */
 .fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
 .fx-sim thead th{
-  position: sticky; top: 0; z-index: 1;
-  background: #ffffff;
+  position: sticky; top: 0; z-index: 1; background: #ffffff;
 }
-/* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
-/* フォーカス輪郭（控えめに可視化） */
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-/* === 追記：必要最小限・他要素に干渉しないクラス === */
-
-/* ヒーロー見出しなどで完全に改行させたくない語がある場合に使用 */
 .nowrap { white-space: nowrap; }
 
-/* 既に定義済みの .text-sm / .muted を使うため新規スタイルは最小限 */
+/* === ここがポイント：最上段の重複見出しだけ非表示（アコーディオンは残す） === */
+/* 「冒頭で連続して並ぶ2つの見出し」のうち、先頭だけを隠す */
+main > :is(h1,h2):first-child:has(+ :is(h1,h2)),
+main > :is(section,div):first-child > :is(h1,h2):first-child:has(+ :is(h1,h2)),
+body > :is(h1,h2):first-of-type:has(+ :is(h1,h2)),
+body > :is(div,section):first-child > :is(h1,h2):first-child:has(+ :is(h1,h2))
+{ display:none !important; }
 
-
-/* === 2025-11-11 fix: #corp-setup の最初のdetails（見出しと重複する要約）を非表示 === */
-#corp-setup .accordion > details:first-of-type { display: none !important; }
+/* ※ 以前の「#corp-setup .accordion > details:first-of-type { display:none }」は入れていません */
