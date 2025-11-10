@@ -1,4 +1,4 @@
-/* ===== script.js (2025-11-09 no-top-links) ===== */
+/* ===== script.js (2025-11-10 final) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
@@ -86,8 +86,8 @@
 
     function closeMenuSoft(){
       html.classList.remove('menu-open');
-      menuDrawer?.setAttribute('aria-hidden','true');
-      menuBtn?.setAttribute('aria-expanded','false');
+      menuDrawer && menuDrawer.setAttribute('aria-hidden','true');
+      menuBtn && menuBtn.setAttribute('aria-expanded','false');
     }
 
     wrap.innerHTML = '';
@@ -109,9 +109,12 @@
       const ul = document.createElement('ul');
       ul.className = 'menu-list';
 
-      // ★トップ項目（=セクション名リンク）は生成しない
-      // サマリー項目のみ列挙
-      sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx)=>{
+      // :scopeフォールバック
+      const scopeOK = (window.CSS && CSS.supports && CSS.supports('selector(:scope)'));
+      const selector = (scopeOK ? ':scope ' : '') + '.accordion > details > summary';
+
+      // トップ項目は作らず、サマリーのみ列挙
+      sec.querySelectorAll(selector).forEach((sum, idx)=>{
         const det = sum.closest('details'); if (!det) return;
         const id  = ensureId(det, secId, sum.textContent, idx);
 
@@ -173,6 +176,10 @@
       el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
+      // ★キーボード操作を保証
+      el.tabIndex = 0;
+      el.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); el.click(); } });
+
       el.addEventListener('click', ()=>{
         const sel = document.querySelector('#google_translate_element select.goog-te-combo');
         if (!sel) return;
@@ -210,7 +217,45 @@
 
 })();
 
-/* === ここから為替表の横はみ出し対策（既存） === */
+/* === 追加: フォーカストラップ（menu/lang）=== */
+(function(){
+  const html = document.documentElement;
+  const FOCUS = 'a,button,input,select,textarea,[tabindex]:not([tabindex="-1"])';
+  let releaseMenu=null, releaseLang=null;
+
+  const trap = (root) =>{
+    const prev = document.activeElement;
+    const onKey = (e)=>{
+      if(e.key!=='Tab') return;
+      const list = Array.from(root.querySelectorAll(FOCUS))
+        .filter(el=>!el.disabled && el.offsetParent!==null);
+      if(!list.length) return;
+      const first=list[0], last=list[list.length-1];
+      if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    };
+    root.addEventListener('keydown', onKey);
+    (root.querySelector(FOCUS)||root).focus();
+    return ()=>{ root.removeEventListener('keydown', onKey); prev && prev.focus(); };
+  };
+
+  const obs = new MutationObserver(()=>{
+    const menuOpen = html.classList.contains('menu-open');
+    const langOpen = html.classList.contains('lang-open');
+
+    const menuPanel = document.getElementById('menuDrawer');
+    const langPanel = document.getElementById('langDrawer');
+
+    if(menuOpen && !releaseMenu && menuPanel) releaseMenu = trap(menuPanel);
+    if(!menuOpen && releaseMenu){ releaseMenu(); releaseMenu=null; }
+
+    if(langOpen && !releaseLang && langPanel) releaseLang = trap(langPanel);
+    if(!langOpen && releaseLang){ releaseLang(); releaseLang=null; }
+  });
+  obs.observe(html, { attributes:true, attributeFilter:['class'] });
+})();
+
+/* === 為替表の横はみ出し対策（既存） === */
 (function () {
   function markFxTable(){
     try{
