@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版 2025-11-10a）===== */
+/* ===== patch.css（完全置換版）===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -107,7 +107,7 @@ html.menu-open,html.menu-open body{overflow:hidden}
   padding-bottom:var(--safe-bottom)
 }
 .fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid transparent;text-decoration:none;white-space:nowrap;cursor:pointer}
+.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
 .btn.neutral{background:#e5e7eb;color:#111827}
 .btn.secondary{background:#1f2937;color:#fff}
 .btn.success{background:#10b981;color:#fff}
@@ -244,9 +244,13 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 /* フォーカス輪郭（控えめに可視化） */
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-
-/* アクセシビリティ用：画面非表示テキスト */
-.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+/* === 追記：必要最小限・他要素に干渉しないクラス === */
 
 /* ヒーロー見出しなどで完全に改行させたくない語がある場合に使用 */
 .nowrap { white-space: nowrap; }
+
+/* 既に定義済みの .text-sm / .muted を使うため新規スタイルは最小限 */
+
+
+/* === 2025-11-11 fix: #corp-setup の最初のdetails（見出しと重複する要約）を非表示 === */
+#corp-setup .accordion > details:first-of-type { display: none !important; }
