@@ -318,3 +318,4 @@ body.lang-open #google_translate_element {
 /* 自作の言語パネルは重複防止で非表示（暗転だけになっていた原因箇所をbodyにも適用） */
 html.lang-open .lang-panel,
 body.lang-open .lang-panel { display: none !important; }
+iframe.goog-te-menu-frame, .goog-te-menu2 { z-index: 2147483647 !important; }
