@@ -294,3 +294,27 @@ body.lang-open #google_translate_element {
 /* 自作の言語パネルは重複防止で非表示（暗転だけになっていた原因箇所をbodyにも適用） */
 html.lang-open .lang-panel,
 body.lang-open .lang-panel { display: none !important; }
+/* === hotfix: 翻訳モーダルが暗転だけになる問題（body.lang-open対応） === */
+html.lang-open .lang-wrap,
+body.lang-open .lang-wrap { pointer-events: auto; }
+
+html.lang-open .lang-backdrop,
+body.lang-open .lang-backdrop { opacity: 1; }
+
+/* Google翻訳ウィジェットを画面内へ */
+html.lang-open #google_translate_element,
+body.lang-open #google_translate_element {
+  position: fixed;
+  top: calc(64px + var(--safe-top));
+  right: calc(10px + var(--safe-right));
+  left: auto;
+  width: auto;
+  height: auto;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10005;
+}
+
+/* 自作の言語パネルは重複防止で非表示（暗転だけになっていた原因箇所をbodyにも適用） */
+html.lang-open .lang-panel,
+body.lang-open .lang-panel { display: none !important; }
