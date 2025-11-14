@@ -358,3 +358,28 @@ section:has(.accordion) > :is(h1,h2,h3) {
   line-height: 1.28;
   font-weight: 800;
 }
+/* === single-picker hotfix: iOSで二重表示を防ぐ ===================== */
+/* 言語選択時は自作パネルを隠し、Google/OS側のピッカーのみ表示 */
+html.lang-open .lang-panel,
+body.lang-open .lang-panel { display: none !important; }
+
+/* 暗転レイヤとヒット判定は維持（外側タップで閉じられる） */
+html.lang-open .lang-wrap,
+body.lang-open .lang-wrap { pointer-events: auto; }
+html.lang-open .lang-backdrop,
+body.lang-open .lang-backdrop { opacity: 1; }
+
+/* Google翻訳の要素を画面内へ、操作可能に */
+html.lang-open #google_translate_element,
+body.lang-open #google_translate_element {
+  position: fixed;
+  top: calc(64px + var(--safe-top));
+  right: calc(10px + var(--safe-right));
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  z-index: 10005;
+}
+
+/* Googleのメニューiframeが他オーバーレイより最前面になるように */
+iframe.goog-te-menu-frame,
+.goog-te-menu2 { z-index: 2147483647 !important; }
