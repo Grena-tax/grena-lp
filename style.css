@@ -1,18 +1,13 @@
-/* ===== patch.css（完全置換版 v3：見出し統一＋翻訳復旧）====================
- * 変更点（最小差分）
- * - FIX-001: #corp-setup 内で .accordion の直前にある重複見出しだけ非表示
- * - FIX-002: 「地球アイコン」押下時に Google翻訳ウィジェットを画面内に表示
- * - FIX-003: .accordion直前見出しの文字サイズを全ページで統一
- * ======================================================================= */
-
-/* --- スクロール/安全域/CTA高さ --- */
+/* ===== patch.css（v4：翻訳復旧＋見出し統一＋重複見出し抑止）================= */
+/* 基本変数 */
 :root{
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+  --menu-head-h: 56px;
 }
+
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
 body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
@@ -28,9 +23,14 @@ details .content{
   padding:1rem 1.2rem .9rem;background:#fff
 }
 .accordion>details{margin:.55rem 0!important}
-.text-sm{font-size:.86em;opacity:.9}.muted{color:#475569}.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
+
+/* テキスト系ユーティリティ */
+.text-sm{font-size:.86em;opacity:.9}
+.muted{color:#475569}
+.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem}
 .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800}
-.security-note{font-size:.9em;color:#334155;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:10px;padding:.8rem 1rem;margin-top:.6rem}
+
+/* 価格ボックスなど（必要最低限） */
 .price-promo{border:1px solid #e5e7eb;background:#f9fafb;border-radius:12px;padding:16px 16px 14px;margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03)}
 .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px}
 .price-promo .label{color:#475569;font-weight:700}
@@ -38,434 +38,102 @@ details .content{
 .price-promo .now{font-weight:800;font-size:clamp(18px,2.2vw,22px);color:#d32f2f}
 .price-promo .badge{display:inline-block;background:#ef4444;color:#fff;border-radius:999px;padding:.2rem .6rem;font-size:.8em;font-weight:700;margin-left:.25rem}
 .price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6}
-.price-promo .proof{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:#0b1220}
-.price-promo .proof span{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:.25rem .6rem;font-weight:700}
-.progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0}
-.progress-steps .step{padding:.4rem .7rem;border-radius:999px;border:1px solid #e5e7eb;background:#fff}
-.progress-steps .completed{background:#f0fdf4;border-color:#dcfce7}
+
+/* テーブル */
 table{width:100%;border-collapse:collapse;margin:.5rem 0}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right}
 th:first-child,td:first-child{text-align:left}
-@media (max-width:480px){
-  h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
-}
 
-/* ご指定：KYCと料金の隙間を詰める（既存） */
+/* セクション間隔 指定（要望に合わせて） */
 #corp-setup{padding-bottom:0!important}
 #plans{padding-top:0!important;margin-top:0!important}
 
-/* --- 右上ハンバーガー（アイコン） --- */
-.menu-button{
-  position:fixed;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));z-index:10000;
-  display:inline-flex;align-items:center;justify-content:center;
-  width:48px;height:48px;border-radius:12px;background:#111827;color:#fff;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);border:1px solid rgba(255,255,255,.08)
-}
-.menu-button .bars{display:block;width:28px;height:20px;position:relative}
-.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px
-}
-.menu-button .bars::before{top:0}.menu-button .bars span{top:9px}.menu-button .bars::after{bottom:0}
-
-/* --- ハンバーガー本体（被り根絶・縦分割） --- */
-.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none}
-.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.menu-panel{
-  position:absolute;top:0;right:0;height:100%;width:min(420px,92vw);
-  background:#f5f7fa;color:#0b1220;border-left:1px solid #e5e7eb;
-  box-shadow:-16px 0 40px rgba(0,0,0,.12);transform:translateX(100%);transition:transform .22s ease;
-  font-size:14px;line-height:1.38;
-  display:flex;flex-direction:column;
-}
-.menu-head{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;
-  position:sticky;top:0;z-index:2;min-height:var(--menu-head-h)
-}
-.menu-title{font-weight:800;color:#111827}
-.menu-close{
-  width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;
-  border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827
-}
-.menu-close:hover{background:#f3f4f6}
-.menu-groups{
-  flex:1 1 auto; overflow:auto; height:auto !important;
-  padding: calc(var(--menu-head-h) + 10px) 0 12px;
-  scroll-padding-top: calc(var(--menu-head-h) + 8px);
-  -webkit-overflow-scrolling: touch;
-}
-.menu-group{padding:8px 10px 6px}
-.menu-group h4{margin:0 0 6px;padding:0 6px;font-size:.92rem;color:#111827;font-weight:700;opacity:.9}
-.menu-list{list-style:none;margin:0;padding:0}
-.menu-list li a{display:block;padding:7px 10px;margin:0 6px 6px;border-radius:8px;text-decoration:none;color:#334155;background:#fff;border:1px solid #e5e7eb}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de}
-
-html.menu-open .menu-wrap{pointer-events:auto}
-html.menu-open .menu-backdrop{opacity:1}
-html.menu-open .menu-panel{transform:none}
-html.menu-open,html.menu-open body{overflow:hidden}
-
-/* --- 画面最下部 固定CTA（既存） --- */
-.fixed-cta{
-  position:fixed;left:0;right:0;bottom:0;z-index:9998;background:#ffffffcc;
-  backdrop-filter:saturate(140%) blur(8px);border-top:1px solid rgba(0,0,0,.06);
-  padding-bottom:var(--safe-bottom)
-}
-.fixed-cta .row{max-width:64rem;margin:0 auto;display:flex;gap:.6rem;align-items:center;justify-content:flex-end;padding:.6rem 1rem;min-height:var(--cta-h)}
-.btn{display:inline-flex;gap:.5rem;align-items:center;justify-content:center;border-radius:10px;padding:.55rem .9rem;font-weight:700;border:1px solid透明;text-decoration:none;white-space:nowrap;cursor:pointer}
-.btn.neutral{background:#e5e7eb;color:#111827}
-.btn.secondary{background:#1f2937;color:#fff}
-.btn.success{background:#10b981;color:#fff}
-.btn:hover{opacity:.92}
-
-/* --- 言語スイッチ（英語名リスト/縦スクロール） --- */
+/* ===== 言語切替UI（暗転だけ問題をCSS側で確実に抑止） ===== */
+/* 右上の地球儀ボタン（DOMに存在する前提） */
 .lang-button{
   position:fixed;top:calc(10px + var(--safe-top));
-  right:calc(10px + var(--safe-right) + 48px + 10px);
+  right:calc(10px + var(--safe-right));
   z-index:10001; width:48px;height:48px;border-radius:12px;
   background:#111827; color:#fff; border:1px solid rgba(255,255,255,.08);
   display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 14px rgba(0,0,0,.15)
+  box-shadow:0 4px 14px rgba(0,0,0,.15); cursor:pointer;
 }
 .lang-button .globe{font-size:20px;line-height:1}
+
+/* オーバーレイ（JSで生成される .lang-wrap / .lang-backdrop 前提） */
 .lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none}
 .lang-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.35);opacity:0;transition:opacity .18s ease;backdrop-filter:blur(1px)}
-.lang-panel{
-  position:absolute;top:calc(64px + var(--safe-top));right:calc(10px + var(--safe-right));
-  width:min(420px,92vw);background:#fff;border:1px solid #e5e7eb;border-radius:12px;
-  box-shadow:0 16px 40px rgba(0,0,0,.12);
-  transform:translateY(-8px) scale(.98); opacity:0; transition:transform .18s ease, opacity .18s ease;
-  font-size:14px;line-height:1.5; max-height: calc(100dvh - 80px);
-  display:flex;flex-direction:column;overflow:hidden;
-  z-index:10003; /* 安全に最前面 */
-}
-.lang-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid #e5e7eb;background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px}
-.lang-title{font-weight:800;color:#111827}
-.lang-close{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#111827}
-.lang-close:hover{background:#f3f4f6}
-.lang-body{padding:10px 12px;overflow:auto;-webkit-overflow-scrolling:touch}
-.ls-search{display:flex;gap:8px;margin:6px 0 10px}
-.ls-search input{flex:1 1 auto;height:40px;border-radius:8px;border:1px solid #d1d5db;padding:0 10px;font-size:14px}
-.ls-list{display:grid;grid-template-columns:1fr;gap:6px;max-height:min(60vh,520px);overflow:auto;padding:2px}
-.ls-item{display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;cursor:pointer}
-.ls-item:hover{background:#f3f4f6}
-.ls-code{font-size:12px;color:#64748b}
-.ls-active{outline:2px solid #2563eb}
 
-html.lang-open .lang-wrap{pointer-events:auto}
-html.lang-open .lang-backdrop{opacity:1}
-html.lang-open .lang-panel{transform:none;opacity:1}
-@media (max-width:480px){ .lang-button{transform:scale(.92);transform-origin:top right} }
+html.lang-open .lang-wrap, body.lang-open .lang-wrap { pointer-events: auto; }
+html.lang-open .lang-backdrop, body.lang-open .lang-backdrop { opacity: 1; }
 
-/* --- Google翻訳：青バナーや吹き出しを隠す（CSS側） --- */
+/* Google翻訳：青バナー等は常時非表示 */
 #goog-gt-tt, iframe#goog-te-banner-frame, .goog-te-banner-frame{
   display:none!important;visibility:hidden!important;height:0!important;max-height:0!important;overflow:hidden!important
 }
 body > .skiptranslate{display:none!important}
-/* 公式ウィジェット自体は通常は画面外へ退避 */
+
+/* 公式ウィジェットは通常は画面外へ退避（開いた時だけ出す） */
 #google_translate_element{
   position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;
   pointer-events:auto !important;
 }
-/* 青バーが出た端末向けのバッファ */
-html.gtbar body{ padding-top:44px; }
+html.lang-open #google_translate_element,
+body.lang-open #google_translate_element{
+  position: fixed !important;
+  top: calc(64px + var(--safe-top)) !important;
+  right: calc(10px + var(--safe-right)) !important;
+  left: auto !important; width: auto !important; height: auto !important;
+  display: block !important; visibility: visible !important; opacity: 1 !important;
+  transform: none !important; pointer-events: auto !important;
+  z-index: 2147483646 !important;
+}
+/* Googleの言語メニューを最前面に */
+iframe.goog-te-menu-frame, .goog-te-menu2 { z-index: 2147483647 !important; }
+/* 言語選択中だけ skiptranslate を許可（フォーカス可能に） */
+html.lang-open body > .skiptranslate, body.lang-open > .skiptranslate { display: block !important; }
 
-/* --- フッターは常に黒（翻訳で白化しない） --- */
+/* ===== 見出し：重複抑止＋サイズ統一 ===== */
+/* #corp-setup 直下で、直後に .accordion が続く重複見出しだけ隠す */
+#corp-setup > :is(h1,h2,h3):has(+ .accordion){
+  display: none !important;
+}
+/* アコーディオン直前の見出しサイズを統一（3ブロック共通） */
+:is(h1,h2,h3):has(+ .accordion){
+  font-size: clamp(22px, 5.6vw, 28px) !important;
+  line-height: 1.28 !important;
+  margin: 0 0 .8rem !important;
+  font-weight: 800 !important;
+}
+
+@media (max-width:480px){
+  h2{font-size:clamp(18px,5.6vw,22px);line-height:1.28;margin:0 0 .8rem}
+}
+
+/* ===== フッター色固定 ===== */
 :root{ --foot-bg:#0b1220; --foot-fg:#cbd5e1; --foot-border:#1f2937; }
 .site-foot{
   background:var(--foot-bg) !important; color:var(--foot-fg) !important; border-top:1px solid var(--foot-border) !important;
   text-align:center; padding:14px 16px; padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
   font-size:13px; line-height:1.7;
 }
-.site-foot small{ display:block; margin:0 auto; max-width:min(1100px,92%); letter-spacing:.02em; }
 .site-foot a{ color:#93c5fd; text-decoration:underline; text-underline-offset:2px; }
-.site-foot .foot-pc{ display:none; } .site-foot .foot-sp{ display:block; }
-@media (min-width:640px){ .site-foot .foot-pc{ display:inline; } .site-foot .foot-sp{ display:none; } }
 
-/* --- アンカー停止位置（ハンバーガーからの遷移で被らない） --- */
-section[id], details[id]{ scroll-margin-top: 70px; }
-
-/* --- スマホ時の上辺マージン（右上アイコンと本文の重なり回避） --- */
-@media (max-width: 480px){
-  .menu-panel{ width:58vw; }
-  body{ padding-top:66px; }
-  html.gtbar body{ padding-top: calc(66px + 44px); }
-}
-
-/* ===== フォントの原状回復（サイト既定に戻す） ===== */
-html, body,
-button, input, select, textarea, summary, details,
-nav, a, .menu-panel, .menu-list, .lang-panel {
-  font-family: revert !important;
-}
-@supports not (font-family: revert) {
-  html, body,
-  button, input, select, textarea, summary, details,
-  nav, a, .menu-panel, .menu-list, .lang-panel {
-    font-family: inherit !important;
-  }
-}
-:root { --font-jp: initial; }
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
-@supports not (font-family: revert) {
-  html { font-family: inherit !important; }
-  body { font-family: inherit !important; }
-  button, input, select, textarea, summary, details,
-  .menu-panel, .menu-list, .lang-panel, nav, a { font-family: inherit !important; }
-}
-html, body,
-button, input, select, textarea, summary, details,
-nav, a, .menu-panel, .menu-list, .lang-panel {
-  font-family: -apple-system, BlinkMacSystemFont,
-               "Hiragino Sans", "Hiragino Kaku Gothic ProN",
-               "Yu Gothic", Meiryo, "Noto Sans JP",
-               "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-}
-
-/* === ここから：UXポリッシュ（append-only, safe） =================== */
+/* ===== 可読性ポリッシュ（安全） ===== */
 h1, .hero h1, .page-title, .hero .lead {
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-  line-break: strict;
-  text-wrap: balance;
+  word-break: keep-all; overflow-wrap: anywhere; line-break: strict; text-wrap: balance;
 }
 .fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
-.fx-sim thead th{
-  position: sticky; top: 0; z-index: 1;
-  background: #ffffff;
-}
+.fx-sim thead th{ position: sticky; top: 0; z-index: 1; background: #fff; }
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
-.nowrap { white-space: nowrap; }
 
-/* === FIX-001: #corp-setup 直下の重複見出しのみ非表示（アコーディオンは残す） === */
-#corp-setup > :is(h1,h2,h3):has(+ .accordion){
-  display: none !important;
-}
-
-/* === FIX-003: .accordion 直前の見出しサイズを統一（ページ全体） === */
-:is(h1,h2,h3):has(+ .accordion){
-  font-size: clamp(20px, 5.6vw, 22px) !important;
-  line-height: 1.28 !important;
-  margin: 0 0 .8rem !important;
-  font-weight: 800 !important;
-}
-
-/* === FIX-002: 言語選択できない暫定対処（公式ウィジェットを表示） === */
-html.lang-open #google_translate_element{
-  position: fixed; top: calc(64px + var(--safe-top)); right: calc(10px + var(--safe-right));
-  left: auto; width: auto; height: auto; opacity: 1 !important;
-  pointer-events: auto !important; z-index: 10005;
-}
-/* 自作の空パネルは隠す（二重UI防止） */
-html.lang-open .lang-panel{ display: none !important; }
-/* === hotfix: 翻訳モーダルが暗転だけになる問題（body.lang-open対応） === */
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap { pointer-events: auto; }
-
-html.lang-open .lang-backdrop,
-body.lang-open .lang-backdrop { opacity: 1; }
-
-/* Google翻訳ウィジェットを画面内へ */
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element {
-  position: fixed;
-  top: calc(64px + var(--safe-top));
-  right: calc(10px + var(--safe-right));
-  left: auto;
-  width: auto;
-  height: auto;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 10005;
-}
-
-/* 自作の言語パネルは重複防止で非表示（暗転だけになっていた原因箇所をbodyにも適用） */
-html.lang-open .lang-panel,
-body.lang-open .lang-panel { display: none !important; }
-/* === hotfix: 翻訳モーダルが暗転だけになる問題（body.lang-open対応） === */
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap { pointer-events: auto; }
-
-html.lang-open .lang-backdrop,
-body.lang-open .lang-backdrop { opacity: 1; }
-
-/* Google翻訳ウィジェットを画面内へ */
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element {
-  position: fixed;
-  top: calc(64px + var(--safe-top));
-  right: calc(10px + var(--safe-right));
-  left: auto;
-  width: auto;
-  height: auto;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 10005;
-}
-
-/* 自作の言語パネルは重複防止で非表示（暗転だけになっていた原因箇所をbodyにも適用） */
-html.lang-open .lang-panel,
-body.lang-open .lang-panel { display: none !important; }
-iframe.goog-te-menu-frame, .goog-te-menu2 { z-index: 2147483647 !important; }
-/* === hotfix: 翻訳モーダルが暗転だけになる問題をCSSだけで回避 ================= */
-
-/* 暗転レイヤとヒット判定を有効化（HTML/BODYどちらに .lang-open が付いても動く）*/
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap { pointer-events: auto; }
-html.lang-open .lang-backdrop,
-body.lang-open .lang-backdrop { opacity: 1; }
-
-/* 自作の言語パネルを表示（前の display:none を上書き。末尾なので勝つ）*/
-html.lang-open .lang-panel,
-body.lang-open .lang-panel { display: flex !important; }
-
-/* Google翻訳コンテナを画面内に戻す（操作できる位置とZ順）*/
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element {
-  position: fixed;
-  top: calc(64px + var(--safe-top));
-  right: calc(10px + var(--safe-right));
-  left: auto;
-  width: auto;
-  height: auto;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 10005;
-}
-
-/* Googleが挿入するメニューフレームを最前面に（他のオーバーレイより上）*/
-iframe.goog-te-menu-frame, .goog-te-menu2 { z-index: 2147483647 !important; }
-
-/* 以前「非表示」にしていた skiptranslate を、言語選択中だけ許可 */
-html.lang-open body > .skiptranslate,
-body.lang-open > .skiptranslate { display: block !important; }
-
-/* === 見出しサイズの統一（アコーディオンを含むセクションの見出しに適用）===== */
-section:has(.accordion) > :is(h1,h2,h3) {
-  font-size: clamp(22px, 5.6vw, 28px);
-  line-height: 1.28;
-  font-weight: 800;
-}
-/* === single-picker hotfix: iOSで二重表示を防ぐ ===================== */
-/* 言語選択時は自作パネルを隠し、Google/OS側のピッカーのみ表示 */
-html.lang-open .lang-panel,
-body.lang-open .lang-panel { display: none !important; }
-
-/* 暗転レイヤとヒット判定は維持（外側タップで閉じられる） */
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap { pointer-events: auto; }
-html.lang-open .lang-backdrop,
-body.lang-open .lang-backdrop { opacity: 1; }
-
-/* Google翻訳の要素を画面内へ、操作可能に */
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element {
-  position: fixed;
-  top: calc(64px + var(--safe-top));
-  right: calc(10px + var(--safe-right));
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 10005;
-}
-
-/* Googleのメニューiframeが他オーバーレイより最前面になるように */
-iframe.goog-te-menu-frame,
-.goog-te-menu2 { z-index: 2147483647 !important; }
-/* === PATCH v3.1 (final override) ─ 言語ピッカー復旧＋見出し統一 === */
-
-/* 1) 暗転だけになる問題：オーバーレイ有効化＋自作パネル停止 */
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap { pointer-events: auto; }
-html.lang-open .lang-backdrop,
-body.lang-open .lang-backdrop { opacity: 1; }
-html.lang-open .lang-panel,
-body.lang-open .lang-panel { display: none !important; }
-
-/* 2) Google翻訳ウィジェットを画面右上に“確実に”出す（最終勝ち） */
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element{
-  position: fixed !important;
-  top: calc(64px + var(--safe-top)) !important;
-  right: calc(10px + var(--safe-right)) !important;
-  left: auto !important;
-  width: auto !important;
-  height: auto !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  transform: none !important;
-  pointer-events: auto !important;
-  z-index: 2147483646 !important;
-}
-/* Google のメニュー iframe を最前面 */
-iframe.goog-te-menu-frame, .goog-te-menu2 { z-index: 2147483647 !important; }
-/* 言語選択中だけ skiptranslate を許可（フォーカス可） */
-html.lang-open body > .skiptranslate,
-body.lang-open > .skiptranslate { display: block !important; }
-
-/* 3) アコーディオン直前の見出しサイズを統一（3セクション共通） */
-:is(h1,h2,h3):has(+ .accordion){
-  font-size: clamp(22px, 5.6vw, 28px) !important;
-  line-height: 1.28 !important;
-  margin: 0 0 .8rem !important;
-  font-weight: 800 !important;
-}
-/* === P0 HOTFIX (append at end) ─ 翻訳復旧＋見出し統一 =================== */
-/* 1) 自作の暗転レイヤ／言語パネルは停止（ブロック原因を排除） */
-html.lang-open .lang-wrap,
-body.lang-open .lang-wrap,
-html.lang-open .lang-panel,
-body.lang-open .lang-panel {
-  display: none !important;
-}
-
-/* 2) Google翻訳ウィジェットを右上に“確実に”前面表示 */
-html.lang-open #google_translate_element,
-body.lang-open #google_translate_element {
-  position: fixed !important;
-  top: calc(64px + var(--safe-top)) !important;
-  right: calc(10px + var(--safe-right)) !important;
-  left: auto !important;
-  width: auto !important;
-  height: auto !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  z-index: 2147483646 !important;
-}
-
-/* 3) Googleのメニューiframeを最前面へ */
-iframe.goog-te-menu-frame,
-.goog-te-menu2 {
-  z-index: 2147483647 !important;
-}
-
-/* 4) 言語選択中のみ skiptranslate を許可（操作可能に） */
-html.lang-open body > .skiptranslate,
-body.lang-open > .skiptranslate {
-  display: block !important;
-  visibility: visible !important;
-}
-
-/* 5) 3セクションのアコーディオン直前見出しをサイズ統一 */
-#corp-setup  > :is(h1,h2,h3):has(+ .accordion),
-#soleprop-setup > :is(h1,h2,h3):has(+ .accordion),
-#bank-setup  > :is(h1,h2,h3):has(+ .accordion) {
-  font-size: clamp(22px, 5.6vw, 28px) !important;
-  line-height: 1.28 !important;
-  margin: 0 0 .8rem !important;
-  font-weight: 800 !important;
-}
+/* ===== フォントは既定へ戻す（強制上書き） ===== */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a { font-family: -apple-system, BlinkMacSystemFont,
+         "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+         "Yu Gothic", Meiryo, "Noto Sans JP",
+         "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important; }
