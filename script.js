@@ -287,3 +287,102 @@
     markFxTable();
   }
 })();
+/* ===== patch-lang.js（翻訳UI復旧：暗転だけ問題の根治＋一度だけ初期化） ===== */
+(function(){
+  if (window.__langPatchInit) return;
+  window.__langPatchInit = true;
+
+  // 1) 必要ノードが無ければ生成
+  function ensureNode(sel, html) {
+    let el = document.querySelector(sel);
+    if (!el) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html.trim();
+      el = tmp.firstElementChild;
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  // オーバーレイ（暗転と外側クリックで閉じる）
+  const wrap = ensureNode('.lang-wrap', '<div class="lang-wrap" translate="no"><div class="lang-backdrop"></div></div>');
+  const backdrop = wrap.querySelector('.lang-backdrop');
+
+  // Google翻訳コンテナ（存在しなければ作成）
+  ensureNode('#google_translate_element', '<div id="google_translate_element" translate="no" aria-hidden="false"></div>');
+
+  // 2) Google翻訳スクリプトを一度だけ読み込み
+  function loadGoogleTranslate(cb){
+    if (window.google && window.google.translate && window.google.translate.TranslateElement) {
+      cb && cb(); return;
+    }
+    if (window.__gtLoading) { // 二重読込防止：読込済みなら待たずに続行
+      cb && cb(); return;
+    }
+    window.__gtLoading = true;
+    window.googleTranslateElementInit = function(){
+      try{
+        new google.translate.TranslateElement({
+          pageLanguage: 'ja',
+          includedLanguages: 'en,ko,zh-CN,zh-TW,fr,de,es,id,th,vi,ar,ru,hi,pt,it,nl',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          autoDisplay: false
+        }, 'google_translate_element');
+      }catch(e){}
+      cb && cb();
+    };
+    var s = document.createElement('script');
+    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  // 3) 開閉制御（html/body の両方に .lang-open を付与：CSSの両対応）
+  function openLang(){
+    document.documentElement.classList.add('lang-open');
+    document.body.classList.add('lang-open');
+    loadGoogleTranslate(function(){
+      // 表示はCSSで制御（位置・Z-indexはpatch.cssで最前面に）
+      // ここでは何もしない（自動で #google_translate_element が操作可能になる）
+    });
+  }
+  function closeLang(){
+    document.documentElement.classList.remove('lang-open');
+    document.body.classList.remove('lang-open');
+  }
+
+  // 4) イベント：地球儀ボタン／暗転クリック／ESC
+  function bindOnce(){
+    if (window.__langBindDone) return;
+    window.__langBindDone = true;
+
+    // 地球儀ボタンは .lang-button または [data-lang-button]
+    const btn = document.querySelector('.lang-button, [data-lang-button]');
+    if (btn) {
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        // トグル：開いていれば閉じる
+        if (document.documentElement.classList.contains('lang-open') || document.body.classList.contains('lang-open')){
+          closeLang();
+        } else {
+          openLang();
+        }
+      }, { passive:false });
+    }
+
+    // 暗転クリックで閉じる
+    backdrop.addEventListener('click', function(){ closeLang(); });
+
+    // Escで閉じる
+    window.addEventListener('keydown', function(ev){
+      if (ev.key === 'Escape') closeLang();
+    });
+  }
+
+  // 5) DOM準備後にバインド
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindOnce, { once: true });
+  } else {
+    bindOnce();
+  }
+})();
