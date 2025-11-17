@@ -386,3 +386,136 @@
     bindOnce();
   }
 })();
+/* ===== app.lang.js FINAL v6 ─ 地球儀→自作パネル→Google翻訳適用（共存・一度だけ） ===== */
+(function(){
+  function init(){
+    if (window.__langPatchInit) return;
+    window.__langPatchInit = true;
+
+    const html = document.documentElement;
+
+    // 1) ボタン & オーバーレイ（無ければ生成）
+    let btn  = document.querySelector('.lang-button');
+    let wrap = document.querySelector('.lang-wrap');
+    if (!wrap){
+      wrap = document.createElement('div');
+      wrap.className = 'lang-wrap';
+      wrap.innerHTML = `
+        <div class="lang-backdrop"></div>
+        <div class="lang-panel" translate="no">
+          <div class="lang-head">
+            <div class="lang-title">Language</div>
+            <button type="button" class="lang-close" aria-label="Close">✕</button>
+          </div>
+          <div class="lang-body">
+            <div class="ls-search"><input type="search" placeholder="Search language (English only)"></div>
+            <div class="ls-list">
+              ${[
+                ['ja','日本語'],['en','English'],['zh-CN','简体中文'],['zh-TW','繁體中文'],
+                ['ko','한국어'],['th','ไทย'],['vi','Tiếng Việt'],
+                ['es','Español'],['fr','Français'],['de','Deutsch'],
+                ['ru','Русский'],['ar','العربية'],['id','Indonesia']
+              ].map(([c,n])=>`<div class="ls-item" data-lang="${c}"><span>${n}</span><span class="ls-code">${c}</span></div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(wrap);
+    }
+    if (!btn){
+      btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'lang-button';
+      btn.innerHTML = '<span class="globe">🌐</span>';
+      document.body.appendChild(btn);
+    }
+
+    // 2) Google翻訳ホルダー（無ければ生成）
+    function ensureHolder(){
+      let el = document.getElementById('google_translate_element');
+      if (!el){
+        el = document.createElement('div');
+        el.id = 'google_translate_element';
+        document.body.appendChild(el);
+      }
+      return el;
+    }
+
+    // 3) Google翻訳 読み込み（ポーリング禁止・一度だけ）
+    function isReady(){
+      return !!(window.google && window.google.translate && window.google.translate.TranslateElement);
+    }
+    function boot(cb){
+      ensureHolder();
+      if (isReady()){
+        if (!window.__gteInited){
+          window.__gteInited = true;
+          new window.google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element');
+        }
+        cb && cb(); return;
+      }
+      if (window.__gteLoading){ (window.__gteQueue = window.__gteQueue || []).push(cb); return; }
+      window.__gteLoading = true; window.__gteQueue = [cb];
+      const s = document.createElement('script');
+      s.src = '//translate.google.com/translate_a/element.js?cb=__gteCb';
+      window.__gteCb = function(){
+        window.__gteInited = true;
+        new window.google.translate.TranslateElement({pageLanguage:'ja',autoDisplay:false}, 'google_translate_element');
+        (window.__gteQueue||[]).forEach(fn => {try{fn&&fn()}catch(_){}}); window.__gteQueue = [];
+      };
+      document.head.appendChild(s);
+    }
+
+    // 4) 言語適用（隠し select を直接変更）
+    function apply(code){
+      const combo = document.querySelector('select.goog-te-combo');
+      if (!combo) return;
+      combo.value = code;
+      combo.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+
+    // 5) 開閉
+    const open  = () => html.classList.add('x-lang-open');
+    const close = () => html.classList.remove('x-lang-open');
+
+    // 地球儀
+    btn.addEventListener('click', () => { boot(open); }, {passive:true});
+    // 背景/×で閉じる
+    wrap.addEventListener('click', (e) => {
+      if (e.target.classList.contains('lang-backdrop') || e.target.classList.contains('lang-close')) close();
+    }, {passive:true});
+
+    // 検索
+    const search = wrap.querySelector('.ls-search input');
+    const list   = wrap.querySelector('.ls-list');
+    if (search && list){
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase();
+        list.querySelectorAll('.ls-item').forEach(it => {
+          const t = (it.textContent||'').toLowerCase();
+          it.style.display = t.includes(q) ? '' : 'none';
+        });
+      });
+    }
+
+    // 言語選択
+    document.addEventListener('click', (e) => {
+      const item = e.target.closest('.ls-item[data-lang]');
+      if (!item) return;
+      e.preventDefault();
+      const code = item.dataset.lang;
+      boot(() => { apply(code); close(); });
+    }, {passive:false});
+
+    // 既存スクリプトが html.lang-open を付与しても追随
+    const mo = new MutationObserver(() => {
+      if (html.classList.contains('lang-open') && !html.classList.contains('x-lang-open')) boot(open);
+    });
+    mo.observe(html, {attributes:true, attributeFilter:['class']});
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init, {once:true});
+  } else {
+    init();
+  }
+})();
