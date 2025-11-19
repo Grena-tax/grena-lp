@@ -1,10 +1,10 @@
-/* ===== script.js（完全置換版：翻訳適用を確実化／無限ループ防止） ===== */
+/* ===== script.js (Full Replace / No-Polling / One-Reload / Final) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しを除去（ポーリング無し） ---------- */
+  /* ---------- 0) Google青バナー/吹き出しの抑止（Observerのみ） ---------- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -12,17 +12,19 @@
       if (tip) (tip.remove ? tip.remove() : (tip.style.display='none'));
       const bar = document.querySelector('iframe.goog-te-banner-frame');
       if (bar) (bar.remove ? bar.remove() : (bar.style.display='none'));
-      html.classList.toggle('gtbar', !!bar && bar.offsetHeight>0);
+      html.classList.remove('gtbar');
     }catch(_){}
   }
-  // 生成/差し替え時のみ反応
   new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
   window.addEventListener('load', killGoogleBar, {once:true});
+  window.addEventListener('pageshow', killGoogleBar, {once:true});
 
-  /* ---------- 0.1) Google翻訳スクリプトを必要時だけ読込 ---------- */
+  /* ---------- 0.1) 公式翻訳スクリプトの遅延ロード（多重読込ガード強化） ---------- */
+  function hasGTranslateTag(){
+    return !!document.querySelector('script[src*="translate_a/element.js"]');
+  }
   function loadGTranslate(){
-    if (window.google && window.google.translate) return;
-    if (document.getElementById('gt-script')) return;
+    if ((window.google && window.google.translate) || hasGTranslateTag()) return;
     const s = document.createElement('script');
     s.id  = 'gt-script';
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
@@ -34,23 +36,6 @@
   }else{
     loadGTranslate();
   }
-
-  /* ---------- 0.2) 見出しの不自然な改行抑止（既存） ---------- */
-  (function fixHeroHeading(){
-    function patch(el){
-      if (!el || el.dataset.jpFixed) return;
-      const raw = el.textContent || '';
-      if (!raw) return;
-      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
-      el.textContent = '';
-      el.insertAdjacentText('afterbegin', withBreakPoints);
-      el.classList.add('no-jp-break');
-      el.dataset.jpFixed = '1';
-    }
-    const targets = $$('main h1, main h2');
-    targets.forEach(patch);
-    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
-  })();
 
   /* ---------- 1) ハンバーガー ---------- */
   const menuBtn      = $('#menuBtn');
@@ -66,12 +51,12 @@
   const toggleMenu = (e)=>{ e?.preventDefault(); setMenu(!html.classList.contains('menu-open')); };
   const closeMenu  = ()=> setMenu(false);
 
-  menuBtn && ['click','touchstart'].forEach(ev=>menuBtn.addEventListener(ev, toggleMenu, {passive:false}));
+  menuBtn      && ['click','touchstart'].forEach(ev=>menuBtn.addEventListener(ev, toggleMenu, {passive:false}));
   menuBackdrop && menuBackdrop.addEventListener('click', closeMenu);
-  menuClose && menuClose.addEventListener('click', closeMenu);
+  menuClose    && menuClose.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 
-  /* ---------- 2) 目次（トップ項目は作らない） ---------- */
+  /* ---------- 2) サイド目次（トップ項目は作らない） ---------- */
   (function buildMenuNoTop(){
     const wrap = $('#menuGroups'); if (!wrap) return;
     const SECTIONS = [
@@ -113,7 +98,7 @@
     });
   })();
 
-  /* ---------- 3) 言語ドロワー（自作リスト） ---------- */
+  /* ---------- 3) 言語ドロワー（自作リスト＋確実適用） ---------- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -123,68 +108,47 @@
 
   function setLang(open){
     html.classList.toggle('lang-open', open);
-    langDrawer?.setAttribute('aria-hidden', String(!open));
-    langBtn?.setAttribute('aria-expanded', String(open));
+    if (langDrawer) langDrawer.setAttribute('aria-hidden', String(!open));
+    if (langBtn)    langBtn.setAttribute('aria-expanded', String(open));
   }
   const openLang  = ()=> { loadGTranslate(); setLang(true); setTimeout(buildLangList, 0); };
   const closeLang = ()=> setLang(false);
 
-  langBtn && ['click','touchstart'].forEach(ev=>langBtn.addEventListener(ev, (e)=>{ e.preventDefault(); openLang(); }, {passive:false}));
+  langBtn      && ['click','touchstart'].forEach(ev=>langBtn.addEventListener(ev, (e)=>{ e.preventDefault(); openLang(); }, {passive:false}));
   langBackdrop && langBackdrop.addEventListener('click', closeLang);
-  langClose && langClose.addEventListener('click', closeLang);
+  langClose    && langClose.addEventListener('click', closeLang);
   document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeLang(); });
 
   const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
 
-  // ---- 翻訳を「確実に」適用（Cookie書き＋レガシーchange発火＋1度だけの再読込） ----
-  function triggerChange(el){
-    try{
-      const evt = document.createEvent('HTMLEvents');
-      evt.initEvent('change', true, true);
-      el.dispatchEvent(evt);
-    }catch(_){}
+  function setGoogTransCookie(code){
+    const exp  = new Date(Date.now()+365*864e5).toUTCString();
+    const host = location.hostname.replace(/^www\./,'');
+    const vals = [`/ja/${code}`, `/auto/${code}`];
+    const domains = ['', `.${host}`];
+    vals.forEach(v=>domains.forEach(dm=>{
+      document.cookie = `googtrans=${encodeURIComponent(v)}; expires=${exp}; path=/` + (dm?`; domain=${dm}`:'');
+    }));
   }
+
+  // 一度だけ確実にリロード → 二度目以降はchange発火のみ
   function applyTranslate(code){
     try{
-      // Cookieを/ja/<code> と /auto/<code> の両方で書く（ドメイン両対応）
-      const exp = new Date(Date.now()+365*864e5).toUTCString();
-      const host = location.hostname.replace(/^www\./,'');
-      const vals = [`/ja/${code}`, `/auto/${code}`];
-      const domains = ['', `.${host}`];
-      vals.forEach(v=>{
-        domains.forEach(dm=>{
-          document.cookie = `googtrans=${encodeURIComponent(v)}; expires=${exp}; path=/` + (dm?`; domain=${dm}`:'');
-        });
-      });
-
-      const ensure = () => {
-        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (!sel) return;
-        if (sel.value !== code) sel.value = code;
-        // 互換性のために2回（新/旧）を短い間隔で1回ずつ。ループしない。
-        triggerChange(sel);
-        setTimeout(()=>triggerChange(sel), 120);
-        // 適用確認→未適用なら1度だけリロード（無限ループ防止フラグ）
-        setTimeout(()=>{
-          const applied = /\btranslated-(ltr|rtl)\b/.test(document.documentElement.className) ||
-                          !!document.querySelector('body .skiptranslate');
-          const once = sessionStorage.getItem('gtOnceReloaded') === '1';
-          if (!applied && !once){
-            sessionStorage.setItem('gtOnceReloaded','1');
-            location.reload();
-          }
-        }, 900);
-      };
-
-      if (document.querySelector('#google_translate_element select.goog-te-combo')){
-        ensure();
-      }else{
-        // まだ初期化前なら一度だけ遅延実行
-        setTimeout(ensure, 300);
+      const once = sessionStorage.getItem('gt-once') === '1';
+      setGoogTransCookie(code);
+      if (!once){
+        sessionStorage.setItem('gt-desired', code);
+        sessionStorage.setItem('gt-once', '1');
+        location.reload();
+        return;
       }
-    }catch(_){
-      /* 失敗時も再読込はしない（ループ回避） */
-    }
+      const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+      if (sel){
+        sel.value = code;
+        const evt = document.createEvent('HTMLEvents'); evt.initEvent('change', true, true);
+        sel.dispatchEvent(evt);
+      }
+    }catch(_){}
   }
 
   function buildLangList(){
@@ -209,9 +173,9 @@
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
       el.addEventListener('click', ()=>{
-        applyTranslate(code);         // 先に適用
-        setTimeout(closeLang, 180);   // 少し待って閉じる
-        setTimeout(killGoogleBar, 360);
+        closeLang();
+        applyTranslate(code);
+        killGoogleBar();
       });
       frag.appendChild(el);
     });
@@ -229,11 +193,24 @@
     }
   }
 
-  /* ---------- Googleコールバック（公式スクリプトが呼ぶ） ---------- */
+  /* ---------- 4) Googleの初期化コールバック（グローバルに必要） ---------- */
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
     }catch(_){}
+    setTimeout(()=>{
+      const desired = sessionStorage.getItem('gt-desired');
+      if (desired){
+        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
+        if (sel){
+          sel.value = desired;
+          const evt = document.createEvent('HTMLEvents'); evt.initEvent('change', true, true);
+          sel.dispatchEvent(evt);
+          sessionStorage.removeItem('gt-desired');
+        }
+      }
+    }, 400);
+
     setTimeout(buildLangList, 600);
     const host = $('#google_translate_element');
     if (host){
@@ -241,31 +218,48 @@
     }
   };
 
-})(); // ここまでIIFE
+  /* ---------- 5) 見出しの不自然な改行抑止（既存） ---------- */
+  (function fixHeroHeading(){
+    function patch(el){
+      if (!el || el.dataset.jpFixed) return;
+      const raw = el.textContent || '';
+      if (!raw) return;
+      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
+      el.textContent = '';
+      el.insertAdjacentText('afterbegin', withBreakPoints);
+      el.classList.add('no-jp-break');
+      el.dataset.jpFixed = '1';
+    }
+    const targets = $$('main h1, main h2');
+    targets.forEach(patch);
+    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
+  })();
 
-/* === 為替表の横はみ出し対策（既存を温存） ========================== */
-(function () {
-  function markFxTable(){
-    try{
-      document.querySelectorAll('table').forEach(tbl=>{
-        if (tbl.classList.contains('fx-sim')) return;
-        const heads = Array.from(
-          tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
-        ).map(th => (th.textContent || '').trim());
-        const need = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
-        const hit  = need.every(k => heads.some(h => h.includes(k)));
-        if (!hit) return;
-        tbl.classList.add('fx-sim');
-        if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
-          const wrap = document.createElement('div'); wrap.className = 'fx-wrap';
-          tbl.parentNode.insertBefore(wrap, tbl); wrap.appendChild(tbl);
-        }
-      });
-    }catch(_){}
-  }
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', markFxTable);
-  }else{
-    markFxTable();
-  }
+  /* ---------- 6) 為替表の横はみ出し対策（既存） ---------- */
+  (function () {
+    function markFxTable(){
+      try{
+        document.querySelectorAll('table').forEach(tbl=>{
+          if (tbl.classList.contains('fx-sim')) return;
+          const heads = Array.from(
+            tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
+          ).map(th => (th.textContent || '').trim());
+          const need  = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
+          const hit   = need.every(k => heads.some(h => h.includes(k)));
+          if (!hit) return;
+          tbl.classList.add('fx-sim');
+          if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
+            const wrap = document.createElement('div'); wrap.className = 'fx-wrap';
+            tbl.parentNode.insertBefore(wrap, tbl); wrap.appendChild(tbl);
+          }
+        });
+      }catch(_){}
+    }
+    if (document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', markFxTable);
+    }else{
+      markFxTable();
+    }
+  })();
+
 })();
