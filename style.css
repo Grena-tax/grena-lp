@@ -254,3 +254,15 @@ h1, .hero h1, .page-title, .hero .lead {
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
 /* ヒーロー見出しで完全に改行させたくない語に付ける */
 .nowrap { white-space: nowrap; }
+
+/* === ここから：追記（コンプライアンス文の視認性補助、見た目のみ） === */
+#disclaimer .accordion > details > summary {
+  position: relative;
+}
+#disclaimer .accordion > details > summary::after{
+  content:""; position:absolute; inset:auto 14px 10px auto; width:8px; height:8px;
+  border-radius:999px; background:#e5e7eb;
+}
+#disclaimer .accordion > details[open] > summary::after{
+  background:#93c5fd;
+}
