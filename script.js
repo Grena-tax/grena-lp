@@ -263,3 +263,56 @@
   })();
 
 })();
+// ===== compound calc (isolated) =====
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const root = $('calc-compound');
+  if (!root) return;
+
+  const principal = $('c_principal');
+  const rate = $('c_rate');
+  const years = $('c_years');
+  const freq = $('c_freq');
+  const ack = $('c_ack');
+  const run = $('c_run');
+  const clearBtn = $('c_clear');
+  const result = $('c_result');
+  const balance = $('c_balance');
+  const multiple = $('c_multiple');
+
+  function fmtJPY(n){
+    if (Number.isNaN(n)) return '-';
+    return '¥' + Math.round(n).toLocaleString('ja-JP');
+  }
+  function fmtX(n){
+    if (Number.isNaN(n)) return '-';
+    return (Math.round(n * 100) / 100).toLocaleString('ja-JP') + '倍';
+  }
+
+  run.addEventListener('click', () => {
+    const P = parseFloat(principal.value);
+    const r = parseFloat(rate.value) / 100;
+    const t = parseFloat(years.value);
+    const n = parseInt(freq.value, 10);
+
+    if (!ack.checked) { alert('同意チェックを入れてください。'); return; }
+    if (!(P > 0 && r >= 0 && t > 0 && n > 0)) { alert('入力値を確認してください。'); return; }
+
+    // A = P * (1 + r/n)^(n*t)
+    const A = P * Math.pow(1 + r / n, n * t);
+    balance.textContent = fmtJPY(A);
+    multiple.textContent = fmtX(A / P);
+    result.hidden = false;
+  });
+
+  clearBtn.addEventListener('click', () => {
+    principal.value = '';
+    rate.value = '';
+    years.value = '';
+    freq.value = '12';
+    ack.checked = false;
+    result.hidden = true;
+    balance.textContent = '-';
+    multiple.textContent = '-';
+  });
+})();
