@@ -218,7 +218,7 @@
     }
   };
 
-  /* ---------- 5) 見出しの不自然な改行抑止（既存） ---------- */
+  /* ---------- 5) 見出しの不自然な改行抑止 ---------- */
   (function fixHeroHeading(){
     function patch(el){
       if (!el || el.dataset.jpFixed) return;
@@ -235,7 +235,7 @@
     new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
   })();
 
-  /* ---------- 6) 為替表の横はみ出し対策（既存） ---------- */
+  /* ---------- 6) 為替表の横はみ出し対策 ---------- */
   (function () {
     function markFxTable(){
       try{
@@ -262,9 +262,10 @@
     }
   })();
 
-})();
-// ===== compound calc (isolated) =====
-(() => {
+})(); // ← ここまでが共通UI部分
+
+/* ===== compound calc (legacy #calc-compound) ===== */
+(function(){
   const $ = (id) => document.getElementById(id);
   const root = $('calc-compound');
   if (!root) return;
@@ -280,58 +281,9 @@
   const balance = $('c_balance');
   const multiple = $('c_multiple');
 
-  function fmtJPY(n){
-    if (Number.isNaN(n)) return '-';
-    return '¥' + Math.round(n).toLocaleString('ja-JP');
-  }
-  function fmtX(n){
-    if (Number.isNaN(n)) return '-';
-    return (Math.round(n * 100) / 100).toLocaleString('ja-JP') + '倍';
-  }
-
-  run.addEventListener('click', () => {
-    const P = parseFloat(principal.value);
-    const r = parseFloat(rate.value) / 100;
-    const t = parseFloat(years.value);
-    const n = parseInt(freq.value, 10);
-
-    if (!ack.checked) { alert('同意チェックを入れてください。'); return; }
-    if (!(P > 0 && r >= 0 && t > 0 && n > 0)) { alert('入力値を確認してください。'); return; }
-
-    // A = P * (1 + r/n)^(n*t)
-    const A = P * Math.pow(1 + r / n, n * t);
-    balance.textContent = fmtJPY(A);
-    multiple.textContent = fmtX(A / P);
-    result.hidden = false;
-  });
-
-  clearBtn.addEventListener('click', () => {
-    principal.value = '';
-    rate.value = '';
-    years.value = '';
-    freq.value = '12';
-    ack.checked = false;
-    result.hidden = true;
-    balance.textContent = '-';
-    multiple.textContent = '-';
-  });
-})();
-// ===== compound calc (isolated) =====
-(() => {
-  const $ = (id) => document.getElementById(id);
-  const root = $('calc-compound');
-  if (!root) return;
-
-  const principal = $('c_principal');
-  const rate = $('c_rate');
-  const years = $('c_years');
-  const freq = $('c_freq');
-  const ack = $('c_ack');
-  const run = $('c_run');
-  const clearBtn = $('c_clear');
-  const result = $('c_result');
-  const balance = $('c_balance');
-  const multiple = $('c_multiple');
+  // 二重バインドガード
+  if (run && run.dataset.bound === '1') return;
+  if (run) run.dataset.bound = '1';
 
   function fmtJPY(n){
     if (Number.isNaN(n)) return '-';
@@ -342,7 +294,7 @@
     return (Math.round(n * 100) / 100).toLocaleString('ja-JP') + '倍';
   }
 
-  run.addEventListener('click', () => {
+  run && run.addEventListener('click', () => {
     const P = parseFloat(principal.value);
     const r = parseFloat(rate.value) / 100;
     const t = parseFloat(years.value);
@@ -351,14 +303,13 @@
     if (!ack.checked) { alert('同意チェックを入れてください。'); return; }
     if (!(P > 0 && r >= 0 && t > 0 && n > 0)) { alert('入力値を確認してください。'); return; }
 
-    // A = P * (1 + r/n)^(n*t)
-    const A = P * Math.pow(1 + r / n, n * t);
+    const A = P * Math.pow(1 + r / n, n * t); // 複利
     balance.textContent = fmtJPY(A);
     multiple.textContent = fmtX(A / P);
     result.hidden = false;
   });
 
-  clearBtn.addEventListener('click', () => {
+  clearBtn && clearBtn.addEventListener('click', () => {
     principal.value = '';
     rate.value = '';
     years.value = '';
@@ -369,7 +320,8 @@
     multiple.textContent = '-';
   });
 })();
-/* ===== Compounding Tool v2.1 (currency-safe) ===== */
+
+/* ===== Compounding Tool v2.1 (currency-safe, #cf-tool) ===== */
 (function(){
   const $ = (id)=>document.getElementById(id);
   const el = {
@@ -404,7 +356,7 @@
     const r = parseFloat(el.rate.value || '0');
     el.rateDisp.textContent = isFinite(r) ? r.toFixed(2) + '%' : '--';
   };
-  el.rate.addEventListener('input', syncRate);
+  el.rate && el.rate.addEventListener('input', syncRate);
   syncRate();
 
   // 年率プリセット
@@ -416,12 +368,12 @@
   });
 
   // 免責同意でボタン有効化
-  const toggleRun = ()=> { el.run.disabled = !el.ack.checked; };
-  el.ack.addEventListener('change', toggleRun);
+  const toggleRun = ()=> { if(el.run) el.run.disabled = !el.ack.checked; };
+  el.ack && el.ack.addEventListener('change', toggleRun);
   toggleRun();
 
   // 実行
-  el.run.addEventListener('click', (e)=>{
+  el.run && el.run.addEventListener('click', (e)=>{
     e.preventDefault();
     const ccy = el.currency.value;
     const locale = getLocale();
@@ -455,7 +407,7 @@
   });
 
   // クリア
-  el.clear.addEventListener('click', ()=>{
+  el.clear && el.clear.addEventListener('click', ()=>{
     el.principal.value = '1000000';
     el.rate.value = '10.00';
     el.years.value = '7';
@@ -463,5 +415,36 @@
     el.isComp.checked = true;
     syncRate();
     el.out.innerHTML = '';
+  });
+})();
+
+/* ===== CF Tool: persist last inputs (localStorage) ===== */
+(function(){
+  const ids = ['cf-currency','cf-principal','cf-rate','cf-years','cf-nper','cf-is-comp'];
+  const els = ids.map(id => document.getElementById(id));
+  if (els.some(el => !el)) return; // ツール未配置時は何もしない
+  const K = 'cf:v2:';
+
+  // restore
+  ids.forEach((id, i)=>{
+    const el = els[i];
+    const v = localStorage.getItem(K+id);
+    if(v!==null){
+      if(el.type==='checkbox'){ el.checked = (v==='1'); }
+      else { el.value = v; }
+      el.dispatchEvent(new Event('input'));
+      el.dispatchEvent(new Event('change'));
+    }
+  });
+
+  // save
+  ids.forEach((id, i)=>{
+    const el = els[i];
+    ['input','change'].forEach(ev=>{
+      el.addEventListener(ev, ()=>{
+        const val = (el.type==='checkbox') ? (el.checked?'1':'0') : el.value;
+        try{ localStorage.setItem(K+id, val); }catch(_){}
+      });
+    });
   });
 })();
