@@ -1,10 +1,10 @@
-/* ===== script.js (Full Replace / No-Polling / One-Reload / Final) ===== */
+/* ===== script.js (Full Replace / v2.1 – only new calculator) ===== */
 (function(){
   const $  = (s, r=document) => r.querySelector(s);
   const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
   const html = document.documentElement;
 
-  /* ---------- 0) Google青バナー/吹き出しの抑止（Observerのみ） ---------- */
+  /* --- 0) Google青バナー/吹き出しの抑止（Observerのみ） --- */
   function killGoogleBar(){
     try{
       document.body.style.top = '0px';
@@ -19,7 +19,7 @@
   window.addEventListener('load', killGoogleBar, {once:true});
   window.addEventListener('pageshow', killGoogleBar, {once:true});
 
-  /* ---------- 0.1) 公式翻訳スクリプトの遅延ロード（多重読込ガード強化） ---------- */
+  /* --- 0.1) 公式翻訳スクリプトの遅延ロード（多重読込ガード） --- */
   function hasGTranslateTag(){
     return !!document.querySelector('script[src*="translate_a/element.js"]');
   }
@@ -37,7 +37,7 @@
     loadGTranslate();
   }
 
-  /* ---------- 1) ハンバーガー ---------- */
+  /* --- 1) ハンバーガー --- */
   const menuBtn      = $('#menuBtn');
   const menuDrawer   = $('#menuDrawer');
   const menuBackdrop = $('#menuBackdrop');
@@ -56,7 +56,7 @@
   menuClose    && menuClose.addEventListener('click', closeMenu);
   document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
 
-  /* ---------- 2) サイド目次（トップ項目は作らない） ---------- */
+  /* --- 2) サイド目次（トップ項目は作らない） --- */
   (function buildMenuNoTop(){
     const wrap = $('#menuGroups'); if (!wrap) return;
     const SECTIONS = [
@@ -98,7 +98,7 @@
     });
   })();
 
-  /* ---------- 3) 言語ドロワー（自作リスト＋確実適用） ---------- */
+  /* --- 3) 言語ドロワー --- */
   const langBtn      = $('#langBtn');
   const langDrawer   = $('#langDrawer');
   const langBackdrop = $('#langBackdrop');
@@ -130,8 +130,6 @@
       document.cookie = `googtrans=${encodeURIComponent(v)}; expires=${exp}; path=/` + (dm?`; domain=${dm}`:'');
     }));
   }
-
-  // 一度だけ確実にリロード → 二度目以降はchange発火のみ
   function applyTranslate(code){
     try{
       const once = sessionStorage.getItem('gt-once') === '1';
@@ -150,11 +148,9 @@
       }
     }catch(_){}
   }
-
   function buildLangList(){
     const sel = document.querySelector('#google_translate_element select.goog-te-combo');
     if (!sel || !langList){ setTimeout(buildLangList, 200); return; }
-
     const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
     const items = Array.from(sel.options)
       .filter(o => o.value && o.value !== 'auto')
@@ -173,7 +169,7 @@
       el.setAttribute('role','option');
       el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
       el.addEventListener('click', ()=>{
-        closeLang();
+        setLang(false);
         applyTranslate(code);
         killGoogleBar();
       });
@@ -193,7 +189,7 @@
     }
   }
 
-  /* ---------- 4) Googleの初期化コールバック（グローバルに必要） ---------- */
+  /* --- 4) Googleの初期化コールバック（グローバルに必要） --- */
   window.googleTranslateElementInit = function(){
     try{
       new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
@@ -210,7 +206,6 @@
         }
       }
     }, 400);
-
     setTimeout(buildLangList, 600);
     const host = $('#google_translate_element');
     if (host){
@@ -218,7 +213,7 @@
     }
   };
 
-  /* ---------- 5) 見出しの不自然な改行抑止 ---------- */
+  /* --- 5) 見出しの不自然な改行抑止 --- */
   (function fixHeroHeading(){
     function patch(el){
       if (!el || el.dataset.jpFixed) return;
@@ -235,7 +230,7 @@
     new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
   })();
 
-  /* ---------- 6) 為替表の横はみ出し対策 ---------- */
+  /* --- 6) 為替表の横はみ出し対策 --- */
   (function () {
     function markFxTable(){
       try{
@@ -262,66 +257,9 @@
     }
   })();
 
-})(); // ← ここまでが共通UI部分
+})(); // --- end of base UI scripts ---
 
-/* ===== compound calc (legacy #calc-compound) ===== */
-(function(){
-  const $ = (id) => document.getElementById(id);
-  const root = $('calc-compound');
-  if (!root) return;
-
-  const principal = $('c_principal');
-  const rate = $('c_rate');
-  const years = $('c_years');
-  const freq = $('c_freq');
-  const ack = $('c_ack');
-  const run = $('c_run');
-  const clearBtn = $('c_clear');
-  const result = $('c_result');
-  const balance = $('c_balance');
-  const multiple = $('c_multiple');
-
-  // 二重バインドガード
-  if (run && run.dataset.bound === '1') return;
-  if (run) run.dataset.bound = '1';
-
-  function fmtJPY(n){
-    if (Number.isNaN(n)) return '-';
-    return '¥' + Math.round(n).toLocaleString('ja-JP');
-  }
-  function fmtX(n){
-    if (Number.isNaN(n)) return '-';
-    return (Math.round(n * 100) / 100).toLocaleString('ja-JP') + '倍';
-  }
-
-  run && run.addEventListener('click', () => {
-    const P = parseFloat(principal.value);
-    const r = parseFloat(rate.value) / 100;
-    const t = parseFloat(years.value);
-    const n = parseInt(freq.value, 10);
-
-    if (!ack.checked) { alert('同意チェックを入れてください。'); return; }
-    if (!(P > 0 && r >= 0 && t > 0 && n > 0)) { alert('入力値を確認してください。'); return; }
-
-    const A = P * Math.pow(1 + r / n, n * t); // 複利
-    balance.textContent = fmtJPY(A);
-    multiple.textContent = fmtX(A / P);
-    result.hidden = false;
-  });
-
-  clearBtn && clearBtn.addEventListener('click', () => {
-    principal.value = '';
-    rate.value = '';
-    years.value = '';
-    freq.value = '12';
-    ack.checked = false;
-    result.hidden = true;
-    balance.textContent = '-';
-    multiple.textContent = '-';
-  });
-})();
-
-/* ===== Compounding Tool v2.1 (currency-safe, #cf-tool) ===== */
+/* ===== Compounding Tool v2.1 (currency-safe / only this tool) ===== */
 (function(){
   const $ = (id)=>document.getElementById(id);
   const el = {
@@ -337,7 +275,7 @@
     out: $('cf-out'),
     rateDisp: $('cf-rate-display')
   };
-  if(!el.currency) return; // セクション未配置なら何もしない
+  if(!el.currency) return; // 未配置なら何もしない
 
   const fmtMoney = (val, ccy, locale) => {
     try {
@@ -351,12 +289,12 @@
     return opt && opt.dataset.locale || undefined;
   };
 
-  // 年率の見える化
+  // 年率表示の同期
   const syncRate = ()=>{
     const r = parseFloat(el.rate.value || '0');
     el.rateDisp.textContent = isFinite(r) ? r.toFixed(2) + '%' : '--';
   };
-  el.rate && el.rate.addEventListener('input', syncRate);
+  el.rate.addEventListener('input', syncRate);
   syncRate();
 
   // 年率プリセット
@@ -367,13 +305,13 @@
     });
   });
 
-  // 免責同意でボタン有効化
-  const toggleRun = ()=> { if(el.run) el.run.disabled = !el.ack.checked; };
-  el.ack && el.ack.addEventListener('change', toggleRun);
+  // 同意チェックでボタン有効化
+  const toggleRun = ()=> { el.run.disabled = !el.ack.checked; };
+  el.ack.addEventListener('change', toggleRun);
   toggleRun();
 
   // 実行
-  el.run && el.run.addEventListener('click', (e)=>{
+  el.run.addEventListener('click', (e)=>{
     e.preventDefault();
     const ccy = el.currency.value;
     const locale = getLocale();
@@ -407,7 +345,7 @@
   });
 
   // クリア
-  el.clear && el.clear.addEventListener('click', ()=>{
+  el.clear.addEventListener('click', ()=>{
     el.principal.value = '1000000';
     el.rate.value = '10.00';
     el.years.value = '7';
@@ -415,36 +353,5 @@
     el.isComp.checked = true;
     syncRate();
     el.out.innerHTML = '';
-  });
-})();
-
-/* ===== CF Tool: persist last inputs (localStorage) ===== */
-(function(){
-  const ids = ['cf-currency','cf-principal','cf-rate','cf-years','cf-nper','cf-is-comp'];
-  const els = ids.map(id => document.getElementById(id));
-  if (els.some(el => !el)) return; // ツール未配置時は何もしない
-  const K = 'cf:v2:';
-
-  // restore
-  ids.forEach((id, i)=>{
-    const el = els[i];
-    const v = localStorage.getItem(K+id);
-    if(v!==null){
-      if(el.type==='checkbox'){ el.checked = (v==='1'); }
-      else { el.value = v; }
-      el.dispatchEvent(new Event('input'));
-      el.dispatchEvent(new Event('change'));
-    }
-  });
-
-  // save
-  ids.forEach((id, i)=>{
-    const el = els[i];
-    ['input','change'].forEach(ev=>{
-      el.addEventListener(ev, ()=>{
-        const val = (el.type==='checkbox') ? (el.checked?'1':'0') : el.value;
-        try{ localStorage.setItem(K+id, val); }catch(_){}
-      });
-    });
   });
 })();
