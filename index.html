@@ -8,15 +8,15 @@
 <!-- 自動翻訳の誘導を抑止 -->
 <meta name="google" content="notranslate">
 
-<!-- 差し替え確認用ピンクバー -->
+<!-- 既存：差し替え確認用ピンクバー -->
 <style>html{border-top:8px solid #ff0077!important}</style>
 
-<!-- キャッシュバスター -->
+<!-- キャッシュバスター更新（既存と同じでOK） -->
 <link rel="stylesheet" href="./style.css?v=20251103a">
 <link rel="stylesheet" href="./patch.css?v=20251110a">
 <meta name="theme-color" content="#111827">
 
-<!-- 初期状態が英語化しないための事前クッキー掃除 -->
+<!-- ▼ 初期状態が英語化しないための事前クッキー掃除（既存） -->
 <script>
 (function(){
   try{
@@ -43,7 +43,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ -->
+<!-- 右上：言語スイッチ（既存のまま） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -65,7 +65,7 @@
   </aside>
 </div>
 
-<!-- 右上ハンバーガー -->
+<!-- 右上ハンバーガー（既存のまま） -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -319,17 +319,6 @@
         </div>
       </details>
 
-      <details>
-        <summary>よくある質問（2年目以降）</summary>
-        <div class="content">
-          <ul>
-            <li>Q. 解約は？ → A. 更新前（例：月末）までに解約申請で可。</li>
-            <li>Q. 他社設立でもサポート可？ → A. 状況次第（別途診断）。</li>
-            <li>Q. .jpのままのリスクは？ → A. 「日本での実態」認定の可能性。.ge等への切替を検討。</li>
-          </ul>
-        </div>
-      </details>
-
     </div>
   </section>
 
@@ -495,8 +484,21 @@
             <li>Wise登録支援、連絡窓口（LINE/WhatsApp）</li>
             <li>必要書類・マニュアル一式＋最終チェック（日本語）</li>
           </ul>
+
+          <!-- 価値ポイント：渡航不要（原則） -->
+          <div class="value-box" role="region" aria-label="渡航不要のご案内">
+            <h5 class="value-title">渡航不要（原則）</h5>
+            <p><strong>わざわざ現地に行く必要はありません。</strong>日本語の文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
+            <ul class="value-list">
+              <li>航空券・宿泊・移動リスク・言語対応の負担を<strong>オンラインで代替</strong></li>
+              <li>MoU連携の正規ルート申請／書類の最終チェック</li>
+              <li>連絡はLINE/WhatsApp中心（履歴が残って安心）</li>
+            </ul>
+            <p class="text-sm muted">※ 開設可否は各銀行の審査判断です。方針・時期により、例外的に追加書類や来店を求められる場合があります。</p>
+          </div>
+
           <div class="price-promo" aria-label="個人口座開設サポート費用">
-            <div class="row"><span class="label">サポート費用：</span><span class="now">¥198,000</span><span class="text-sm">（税込）</span></div>
+            <div class="row"><span class="label">サポート費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
             <div class="meta">
               <small>対価の範囲：書類案内・最終チェック・翻訳補助・公証/アポスティーユ取得方法の案内・現地法律事務所への取次・申請進捗連絡。</small><br>
               <small>含まれないもの：銀行の審査/結果・銀行/公証/郵送の実費・為替/送金手数料・税務/法務の助言。</small><br>
@@ -508,11 +510,11 @@
         </div>
       </details>
 
-      <!-- ▼▼ ここが新ツール：通貨選択つき（旧calc-compoundは削除済み） ▼▼ -->
-      <details id="cf-tool" class="calc-wrap">
+      <!-- 複利の概算ツール（商品非特定・ユーザー任意入力／通貨切替対応） -->
+      <details id="cf-tool-sec" class="calc-wrap">
         <summary>複利の概算ツール（参考・商品非特定）</summary>
         <div class="content">
-          <div id="cf-tool-root" class="cf-card" role="form" aria-labelledby="cf-title">
+          <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
             <h4 id="cf-title" class="smallish">複利の概算ツール（数式ベース／商品・銀行は特定しません）</h4>
 
             <div class="cf-grid">
@@ -569,7 +571,7 @@
 
             <div id="cf-out" class="cf-out" aria-live="polite"></div>
 
-            <!-- 公式金利は“リンク案内のみ”（数値は掲載しない） -->
+            <!-- 公式金利ページへの“リンクのみ”を案内（安全策） -->
             <div class="cf-ref" style="margin-top:10px;">
               <details>
                 <summary>参考：公式の預金金利ページ（外部リンク）</summary>
@@ -577,15 +579,14 @@
                   <li><a href="https://bankofgeorgia.ge/en/retail/deposits" target="_blank" rel="noopener noreferrer nofollow">Bank of Georgia – Deposits</a></li>
                   <li><a href="https://www.tbcbank.ge/web/en/web/guest/deposits" target="_blank" rel="noopener noreferrer nofollow">TBC Bank – Deposits</a></li>
                 </ul>
-                <p class="text-sm muted">※ 最新値は各行の公式情報をご確認の上、「年率」欄にご自身で入力してください。当社は各行の金利を表示・保証しません。</p>
+                <p class="text-sm muted">※ 当社は各行の金利を表示・保証しません。最新値は各行の公式情報をご確認の上、「年率」欄にご自身で入力してください。</p>
               </details>
             </div>
 
-            <p class="text-sm muted" style="margin-top:.5rem;">※ 教育・参考目的です。投資の勧誘・推奨ではありません。</p>
+            <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。各国の法令・税制は居住国・個別事情で異なります。必要に応じて専門家にご相談ください。</p>
           </div>
         </div>
       </details>
-      <!-- ▲▲ 新ツール終わり ▲▲ -->
 
     </div>
   </section>
@@ -635,7 +636,7 @@
     </div>
   </section>
 
-  <!-- 画面最下部 固定CTA -->
+  <!-- 画面最下部 固定CTA（既存のまま） -->
   <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
     <div class="row">
       <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
@@ -650,8 +651,8 @@
   <small class="foot-sp">©2025 THE GEORGIAN TIMES｜ID：406365525｜一般情報の提供のみ</small>
 </footer>
 
-<!-- 末尾読み込み -->
-<script src="./script.js?v=20251123b" defer></script>
+<!-- 末尾読み込み（既存2本のまま） -->
+<script src="./script.js?v=20251110a" defer></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
