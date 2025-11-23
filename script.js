@@ -369,3 +369,99 @@
     multiple.textContent = '-';
   });
 })();
+/* ===== Compounding Tool v2.1 (currency-safe) ===== */
+(function(){
+  const $ = (id)=>document.getElementById(id);
+  const el = {
+    currency: $('cf-currency'),
+    principal: $('cf-principal'),
+    rate: $('cf-rate'),
+    years: $('cf-years'),
+    nper: $('cf-nper'),
+    isComp: $('cf-is-comp'),
+    ack: $('cf-ack'),
+    run: $('cf-run'),
+    clear: $('cf-clear'),
+    out: $('cf-out'),
+    rateDisp: $('cf-rate-display')
+  };
+  if(!el.currency) return; // セクション未配置なら何もしない
+
+  const fmtMoney = (val, ccy, locale) => {
+    try {
+      return new Intl.NumberFormat(locale || undefined, { style:'currency', currency: ccy, maximumFractionDigits: 2 }).format(val);
+    } catch(_) {
+      return (val.toLocaleString()) + ' ' + ccy;
+    }
+  };
+  const getLocale = ()=> {
+    const opt = el.currency.options[el.currency.selectedIndex];
+    return opt && opt.dataset.locale || undefined;
+  };
+
+  // 年率の見える化
+  const syncRate = ()=>{
+    const r = parseFloat(el.rate.value || '0');
+    el.rateDisp.textContent = isFinite(r) ? r.toFixed(2) + '%' : '--';
+  };
+  el.rate.addEventListener('input', syncRate);
+  syncRate();
+
+  // 年率プリセット
+  document.querySelectorAll('.cf-chip[data-rate]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      el.rate.value = parseFloat(b.dataset.rate).toFixed(2);
+      syncRate();
+    });
+  });
+
+  // 免責同意でボタン有効化
+  const toggleRun = ()=> { el.run.disabled = !el.ack.checked; };
+  el.ack.addEventListener('change', toggleRun);
+  toggleRun();
+
+  // 実行
+  el.run.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const ccy = el.currency.value;
+    const locale = getLocale();
+    const P = Math.max(0, parseFloat(el.principal.value || '0'));
+    const r = (parseFloat(el.rate.value || '0')/100);
+    const t = Math.max(0, parseFloat(el.years.value || '0'));
+    const m = Math.max(1, parseInt(el.nper.value || '1', 10));
+    const isComp = el.isComp.checked;
+
+    if(!isFinite(P) || !isFinite(r) || !isFinite(t) || !isFinite(m)){
+      el.out.innerHTML = '<p class="muted">入力値を確認してください。</p>';
+      return;
+    }
+
+    const A = isComp ? P * Math.pow(1 + r/m, m*t) : P * (1 + r * t);
+    const interest = Math.max(0, A - P);
+
+    el.out.innerHTML = `
+      <h5>計算結果（概算）</h5>
+      <div class="cf-kv">
+        <div>通貨</div><div>${ccy}</div>
+        <div>年率</div><div>${(r*100).toFixed(2)}%</div>
+        <div>期間</div><div>${t} 年</div>
+        <div>複利回数</div><div>${isComp ? (m + ' 回/年') : '単利（年1回換算）'}</div>
+        <div>元本</div><div>${fmtMoney(P, ccy, locale)}</div>
+        <div>総利息（概算）</div><div>${fmtMoney(interest, ccy, locale)}</div>
+        <div>満期残高（概算）</div><div><strong>${fmtMoney(A, ccy, locale)}</strong></div>
+      </div>
+      <p class="text-sm muted" style="margin-top:.5rem;">※ 税・手数料・為替・課税関係は含みません。教育・参考目的であり、投資の勧誘・推奨ではありません。</p>
+    `;
+  });
+
+  // クリア
+  el.clear.addEventListener('click', ()=>{
+    el.principal.value = '1000000';
+    el.rate.value = '10.00';
+    el.years.value = '7';
+    el.nper.value = '12';
+    el.isComp.checked = true;
+    syncRate();
+    el.out.innerHTML = '';
+  });
+})();
