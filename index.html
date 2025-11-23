@@ -617,6 +617,86 @@
       <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">今すぐ申し込み</a>
     </div>
   </div>
+  <!-- ===== Append-only: Compounding Tool v2.1 (currency-safe) ===== -->
+<section id="cf-tool-sec" class="container mx-auto max-w-4xl px-4 py-12">
+  <details open>
+    <summary>複利の概算ツール（参考・商品非特定）</summary>
+    <div class="content">
+      <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
+        <h4 id="cf-title" class="smallish">複利の概算ツール（数式ベース／商品・銀行は特定しません）</h4>
+
+        <div class="cf-grid">
+          <label for="cf-currency">通貨</label>
+          <select id="cf-currency" aria-label="通貨">
+            <option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option>
+            <option value="USD" data-locale="en-US" data-symbol="$">USD（ドル）</option>
+            <option value="EUR" data-locale="de-DE" data-symbol="€">EUR（ユーロ）</option>
+            <option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL（ラリ）</option>
+          </select>
+
+          <label for="cf-principal">元本</label>
+          <input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
+
+          <label for="cf-rate">年率（%・任意入力）</label>
+          <input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
+          <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
+
+          <label for="cf-years">年数</label>
+          <input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
+
+          <label for="cf-nper">回数/年</label>
+          <select id="cf-nper">
+            <option value="1">年1回</option>
+            <option value="4">四半期</option>
+            <option value="12" selected>月次</option>
+            <option value="365">日次</option>
+          </select>
+
+          <label for="cf-is-comp">複利で計算</label>
+          <input id="cf-is-comp" type="checkbox" checked>
+        </div>
+
+        <div class="cf-preset" aria-label="年率の例（商品非特定）">
+          <span class="cf-hint">年率の例：</span>
+          <button type="button" class="cf-chip" data-rate="5">5%</button>
+          <button type="button" class="cf-chip" data-rate="8">8%</button>
+          <button type="button" class="cf-chip" data-rate="10">10%</button>
+          <button type="button" class="cf-chip" data-rate="12">12%</button>
+          <small class="note">※ 例示の数値であり、特定の商品・銀行を示すものではありません。</small>
+        </div>
+
+        <div class="cf-ack">
+          <input id="cf-ack" type="checkbox">
+          <label for="cf-ack">
+            一般的な<strong>数学計算</strong>の参考ツールです。特定の商品・銀行・利回りの示唆ではありません。税・手数料・為替・課税関係は加味していません。結果は将来の成果を示唆・保証しません。
+          </label>
+        </div>
+
+        <div class="cf-actions">
+          <button id="cf-run" class="btn secondary" disabled>結果を表示</button>
+          <button id="cf-clear" class="btn neutral" type="button">クリア</button>
+        </div>
+
+        <div id="cf-out" class="cf-out" aria-live="polite"></div>
+
+        <!-- 公式金利ページへの“リンクのみ”を案内（安全策） -->
+        <div class="cf-ref" style="margin-top:10px;">
+          <details>
+            <summary>参考：公式の預金金利ページ（外部リンク）</summary>
+            <ul class="cf-links">
+              <li><a href="https://bankofgeorgia.ge/en/retail/deposits" target="_blank" rel="noopener noreferrer nofollow">Bank of Georgia – Deposits</a></li>
+              <li><a href="https://www.tbcbank.ge/web/en/web/guest/deposits" target="_blank" rel="noopener noreferrer nofollow">TBC Bank – Deposits</a></li>
+            </ul>
+            <p class="text-sm muted">※ 当社は各行の金利を表示・保証しません。最新値は各行の公式情報をご確認の上、「年率」欄にご自身で入力してください。</p>
+          </details>
+        </div>
+
+        <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。各国の法令・税制は居住国・個別事情で異なります。必要に応じて専門家にご相談ください。</p>
+      </div>
+    </div>
+  </details>
+</section>
+<!-- ===== /Compounding Tool v2.1 ===== -->
 </main>
 
 <footer class="site-foot" role="contentinfo">
