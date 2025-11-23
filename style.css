@@ -266,3 +266,24 @@ h1, .hero h1, .page-title, .hero .lead {
 #disclaimer .accordion > details[open] > summary::after{
   background:#93c5fd;
 }
+/* ===== cf- (Compounding Tool) ===== */
+.cf-card{border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:14px}
+.cf-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;margin-top:6px}
+.cf-grid label{align-self:center;color:#0b1220;font-weight:600}
+.cf-grid input,.cf-grid select{height:40px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:14px}
+.cf-subrow{grid-column:2 / 3;color:#475569;font-size:.9em;margin-top:-4px}
+.cf-preset{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 6px}
+.cf-chip{border:1px solid #e5e7eb;background:#f8fafc;border-radius:999px;padding:.25rem .6rem;font-weight:700;cursor:pointer}
+.cf-chip:hover{background:#eef2f7}
+.cf-ack{display:flex;gap:8px;align-items:flex-start;border:1px solid #e5e7eb;background:#f9fafb;border-radius:10px;padding:10px;margin:10px 0}
+.cf-actions{display:flex;gap:8px;justify-content:flex-start;margin:8px 0}
+.cf-out{margin-top:8px;border:1px dashed #d1d5db;border-radius:10px;padding:10px;background:#fafafa}
+.cf-out .cf-kv{display:grid;grid-template-columns:180px 1fr;gap:6px 10px}
+.cf-out h5{margin:.3rem 0 .4rem;font-weight:800}
+.cf-links{list-style:none;margin:.4rem 0 0;padding-left:1rem}
+.cf-links li{margin:.2rem 0}
+@media (max-width:640px){
+  .cf-grid{grid-template-columns:1fr;gap:8px}
+  .cf-subrow{grid-column:auto}
+  .cf-out .cf-kv{grid-template-columns:1fr}
+}
