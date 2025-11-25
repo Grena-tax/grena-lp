@@ -287,3 +287,17 @@ h1, .hero h1, .page-title, .hero .lead {
   .cf-subrow{grid-column:auto}
   .cf-out .cf-kv{grid-template-columns:1fr}
 }
+/* サクッと要点の行間を少し広げる */
+.quick-summary .qs-list {
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-top: .4rem;
+}
+
+.quick-summary .qs-list li + li {
+  margin-top: .8rem;  /* 行と行のあいだをあける */
+}
+
+.quick-summary .qs-tag {
+  margin: 0 0 .1rem;
+}
