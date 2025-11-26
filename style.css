@@ -301,3 +301,8 @@ h1, .hero h1, .page-title, .hero .lead {
 .quick-summary .qs-tag {
   margin: 0 0 .1rem;
 }
+
+/* 「サクッと要点（Quick summary）」の下にしっかり余白を入れる */
+.quick-summary .row {
+  margin-bottom: .8rem;
+}
