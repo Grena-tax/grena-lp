@@ -21,7 +21,7 @@
 (function(){
   try{
     var host = location.hostname.replace(/^www\./,'');
-    var m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    var m = document.cookie.match(/(?:^|;\s*)Googtrans=([^;]+)/);
     if (m) {
       var v = decodeURIComponent(m[1]||'');
       if (v && v !== '/ja/ja') {
@@ -81,8 +81,10 @@
 </nav>
 
 <main id="main">
-  <!-- フル文言は画面に出さず、sr-only だけで保持 -->
-  <h1 class="sr-only">ジョージア法人設立・個人事業主・個人口座｜公開資料の参照に基づく一般情報／MoU契約／オンライン手続き</h1>
+  <!-- フル文言は画面に出さず、SEO用にのみ保持（強制的に非表示にしておく） -->
+  <h1 class="sr-only" style="position:absolute;left:-9999px;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden;">
+    ジョージア法人設立・個人事業主・個人口座｜公開資料の参照に基づく一般情報／MoU契約／オンライン手続き
+  </h1>
 
   <!-- =========================
     法人設立セクション
@@ -101,12 +103,12 @@
 
       <p class="qs-tag">こんな方におすすめ</p>
       <ul class="qs-list">
-        <li>海外向けの取引用に、自分の個人事業とは分けた「法人の箱」をつくっておきたい方</li>
-        <li>将来の移住や国際展開を見すえて、ジョージアに法人拠点を持っておきたい方</li>
+        <li>海外事業をこれから始めたい方</li>
+        <li>すでに海外取引があり、個人とは別に「法人の箱」を作っておきたい方</li>
         <li>ジョージア語やジョージアの役所手続きが不安で、自国のことばで進めたい方</li>
       </ul>
 
-      <p class="qs-tag">提供内容</p>
+      <p class="qs-tag">サポート内容</p>
       <ul class="qs-list">
         <li>ジョージア法人の登記サポート（登記官との連絡や必要書類の案内など）</li>
         <li>法人口座開設に向けた書類準備・連絡のサポート（開設可否は各銀行の審査判断）</li>
@@ -117,39 +119,18 @@
       <ul class="qs-list">
         <li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li>
         <li>LP付き・フルサポートなどの上位プランもあり（いずれも事務サポートの対価です）</li>
+        <!-- ▼ ここを 2〜3日 → 7〜10営業日 に変更 -->
+        <li>法人登記の完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong>（案件や時期により変動します）</li>
       </ul>
 
       <p class="meta">※ 制度の詳細や注意事項は、下の各アコーディオン項目をご確認ください。</p>
     </div>
 
-    <!-- このページで分かること / 分からないこと -->
-    <div class="price-promo quick-summary" aria-label="このページで分かること・分からないこと">
-      <div class="row">
-        <span class="label">このページで分かること / 分からないこと</span>
-      </div>
-
-      <p class="qs-tag">このページで分かること</p>
-      <ul class="qs-list">
-        <li>ジョージア法人・個人事業主・個人口座の、ざっくりした仕組みとイメージ</li>
-        <li>相談〜申し込み〜完了までの、おおまかな流れ</li>
-        <li>サポート内容と、事務サポートとしての費用の目安</li>
-      </ul>
-
-      <p class="qs-tag">このページでは分からないこと</p>
-      <ul class="qs-list">
-        <li>自国で最終的にどれくらい税負担が変わるかなどの、個別の節税効果</li>
-        <li>特定の投資商品や運用方法の「良し悪し」</li>
-        <li>各銀行・税務当局・規制当局による最終判断や審査の結果</li>
-      </ul>
-
-      <p class="meta">※ 個別の節税額・資産運用の判断は、必ず自国の専門家（税理士・弁護士など）にご相談ください。</p>
-    </div>
-
-    <!-- ご利用の流れ（全プラン共通・3ステップ） -->
-    <div class="progress-steps flow-steps" aria-label="ご利用の大まかな流れ（全プラン共通）">
-      <div class="step">1. メッセージ / LINE でざっくり相談</div>
-      <div class="step">2. ヒアリングシート記入 → サポート内容と費用のご案内</div>
-      <div class="step">3. お申し込み → 現地手続き → 完了のご報告</div>
+    <!-- 3ステップの流れ -->
+    <div class="progress-steps" aria-label="ご利用の3ステップ">
+      <div class="step">1. メッセージで相談</div>
+      <div class="step">2. ヒアリングシート記入 → ご提案</div>
+      <div class="step">3. お申し込み → 現地手続き → 完了報告</div>
     </div>
 
     <div class="space-y-3 accordion">
@@ -161,11 +142,11 @@
           <span class="note">※ 当社はOECD／PwCの認定・提携機関ではありません。記載は公表資料を参照した一般情報で、助言や保証を目的とするものではありません。</span>
           <p><strong>留意事項（居住国側の税制）</strong></p>
           <ul>
-            <li>日本を含む居住国の税法（CFC、移転価格等）の適用可能性があります。</li>
+            <li>居住国の税法（CFC、移転価格等）の適用可能性があります。</li>
             <li>実際の税務効果は居住地・所得区分・資本構成など個別事情で大きく異なります。</li>
             <li><strong>税務・法務の助言は行いません。必ず有資格の専門家にご相談ください。</strong></li>
           </ul>
-          <p>渡航・英語・Zoomは不要で、文面ベースのやりとりで完了します。</p>
+          <p>渡航・英語・オンライン会議は不要で、文面ベースのやりとりで完了します。</p>
         </div>
       </details>
 
@@ -173,7 +154,7 @@
         <summary>よくある検討動機（一般的な例）</summary>
         <div class="content">
           <ul>
-            <li>海外法人を検討したいが、英語・現地手続きに不安がある</li>
+            <li>海外法人を検討したいが、言語や現地手続きに不安がある</li>
             <li>将来的な税務・コンプライアンス対応を見据え、制度面を理解しておきたい</li>
             <li>暗号資産の取扱いに関する制度面の情報を収集しておきたい</li>
           </ul>
@@ -211,7 +192,7 @@
       <details>
         <summary>法人税の課税タイミング（再投資型の一般説明）</summary>
         <div class="content">
-          <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税される制度です（例外あり）。<br><span class="text-sm muted">※ 日本居住者等はCFC適用等の可能性があります。必ず専門家にご確認ください。</span></p>
+          <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税される制度です（例外あり）。<br><span class="text-sm muted">※ 居住国によってはCFC適用等の可能性があります。必ず専門家にご確認ください。</span></p>
           <p>出典例：</p>
           <ul>
             <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener noreferrer" aria-label="PwCの資料（外部サイト）">PwCの資料（外部）</a></li>
@@ -238,7 +219,8 @@
         <summary>初年度の事務サポート範囲</summary>
         <div class="content">
           <ul>
-            <li>法人登記（目安：現地営業日ベース2〜3日／変動あり）</li>
+            <!-- ▼ ここを 2〜3日 → 7〜10営業日 に変更 -->
+            <li>法人登記（目安：現地営業日ベース7〜10営業日／変動あり）</li>
             <li>バーチャルオフィス（12ヶ月）</li>
             <li>英文契約書の取得・公証（アポスティーユ手配案内含む）</li>
             <li>IBAN法人口座<strong>開設手続の支援（取次・事務連絡）</strong></li>
@@ -273,20 +255,6 @@
       </details>
 
     </div>
-
-    <!-- こんな方にはおすすめしません（全プラン共通の前提） -->
-    <div class="price-promo quick-summary" aria-label="おすすめしないケース">
-      <div class="row">
-        <span class="label">こんな方にはおすすめしません</span>
-      </div>
-      <ul class="qs-list">
-        <li>「節税だけ」を目的にしていて、自国の税務ルールや申告に向き合うつもりがない方</li>
-        <li>短期の投機目的だけを考えていて、長期の事業やルール順守を重視していない方</li>
-        <li>帳簿づけや、必要な書類の準備をほとんど行う気がない方</li>
-      </ul>
-      <p class="meta">※ 法人設立・個人事業主・個人口座のいずれも、長く安全に続けたい方向けのサポートです。「楽に節税だけ」を求める方とは相性がよくありません。</p>
-    </div>
-
   </section>
 
   <!-- =========================
@@ -298,6 +266,37 @@
         <summary>料金プラン（範囲は事務サポート）</summary>
         <div class="content">
 
+          <!-- 料金＋手続き日数の早見表 -->
+          <h3 class="smallish">料金と手続き日数の早見表</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>内容</th>
+                <th>サポート料金（税込）</th>
+                <th>手続きの目安</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>法人設立 基本プラン</td>
+                <td>¥330,000〜</td>
+                <!-- ▼ ここを 2〜3日程度 → 7〜10営業日程度 に変更 -->
+                <td>法人登記：現地営業日ベース 7〜10営業日程度</td>
+              </tr>
+              <tr>
+                <td>個人事業主（IE＋SBS）</td>
+                <td>¥288,000</td>
+                <td>登録完了：オンライン申請ベース 7〜10営業日程度</td>
+              </tr>
+              <tr>
+                <td>個人口座開設サポート</td>
+                <td>¥258,000</td>
+                <td>開設完了：書類到着〜審査完了まで 数週間〜</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-sm muted">※ いずれも目安です。案件や時期、銀行・当局の方針により前後します。</p>
+
           <details>
             <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
             <div class="content">
@@ -306,7 +305,7 @@
                 <li>法人口座<strong>開設手続支援</strong>（TBC／BOG 他・審査は銀行判断）</li>
                 <li>登記住所（1年）</li>
                 <li>書類翻訳・郵送の事務サポート</li>
-                <li>日本語ベースで文面完結（Zoom・英語不要）</li>
+                <li>自国のことばベースで文面完結（オンライン会議・英語不要）</li>
               </ul>
               <span class="note">※ 表示価格は<strong>紹介・取次・事務サポートの対価</strong>であり、銀行手数料・預入金等とは無関係です。成功保証はありません。</span>
             </div>
@@ -319,7 +318,7 @@
                 <li>基本プランの範囲に加え：</li>
                 <li>.geドメイン取得手続（金融仲介とは無関係）</li>
                 <li>初期LP（問い合わせフォーム＋運用ガイドPDF）</li>
-                <li>月1回の軽微な相談（LINE/チャット）</li>
+                <li>月1回の軽微な相談（チャットベース）</li>
                 <li>ライティング構成アドバイス（一般情報）</li>
               </ul>
               <span class="note">※ LP＝ランディングページ。勧誘表示は行いません。</span>
@@ -415,7 +414,7 @@
         <li>海外ビジネスをフリーランス・副業でやりたい方、やっている方</li>
       </ul>
 
-      <p class="qs-tag">提供内容</p>
+      <p class="qs-tag">サポート内容</p>
       <ul class="qs-list">
         <li>IE（個人事業主）＋Small Business Status（SBS）のオンライン登録サポート</li>
         <li>税務ポータル（RS.ge）の初期サポート</li>
@@ -426,6 +425,7 @@
       <ul class="qs-list">
         <li>IE＋SBS 登録一式：<strong>¥288,000（税込）</strong></li>
         <li>公証費用や郵送費などの実費は別途ご負担となります</li>
+        <li>登録完了までの目安：オンライン申請ベースで<strong>7〜10営業日</strong>（時期により変動します）</li>
       </ul>
 
       <p class="meta">※ 制度の詳細・税率区分などは、下の各アコーディオン項目をご確認ください。</p>
@@ -440,7 +440,7 @@
           <ul>
             <li>登録対象：IE（個人事業主）＋SBS</li>
             <li>所要期間：7〜10営業日（2025年実績 平均8.2日・変動あり）</li>
-            <li>言語：日本語／英語／ジョージア語（翻訳士連携）</li>
+            <li>言語：複数言語（例：英語・ジョージア語等）に対応</li>
             <li>申請はオンライン（渡航不要）</li>
             <li>MoU提携：TREX LEGAL（2025/5/28）</li>
           </ul>
@@ -463,8 +463,8 @@
         <summary>サポート範囲と料金</summary>
         <div class="content">
           <ul>
-            <li>登録一式（IE＋SBS）／登録証明（英語・ジョージア語）／納税ID</li>
-            <li>RS.ge（税務ポータル）初期セットアップ</li>
+            <li>登録一式（IE＋SBS）／登録証明（複数言語）／納税ID</li>
+            <li>RS.ge（税務ポータル）初期セットアップの案内</li>
             <li>書類テンプレ一式・提出サポート（オンライン）</li>
           </ul>
 
@@ -481,7 +481,7 @@
             <div class="proof">
               <span>MoU：TREX LEGAL</span>
               <span>オンライン完結</span>
-              <span>日英・ジョージア語対応</span>
+              <span>複数言語対応</span>
             </div>
           </div>
 
@@ -507,7 +507,7 @@
             </tbody>
           </table>
           <p>適用業種例：IT開発、コンサル、デザイン、翻訳、小規模輸出入 等</p>
-          <p class="text-sm">※ 日本居住者は国外所得の申告義務等が生じ得ます。国税庁の案内等をご確認ください。</p>
+          <p class="text-sm">※ 居住国によっては国外所得の申告義務等が生じ得ます。各国の案内等をご確認ください。</p>
         </div>
       </details>
 
@@ -519,7 +519,7 @@
 
           <h5>FAQ</h5>
           <ul>
-            <li>Q. 日本から申請可能？ → A. 可能（オンライン完結）。</li>
+            <li>Q. 海外から申請可能？ → A. 可能（オンライン完結）。</li>
             <li>Q. 個人口座開設は含まれる？ → A. 別サービスです（下記参照）。</li>
             <li>Q. 上位区分へ移行する目安は？ → A. 収入規模に応じ各制度の要件を確認。</li>
           </ul>
@@ -564,7 +564,7 @@
         <li>渡航は難しいが、正規ルートで口座開設を検討したい方</li>
       </ul>
 
-      <p class="qs-tag">提供内容</p>
+      <p class="qs-tag">サポート内容</p>
       <ul class="qs-list">
         <li>必要書類の案内とチェック、公証・アポスティーユ取得方法のガイド</li>
         <li>提携法律事務所経由での申請取次と進捗連絡</li>
@@ -576,6 +576,7 @@
         <li>個人口座開設サポート：<strong>¥258,000（税込）</strong></li>
         <li>IE＋個人口座セット：<strong>¥498,000（税込）</strong>（IE登録と口座開設をまとめて進めたい方向け）</li>
         <li>銀行・公証・郵送などの実費は別途ご負担となります</li>
+        <li>開設完了までの目安：書類到着〜審査完了まで<strong>数週間〜</strong>（銀行・時期により変動します）</li>
       </ul>
 
       <p class="meta">※ 金融商品の勧誘ではなく、口座開設に関する一般情報と事務サポートのみを提供します。</p>
@@ -597,7 +598,7 @@
       </details>
 
       <details>
-        <summary>必要書類（日本在住・非居住者例）</summary>
+        <summary>必要書類（海外在住・非居住者例）</summary>
         <div class="content">
           <ul>
             <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
@@ -616,18 +617,18 @@
           <ul>
             <li>提携法律事務所による正規ルート申請（MoU連携）</li>
             <li>公証・アポスティーユ取得案内、翻訳補助、最終チェック</li>
-            <li>Wise登録支援、連絡窓口（LINE/WhatsApp）</li>
-            <li>必要書類・マニュアル一式＋最終チェック（日本語）</li>
+            <li>Wise登録支援、連絡窓口（チャットベース）</li>
+            <li>必要書類・マニュアル一式＋最終チェック</li>
           </ul>
 
           <!-- 価値ポイント：渡航不要（原則） -->
           <div class="value-box" role="region" aria-label="渡航不要のご案内">
             <h5 class="value-title">渡航不要（原則）</h5>
-            <p><strong>わざわざ現地に行く必要はありません。</strong>日本語の文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
+            <p><strong>わざわざ現地に行く必要はありません。</strong>自国のことばの文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
             <ul class="value-list">
               <li>航空券・宿泊・移動リスク・言語対応の負担を<strong>オンラインで代替</strong></li>
               <li>MoU連携の正規ルート申請／書類の最終チェック</li>
-              <li>連絡はLINE/WhatsApp中心（履歴が残って安心）</li>
+              <li>連絡はチャット中心（履歴が残って安心）</li>
             </ul>
             <p class="text-sm muted">※ 開設可否は各銀行の審査判断です。方針・時期により、例外的に追加書類や来店を求められる場合があります。</p>
           </div>
@@ -642,7 +643,7 @@
               <small>対価の範囲：書類案内・最終チェック・翻訳補助・公証/アポスティーユ取得方法の案内・現地法律事務所への取次・申請進捗連絡。</small><br>
               <small>含まれないもの：銀行の審査/結果・銀行/公証/郵送の実費・為替/送金手数料・税務/法務の助言。</small><br>
               <small>重要：開設可否は各銀行の審査判断であり、<strong>成功保証はありません</strong>（不許可でも性質上ご返金対象外）。</small><br>
-              <small>地域制限：米国・EEA 等、当社の免許・登録が求められる法域の居住者は対象外。</small>
+              <small>地域制限：法域によっては当社の免許・登録が求められるため、対象外となる場合があります。</small>
             </div>
             <div class="proof"><span>MoU：TREX LEGAL</span><span>SWIFT対応行あり</span></div>
           </div>
@@ -722,12 +723,51 @@
               </details>
             </div>
 
+            <!-- 為替レートの参考リンク（外部チャート） -->
+            <div class="cf-ref" style="margin-top:10px;">
+              <details>
+                <summary>参考：為替レート（外部チャート）</summary>
+                <ul class="cf-links">
+                  <li><a href="https://www.xe.com" target="_blank" rel="noopener noreferrer nofollow">XE.com（通貨チャート）</a></li>
+                  <li><a href="https://www.investing.com/currencies/" target="_blank" rel="noopener noreferrer nofollow">Investing.com – Currencies</a></li>
+                </ul>
+                <p class="text-sm muted">※ USD/GEL・EUR/GEL・JPY/GELなどのレートは、各サイト内で通貨ペアを選んでご確認ください。</p>
+              </details>
+            </div>
+
             <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。各国の法令・税制は居住国・個別事情で異なります。必要に応じて専門家にご相談ください。</p>
           </div>
         </div>
       </details>
 
     </div>
+  </section>
+
+  <!-- =========================
+    こんな方にはおすすめしません（共通）
+  ========================== -->
+  <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
+    <h2 class="text-xl md:text-2xl font-bold mb-4">こんな方にはおすすめしません</h2>
+    <ul class="qs-list">
+      <li>「節税だけ」を目的にしており、自国での申告やルールを守る気がない方</li>
+      <li>短期の投機目的だけを考えている方</li>
+      <li>必要書類の準備や帳簿づけを、まったく行うつもりがない方</li>
+    </ul>
+    <p class="text-sm muted" style="margin-top:.5rem;">※ 制度に沿って長く続けたい方向けのサービスです。ルールを軽視したい方とは相性がよくありません。</p>
+  </section>
+
+  <!-- =========================
+    相談前チェックリスト
+  ========================== -->
+  <section id="precheck" class="container mx-auto max-w-4xl px-4 py-8">
+    <h2 class="text-xl md:text-2xl font-bold mb-4">相談前に考えておいていただけるとスムーズです</h2>
+    <ul class="qs-list">
+      <li>主な収入の種類（IT・コンサル・デザイン・輸出入 など）</li>
+      <li>だいたいの売上規模（ざっくりでOK）</li>
+      <li>最初は「法人」から始めたいか、「個人事業主」から始めたいか</li>
+      <li>口座を主に使うのは「生活用」か「事業用」か</li>
+    </ul>
+    <p class="text-sm muted" style="margin-top:.5rem;">※ 全部決まっていなくても大丈夫です。「なんとなくこうしたい」で構いません。</p>
   </section>
 
   <!-- =========================
@@ -750,8 +790,8 @@
             <li>利率・試算・事例等は参考情報であり、<strong>将来の成果を保証しません。</strong></li>
             <li>個人情報は提携法律事務所・実務連携先の範囲でのみ共有し、目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
             <li>提供主体はジョージア法人であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（詳細は利用規約）。</li>
-            <li>米国・EEA等、当社の免許・登録が求められる法域の居住者は対象外です。</li>
-            <li>国外財産調書・国外送金等調書など、届出義務が生じ得ます。各自で所管官庁・専門家にご確認ください。</li>
+            <li>一部の法域（例：特定の金融ライセンスを要する地域）の居住者は対象外です。</li>
+            <li>国外財産に関する届出義務が生じ得ます。各自で所管官庁・専門家にご確認ください。</li>
           </ul>
           <p class="text-sm muted">※ 本サイトの情報は公表資料の参照に基づく一般情報で、特定行為の勧誘や意思決定のための助言を目的としません。</p>
         </div>
