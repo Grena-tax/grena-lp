@@ -323,3 +323,33 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans table td:nth-child(2) {
   white-space: nowrap;
 }
+/* === 料金プラン表：2列目は改行させず、横スクロールさせる === */
+
+/* 料金プランセクション自体を横スク可能に */
+#plans {
+  overflow-x: auto;
+}
+
+/* 料金プラン内のテーブルだけ「横に長く」してスクロール対象にする */
+#plans table {
+  display: block;
+  border-collapse: collapse;
+  /* 全体が入りきらない時は横に伸びるようにする */
+  min-width: 100%;
+  width: max-content;
+}
+
+/* 行グループと行は普通のテーブル表示のまま */
+#plans table thead,
+#plans table tbody {
+  display: table-row-group;
+}
+#plans table tr {
+  display: table-row;
+}
+
+/* 特に「手続きの目安」列は改行させない */
+#plans table th:nth-child(2),
+#plans table td:nth-child(2) {
+  white-space: nowrap;
+}
