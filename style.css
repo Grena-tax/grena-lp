@@ -306,3 +306,24 @@ h1, .hero h1, .page-title, .hero .lead {
 .quick-summary .row {
   margin-bottom: .8rem;
 }
+/* === 料金表（#plans 内のテーブル）専用の見た目調整 11/28 === */
+
+/* セクションごと横スクロールを許可 */
+#plans {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 料金表のテーブルを少し広くして、変な折り返しを減らす */
+#plans table {
+  min-width: 640px; /* きつければ 600〜700 の範囲でお好み調整可 */
+}
+
+/* 3列目「手続きの目安」を左寄せ＆自然な改行にする */
+#plans table th:nth-child(3),
+#plans table td:nth-child(3) {
+  text-align: left;
+  white-space: normal;   /* ここだけは自動改行を許可 */
+}
+
+/* それ以外の列は、今までどおりでOK（グローバル指定に任せる） */
