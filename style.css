@@ -353,3 +353,41 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans table td:nth-child(2) {
   white-space: nowrap;
 }
+/* === 料金プラン表レイアウト修正（オーバーフロー解除） === */
+
+/* 料金プランセクションは横スクロールさせない */
+#plans {
+  overflow-x: visible !important;
+}
+
+/* テーブルを通常のレイアウトに戻す */
+#plans table {
+  display: table !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  table-layout: fixed;  /* 列幅を割合で固定 */
+}
+
+/* 各セルの改行ルールを少しマイルドにする */
+#plans table th,
+#plans table td {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* 1列目＝内容、2列目＝料金、3列目＝手続きの目安 */
+#plans table th:nth-child(1),
+#plans table td:nth-child(1) {
+  width: 28%;
+}
+
+#plans table th:nth-child(2),
+#plans table td:nth-child(2) {
+  width: 22%;
+  white-space: nowrap;
+}
+
+#plans table th:nth-child(3),
+#plans table td:nth-child(3) {
+  width: 50%;
+}
