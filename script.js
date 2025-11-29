@@ -355,3 +355,24 @@
     el.out.innerHTML = '';
   });
 })();
+/* --- plans: 料金と手続き日数の表だけを横スク対応にする --- */
+(function(){
+  // 料金プランのセクションだけを見る
+  const sec = document.getElementById('plans');
+  if (!sec) return;
+
+  // セクション内の最初の table（早見表）だけを対象にする
+  const tbl = sec.querySelector('table');
+  if (!tbl) return;
+
+  // すでにラップ済みなら二重にラップしない
+  if (tbl.parentElement && tbl.parentElement.classList.contains('plan-table-wrap')) {
+    return;
+  }
+
+  // ラッパーを作って table を中に入れる
+  const wrap = document.createElement('div');
+  wrap.className = 'plan-table-wrap';
+  tbl.parentNode.insertBefore(wrap, tbl);
+  wrap.appendChild(tbl);
+})();
