@@ -427,3 +427,20 @@ h1, .hero h1, .page-title, .hero .lead {
     font-size: 0.90em;
   }
 }
+/* === 料金早見表：列幅を調整して、真ん中の線の位置を右に寄せる === */
+#plans .plan-table-wrap table th:nth-child(1),
+#plans .plan-table-wrap table td:nth-child(1){
+  width: 32%;
+}
+
+#plans .plan-table-wrap table th:nth-child(2),
+#plans .plan-table-wrap table td:nth-child(2){
+  width: 28%;          /* ← ここを広げたので、赤線位置に縦線が来る */
+  text-align: right;   /* 金額だけ右寄せ */
+  padding-right: 0.8rem; /* 縦線とのあいだに少し余白を作る */
+}
+
+#plans .plan-table-wrap table th:nth-child(3),
+#plans .plan-table-wrap table td:nth-child(3){
+  width: 40%;
+}
