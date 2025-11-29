@@ -391,3 +391,21 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans table td:nth-child(3) {
   width: 50%;
 }
+/* === #plans 内の料金早見表だけに効くレイアウト調整 === */
+#plans .plan-table-wrap{
+  width: 100%;
+  overflow-x: auto;              /* はみ出した分だけ横スクロール */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 表自体を少し広めにして、文字の詰まりを軽減 */
+#plans .plan-table-wrap table{
+  min-width: 640px;
+}
+
+/* 早見表のセルだけ、変なところで改行されないようにする */
+#plans .plan-table-wrap th,
+#plans .plan-table-wrap td{
+  word-break: keep-all;          /* 「ベ\nース」「度\n」みたいな割れ方を防ぐ */
+  white-space: normal;
+}
