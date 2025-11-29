@@ -409,3 +409,17 @@ h1, .hero h1, .page-title, .hero .lead {
   word-break: keep-all;          /* 「ベ\nース」「度\n」みたいな割れ方を防ぐ */
   white-space: normal;
 }
+/* === #plans 料金早見表：2列目（サポート料金）だけ中央寄せにする === */
+/* ここは料金プランセクション内の「早見表」だけに効きます */
+#plans .plan-table-wrap th:nth-child(2),
+#plans .plan-table-wrap td:nth-child(2){
+  text-align: center;      /* 右寄せ → 中央寄せ */
+}
+
+@media (max-width: 480px){
+  /* スマホだけ、ほんの少しだけ文字サイズを小さくして余裕を作る */
+  #plans .plan-table-wrap th:nth-child(2),
+  #plans .plan-table-wrap td:nth-child(2){
+    font-size: 0.95em;
+  }
+}
