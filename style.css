@@ -444,3 +444,40 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans .plan-table-wrap table td:nth-child(3){
   width: 40%;
 }
+/* =========================
+   Quick summary 全セクション共通
+   （法人／個人事業主／個人口座）
+   見出しを少し大きく・太く＋上下の余白を少し詰める
+========================= */
+
+/* ボックス全体の上下余白を少しだけ詰める */
+.price-promo.quick-summary {
+  padding-top: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+/* 「こんな方におすすめ」「サポート内容」「料金の目安」などの行 */
+.price-promo.quick-summary .qs-tag {
+  font-size: 0.98rem;      /* 本文より少し大きく */
+  font-weight: 600;        /* やや太字 */
+  margin-top: 0.75rem;     /* 上の余白を控えめに */
+  margin-bottom: 0.25rem;  /* 下の余白も短めに */
+  letter-spacing: 0.02em;  /* スマホで読みやすくするため少しだけ字間を広げる */
+}
+
+/* 箇条書きリスト全体（各ブロックの上下間隔を少し詰める） */
+.price-promo.quick-summary .qs-list {
+  margin-top: 0.1rem;
+  margin-bottom: 0.45rem;  /* セクション間の縦幅を少しだけ短く */
+  padding-left: 1.2rem;    /* 左の字下げを少しだけ浅く */
+}
+
+/* 箇条書き同士の行間をやや詰める */
+.price-promo.quick-summary .qs-list li + li {
+  margin-top: 0.12rem;
+}
+
+/* 一番上の「サクッと要点（Quick summary）」行の余白も少しだけ詰める */
+.price-promo.quick-summary .row {
+  margin-bottom: 0.35rem;
+}
