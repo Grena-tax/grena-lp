@@ -844,3 +844,387 @@
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 </body>
 </html>
+<!-- ======== Grena LP 追加ブロック：ここから ======== -->
+<style>
+  /* ほかと被らないように glp- で統一 */
+  .glp-wrapper {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f7fb;
+    color: #222;
+  }
+  .glp-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  /* ヒーロー */
+  .glp-hero {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    padding: 16px 16px 20px;
+    margin-bottom: 24px;
+  }
+  .glp-hero-imgwrap {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .glp-hero-img {
+    width: 100%;
+    display: block;
+  }
+  .glp-hero-title {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 4px 0 8px;
+  }
+  .glp-hero-lead {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0 0 6px;
+  }
+  .glp-hero-note {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #666;
+    margin: 4px 0 10px;
+  }
+
+  /* 水色のボタン共通 */
+  .glp-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .glp-btn-main {
+    background: #1ba5e1;
+    color: #fff;
+  }
+  .glp-btn-main:hover {
+    opacity: 0.85;
+  }
+  .glp-btn-sub {
+    background: #ffffff;
+    color: #1ba5e1;
+    border: 1px solid #1ba5e1;
+  }
+  .glp-btn-green {
+    background: #18a34a;
+    color: #fff;
+  }
+  .glp-btn-gray {
+    background: #d4d4d8;
+    color: #333;
+  }
+
+  /* 法人税などの帯 */
+  .glp-band {
+    background: #0f172a;
+    color: #e5f3ff;
+    border-radius: 16px;
+    padding: 14px 16px 12px;
+    margin-bottom: 20px;
+  }
+  .glp-band-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 8px;
+  }
+  .glp-band-list {
+    font-size: 12px;
+    margin: 0;
+    padding-left: 16px;
+  }
+  .glp-band-list li {
+    margin: 2px 0;
+  }
+  .glp-band-note {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 6px;
+  }
+
+  /* ジョージアってどんな国？ */
+  .glp-country {
+    margin-bottom: 24px;
+  }
+  .glp-country-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 10px;
+  }
+  .glp-country-photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 6px;
+  }
+  .glp-country-photos img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+  }
+
+  /* カードグリッド（スマホ2列） */
+  .glp-cardgrid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-gap: 10px;
+  }
+  .glp-card {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+    padding: 12px 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .glp-card-flag {
+    width: 32px;
+    height: auto;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .glp-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .glp-card-text {
+    font-size: 11px;
+    line-height: 1.5;
+    margin: 0 0 8px;
+    color: #4b5563;
+  }
+  .glp-card .glp-btn {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  /* 少し広い画面（PC）用 */
+  @media (min-width: 768px) {
+    .glp-hero {
+      padding: 20px 24px 24px;
+      display: grid;
+      grid-template-columns: 1.6fr 1.4fr;
+      grid-column-gap: 20px;
+      align-items: center;
+    }
+    .glp-hero-imgwrap {
+      margin-bottom: 0;
+    }
+    .glp-hero-title {
+      font-size: 22px;
+    }
+    .glp-hero-lead {
+      font-size: 14px;
+    }
+    .glp-hero-note {
+      font-size: 12px;
+    }
+    .glp-cardgrid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
+
+<div id="glp-landing" class="glp-wrapper">
+  <div class="glp-inner">
+
+    <!-- ヒーロー -->
+    <section class="glp-hero">
+      <div class="glp-hero-imgwrap">
+        <!-- ★ トビリシの写真に差し替え -->
+        <img src="YOUR_IMAGE_TOP_TBILISI.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img">
+      </div>
+      <div>
+        <p class="glp-hero-title">
+          ジョージアから、世界にひらくビジネスと資産管理
+        </p>
+        <p class="glp-hero-lead">
+          各国のルールに配慮しながら、ジョージアを拠点にした国際ビジネス・資産管理をサポートします。
+        </p>
+        <p class="glp-hero-note">
+          現地の法律事務所・会計士と連携し、ジョージアでの法人・口座開設に関する実務サポートを提供します。<br>
+          ※各国の税務・法務判断は、お住まいの国の専門家にご確認ください。
+        </p>
+        <a href="#" class="glp-btn glp-btn-main" data-glp-target="lp-start">
+          無料相談はこちら
+        </a>
+      </div>
+    </section>
+
+    <!-- 法人税などの帯 -->
+    <section class="glp-band">
+      <p class="glp-band-title">
+        ジョージアの税制・銀行制度を活用した国際ビジネス拠点
+      </p>
+      <ul class="glp-band-list">
+        <li>EU加盟候補国・ジョージアの制度に沿った法人・口座開設をサポート</li>
+        <li>渡航せずにオンライン完結を目指せるワークフローを構築</li>
+        <li>現地法律事務所との提携により、手続き内容を事前に確認したうえでご案内</li>
+      </ul>
+      <p class="glp-band-note">
+        ※当社は各国の税務・法務判断を行わず、制度や手続きの一般的な情報共有・実務サポートのみ行います。
+      </p>
+    </section>
+
+    <!-- ジョージアってどんな国？ 写真3枚 -->
+    <section class="glp-country">
+      <p class="glp-country-title">ジョージアってどんな国？</p>
+      <div class="glp-country-photos">
+        <!-- ★ 城（アンanuriなど） -->
+        <img src="YOUR_IMAGE_CASTLE.jpg" alt="ジョージアの教会と城塞">
+        <!-- ★ 伝統料理（ハチャプリ） -->
+        <img src="YOUR_IMAGE_FOOD.jpg" alt="ジョージアのチーズパン・ハチャプリ">
+        <!-- ★ 自由広場の像など -->
+        <img src="YOUR_IMAGE_SQUARE.jpg" alt="ジョージア・トビリシの広場">
+      </div>
+    </section>
+
+    <!-- 6枚のカード -->
+    <section class="glp-cardgrid">
+
+      <!-- 1. ジョージア法人設立 -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_FLAG.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <h3 class="glp-card-title">ジョージア法人設立</h3>
+        <p class="glp-card-text">
+          渡航不要でも手続き可能な法人設立フローを、現地の専門家と連携してサポートします。
+        </p>
+        <a href="#" class="glp-btn glp-btn-sub" data-glp-target="corp">詳しくはこちら</a>
+      </article>
+
+      <!-- 2. ジョージア個人事業主 -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_FLAG.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <h3 class="glp-card-title">ジョージア個人事業主（IE）登録</h3>
+        <p class="glp-card-text">
+          ジョージア政府が認める正規制度「IE登録」のご案内と、登録手続きの実務サポート（条件あり）。
+        </p>
+        <a href="#" class="glp-btn glp-btn-sub" data-glp-target="ie">詳しくはこちら</a>
+      </article>
+
+      <!-- 3. ジョージア銀行口座開設 -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_FLAG.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <h3 class="glp-card-title">ジョージア銀行口座開設</h3>
+        <p class="glp-card-text">
+          非居住者でも開設が検討できる銀行口座について、リスク・条件を含めた一般情報と手続きサポートを提供します。
+        </p>
+        <a href="#" class="glp-btn glp-btn-sub" data-glp-target="bank">今すぐチェック</a>
+      </article>
+
+      <!-- 4. 和食店をあなたの国に -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_FOOD.jpg" alt="寿司など和食イメージ" class="glp-card-flag">
+        <h3 class="glp-card-title">和食店をあなたの国に</h3>
+        <p class="glp-card-text">
+          寿司が握れなくても大丈夫。現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認までをサポートします。
+        </p>
+        <a href="#" class="glp-btn glp-btn-green" data-glp-target="washoku">無料相談する</a>
+      </article>
+
+      <!-- 5. 海外不動産購入・賃貸 -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_CASTLE.jpg" alt="海外不動産イメージ" class="glp-card-flag">
+        <h3 class="glp-card-title">海外不動産購入・賃貸</h3>
+        <p class="glp-card-text">
+          ジョージアを含む海外不動産について、現地パートナーと連携しながら、物件選び・契約プロセスのサポートを行います。
+        </p>
+        <a href="#" class="glp-btn glp-btn-gray" data-glp-target="realestate">準備中</a>
+      </article>
+
+      <!-- 6. その他・企画サポート -->
+      <article class="glp-card">
+        <img src="YOUR_IMAGE_FLAG.jpg" alt="サポートイメージ" class="glp-card-flag">
+        <h3 class="glp-card-title">その他・企画サポート</h3>
+        <p class="glp-card-text">
+          企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計をお手伝いします。
+        </p>
+        <a href="#" class="glp-btn glp-btn-sub" data-glp-target="others">詳しくはこちら</a>
+      </article>
+
+    </section>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  var landing = document.getElementById('glp-landing');
+  if (!landing) return;
+
+  /* 1) いま追加したブロックを、bodyの一番上に移動する */
+  try {
+    var first = document.body.firstChild;
+    if (first !== landing) {
+      document.body.insertBefore(landing, first);
+    }
+  } catch (e) {}
+
+  /* 2) クリックしたら、既存LPの「それっぽい見出し」までスクロールさせる */
+
+  // 探しに行くキーワード（既存LPの見出しの文言に合わせる）
+  var keywordMap = {
+    "lp-start": "ジョージアで、はじまる",        // 既存LPの一番上の見出し想定
+    "corp":     "ジョージア法人設立",
+    "ie":       "ジョージア個人事業主",
+    "bank":     "ジョージア銀行口座開設",
+    "washoku":  "和食店をあなたの国に",
+    "realestate": "海外不動産購入・賃貸",
+    "others":   "その他・企画サポート"
+  };
+
+  function scrollToKeyword(keyword) {
+    if (!keyword) return;
+
+    var tags = ["h1","h2","h3","h4","h5","h6","p","div","span","section"];
+    var nodes = [];
+    for (var i = 0; i < tags.length; i++) {
+      var list = document.getElementsByTagName(tags[i]);
+      for (var j = 0; j < list.length; j++) {
+        nodes.push(list[j]);
+      }
+    }
+
+    var target = null;
+    for (var k = 0; k < nodes.length; k++) {
+      var text = nodes[k].textContent || "";
+      if (text.indexOf(keyword) !== -1) {
+        target = nodes[k];
+        break;
+      }
+    }
+
+    if (target) {
+      var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
+      try {
+        window.scrollTo({ top: y, behavior: "smooth" });
+      } catch (e) {
+        window.scrollTo(0, y);
+      }
+    }
+  }
+
+  var links = landing.querySelectorAll("[data-glp-target]");
+  for (var n = 0; n < links.length; n++) {
+    links[n].addEventListener("click", function(ev) {
+      ev.preventDefault();
+      var key = this.getAttribute("data-glp-target");
+      scrollToKeyword(keywordMap[key]);
+    });
+  }
+})();
+</script>
+<!-- ======== Grena LP 追加ブロック：ここまで ======== -->
