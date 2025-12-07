@@ -667,3 +667,28 @@ h1, .hero h1, .page-title, .hero .lead {
 .glp-hero-card .glp-hero-note {
   color: #1f2937;
 }
+/* ==== ヒーローの一番上の白いカードだけを少し透明＆柔らかくする調整 v2 ==== */
+/* 実際のDOM構造に合わせて .glp-hero-content を直接上書きします */
+
+.glp-hero-content {
+  background: rgba(248, 250, 252, 0.88);      /* 真っ白 → ほんの少し透けた白 */
+  border-radius: 24px;                         /* 角丸を少し強めて柔らかく */
+  box-shadow: 0 18px 45px rgba(15, 23, 42, .26); /* 影はやや控えめに */
+}
+
+/* 文字色を少し落ち着かせて、白カードとのコントラストを調整 */
+.glp-hero-content .glp-hero-title {
+  color: #0f172a;
+}
+
+.glp-hero-content .glp-hero-lead,
+.glp-hero-content .glp-hero-note {
+  color: #111827;
+}
+
+/* スマホサイズでは過度にゴツく見えないよう、角丸を微調整 */
+@media (max-width: 767px) {
+  .glp-hero-content {
+    border-radius: 20px;
+  }
+}
