@@ -714,3 +714,26 @@ h1, .hero h1, .page-title, .hero .lead {
     border-radius: 20px !important;
   }
 }
+/* ==== ヒーローの一番上の白いカードを、もっと薄く・軽く見せる（再上書き） ==== */
+.glp-hero-content {
+  /* 白をだいぶ薄くして、背景写真をもっと透かす */
+  background: rgba(248, 250, 252, 0.60) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.18) !important;
+}
+
+/* 文字色は読みやすい濃いグレーのまま */
+.glp-hero-content .glp-hero-title {
+  color: #0f172a !important;
+}
+.glp-hero-content .glp-hero-lead,
+.glp-hero-content .glp-hero-note {
+  color: #111827 !important;
+}
+
+/* スマホでの角丸調整（少しだけ丸く） */
+@media (max-width: 767px) {
+  .glp-hero-content {
+    border-radius: 20px !important;
+  }
+}
