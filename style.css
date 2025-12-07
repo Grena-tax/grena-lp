@@ -692,3 +692,25 @@ h1, .hero h1, .page-title, .hero .lead {
     border-radius: 20px;
   }
 }
+/* ==== ヒーローの一番上の白いカードを少しだけ薄く・柔らかくする（強制上書き版） ==== */
+.glp-hero-content {
+  background: rgba(248, 250, 252, 0.82) !important;  /* 真っ白 → 少し透けた白 */
+  border-radius: 24px !important;                    /* 角をやや丸く */
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important; /* 影も少しだけ軽く */
+}
+
+/* 文字色は落ち着いた濃いグレーに（コントラスト調整） */
+.glp-hero-content .glp-hero-title {
+  color: #0f172a !important;
+}
+.glp-hero-content .glp-hero-lead,
+.glp-hero-content .glp-hero-note {
+  color: #111827 !important;
+}
+
+/* スマホではさらに少しだけ角丸を弱めて、画面に馴染ませる */
+@media (max-width: 767px) {
+  .glp-hero-content {
+    border-radius: 20px !important;
+  }
+}
