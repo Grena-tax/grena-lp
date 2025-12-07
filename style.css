@@ -642,3 +642,28 @@ h1, .hero h1, .page-title, .hero .lead {
     padding: 26px 32px 26px;
   }
 }
+/* ===== ヒーロー内の白カードを少しだけ透明＆薄い枠にする調整 ===== */
+/* 対象：ヒーローの中で一番上に出ている白いカードだけ */
+.glp-hero-card {
+  background: rgba(248, 250, 252, 0.90); /* 真っ白 → 少しだけ透けた白 */
+  border: 1px solid rgba(148, 163, 184, 0.35); /* ごく薄いグレーの枠 */
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28); /* 影をやや弱めてなじませる */
+}
+
+/* スマホでの余白と角丸を少しだけソフトに */
+@media (max-width: 767px) {
+  .glp-hero-card {
+    border-radius: 18px;
+    padding: 18px 16px 20px;
+  }
+}
+
+/* 文字がくっきりし過ぎないように、タイトルと本文を少しだけ落ち着かせる */
+.glp-hero-card .glp-hero-title {
+  color: #0f172a;
+}
+
+.glp-hero-card .glp-hero-lead,
+.glp-hero-card .glp-hero-note {
+  color: #1f2937;
+}
