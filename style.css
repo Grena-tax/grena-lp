@@ -768,3 +768,41 @@ h1, .hero h1, .page-title, .hero .lead {
   background: rgba(15,23,42,0.78) !important;
   color:#e5f2ff !important;
 }
+/* ▼ ヒーローの一番上の白いカード：ほぼ真っ白＋少しだけ透ける「最終版」 */
+/* ★ 必ず patch.css の一番下にそのまま追加してください ★ */
+.glp-hero-content{
+  /* 白ベースで、ほんの少しだけ背景が透ける */
+  background: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.28) !important;
+
+  color: #111827 !important;
+}
+
+/* タイトルとテキストの色（白いカード前提でくっきり見えるように） */
+.glp-hero-content .glp-hero-title{
+  color: #0f172a !important;
+}
+.glp-hero-content .glp-hero-lead{
+  color: #111827 !important;
+}
+.glp-hero-content .glp-hero-note{
+  color: #4b5563 !important;
+}
+
+/* 上の細い帯（EU候補国〜のところ）は、濃い目のネイビーで固定 */
+.glp-hero-kicker{
+  background: rgba(15, 23, 42, 0.82) !important;
+  color: #e5f2ff !important;
+}
+
+/* スマホでは角丸だけ少し弱めてなじませる */
+@media (max-width: 767px){
+  .glp-hero-content{
+    border-radius: 20px !important;
+  }
+}
