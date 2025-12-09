@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋HERO調整）===== */
+/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋ヒーロー調整）===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -232,26 +232,29 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
                "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
 }
 
-/* === ここから：UXポリッシュ（append-only, safe） =================== */
-/* 見出しの禁則・割れ対策（オンライ\nン 等を抑止） */
+/* === ここから：UXポリッシュ =================== */
 h1, .hero h1, .page-title, .hero .lead {
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-break: strict;
   text-wrap: balance;
 }
+
 /* 為替シミュレーション表：横スク時にヘッダー固定 */
 .fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
 .fx-sim thead th{
   position: sticky; top: 0; z-index: 1;
   background: #ffffff;
 }
+
 /* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
 /* フォーカス輪郭（控えめに可視化） */
 :focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+
 /* ヒーロー見出しで完全に改行させたくない語に付ける */
 .nowrap { white-space: nowrap; }
 
@@ -271,7 +274,7 @@ h1, .hero h1, .page-title, .hero .lead {
 .cf-card{border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:14px}
 .cf-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;margin-top:6px}
 .cf-grid label{align-self:center;color:#0b1220;font-weight:600}
-.cf-grid input,.cf-grid select{height:40px;border:1px solid #d1d5db;border-radius:8px;padding:0 10px;font-size:14px}
+.cf-grid input,.cf-grid select{height:40px;border:1px固 #d1d5db;border-radius:8px;padding:0 10px;font-size:14px}
 .cf-subrow{grid-column:2 / 3;color:#475569;font-size:.9em;margin-top:-4px}
 .cf-preset{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 6px}
 .cf-chip{border:1px solid #e5e7eb;background:#f8fafc;border-radius:999px;padding:.25rem .6rem;font-weight:700;cursor:pointer}
@@ -301,90 +304,19 @@ h1, .hero h1, .page-title, .hero .lead {
 .quick-summary .qs-tag {
   margin: 0 0 .1rem;
 }
-/* 「サクッと要点（Quick summary）」の下にしっかり余白を入れる */
 .quick-summary .row {
   margin-bottom: .8rem;
 }
 
 /* === ここから：料金プラン表（#plans）だけのはみ出し＆変な改行対策 === */
 
-/* 料金プランの表を、必要なら横スクロールで見せる */
-#plans table {
-  display: block;
-  width: max-content;
-  min-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 2列目「手続きの目安」は途中で変な位置で折り返さない */
-#plans table th:nth-child(2),
-#plans table td:nth-child(2) {
-  white-space: nowrap;
-}
-
 /* 料金プランセクション自体を横スク可能に */
-#plans {
-  overflow-x: auto;
-}
-
-/* テーブルを横長に */
-#plans table {
-  display: block;
-  border-collapse: collapse;
-  min-width: 100%;
-  width: max-content;
-}
-#plans table thead,
-#plans table tbody {
-  display: table-row-group;
-}
-#plans table tr {
-  display: table-row;
-}
-
-/* 特に「手続きの目安」列は改行させない */
-#plans table th:nth-child(2),
-#plans table td:nth-child(2) {
-  white-space: nowrap;
-}
-
-/* === 料金プラン表レイアウト修正（オーバーフロー解除） === */
-#plans {
-  overflow-x: visible !important;
-}
-#plans table {
-  display: table !important;
-  width: 100% !important;
-  min-width: 0 !important;
-  table-layout: fixed;
-}
-#plans table th,
-#plans table td {
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-/* 1列目＝内容、2列目＝料金、3列目＝手続きの目安 */
-#plans table th:nth-child(1),
-#plans table td:nth-child(1) {
-  width: 28%;
-}
-#plans table th:nth-child(2),
-#plans table td:nth-child(2) {
-  width: 22%;
-  white-space: nowrap;
-}
-#plans table th:nth-child(3),
-#plans table td:nth-child(3) {
-  width: 50%;
-}
-
-/* === #plans 内の料金早見表だけに効くレイアウト調整 === */
 #plans .plan-table-wrap{
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
+/* 表自体を少し広めに */
 #plans .plan-table-wrap table{
   min-width: 640px;
 }
@@ -393,8 +325,7 @@ h1, .hero h1, .page-title, .hero .lead {
   word-break: keep-all;
   white-space: normal;
 }
-
-/* === #plans 料金早見表：2列目（サポート料金）だけ中央寄せ＋余白調整 === */
+/* 2列目（サポート料金）だけ中央寄せ＋余白 */
 #plans .plan-table-wrap th:nth-child(2),
 #plans .plan-table-wrap td:nth-child(2){
   text-align: center;
@@ -408,8 +339,7 @@ h1, .hero h1, .page-title, .hero .lead {
     font-size: 0.90em;
   }
 }
-
-/* === 料金早見表：列幅を調整して、真ん中の線の位置を右に寄せる === */
+/* 列幅の微調整 */
 #plans .plan-table-wrap table th:nth-child(1),
 #plans .plan-table-wrap table td:nth-child(1){
   width: 32%;
@@ -425,40 +355,8 @@ h1, .hero h1, .page-title, .hero .lead {
   width: 40%;
 }
 
-/* =========================
-   Quick summary 全セクション共通
-========================= */
-
-/* ボックス全体の上下余白を少しだけ詰める */
-.price-promo.quick-summary {
-  padding-top: 0.9rem;
-  padding-bottom: 0.9rem;
-}
-/* 「こんな方におすすめ」などの行 */
-.price-promo.quick-summary .qs-tag {
-  font-size: 0.98rem;
-  font-weight: 600;
-  margin-top: 0.75rem;
-  margin-bottom: 0.25rem;
-  letter-spacing: 0.02em;
-}
-/* 箇条書きリスト全体 */
-.price-promo.quick-summary .qs-list {
-  margin-top: 0.1rem;
-  margin-bottom: 0.45rem;
-  padding-left: 1.2rem;
-}
-/* 箇条書き同士の行間 */
-.price-promo.quick-summary .qs-list li + li {
-  margin-top: 0.12rem;
-}
-/* 一番上の行の余白 */
-.price-promo.quick-summary .row {
-  margin-bottom: 0.35rem;
-}
-
 /* =========================================
-   TOPヒーロー（背景写真＋白オーバーレイ＋テキスト）
+   TOPヒーロー（背景写真＋白ガラスカード）
    ========================================= */
 
 .glp-hero{
@@ -481,7 +379,7 @@ h1, .hero h1, .page-title, .hero .lead {
   overflow: hidden;
 }
 
-/* 背景写真本体（やや拡大＋色味は残す） */
+/* 背景写真本体 */
 .glp-hero-img{
   width: 100%;
   height: 100%;
@@ -490,7 +388,7 @@ h1, .hero h1, .page-title, .hero .lead {
   filter: saturate(1.05);
 }
 
-/* 白っぽいベール（上は薄く、下はやや白く） */
+/* 上がほんのり、下に行くほど白が強くなるベール */
 .glp-hero-imgwrap::before{
   content: "";
   position: absolute;
@@ -498,13 +396,13 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,0.22),
-      rgba(255,255,255,0.68)
+      rgba(255,255,255,0.20),
+      rgba(255,255,255,0.70)
     );
   z-index: 1;
 }
 
-/* テキストボックス全体（白いカード） */
+/* 中央の白ガラスカード（今回ここだけ薄く） */
 .glp-hero-content{
   position: relative;
   z-index: 2;
@@ -512,13 +410,12 @@ h1, .hero h1, .page-title, .hero .lead {
   margin: 0 auto;
   padding: 22px 24px 24px;
   border-radius: 24px;
-  /* ここが「薄く透けた白」：少し背景が見える */
-  background: rgba(255,255,255,0.54);
-  box-shadow: 0 18px 40px rgba(15,23,42,0.22);
-  border: 1px solid rgba(255,255,255,0.90);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #0f172a;
+  background: rgba(255,255,255,0.52); /* ← ここが「薄さ」：少しだけ透ける */
+  border: 1px solid rgba(255,255,255,0.85);
+  box-shadow: 0 16px 36px rgba(15,23,42,0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #111827;
 }
 
 /* 上部の小見出し（EU候補国〜） */
@@ -528,32 +425,35 @@ h1, .hero h1, .page-title, .hero .lead {
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
-  background: rgba(15,23,42,0.78);
   color: #e5f2ff;
-  padding: 6px 14px;
+  background: rgba(15,23,42,0.78);
+  padding: 6px 12px;
   border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-/* メインタイトル「ジョージアで、はじまる。」 */
+/* メインタイトル */
 .glp-hero-title{
   margin: 10px 0 8px;
   font-size: clamp(26px, 5vw, 36px);
-  line-height: 1.25;
+  line-height: 1.28;
   font-weight: 800;
   color: #0f172a;
 }
 
-/* リード文（2行くらい） */
+/* リード文 */
 .glp-hero-lead{
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: clamp(14px, 2.5vw, 16px);
   line-height: 1.7;
   color: #111827;
 }
 
-/* 補足の一文（注意書きの前の文章） */
+/* 補足本文 */
 .glp-hero-note{
-  margin: 4px 0 12px;
+  margin: 4px 0 14px;
   font-size: clamp(13px, 2.2vw, 15px);
   line-height: 1.7;
   color: #475569;
@@ -574,7 +474,7 @@ h1, .hero h1, .page-title, .hero .lead {
   font-size: 0.9rem;
 }
 
-/* チェック付きの小さなポイント */
+/* 下の小さなポイント */
 .glp-hero-subpoints{
   display: flex;
   flex-wrap: wrap;
@@ -596,28 +496,19 @@ h1, .hero h1, .page-title, .hero .lead {
 
 @media (max-width: 767px){
   .glp-hero{
-    padding-top: 72px;
+    padding-top: 76px;
     padding-bottom: 52px;
   }
   .glp-hero-content{
-    padding: 18px 18px 20px;
+    padding: 18px 16px 20px;
     border-radius: 20px;
-    /* スマホではすこしだけさらに薄く */
-    background: rgba(255,255,255,0.50);
+    background: rgba(255,255,255,0.48); /* スマホでは気持ちだけ薄く */
   }
   .glp-hero-subpoints{
     font-size: 11px;
   }
   .sp-only{ display: inline; }
   .pc-only{ display: none; }
-}
-
-@media (max-width: 480px){
-  .glp-hero-content{
-    /* いちばん小さい画面ではもう一段階だけ薄く */
-    background: rgba(255,255,255,0.48);
-    padding: 16px 16px 18px;
-  }
 }
 
 @media (min-width: 1024px){
