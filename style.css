@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ）===== */
+/* ===== patch.css（完全置換版）===== */
 
 /* --- スクロール/安全域/CTA高さ --- */
 :root{
@@ -212,11 +212,6 @@ button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
   font-family: revert !important;
 }
-html, body,
-button, input, select, textarea, summary, details,
-.menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !important;
-}
 @supports not (font-family: revert) {
   html { font-family: inherit !important; }
   body { font-family: inherit !important; }
@@ -266,6 +261,7 @@ h1, .hero h1, .page-title, .hero .lead {
 #disclaimer .accordion > details[open] > summary::after{
   background:#93c5fd;
 }
+
 /* ===== cf- (Compounding Tool) ===== */
 .cf-card{border:1px solid #e5e7eb;background:#fff;border-radius:12px;padding:14px}
 .cf-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 12px;margin-top:6px}
@@ -287,21 +283,19 @@ h1, .hero h1, .page-title, .hero .lead {
   .cf-subrow{grid-column:auto}
   .cf-out .cf-kv{grid-template-columns:1fr}
 }
+
 /* サクッと要点の行間を少し広げる */
 .quick-summary .qs-list {
   list-style: disc;
   padding-left: 1.4rem;
   margin-top: .4rem;
 }
-
 .quick-summary .qs-list li + li {
-  margin-top: .8rem;  /* 行と行のあいだをあける */
+  margin-top: .8rem;
 }
-
 .quick-summary .qs-tag {
   margin: 0 0 .1rem;
 }
-
 /* 「サクッと要点（Quick summary）」の下にしっかり余白を入れる */
 .quick-summary .row {
   margin-bottom: .8rem;
@@ -309,53 +303,7 @@ h1, .hero h1, .page-title, .hero .lead {
 
 /* === ここから：料金プラン表（#plans）だけのはみ出し＆変な改行対策 === */
 
-/* 料金プランの表を、必要なら横スクロールで見せる */
-#plans table {
-  display: block;
-  width: max-content;              /* 中身の幅に合わせる */
-  min-width: 100%;                 /* 画面より小さくはしない */
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* 2列目「手続きの目安」は途中で変な位置で折り返さない */
-#plans table th:nth-child(2),
-#plans table td:nth-child(2) {
-  white-space: nowrap;
-}
-/* === 料金プラン表：2列目は改行させず、横スクロールさせる === */
-
-/* 料金プランセクション自体を横スク可能に */
-#plans {
-  overflow-x: auto;
-}
-
-/* 料金プラン内のテーブルだけ「横に長く」してスクロール対象にする */
-#plans table {
-  display: block;
-  border-collapse: collapse;
-  /* 全体が入りきらない時は横に伸びるようにする */
-  min-width: 100%;
-  width: max-content;
-}
-
-/* 行グループと行は普通のテーブル表示のまま */
-#plans table thead,
-#plans table tbody {
-  display: table-row-group;
-}
-#plans table tr {
-  display: table-row;
-}
-
-/* 特に「手続きの目安」列は改行させない */
-#plans table th:nth-child(2),
-#plans table td:nth-child(2) {
-  white-space: nowrap;
-}
-/* === 料金プラン表レイアウト修正（オーバーフロー解除） === */
-
-/* 料金プランセクションは横スクロールさせない */
+/* 料金プランセクション全体の横スクロールは解除 */
 #plans {
   overflow-x: visible !important;
 }
@@ -365,10 +313,10 @@ h1, .hero h1, .page-title, .hero .lead {
   display: table !important;
   width: 100% !important;
   min-width: 0 !important;
-  table-layout: fixed;  /* 列幅を割合で固定 */
+  table-layout: fixed;
 }
 
-/* 各セルの改行ルールを少しマイルドにする */
+/* 各セルの改行ルール */
 #plans table th,
 #plans table td {
   word-break: keep-all;
@@ -380,73 +328,62 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans table td:nth-child(1) {
   width: 28%;
 }
-
 #plans table th:nth-child(2),
 #plans table td:nth-child(2) {
   width: 22%;
   white-space: nowrap;
 }
-
 #plans table th:nth-child(3),
 #plans table td:nth-child(3) {
   width: 50%;
 }
-/* === #plans 内の料金早見表だけに効くレイアウト調整 === */
+
+/* 料金早見表を包むラッパー（横スク対応） */
 #plans .plan-table-wrap{
   width: 100%;
-  overflow-x: auto;              /* はみ出した分だけ横スクロール */
+  overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
-
-/* 表自体を少し広めにして、文字の詰まりを軽減 */
 #plans .plan-table-wrap table{
   min-width: 640px;
 }
-
-/* 早見表のセルだけ、変なところで改行されないようにする */
 #plans .plan-table-wrap th,
 #plans .plan-table-wrap td{
-  word-break: keep-all;          /* 「ベ\nース」「度\n」みたいな割れ方を防ぐ */
+  word-break: keep-all;
   white-space: normal;
 }
-
-/* === #plans 料金早見表：2列目（サポート料金）だけ中央寄せ＋余白調整 === */
+/* 2列目（料金）だけ中央寄せ＋余白 */
 #plans .plan-table-wrap th:nth-child(2),
 #plans .plan-table-wrap td:nth-child(2){
-  text-align: center;        /* 右寄せ → 中央寄せ */
-  padding-left: 0.9rem;      /* 左右に少し余白を足す */
+  text-align: center;
+  padding-left: 0.9rem;
   padding-right: 0.9rem;
-  white-space: nowrap;       /* 「¥330,000〜」を1行に固定 */
+  white-space: nowrap;
 }
-
 @media (max-width: 480px){
-  /* スマホだけ、さらに少し文字サイズを落として余裕を作る */
   #plans .plan-table-wrap th:nth-child(2),
   #plans .plan-table-wrap td:nth-child(2){
     font-size: 0.90em;
   }
 }
-/* === 料金早見表：列幅を調整して、真ん中の線の位置を右に寄せる === */
+/* 列幅微調整（真ん中の線を少し右へ） */
 #plans .plan-table-wrap table th:nth-child(1),
 #plans .plan-table-wrap table td:nth-child(1){
   width: 32%;
 }
-
 #plans .plan-table-wrap table th:nth-child(2),
 #plans .plan-table-wrap table td:nth-child(2){
-  width: 28%;          /* ← ここを広げたので、赤線位置に縦線が来る */
-  text-align: right;   /* 金額だけ右寄せ */
-  padding-right: 0.8rem; /* 縦線とのあいだに少し余白を作る */
+  width: 28%;
+  text-align: right;
+  padding-right: 0.8rem;
 }
-
 #plans .plan-table-wrap table th:nth-child(3),
 #plans .plan-table-wrap table td:nth-child(3){
   width: 40%;
 }
+
 /* =========================
-   Quick summary 全セクション共通
-   （法人／個人事業主／個人口座）
-   見出しを少し大きく・太く＋上下の余白を少し詰める
+   Quick summary 全セクション共通 調整
 ========================= */
 
 /* ボックス全体の上下余白を少しだけ詰める */
@@ -454,35 +391,32 @@ h1, .hero h1, .page-title, .hero .lead {
   padding-top: 0.9rem;
   padding-bottom: 0.9rem;
 }
-
-/* 「こんな方におすすめ」「サポート内容」「料金の目安」などの行 */
+/* 「こんな方におすすめ」などの行 */
 .price-promo.quick-summary .qs-tag {
-  font-size: 0.98rem;      /* 本文より少し大きく */
-  font-weight: 600;        /* やや太字 */
-  margin-top: 0.75rem;     /* 上の余白を控えめに */
-  margin-bottom: 0.25rem;  /* 下の余白も短めに */
-  letter-spacing: 0.02em;  /* スマホで読みやすくするため少しだけ字間を広げる */
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.02em;
 }
-
-/* 箇条書きリスト全体（各ブロックの上下間隔を少し詰める） */
+/* 箇条書きリスト全体 */
 .price-promo.quick-summary .qs-list {
   margin-top: 0.1rem;
-  margin-bottom: 0.45rem;  /* セクション間の縦幅を少しだけ短く */
-  padding-left: 1.2rem;    /* 左の字下げを少しだけ浅く */
+  margin-bottom: 0.45rem;
+  padding-left: 1.2rem;
 }
-
-/* 箇条書き同士の行間をやや詰める */
+/* 箇条書きどうしの行間 */
 .price-promo.quick-summary .qs-list li + li {
   margin-top: 0.12rem;
 }
-
-/* 一番上の「サクッと要点（Quick summary）」行の余白も少しだけ詰める */
+/* 一番上の行の余白 */
 .price-promo.quick-summary .row {
   margin-bottom: 0.35rem;
 }
+
 /* =========================================
    TOPヒーロー（背景写真＋白オーバーレイ＋テキスト）
-   ※ index.html 側では <section id="top" class="glp-hero"> を想定
+   ※ <section id="top" class="glp-hero"> を想定
    ========================================= */
 
 .glp-hero{
@@ -505,7 +439,7 @@ h1, .hero h1, .page-title, .hero .lead {
   overflow: hidden;
 }
 
-/* 背景写真本体（やや拡大＋色味は残す） */
+/* 背景写真本体 */
 .glp-hero-img{
   width: 100%;
   height: 100%;
@@ -514,8 +448,7 @@ h1, .hero h1, .page-title, .hero .lead {
   filter: saturate(1.05);
 }
 
-/* 白っぽいベール（オーバーレイ）
-   上はうっすら、下に行くほど白が強くなるイメージ  */
+/* 白っぽいベール（上は薄く、下ほどやや白く） */
 .glp-hero-imgwrap::before{
   content: "";
   position: absolute;
@@ -523,54 +456,64 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,0.25),
-      rgba(255,255,255,0.70)
+      rgba(255,255,255,0.18),
+      rgba(255,255,255,0.78)
     );
   z-index: 1;
 }
 
-/* テキストボックス全体 */
+/* テキストボックス全体（白カード） */
 .glp-hero-content{
   position: relative;
   z-index: 2;
   max-width: min(960px, 92vw);
   margin: 0 auto;
-  padding: 20px 22px 22px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.86);
-  box-shadow: 0 18px 36px rgba(15,23,42,0.16);
-  border: 1px solid rgba(148,163,184,0.35);
-  backdrop-filter: blur(10px);
+  padding: 22px 24px 24px;
+  border-radius: 24px;
+  /* ★ ここが「少し透けた白」：数字を変えると透け具合が変わります */
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.90);
+  box-shadow: 0 18px 40px rgba(15,23,42,0.22);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #111827;
 }
 
-/* 上部の小見出し（例：国に縛られない〜） */
+/* 上部の小見出し（EU候補国〜） */
 .glp-hero-kicker{
   margin: 0 0 6px;
   font-size: clamp(13px, 2.1vw, 15px);
   font-weight: 600;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #2563eb;
+  color: #e5f2ff;
+  background: rgba(15,23,42,0.82);
+  border-radius: 999px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 /* メインタイトル「ジョージアで、はじまる。」 */
 .glp-hero-title{
-  margin: 0 0 8px;
+  margin: 10px 0 10px;
   font-size: clamp(26px, 5vw, 36px);
   line-height: 1.25;
   font-weight: 800;
   color: #0f172a;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.8);
 }
 
 /* リード文（2行くらい） */
 .glp-hero-lead{
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: clamp(14px, 2.5vw, 16px);
   line-height: 1.7;
   color: #111827;
 }
 
-/* 補足の一文（EU候補国〜など） */
+/* 補足の一文（現地提携の〜など） */
 .glp-hero-note{
   margin: 4px 0 12px;
   font-size: clamp(13px, 2.2vw, 15px);
@@ -585,12 +528,10 @@ h1, .hero h1, .page-title, .hero .lead {
   gap: 8px;
   margin: 4px 0 10px;
 }
-
 .glp-hero-cta{
   font-size: 0.95rem;
   padding-inline: 1.4rem;
 }
-
 .glp-hero-secondary{
   font-size: 0.9rem;
 }
@@ -604,7 +545,6 @@ h1, .hero h1, .page-title, .hero .lead {
   color: #0b1220;
   margin-top: 4px;
 }
-
 .glp-hero-subpoints span{
   padding: 3px 7px;
   border-radius: 999px;
@@ -622,9 +562,9 @@ h1, .hero h1, .page-title, .hero .lead {
     padding-bottom: 52px;
   }
   .glp-hero-content{
-    padding: 16px 16px 18px;
-    border-radius: 18px;
-    box-shadow: 0 12px 28px rgba(15,23,42,0.18);
+    padding: 18px 16px 20px;
+    border-radius: 20px;
+    box-shadow: 0 14px 32px rgba(15,23,42,0.22);
   }
   .glp-hero-subpoints{
     font-size: 11px;
@@ -639,150 +579,5 @@ h1, .hero h1, .page-title, .hero .lead {
   }
   .glp-hero-content{
     padding: 26px 32px 26px;
-  }
-}
-/* ===== ヒーロー内の白カードを少しだけ透明＆薄い枠にする調整 ===== */
-.glp-hero-card {
-  background: rgba(248, 250, 252, 0.90);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28);
-}
-@media (max-width: 767px) {
-  .glp-hero-card {
-    border-radius: 18px;
-    padding: 18px 16px 20px;
-  }
-}
-.glp-hero-card .glp-hero-title { color: #0f172a; }
-.glp-hero-card .glp-hero-lead,
-.glp-hero-card .glp-hero-note { color: #1f2937; }
-
-/* ==== 少し薄くした別バージョン ==== */
-.glp-hero-content {
-  background: rgba(248, 250, 252, 0.82) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important;
-}
-.glp-hero-content .glp-hero-title { color:#0f172a !important; }
-.glp-hero-content .glp-hero-lead,
-.glp-hero-content .glp-hero-note { color:#111827 !important; }
-@media (max-width: 767px){
-  .glp-hero-content { border-radius:20px !important; }
-}
-
-/* さらに薄くする調整 */
-.glp-hero-content {
-  background: rgba(248, 250, 252, 0.60) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.18) !important;
-}
-.glp-hero-content .glp-hero-title { color:#0f172a !important; }
-.glp-hero-content .glp-hero-lead,
-.glp-hero-content .glp-hero-note { color:#111827 !important; }
-@media (max-width: 767px){
-  .glp-hero-content { border-radius:20px !important; }
-}
-
-/* ▼▼▼ DeepSeek 提案ベース ▼▼▼ */
-.glp-hero-content{
-  background: rgba(255, 255, 255, 0.45) !important;
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
-  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  color: #111827 !important;
-}
-.glp-hero-title{
-  color: #0f172a !important;
-  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
-               0 2px 4px rgba(255, 255, 255, 0.6);
-  font-weight: 800 !important;
-  letter-spacing: -0.01em !important;
-}
-.glp-hero-lead{
-  color: #1e293b !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
-  font-weight: 600 !important;
-  background: rgba(255, 255, 255, 0.3) !important;
-  padding: 4px 8px !important;
-  border-radius: 6px !important;
-  display: inline-block !important;
-  margin: 8px 0 !important;
-}
-.glp-hero-note{
-  color: #374151 !important;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
-}
-.glp-hero-kicker{
-  background: rgba(15, 23, 42, 0.75) !important;
-  color: #e5f2ff !important;
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-}
-.glp-hero-cta,
-.glp-hero-secondary{
-  backdrop-filter: blur(4px) !important;
-  -webkit-backdrop-filter: blur(4px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
-@media (max-width: 767px) {
-  .glp-hero-content{
-    background: rgba(255, 255, 255, 0.35) !important;
-    backdrop-filter: blur(6px) !important;
-    -webkit-backdrop-filter: blur(6px) !important;
-  }
-  .glp-hero-lead{
-    background: rgba(255, 255, 255, 0.4) !important;
-  }
-}
-@media (max-width: 480px) {
-  .glp-hero-content{
-    background: rgba(255, 255, 255, 0.3) !important;
-    padding: 16px 14px !important;
-  }
-}
-/* ▲▲▲ DeepSeek 部分ここまで ▲▲▲ */
-
-/* ==== 最終：読みやすさ優先で「少しだけ薄い」設定に上書き ==== */
-
-/* デスクトップ：0.58 まで薄く（前回 0.65） */
-.glp-hero-content{
-  background: rgba(255, 255, 255, 0.58) !important;
-  border-radius: 24px !important;
-  border: 1px solid rgba(148, 163, 184, 0.6) !important;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22) !important;
-}
-
-/* タイトルはくっきり・影なし */
-.glp-hero-title{
-  color: #0b1120 !important;
-  text-shadow: none !important;
-}
-
-/* リード文：背景 0.50 にして文字を乗せる（前回 0.55） */
-.glp-hero-lead{
-  color: #111827 !important;
-  background: rgba(255, 255, 255, 0.50) !important;
-  padding: 4px 8px !important;
-  border-radius: 6px !important;
-  display: inline-block !important;
-  text-shadow: none !important;
-}
-
-/* 補足文 */
-.glp-hero-note{
-  color: #111827 !important;
-  text-shadow: none !important;
-}
-
-/* スマホ：カード 0.66、リード文 0.58 で少しだけ濃いめ（読みやすさ優先） */
-@media (max-width: 767px){
-  .glp-hero-content{
-    background: rgba(255, 255, 255, 0.66) !important;
-  }
-  .glp-hero-lead{
-    background: rgba(255, 255, 255, 0.58) !important;
   }
 }
