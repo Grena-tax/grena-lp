@@ -210,7 +210,7 @@ nav, a, .menu-panel, .menu-list, .lang-panel {
 html, body,
 button, input, select, textarea, summary, details,
 .menu-panel, .menu-list, .lang-panel, nav, a {
-  font-family: revert !重要;
+  font-family: revert !important;
 }
 html, body,
 button, input, select, textarea, summary, details,
@@ -738,21 +738,21 @@ h1, .hero h1, .page-title, .hero .lead {
   }
 }
 
-/* ▼ ヒーローの白いカードを「薄く透けた白ガラス」にする最終調整（最優先） */
+/* ▼ ヒーローの白いカードを「ほぼ白のガラス」に固定（最終上書き） */
 .glp-hero-content{
-  /* ほぼ真っ白だけど、背景がうっすら透ける */
-  background: rgba(255,255,255,0.82) !important;
+  /* ほぼ真っ白。背景はうっすらだけ透ける */
+  background: rgba(255,255,255,0.88) !important;
   backdrop-filter: blur(18px) !important;
   -webkit-backdrop-filter: blur(18px) !important;
 
   border-radius: 24px !important;
-  border: 1px solid rgba(255,255,255,0.95) !important;
-  box-shadow: 0 18px 32px rgba(15,23,42,0.40) !important;
+  border: 1px solid rgba(255,255,255,0.96) !important;
+  box-shadow: 0 18px 32px rgba(15,23,42,0.38) !important;
 
   color: #111827 !important;
 }
 
-/* 文字色も白背景前提で最終調整 */
+/* タイトル・リード文・注意文の文字色も白カード前提で固定 */
 .glp-hero-title{
   color:#0f172a !important;
 }
@@ -763,46 +763,15 @@ h1, .hero h1, .page-title, .hero .lead {
   color:#6b7280 !important;
 }
 
-/* 上の青い帯（EU候補国〜）は少しだけ透過してなじませる */
+/* 上の青い帯（EU候補国〜）はやや透けたネイビーに固定 */
 .glp-hero-kicker{
-  background: rgba(15,23,42,0.78) !important;
+  background: rgba(15,23,42,0.80) !important;
   color:#e5f2ff !important;
 }
-/* ▼ ヒーローの一番上の白いカード：ほぼ真っ白＋少しだけ透ける「最終版」 */
-/* ★ 必ず patch.css の一番下にそのまま追加してください ★ */
-.glp-hero-content{
-  /* 白ベースで、ほんの少しだけ背景が透ける */
-  background: rgba(255, 255, 255, 0.92) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
 
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.96) !important;
-  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.28) !important;
-
-  color: #111827 !important;
-}
-
-/* タイトルとテキストの色（白いカード前提でくっきり見えるように） */
-.glp-hero-content .glp-hero-title{
-  color: #0f172a !important;
-}
-.glp-hero-content .glp-hero-lead{
-  color: #111827 !important;
-}
-.glp-hero-content .glp-hero-note{
-  color: #4b5563 !important;
-}
-
-/* 上の細い帯（EU候補国〜のところ）は、濃い目のネイビーで固定 */
-.glp-hero-kicker{
-  background: rgba(15, 23, 42, 0.82) !important;
-  color: #e5f2ff !important;
-}
-
-/* スマホでは角丸だけ少し弱めてなじませる */
-@media (max-width: 767px){
+/* スマホでは角丸を少しだけ弱める */
+@media (max-width:767px){
   .glp-hero-content{
-    border-radius: 20px !important;
+    border-radius:20px !important;
   }
 }
