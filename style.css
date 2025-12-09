@@ -411,7 +411,6 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 
 /* === #plans 料金早見表：2列目（サポート料金）だけ中央寄せ＋余白調整 === */
-/* ここは料金プランセクション内の「早見表」だけに効きます */
 #plans .plan-table-wrap th:nth-child(2),
 #plans .plan-table-wrap td:nth-child(2){
   text-align: center;        /* 右寄せ → 中央寄せ */
@@ -524,8 +523,8 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,0.25),  /* ← 0.40 から薄めに */
-      rgba(255,255,255,0.70)   /* ← 0.82 から薄めに */
+      rgba(255,255,255,0.25),
+      rgba(255,255,255,0.70)
     );
   z-index: 1;
 }
@@ -538,7 +537,7 @@ h1, .hero h1, .page-title, .hero .lead {
   margin: 0 auto;
   padding: 20px 22px 22px;
   border-radius: 22px;
-  background: rgba(255,255,255,0.86); /* ← 0.92 → 0.86 に少しだけ透過 */
+  background: rgba(255,255,255,0.86);
   box-shadow: 0 18px 36px rgba(15,23,42,0.16);
   border: 1px solid rgba(148,163,184,0.35);
   backdrop-filter: blur(10px);
@@ -619,7 +618,7 @@ h1, .hero h1, .page-title, .hero .lead {
 
 @media (max-width: 767px){
   .glp-hero{
-    padding-top: 72px;   /* 右上ボタンとの重なり対策を少しだけ強める */
+    padding-top: 72px;
     padding-bottom: 52px;
   }
   .glp-hero-content{
@@ -643,104 +642,50 @@ h1, .hero h1, .page-title, .hero .lead {
   }
 }
 /* ===== ヒーロー内の白カードを少しだけ透明＆薄い枠にする調整 ===== */
-/* 対象：ヒーローの中で一番上に出ている白いカードだけ */
 .glp-hero-card {
-  background: rgba(248, 250, 252, 0.90); /* 真っ白 → 少しだけ透けた白 */
-  border: 1px solid rgba(148, 163, 184, 0.35); /* ごく薄いグレーの枠 */
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28); /* 影をやや弱めてなじませる */
+  background: rgba(248, 250, 252, 0.90);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28);
 }
-
-/* スマホでの余白と角丸を少しだけソフトに */
 @media (max-width: 767px) {
   .glp-hero-card {
     border-radius: 18px;
     padding: 18px 16px 20px;
   }
 }
-
-/* 文字がくっきりし過ぎないように、タイトルと本文を少しだけ落ち着かせる */
-.glp-hero-card .glp-hero-title {
-  color: #0f172a;
-}
-
+.glp-hero-card .glp-hero-title { color: #0f172a; }
 .glp-hero-card .glp-hero-lead,
-.glp-hero-card .glp-hero-note {
-  color: #1f2937;
-}
-/* ==== ヒーローの一番上の白いカードだけを少し透明＆柔らかくする調整 v2 ==== */
-/* 実際のDOM構造に合わせて .glp-hero-content を直接上書きします */
+.glp-hero-card .glp-hero-note { color: #1f2937; }
 
+/* ==== 少し薄くした別バージョン ==== */
 .glp-hero-content {
-  background: rgba(248, 250, 252, 0.88);      /* 真っ白 → ほんの少し透けた白 */
-  border-radius: 24px;                         /* 角丸を少し強めて柔らかく */
-  box-shadow: 0 18px 45px rgba(15, 23, 42, .26); /* 影はやや控えめに */
+  background: rgba(248, 250, 252, 0.82) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important;
 }
-
-/* 文字色を少し落ち着かせて、白カードとのコントラストを調整 */
-.glp-hero-content .glp-hero-title {
-  color: #0f172a;
-}
-
+.glp-hero-content .glp-hero-title { color:#0f172a !important; }
 .glp-hero-content .glp-hero-lead,
-.glp-hero-content .glp-hero-note {
-  color: #111827;
+.glp-hero-content .glp-hero-note { color:#111827 !important; }
+@media (max-width: 767px){
+  .glp-hero-content { border-radius:20px !important; }
 }
 
-/* スマホサイズでは過度にゴツく見えないよう、角丸を微調整 */
-@media (max-width: 767px) {
-  .glp-hero-content {
-    border-radius: 20px;
-  }
-}
-/* ==== ヒーローの一番上の白いカードを少しだけ薄く・柔らかくする（強制上書き版） ==== */
+/* さらに薄くする調整 */
 .glp-hero-content {
-  background: rgba(248, 250, 252, 0.82) !important;  /* 真っ白 → 少し透けた白 */
-  border-radius: 24px !important;                    /* 角をやや丸く */
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important; /* 影も少しだけ軽く */
-}
-
-/* 文字色は落ち着いた濃いグレーに（コントラスト調整） */
-.glp-hero-content .glp-hero-title {
-  color: #0f172a !important;
-}
-.glp-hero-content .glp-hero-lead,
-.glp-hero-content .glp-hero-note {
-  color: #111827 !important;
-}
-
-/* スマホではさらに少しだけ角丸を弱めて、画面に馴染ませる */
-@media (max-width: 767px) {
-  .glp-hero-content {
-    border-radius: 20px !important;
-  }
-}
-/* ==== ヒーローの一番上の白いカードを、もっと薄く・軽く見せる（再上書き） ==== */
-.glp-hero-content {
-  /* 白をだいぶ薄くして、背景写真をもっと透かす */
   background: rgba(248, 250, 252, 0.60) !important;
   border-radius: 24px !important;
   box-shadow: 0 10px 32px rgba(15, 23, 42, 0.18) !important;
 }
-
-/* 文字色は読みやすい濃いグレーのまま */
-.glp-hero-content .glp-hero-title {
-  color: #0f172a !important;
-}
+.glp-hero-content .glp-hero-title { color:#0f172a !important; }
 .glp-hero-content .glp-hero-lead,
-.glp-hero-content .glp-hero-note {
-  color: #111827 !important;
+.glp-hero-content .glp-hero-note { color:#111827 !important; }
+@media (max-width: 767px){
+  .glp-hero-content { border-radius:20px !important; }
 }
 
-/* スマホでの角丸調整（少しだけ丸く） */
-@media (max-width: 767px) {
-  .glp-hero-content {
-    border-radius: 20px !important;
-  }
-}
-
-/* ▼▼▼ 白いカードをかなり透明にして背景写真がはっきり見えるようにする ▼▼▼ */
+/* ▼▼▼ DeepSeek 提案ベース ▼▼▼ */
 .glp-hero-content{
-  background: rgba(255, 255, 255, 0.45) !important;   /* 55%透明！かなり透ける */
+  background: rgba(255, 255, 255, 0.45) !important;
   border-radius: 24px !important;
   border: 1px solid rgba(255, 255, 255, 0.7) !important;
   box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2) !important;
@@ -748,33 +693,27 @@ h1, .hero h1, .page-title, .hero .lead {
   -webkit-backdrop-filter: blur(8px) !important;
   color: #111827 !important;
 }
-
-/* 文字をはっきり見せるための工夫 */
 .glp-hero-title{
   color: #0f172a !important;
   text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
-               0 2px 4px rgba(255, 255, 255, 0.6); /* 強い白シャドウで可読性アップ */
+               0 2px 4px rgba(255, 255, 255, 0.6);
   font-weight: 800 !important;
   letter-spacing: -0.01em !important;
 }
-
 .glp-hero-lead{
   color: #1e293b !important;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
   font-weight: 600 !important;
-  background: rgba(255, 255, 255, 0.3) !important; /* テキスト背景にわずかな白を */
+  background: rgba(255, 255, 255, 0.3) !important;
   padding: 4px 8px !important;
   border-radius: 6px !important;
   display: inline-block !important;
   margin: 8px 0 !important;
 }
-
 .glp-hero-note{
   color: #374151 !important;
   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
 }
-
-/* 青帯（EU候補国〜）も透明感をアップ */
 .glp-hero-kicker{
   background: rgba(15, 23, 42, 0.75) !important;
   color: #e5f2ff !important;
@@ -782,75 +721,68 @@ h1, .hero h1, .page-title, .hero .lead {
   -webkit-backdrop-filter: blur(4px) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
-
-/* ボタンも少し透明感を */
 .glp-hero-cta,
 .glp-hero-secondary{
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
   border: 1px solid rgba(255, 255, 255, 0.3) !important;
 }
-
-/* スマホではさらに透明に */
 @media (max-width: 767px) {
   .glp-hero-content{
-    background: rgba(255, 255, 255, 0.35) !重要ではなく !important;   /* 65%透明 */
+    background: rgba(255, 255, 255, 0.35) !important;
     backdrop-filter: blur(6px) !important;
     -webkit-backdrop-filter: blur(6px) !important;
   }
-  
   .glp-hero-lead{
-    background: rgba(255, 255, 255, 0.4) !important; /* スマホでは文字背景を強く */
+    background: rgba(255, 255, 255, 0.4) !important;
   }
 }
-
-/* 極小デバイスではさらに調整 */
 @media (max-width: 480px) {
   .glp-hero-content{
-    background: rgba(255, 255, 255, 0.3) !important;   /* 70%透明！ほとんど透ける */
+    background: rgba(255, 255, 255, 0.3) !important;
     padding: 16px 14px !important;
   }
 }
-/* ▲▲▲ DeepSeek 提案部分ここまで ▲▲▲ */
+/* ▲▲▲ DeepSeek 部分ここまで ▲▲▲ */
 
-/* ==== ヒーローカード 読みやすさアップ用の最終上書き ==== */
+/* ==== 最終：読みやすさ優先で「少しだけ薄い」設定に上書き ==== */
 
-/* カード全体：少しだけ白を足してコントラストを戻す */
+/* デスクトップ：0.58 まで薄く（前回 0.65） */
 .glp-hero-content{
-  background: rgba(255, 255, 255, 0.65) !important; /* 0.45 → 0.65 にアップ */
+  background: rgba(255, 255, 255, 0.58) !important;
   border-radius: 24px !important;
   border: 1px solid rgba(148, 163, 184, 0.6) !important;
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22) !important;
 }
 
-/* タイトル：くっきり見えるように、影を弱めて色を少し濃く */
+/* タイトルはくっきり・影なし */
 .glp-hero-title{
   color: #0b1120 !important;
-  text-shadow: none !important;  /* 白シャドウをオフにしてボケ感をなくす */
+  text-shadow: none !important;
 }
 
-/* リード文だけ、後ろにうすい白帯を入れて読みやすくする */
+/* リード文：背景 0.50 にして文字を乗せる（前回 0.55） */
 .glp-hero-lead{
   color: #111827 !important;
-  background: rgba(255, 255, 255, 0.55) !important;
+  background: rgba(255, 255, 255, 0.50) !important;
   padding: 4px 8px !important;
   border-radius: 6px !important;
   display: inline-block !important;
   text-shadow: none !important;
 }
 
-/* 補足文も少しだけ読みやすく（必要以上に目立たせない） */
+/* 補足文 */
 .glp-hero-note{
   color: #111827 !important;
   text-shadow: none !important;
 }
 
-/* スマホではさらに少しだけ白を強くして、背景の影響を減らす */
+/* スマホ：カード 0.66、リード文 0.58 で少しだけ濃いめ（読みやすさ優先） */
 @media (max-width: 767px){
   .glp-hero-content{
-    background: rgba(255, 255, 255, 0.72) !important;
+    background: rgba(255, 255, 255, 0.66) !important;
   }
   .glp-hero-lead{
-    background: rgba(255, 255, 255, 0.65) !important;
+    background: rgba(255, 255, 255, 0.58) !important;
   }
 }
