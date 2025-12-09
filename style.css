@@ -481,7 +481,6 @@ h1, .hero h1, .page-title, .hero .lead {
 .price-promo.quick-summary .row {
   margin-bottom: 0.35rem;
 }
-
 /* =========================================
    TOPヒーロー（背景写真＋白オーバーレイ＋テキスト）
    ※ index.html 側では <section id="top" class="glp-hero"> を想定
@@ -525,8 +524,8 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(255,255,255,0.25),
-      rgba(255,255,255,0.70)
+      rgba(255,255,255,0.25),  /* ← 0.40 から薄めに */
+      rgba(255,255,255,0.70)   /* ← 0.82 から薄めに */
     );
   z-index: 1;
 }
@@ -539,7 +538,7 @@ h1, .hero h1, .page-title, .hero .lead {
   margin: 0 auto;
   padding: 20px 22px 22px;
   border-radius: 22px;
-  background: rgba(255,255,255,0.86);
+  background: rgba(255,255,255,0.86); /* ← 0.92 → 0.86 に少しだけ透過 */
   box-shadow: 0 18px 36px rgba(15,23,42,0.16);
   border: 1px solid rgba(148,163,184,0.35);
   backdrop-filter: blur(10px);
@@ -620,7 +619,7 @@ h1, .hero h1, .page-title, .hero .lead {
 
 @media (max-width: 767px){
   .glp-hero{
-    padding-top: 72px;
+    padding-top: 72px;   /* 右上ボタンとの重なり対策を少しだけ強める */
     padding-bottom: 52px;
   }
   .glp-hero-content{
@@ -643,13 +642,12 @@ h1, .hero h1, .page-title, .hero .lead {
     padding: 26px 32px 26px;
   }
 }
-
 /* ===== ヒーロー内の白カードを少しだけ透明＆薄い枠にする調整 ===== */
 /* 対象：ヒーローの中で一番上に出ている白いカードだけ */
 .glp-hero-card {
-  background: rgba(248, 250, 252, 0.90);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28);
+  background: rgba(248, 250, 252, 0.90); /* 真っ白 → 少しだけ透けた白 */
+  border: 1px solid rgba(148, 163, 184, 0.35); /* ごく薄いグレーの枠 */
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.28); /* 影をやや弱めてなじませる */
 }
 
 /* スマホでの余白と角丸を少しだけソフトに */
@@ -669,14 +667,13 @@ h1, .hero h1, .page-title, .hero .lead {
 .glp-hero-card .glp-hero-note {
   color: #1f2937;
 }
-
 /* ==== ヒーローの一番上の白いカードだけを少し透明＆柔らかくする調整 v2 ==== */
 /* 実際のDOM構造に合わせて .glp-hero-content を直接上書きします */
 
 .glp-hero-content {
-  background: rgba(248, 250, 252, 0.88);
-  border-radius: 24px;
-  box-shadow: 0 18px 45px rgba(15, 23, 42, .26);
+  background: rgba(248, 250, 252, 0.88);      /* 真っ白 → ほんの少し透けた白 */
+  border-radius: 24px;                         /* 角丸を少し強めて柔らかく */
+  box-shadow: 0 18px 45px rgba(15, 23, 42, .26); /* 影はやや控えめに */
 }
 
 /* 文字色を少し落ち着かせて、白カードとのコントラストを調整 */
@@ -695,12 +692,11 @@ h1, .hero h1, .page-title, .hero .lead {
     border-radius: 20px;
   }
 }
-
 /* ==== ヒーローの一番上の白いカードを少しだけ薄く・柔らかくする（強制上書き版） ==== */
 .glp-hero-content {
-  background: rgba(248, 250, 252, 0.82) !important;
-  border-radius: 24px !important;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important;
+  background: rgba(248, 250, 252, 0.82) !important;  /* 真っ白 → 少し透けた白 */
+  border-radius: 24px !important;                    /* 角をやや丸く */
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22) !important; /* 影も少しだけ軽く */
 }
 
 /* 文字色は落ち着いた濃いグレーに（コントラスト調整） */
@@ -718,9 +714,9 @@ h1, .hero h1, .page-title, .hero .lead {
     border-radius: 20px !important;
   }
 }
-
 /* ==== ヒーローの一番上の白いカードを、もっと薄く・軽く見せる（再上書き） ==== */
 .glp-hero-content {
+  /* 白をだいぶ薄くして、背景写真をもっと透かす */
   background: rgba(248, 250, 252, 0.60) !important;
   border-radius: 24px !important;
   box-shadow: 0 10px 32px rgba(15, 23, 42, 0.18) !important;
@@ -742,32 +738,77 @@ h1, .hero h1, .page-title, .hero .lead {
   }
 }
 
-/* ▼▼▼ ここからが「白いカード最終調整」：これが一番最後なので必ず勝ちます ▼▼▼ */
-/* ▼ ヒーローの白いカードを「ほぼ真っ白で、ほんの少しだけ透けるガラス」にする最終版 */
+/* ▼▼▼ 白いカードをかなり透明にして背景写真がはっきり見えるようにする ▼▼▼ */
 .glp-hero-content{
-  background: rgba(255,255,255,0.94) !important;   /* かなり白寄り。4%だけ背景が透ける */
+  background: rgba(255, 255, 255, 0.45) !important;   /* 55%透明！かなり透ける */
   border-radius: 24px !important;
-  border: 1px solid rgba(255,255,255,0.95) !important; /* 枠もほぼ白 */
-  box-shadow: 0 18px 32px rgba(15,23,42,0.24) !important;
-  backdrop-filter: blur(18px) !important;
-  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   color: #111827 !important;
 }
 
-/* タイトル＆本文の色（読みやすい濃いグレー） */
+/* 文字をはっきり見せるための工夫 */
 .glp-hero-title{
-  color:#111827 !important;
-}
-.glp-hero-lead{
-  color:#1f2933 !important;
-}
-.glp-hero-note{
-  color:#6b7280 !important;
+  color: #0f172a !important;
+  text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8),
+               0 2px 4px rgba(255, 255, 255, 0.6); /* 強い白シャドウで可読性アップ */
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
 }
 
-/* 上の青帯（EU候補国〜）は少しだけ透過した濃いネイビー */
-.glp-hero-kicker{
-  background: rgba(15,23,42,0.78) !important;
-  color:#e5f2ff !important;
+.glp-hero-lead{
+  color: #1e293b !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.3) !important; /* テキスト背景にわずかな白を */
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  display: inline-block !important;
+  margin: 8px 0 !important;
 }
-/* ▲▲▲ ここまでを必ず末尾まで含めて保存してください ▲▲▲ */
+
+.glp-hero-note{
+  color: #374151 !important;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+
+/* 青帯（EU候補国〜）も透明感をアップ */
+.glp-hero-kicker{
+  background: rgba(15, 23, 42, 0.75) !important;
+  color: #e5f2ff !important;
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ボタンも少し透明感を */
+.glp-hero-cta,
+.glp-hero-secondary{
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* スマホではさらに透明に */
+@media (max-width: 767px) {
+  .glp-hero-content{
+    background: rgba(255, 255, 255, 0.35) !important;   /* スマホでは65%透明！ */
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
+  
+  .glp-hero-lead{
+    background: rgba(255, 255, 255, 0.4) !important; /* スマホでは文字背景を強く */
+  }
+}
+
+/* 極小デバイスではさらに調整 */
+@media (max-width: 480px) {
+  .glp-hero-content{
+    background: rgba(255, 255, 255, 0.3) !important;   /* 70%透明！ほとんど透ける */
+    padding: 16px 14px !important;
+  }
+}
+/* ▲▲▲ ここまでに完全に置き換えてください ▲▲▲ */
