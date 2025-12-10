@@ -666,3 +666,37 @@ h1, .hero h1, .page-title, .hero .lead {
   .glp-hero{ padding-inline: 24px; }
   .glp-hero-content{ padding: 26px 32px 26px; }
 }
+/* === ヒーロー微調整 v2（文字を濃く・カードを半透明に） ================= */
+
+/* カードを半透明の白に＆文字を濃いグレーに */
+.glp-hero-content{
+  background: rgba(255, 255, 255, 0.5);  /* 真っ白 → 50%のガラス白 */
+  color: #111827;                         /* 基本文字色を濃いグレーに */
+}
+
+/* タイトル／リード／補足をそれぞれ少し濃く */
+.glp-hero-title{
+  color: #0b1120;   /* 見出しはほぼ黒に */
+}
+
+.glp-hero-lead{
+  color: #111827;   /* リード文：濃いグレー */
+}
+
+.glp-hero-note{
+  color: #1f2937;   /* 補足文：少しだけ明るいグレー */
+}
+
+/* カード内の小さいグレー文字も濃くする */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: #4b5563;
+  opacity: 0.98;
+}
+
+/* スマホ時もカードを半透明に */
+@media (max-width: 767px){
+  .glp-hero-content{
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
