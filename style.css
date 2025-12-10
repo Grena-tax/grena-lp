@@ -1,1305 +1,672 @@
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ジョージア法人設立LP</title>
+/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋ヒーロー調整）===== */
 
-<!-- 自動翻訳の誘導を抑止 -->
-<meta name="google" content="notranslate">
+/* --- スクロール/安全域/CTA高さ --------------------- */
+:root{
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --cta-h: 72px;
+  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+}
+html,body{margin:0;padding:0}
+html, body { overflow:auto !important; height:auto !important; }
+body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
 
-<!-- 既存：差し替え確認用ピンクバー -->
-<style>html{border-top:8px solid #ff0077!important}</style>
+/* --- アコーディオン ------------------------------- */
+details summary{
+  padding:1rem 1.2rem;cursor:pointer;list-style:none;
+  border:1px solid #e5e7eb;border-radius:10px;background:#fff;font-weight:700;
+}
+details[open] summary{
+  background:#f8fafc;
+  border-bottom-left-radius:0;
+  border-bottom-right-radius:0;
+}
+details .content{
+  border:1px solid #e5e7eb;border-top:0;
+  border-bottom-left-radius:10px;border-bottom-right-radius:10px;
+  padding:1rem 1.2rem .9rem;background:#fff;
+}
+.accordion>details{margin:.55rem 0!important;}
+.text-sm{font-size:.86em;opacity:.9;}
+.muted{color:#475569;}
+.note{display:block;font-size:.82em;color:#475569;margin-top:.35rem;}
+.smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800;}
+.security-note{
+  font-size:.9em;color:#334155;background:#f1f5f9;
+  border:1px solid #e2e8f0;border-radius:10px;
+  padding:.8rem 1rem;margin-top:.6rem;
+}
 
-<!-- キャッシュバスター更新（任意で更新してください） -->
-<link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20251110a">
-<meta name="theme-color" content="#111827">
+/* --- 価格ボックス ------------------------------- */
+.price-promo{
+  border:1px solid #e5e7eb;background:#f9fafb;
+  border-radius:12px;padding:16px 16px 14px;
+  margin:14px 0;box-shadow:0 2px 10px rgba(0,0,0,.03);
+}
+.price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;}
+.price-promo .label{color:#475569;font-weight:700;}
+.price-promo .old{color:#64748b;text-decoration:line-through;}
+.price-promo .now{
+  font-weight:800;font-size:clamp(18px,2.2vw,22px);
+  color:#d32f2f;
+}
+.price-promo .badge{
+  display:inline-block;background:#ef4444;color:#fff;
+  border-radius:999px;padding:.2rem .6rem;
+  font-size:.8em;font-weight:700;margin-left:.25rem;
+}
+.price-promo .meta{font-size:.86em;color:#475569;margin-top:6px;line-height:1.6;}
+.price-promo .proof{
+  display:flex;gap:10px;flex-wrap:wrap;
+  margin-top:8px;color:#0b1220;
+}
+.price-promo .proof span{
+  background:#fff;border:1px solid #e5e7eb;
+  border-radius:999px;padding:.25rem .6rem;font-weight:700;
+}
 
-<!-- ▼ Grena LP 用 追加スタイル -->
-<style>
-  /* ほかと被らないように glp- で統一 */
-  .glp-wrapper {
-    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-    background: #f5f7fb;
-    color: #222;
-  }
-  .glp-inner {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 24px 16px 40px;
-  }
+/* --- 進行ステップ ------------------------------- */
+.progress-steps{display:flex;gap:8px;flex-wrap:wrap;margin:.5rem 0;}
+.progress-steps .step{
+  padding:.4rem .7rem;border-radius:999px;
+  border:1px solid #e5e7eb;background:#fff;
+}
+.progress-steps .completed{background:#f0fdf4;border-color:#dcfce7;}
 
-  /* ヒーロー：背景写真＋オーバーレイ（Studioのイメージに寄せる） */
-  .glp-hero {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    min-height: 260px;
-    margin-bottom: 24px;
-    color: #ffffff;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+/* --- テーブル共通 ------------------------------- */
+table{width:100%;border-collapse:collapse;margin:.5rem 0;}
+th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right;}
+th:first-child,td:first-child{text-align:left;}
+
+@media (max-width:480px){
+  h2{
+    font-size:clamp(18px,5.6vw,22px);
+    line-height:1.28;margin:0 0 .8rem;
   }
-  .glp-hero-bg {
-    position: absolute;
-    inset: 0;
+}
+
+/* --- KYCと料金の隙間調整 ------------------------- */
+#corp-setup{padding-bottom:0!important;}
+#plans{padding-top:0!important;margin-top:0!important;}
+
+/* --- 右上ハンバーガーボタン ---------------------- */
+.menu-button{
+  position:fixed;
+  top:calc(10px + var(--safe-top));
+  right:calc(10px + var(--safe-right));
+  z-index:10000;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:12px;
+  background:#111827;color:#fff;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
+  border:1px solid rgba(255,255,255,.08);
+}
+.menu-button .bars{
+  display:block;width:28px;height:20px;position:relative;
+}
+.menu-button .bars::before,
+.menu-button .bars::after,
+.menu-button .bars span{
+  content:"";position:absolute;left:0;right:0;
+  height:2px;background:#fff;border-radius:2px;
+}
+.menu-button .bars::before{top:0;}
+.menu-button .bars span{top:9px;}
+.menu-button .bars::after{bottom:0;}
+
+/* --- ハンバーガーメニュー本体 ------------------- */
+.menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none;}
+.menu-backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.35);
+  opacity:0;transition:opacity .18s ease;
+  backdrop-filter:blur(1px);
+}
+.menu-panel{
+  position:absolute;top:0;right:0;
+  height:100%;width:min(420px,92vw);
+  background:#f5f7fa;color:#0b1220;
+  border-left:1px solid #e5e7eb;
+  box-shadow:-16px 0 40px rgba(0,0,0,.12);
+  transform:translateX(100%);
+  transition:transform .22s ease;
+  font-size:14px;line-height:1.38;
+  display:flex;flex-direction:column;
+}
+.menu-head{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:12px 14px;border-bottom:1px solid #e5e7eb;background:#fff;
+  position:sticky;top:0;z-index:2;min-height:var(--menu-head-h);
+}
+.menu-title{font-weight:800;color:#111827;}
+.menu-close{
+  width:36px;height:36px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;border:1px solid #e5e7eb;
+  background:#fff;color:#111827;
+}
+.menu-close:hover{background:#f3f4f6;}
+.menu-groups{
+  flex:1 1 auto; overflow:auto; height:auto !important;
+  padding: calc(var(--menu-head-h) + 10px) 0 12px;
+  scroll-padding-top: calc(var(--menu-head-h) + 8px);
+  -webkit-overflow-scrolling: touch;
+}
+.menu-group{padding:8px 10px 6px;}
+.menu-group h4{
+  margin:0 0 6px;padding:0 6px;
+  font-size:.92rem;color:#111827;font-weight:700;opacity:.9;
+}
+.menu-list{list-style:none;margin:0;padding:0;}
+.menu-list li a{
+  display:block;padding:7px 10px;margin:0 6px 6px;
+  border-radius:8px;text-decoration:none;
+  color:#334155;background:#fff;border:1px solid #e5e7eb;
+}
+.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de;}
+
+html.menu-open .menu-wrap{pointer-events:auto;}
+html.menu-open .menu-backdrop{opacity:1;}
+html.menu-open .menu-panel{transform:none;}
+html.menu-open,html.menu-open body{overflow:hidden;}
+
+/* --- 画面最下部 固定CTA ------------------------- */
+.fixed-cta{
+  position:fixed;left:0;right:0;bottom:0;z-index:9998;
+  background:#ffffffcc;
+  backdrop-filter:saturate(140%) blur(8px);
+  border-top:1px solid rgba(0,0,0,.06);
+  padding-bottom:var(--safe-bottom);
+}
+.fixed-cta .row{
+  max-width:64rem;margin:0 auto;
+  display:flex;gap:.6rem;align-items:center;justify-content:flex-end;
+  padding:.6rem 1rem;min-height:var(--cta-h);
+}
+.btn{
+  display:inline-flex;gap:.5rem;align-items:center;justify-content:center;
+  border-radius:10px;padding:.55rem .9rem;
+  font-weight:700;border:1px solid transparent;
+  text-decoration:none;white-space:nowrap;cursor:pointer;
+}
+.btn.neutral{background:#e5e7eb;color:#111827;}
+.btn.secondary{background:#1f2937;color:#fff;}
+.btn.success{background:#10b981;color:#fff;}
+.btn:hover{opacity:.92;}
+
+/* --- 言語スイッチ ------------------------------- */
+.lang-button{
+  position:fixed;
+  top:calc(10px + var(--safe-top));
+  right:calc(10px + var(--safe-right) + 48px + 10px);
+  z-index:10001;
+  width:48px;height:48px;border-radius:12px;
+  background:#111827;color:#fff;
+  border:1px solid rgba(255,255,255,.08);
+  display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);
+}
+.lang-button .globe{font-size:20px;line-height:1;}
+.lang-wrap{position:fixed;inset:0;z-index:10002;pointer-events:none;}
+.lang-backdrop{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.35);
+  opacity:0;transition:opacity .18s ease;
+  backdrop-filter:blur(1px);
+}
+.lang-panel{
+  position:absolute;
+  top:calc(64px + var(--safe-top));
+  right:calc(10px + var(--safe-right));
+  width:min(420px,92vw);
+  background:#fff;border:1px solid #e5e7eb;border-radius:12px;
+  box-shadow:0 16px 40px rgba(0,0,0,.12);
+  transform:translateY(-8px) scale(.98);
+  opacity:0;
+  transition:transform .18s ease, opacity .18s ease;
+  font-size:14px;line-height:1.5;
+  max-height: calc(100dvh - 80px);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.lang-head{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:10px 12px;border-bottom:1px solid #e5e7eb;
+  background:#f8fafc;border-top-left-radius:12px;border-top-right-radius:12px;
+}
+.lang-title{font-weight:800;color:#111827;}
+.lang-close{
+  width:34px;height:34px;
+  display:inline-flex;align-items:center;justify-content:center;
+  border-radius:10px;border:1px solid #e5e7eb;
+  background:#fff;color:#111827;
+}
+.lang-close:hover{background:#f3f4f6;}
+.lang-body{padding:10px 12px;overflow:auto;-webkit-overflow-scrolling:touch;}
+.ls-search{display:flex;gap:8px;margin:6px 0 10px;}
+.ls-search input{
+  flex:1 1 auto;height:40px;border-radius:8px;
+  border:1px solid #d1d5db;padding:0 10px;font-size:14px;
+}
+.ls-list{
+  display:grid;grid-template-columns:1fr;gap:6px;
+  max-height:min(60vh,520px);overflow:auto;padding:2px;
+}
+.ls-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 10px;border-radius:8px;
+  border:1px solid #e5e7eb;background:#fff;cursor:pointer;
+}
+.ls-item:hover{background:#f3f4f6;}
+.ls-code{font-size:12px;color:#64748b;}
+.ls-active{outline:2px solid #2563eb;}
+
+html.lang-open .lang-wrap{pointer-events:auto;}
+html.lang-open .lang-backdrop{opacity:1;}
+html.lang-open .lang-panel{transform:none;opacity:1;}
+
+@media (max-width:480px){
+  .lang-button{transform:scale(.92);transform-origin:top right;}
+}
+
+/* --- Google翻訳の青バー等を隠す ------------------ */
+#goog-gt-tt,
+iframe#goog-te-banner-frame,
+.goog-te-banner-frame{
+  display:none!important;visibility:hidden!important;
+  height:0!important;max-height:0!important;overflow:hidden!important;
+}
+body > .skiptranslate{display:none!important;}
+
+#google_translate_element{
+  position:fixed;left:-9999px;top:-9999px;
+  width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;
+}
+iframe.goog-te-menu-frame,
+.goog-te-menu2{
+  display:none !important;
+}
+
+/* 青バーが出た端末向けのバッファ */
+html.gtbar body{ padding-top:44px; }
+
+/* --- フッター（常に黒） ------------------------- */
+:root{
+  --foot-bg:#0b1220;
+  --foot-fg:#cbd5e1;
+  --foot-border:#1f2937;
+}
+.site-foot{
+  background:var(--foot-bg) !important;
+  color:var(--foot-fg) !important;
+  border-top:1px solid var(--foot-border) !important;
+  text-align:center;
+  padding:14px 16px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  font-size:13px; line-height:1.7;
+}
+.site-foot small{
+  display:block;margin:0 auto;
+  max-width:min(1100px,92%);letter-spacing:.02em;
+}
+.site-foot a{
+  color:#93c5fd;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.site-foot .foot-pc{ display:none; }
+.site-foot .foot-sp{ display:block; }
+
+@media (min-width:640px){
+  .site-foot .foot-pc{ display:inline; }
+  .site-foot .foot-sp{ display:none; }
+}
+
+/* --- アンカー位置調整 ---------------------------- */
+section[id],
+details[id]{ scroll-margin-top: 70px; }
+
+/* --- スマホ時の上辺マージン ---------------------- */
+@media (max-width: 480px){
+  .menu-panel{ width:58vw; }
+  body{ padding-top:66px; }
+  html.gtbar body{ padding-top: calc(66px + 44px); }
+}
+
+/* --- フォントをサイト既定に ---------------------- */
+html, body,
+button, input, select, textarea, summary, details,
+nav, a, .menu-panel, .menu-list, .lang-panel{
+  font-family: -apple-system, BlinkMacSystemFont,
+               "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+               "Yu Gothic", Meiryo, "Noto Sans JP",
+               "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+/* === UXポリッシュ ================================ */
+h1, .hero h1, .page-title, .hero .lead {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: balance;
+}
+
+/* 為替シミュレーション表：横スク時にヘッダー固定 */
+.fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
+.fx-sim thead th{
+  position: sticky; top: 0; z-index: 1;
+  background: #ffffff;
+}
+
+/* 動きに弱い利用者への配慮 */
+@media (prefers-reduced-motion: reduce){
+  *{
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
-  .glp-hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    /* ◆ 写真を少し明るく＋ほんのりコントラストアップ */
-    filter: brightness(0.9) contrast(1.03);
-    transform: scale(1.02);
+}
+
+/* フォーカス輪郭 */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* 改行させたくない語用 */
+.nowrap { white-space: nowrap; }
+
+/* === コンプライアンス文の視認性補助 ============= */
+#disclaimer .accordion > details > summary {
+  position: relative;
+}
+#disclaimer .accordion > details > summary::after{
+  content:""; position:absolute;
+  inset:auto 14px 10px auto;
+  width:8px; height:8px;
+  border-radius:999px; background:#e5e7eb;
+}
+#disclaimer .accordion > details[open] > summary::after{
+  background:#93c5fd;
+}
+
+/* ===== cf- (Compounding Tool) ==================== */
+.cf-card{
+  border:1px solid #e5e7eb;background:#fff;
+  border-radius:12px;padding:14px;
+}
+.cf-grid{
+  display:grid;grid-template-columns:140px 1fr;
+  gap:10px 12px;margin-top:6px;
+}
+.cf-grid label{align-self:center;color:#0b1220;font-weight:600;}
+.cf-grid input,
+.cf-grid select{
+  height:40px;border:1px solid #d1d5db;
+  border-radius:8px;padding:0 10px;font-size:14px;
+}
+.cf-subrow{grid-column:2 / 3;color:#475569;font-size:.9em;margin-top:-4px;}
+.cf-preset{
+  display:flex;flex-wrap:wrap;align-items:center;
+  gap:8px;margin:10px 0 6px;
+}
+.cf-chip{
+  border:1px solid #e5e7eb;background:#f8fafc;
+  border-radius:999px;padding:.25rem .6rem;
+  font-weight:700;cursor:pointer;
+}
+.cf-chip:hover{background:#eef2f7;}
+.cf-ack{
+  display:flex;gap:8px;align-items:flex-start;
+  border:1px solid #e5e7eb;background:#f9fafb;
+  border-radius:10px;padding:10px;margin:10px 0;
+}
+.cf-actions{display:flex;gap:8px;justify-content:flex-start;margin:8px 0;}
+.cf-out{
+  margin-top:8px;border:1px dashed #d1d5db;
+  border-radius:10px;padding:10px;background:#fafafa;
+}
+.cf-out .cf-kv{
+  display:grid;grid-template-columns:180px 1fr;
+  gap:6px 10px;
+}
+.cf-out h5{margin:.3rem 0 .4rem;font-weight:800;}
+.cf-links{list-style:none;margin:.4rem 0 0;padding-left:1rem;}
+.cf-links li{margin:.2rem 0;}
+
+@media (max-width:640px){
+  .cf-grid{grid-template-columns:1fr;gap:8px;}
+  .cf-subrow{grid-column:auto;}
+  .cf-out .cf-kv{grid-template-columns:1fr;}
+}
+
+/* --- 要点リストの行間 ---------------------------- */
+.quick-summary .qs-list{
+  list-style: disc;
+  padding-left: 1.4rem;
+  margin-top: .4rem;
+}
+.quick-summary .qs-list li + li{ margin-top: .8rem; }
+.quick-summary .qs-tag{ margin: 0 0 .1rem; }
+.quick-summary .row{ margin-bottom: .8rem; }
+
+/* === 料金プラン表（#plans）の横スク対応 ========= */
+#plans .plan-table-wrap{
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+#plans .plan-table-wrap table{
+  min-width: 640px;
+}
+#plans .plan-table-wrap th,
+#plans .plan-table-wrap td{
+  word-break: keep-all;
+  white-space: normal;
+}
+#plans .plan-table-wrap th:nth-child(2),
+#plans .plan-table-wrap td:nth-child(2){
+  text-align: center;
+  padding-left: 0.9rem;
+  padding-right: 0.9rem;
+  white-space: nowrap;
+}
+@media (max-width: 480px){
+  #plans .plan-table-wrap th:nth-child(2),
+  #plans .plan-table-wrap td:nth-child(2){
+    font-size: 0.90em;
   }
-  .glp-hero-gradient {
-    position: absolute;
-    inset: 0;
-    /* ◆ 黒グラデーションを少しだけ薄くして、写真も見えるように */
-    background: linear-gradient(
-      180deg,
-      rgba(0,0,0,0.14) 0%,
-      rgba(0,0,0,0.50) 55%,
-      rgba(0,0,0,0.82) 100%
+}
+#plans .plan-table-wrap table th:nth-child(1),
+#plans .plan-table-wrap table td:nth-child(1){
+  width: 32%;
+}
+#plans .plan-table-wrap table th:nth-child(2),
+#plans .plan-table-wrap table td:nth-child(2){
+  width: 28%;
+  text-align: right;
+  padding-right: 0.8rem;
+}
+#plans .plan-table-wrap table th:nth-child(3),
+#plans .plan-table-wrap table td:nth-child(3){
+  width: 40%;
+}
+
+/* =========================================
+   TOPヒーロー（背景写真＋白ガラスカード）
+   ========================================= */
+
+.glp-hero{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: clamp(64px, 10vh, 96px) 16px 56px;
+  min-height: min(520px, 90vh);
+  background: #0b1120; /* わずかに明るめの深紺 */
+  overflow: hidden;
+}
+
+/* 背景写真ラッパー */
+.glp-hero-imgwrap{
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* 背景写真本体：少し明るく＆色も出す */
+.glp-hero-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  filter: brightness(1.12) saturate(1.08);
+}
+
+/* 上はやや暗く、下に行くほど少し明るくするベール（前より薄め） */
+.glp-hero-imgwrap::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(15,23,42,0.38) 0%,
+      rgba(15,23,42,0.28) 40%,
+      rgba(15,23,42,0.20) 70%,
+      rgba(15,23,42,0.12) 100%
     );
+  z-index: 1;
+}
+
+/* 中央の白ガラスカード：前より一段白くして読みやすく */
+.glp-hero-content{
+  position: relative;
+  z-index: 2;
+  max-width: min(960px, 92vw);
+  margin: 0 auto;
+  padding: 22px 24px 24px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.55); /* 0.40 → 0.55 にアップ */
+  border: 1px solid rgba(255,255,255,0.92);
+  box-shadow:
+    0 18px 40px rgba(15,23,42,0.32),
+    0 0 0 1px rgba(255,255,255,0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #0b1120;
+}
+
+/* 上部の小見出し（EU候補国〜） */
+.glp-hero-kicker{
+  margin: 0 0 8px;
+  font-size: clamp(13px, 2.1vw, 15px);
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #e5f2ff;
+  background: rgba(15,23,42,0.85);
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.45);
+}
+
+/* メインタイトル */
+.glp-hero-title{
+  margin: 10px 0 10px;
+  font-size: clamp(26px, 5vw, 36px);
+  line-height: 1.3;
+  font-weight: 800;
+  color: #0b1120;
+  text-shadow:
+    0 1px 3px rgba(255,255,255,0.90),
+    0 3px 8px rgba(15,23,42,0.25);
+}
+
+/* リード文 */
+.glp-hero-lead{
+  margin: 0 0 10px;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.7;
+  color: #111827;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.90);
+}
+
+/* 補足本文 */
+.glp-hero-note{
+  margin: 4px 0 16px;
+  font-size: clamp(13px, 2.2vw, 15px);
+  line-height: 1.7;
+  color: #1f2933;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.85);
+}
+
+/* ボタン行 */
+.glp-hero-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 12px;
+}
+.glp-hero-cta,
+.glp-hero-secondary{
+  border-radius: 999px;
+  padding-inline: 1.5rem;
+  padding-block: .55rem;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 20px rgba(15,23,42,0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.40);
+}
+.glp-hero-secondary{ font-size: 0.9rem; }
+
+/* 下の小さなポイント */
+.glp-hero-subpoints{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: #0b1220;
+  margin-top: 4px;
+}
+.glp-hero-subpoints span{
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(241,245,249,0.94);
+  border: 1px solid rgba(226,232,240,0.92);
+}
+
+/* PC・スマホ切り替え用ユーティリティ */
+.sp-only{ display: none; }
+.pc-only{ display: inline; }
+
+@media (max-width: 767px){
+  .glp-hero{
+    padding-top: 80px;
+    padding-bottom: 52px;
   }
-  .glp-hero-content {
-    position: relative;
-    z-index: 1;
-    padding: 24px 18px 26px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    max-width: 540px;
-    /* ◆ 文字の下にごく薄い幕を敷いて、読みやすさアップ */
-    background: linear-gradient(
-      90deg,
-      rgba(15,23,42,0.35),
-      rgba(15,23,42,0.05)
-    );
+  .glp-hero-content{
+    padding: 18px 16px 20px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.50); /* スマホも少しだけ白を強める */
   }
-  .glp-hero-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.72);
+  .glp-hero-title{
+    font-size: clamp(24px, 6vw, 30px);
+  }
+  .glp-hero-subpoints{
     font-size: 11px;
-    margin-bottom: 10px;
   }
-  .glp-hero-kicker span {
-    display: inline-block;
-  }
-  .glp-hero-title {
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.4;
-    margin: 0 0 8px;
-    letter-spacing: .06em;
-  }
-  .glp-hero-lead {
-    font-size: 13px;
-    line-height: 1.7;
-    margin: 0 0 10px;
-  }
-  .glp-hero-note {
-    font-size: 11px;
-    line-height: 1.6;
-    color: #e5e7eb;
-    margin: 0 0 14px;
-  }
-  /* ◆ タイトル・リード・注意書きにうっすら影を足して、背景に負けないように */
-  .glp-hero-title,
-  .glp-hero-lead,
-  .glp-hero-note {
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
-  }
-
-  .glp-hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  /* 水色のボタン共通 */
-  .glp-btn {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    text-align: center;
-    border: none;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-  .glp-btn-main {
-    background: #28a7f7;
-    color: #fff;
-    box-shadow: 0 8px 18px rgba(37,99,235,0.45);
-  }
-  .glp-btn-main:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
-  .glp-btn-sub {
-    background: rgba(15,23,42,0.86);
-    color: #e0f2fe;
-    border: 1px solid rgba(148,163,184,0.9);
-  }
-  .glp-btn-sub:hover {
-    opacity: 0.9;
-  }
-  .glp-btn-green {
-    background: #18a34a;
-    color: #fff;
-  }
-  .glp-btn-gray {
-    background: #d4d4d8;
-    color: #333;
-  }
-
-  /* 法人税などの帯 */
-  .glp-band {
-    background: #0f172a;
-    color: #e5f3ff;
-    border-radius: 16px;
-    padding: 14px 16px 12px;
-    margin-bottom: 20px;
-  }
-  .glp-band-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 8px;
-  }
-  .glp-band-list {
-    font-size: 12px;
-    margin: 0;
-    padding-left: 16px;
-  }
-  .glp-band-list li {
-    margin: 2px 0;
-  }
-  .glp-band-note {
-    font-size: 10px;
-    color: #9ca3af;
-    margin-top: 6px;
-  }
-
-  /* ジョージアってどんな国？ */
-  .glp-country {
-    margin-bottom: 24px;
-  }
-  .glp-country-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin: 0 0 10px;
-  }
-  .glp-country-photos {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 6px;
-  }
-  .glp-country-photos img {
-    width: 100%;
-    display: block;
-    border-radius: 10px;
-    object-fit: cover;
-    height: 96px;
-  }
-
-  /* カードグリッド（スマホ2列） */
-  .glp-cardgrid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-gap: 10px;
-  }
-  .glp-card {
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 4px 12px rgba(15,23,42,0.08);
-    padding: 12px 10px 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
-  .glp-card-flag {
-    width: 32px;
-    height: auto;
-    display: block;
-    margin-bottom: 6px;
-    border-radius: 6px;
-  }
-  .glp-card-title {
-    font-size: 13px;
-    font-weight: 700;
-    margin: 0 0 6px;
-  }
-  .glp-card-text {
-    font-size: 11px;
-    line-height: 1.5;
-    margin: 0 0 8px;
-    color: #4b5563;
-  }
-  .glp-card .glp-btn {
-    font-size: 11px;
-    padding: 8px 10px;
-  }
-
-  /* 少し広い画面（PC）用 */
-  @media (min-width: 768px) {
-    .glp-inner {
-      padding: 32px 16px 48px;
-    }
-    .glp-hero {
-      min-height: 360px;
-      border-radius: 18px;
-    }
-    .glp-hero-content {
-      padding: 32px 32px 34px;
-      max-width: 620px;
-    }
-    .glp-hero-title {
-      font-size: 26px;
-    }
-    .glp-hero-lead {
-      font-size: 14px;
-    }
-    .glp-hero-note {
-      font-size: 12px;
-    }
-    .glp-country-photos img {
-      height: 120px;
-    }
-    .glp-cardgrid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-</style>
-
-<!-- ▼ 初期状態が英語化しないための事前クッキー掃除（既存） -->
-<script>
-(function(){
-  try{
-    var host = location.hostname.replace(/^www\./,'');
-    var m = document.cookie.match(/(?:^|;\s*)Googtrans=([^;]+)/);
-    if (m) {
-      var v = decodeURIComponent(m[1]||'');
-      if (v && v !== '/ja/ja') {
-        var exp='Thu, 01 Jan 1970 00:00:00 GMT';
-        document.cookie='googtrans=; expires='+exp+'; path=/';
-        document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+host;
-        document.cookie='googtrans=; expires='+exp+'; path=/; domain='+host;
-        if (/#googtrans/.test(location.hash)) {
-          history.replaceState('', document.title, location.pathname + location.search);
-        }
-      }
-    }
-  }catch(_){}
-})();
-</script>
-</head>
-<body>
-
-<!-- ページ最上部アンカー -->
-<div id="page-top" aria-hidden="true"></div>
-
-<!-- 右上：言語スイッチ（既存のまま） -->
-<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
-  <span class="globe" aria-hidden="true">🌐</span>
-</button>
-<div class="lang-wrap" id="langDrawer" aria-hidden="true">
-  <div class="lang-backdrop" id="langBackdrop"></div>
-  <aside class="lang-panel" role="dialog" aria-modal="true" aria-label="Select language">
-    <div class="lang-head">
-      <strong class="lang-title">Select language</strong>
-      <button class="lang-close" id="langClose" aria-label="Close">×</button>
-    </div>
-    <div class="lang-body">
-      <div class="ls-search">
-        <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
-      </div>
-      <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-      <div id="google_translate_element"></div>
-      <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
-    </div>
-  </aside>
-</div>
-
-<!-- 右上ハンバーガー（既存のまま） -->
-<button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
-  <span class="bars"><span></span></span>
-</button>
-<nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
-  <div class="menu-backdrop" id="menuBackdrop"></div>
-  <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次（各セクションへ移動）">
-    <div class="menu-head">
-      <strong class="menu-title">目次（各セクションへ移動）</strong>
-      <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
-    </div>
-    <div class="menu-groups" id="menuGroups"><!-- JSが自動生成 --></div>
-  </aside>
-</nav>
-
-<!-- ======== Grena LP 追加ブロック：ここから ======== -->
-<div id="glp-landing" class="glp-wrapper">
-  <div class="glp-inner">
-
-    <!-- ヒーロー（写真＋テキストオーバーレイ） -->
-    <section class="glp-hero">
-      <div class="glp-hero-bg">
-        <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img">
-        <div class="glp-hero-gradient"></div>
-      </div>
-      <div class="glp-hero-content">
-        <div class="glp-hero-kicker">
-          <span>🌍 EU加盟候補国ジョージア</span>
-          <span>×</span>
-          <span>現地提携の法律事務所</span>
-        </div>
-        <p class="glp-hero-title">
-          ジョージアで、はじめる。<br>国に縛られない、合法的で安心な資産とビジネスの持ち方。
-        </p>
-        <p class="glp-hero-lead">
-          現地提携の法律事務所・会計士と連携し、<br>
-          制度に沿った法人・個人事業主・銀行口座の開設をサポートします。
-        </p>
-        <p class="glp-hero-note">
-          ※ 当社は各国の税務・法務判断は行わず、公開資料に基づく一般情報の共有と手続きの事務サポートのみ行います。<br>
-          ※ 最終的な税務・法務判断は、お住まいの国の有資格専門家にご確認ください。
-        </p>
-        <div class="glp-hero-actions">
-          <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main" data-glp-target="lp-start">
-            無料相談はこちら
-          </a>
-          <a href="#corp-setup" class="glp-btn glp-btn-sub">
-            まずは制度の全体像を見る
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- 法人税などの帯 -->
-    <section class="glp-band">
-      <p class="glp-band-title">
-        ジョージアの税制・銀行制度を活用した国際ビジネス拠点
-      </p>
-      <ul class="glp-band-list">
-        <li>EU加盟候補国・ジョージアの制度に沿った法人・口座開設をサポート</li>
-        <li>渡航せずにオンライン完結を目指せるワークフローを構築</li>
-        <li>現地法律事務所との提携により、手続き内容を事前に確認したうえでご案内</li>
-      </ul>
-      <p class="glp-band-note">
-        ※当社は各国の税務・法務判断を行わず、制度や手続きの一般的な情報共有・実務サポートのみ行います。
-      </p>
-    </section>
-
-    <!-- ジョージアってどんな国？ 写真3枚 -->
-    <section class="glp-country">
-      <p class="glp-country-title">ジョージアってどんな国？</p>
-      <div class="glp-country-photos">
-        <!-- 城・教会 -->
-        <img src="田舎の教会のデザイン.jpg 3.jpg" alt="ジョージアの教会と城塞">
-        <!-- 伝統料理（ハチャプリ） -->
-        <img src="Untitled design 3.jpg" alt="ジョージアのチーズパン・ハチャプリ">
-        <!-- 自由広場など -->
-        <img src="Untitled design 2.jpg" alt="ジョージア・トビリシの広場">
-      </div>
-    </section>
-
-    <!-- 6枚のカード -->
-    <section class="glp-cardgrid">
-
-      <!-- 1. ジョージア法人設立 -->
-      <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア法人設立</h3>
-        <p class="glp-card-text">
-          渡航不要でも手続き可能な法人設立フローを、現地の専門家と連携してサポートします。
-        </p>
-        <a href="#corp-setup" class="glp-btn glp-btn-sub" data-glp-target="corp">詳しくはこちら</a>
-      </article>
-
-      <!-- 2. ジョージア個人事業主 -->
-      <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア個人事業主（IE）登録</h3>
-        <p class="glp-card-text">
-          ジョージア政府が認める正規制度「IE登録」のご案内と、登録手続きの実務サポート（条件あり）。
-        </p>
-        <a href="#sole-setup" class="glp-btn glp-btn-sub" data-glp-target="ie">詳しくはこちら</a>
-      </article>
-
-      <!-- 3. ジョージア銀行口座開設 -->
-      <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア銀行口座開設</h3>
-        <p class="glp-card-text">
-          非居住者でも開設が検討できる銀行口座について、リスク・条件を含めた一般情報と手続きサポートを提供します。
-        </p>
-        <a href="#personal-account" class="glp-btn glp-btn-sub" data-glp-target="bank">今すぐチェック</a>
-      </article>
-
-      <!-- 4. 和食店をあなたの国に -->
-      <article class="glp-card">
-        <img src="Untitled design 3.jpg" alt="寿司など和食イメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">和食店をあなたの国に</h3>
-        <p class="glp-card-text">
-          寿司が握れなくても大丈夫。現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認までをサポートします。
-        </p>
-        <a href="#precheck" class="glp-btn glp-btn-green" data-glp-target="washoku">無料相談する</a>
-      </article>
-
-      <!-- 5. 海外不動産購入・賃貸 -->
-      <article class="glp-card">
-        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">海外不動産購入・賃貸</h3>
-        <p class="glp-card-text">
-          ジョージアを含む海外不動産について、現地パートナーと連携しながら、物件選び・契約プロセスのサポートを行います。
-        </p>
-        <a href="#precheck" class="glp-btn glp-btn-gray" data-glp-target="realestate">準備中</a>
-      </article>
-
-      <!-- 6. その他・企画サポート -->
-      <article class="glp-card">
-        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">その他・企画サポート</h3>
-        <p class="glp-card-text">
-          企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計をお手伝いします。
-        </p>
-        <a href="#disclaimer" class="glp-btn glp-btn-sub" data-glp-target="others">詳しくはこちら</a>
-      </article>
-
-    </section>
-
-  </div>
-</div>
-<!-- ======== Grena LP 追加ブロック：ここまで ======== -->
-
-<main id="main">
-  <!-- フル文言は画面に出さず、SEO用にのみ保持（強制的に非表示にしておく） -->
-  <h1 class="sr-only" style="position:absolute;left:-9999px;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden;">
-    ジョージア法人設立・個人事業主・個人口座｜公開資料の参照に基づく一般情報／MoU契約／オンライン手続き
-  </h1>
-
-  <!-- =========================
-    法人設立セクション
-  ========================== -->
-  <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">
-      ジョージア法人設立｜<br>
-      サポート
-    </h2>
-
-    <!-- サクッと要点（Quick summary：法人） -->
-    <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
-
-      <p class="qs-tag">こんな方におすすめ</p>
-      <ul class="qs-list">
-        <li>海外事業をこれから始めたい方</li>
-        <li>すでに海外取引があり、個人とは別に「法人の箱」を作っておきたい方</li>
-        <li>ジョージア語やジョージアの役所手続きが不安で、自国のことばで進めたい方</li>
-      </ul>
-
-      <p class="qs-tag">サポート内容</p>
-      <ul class="qs-list">
-        <li>ジョージア法人の登記サポート（登記官との連絡や必要書類の案内など）</li>
-        <li>法人口座開設に向けた書類準備・連絡のサポート（開設可否は各銀行の審査判断）</li>
-        <li>公開資料をベースにした制度の一般情報の共有（税務・法務の個別アドバイスは含まれません）</li>
-      </ul>
-
-      <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li>
-        <li>LP付き・フルサポートなどの上位プランもあり（いずれも事務サポートの対価です）</li>
-        <li>法人登記の完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong>（案件や時期により変動します）</li>
-      </ul>
-
-      <p class="meta">※ 制度の詳細や注意事項は、下の各アコーディオン項目をご確認ください。</p>
-    </div>
-
-    <!-- 3ステップの流れ -->
-    <div class="progress-steps" aria-label="ご利用の3ステップ">
-      <div class="step">1. メッセージで相談</div>
-      <div class="step">2. ヒアリングシート記入 → ご提案</div>
-      <div class="step">3. お申し込み → 現地手続き → 完了報告</div>
-    </div>
-
-    <div class="space-y-3 accordion">
-
-      <details>
-        <summary>制度の概要（税制の考え方と前提）</summary>
-        <div class="content">
-          <p>OECDやPwC等が公表している一般資料を参照した、<strong>ジョージアの再投資型課税モデルに関する一般的な説明</strong>です。現地法では、<strong>再投資中の利益には法人税が課されず</strong>、<strong>配当等の分配時に（現地法上15%）課税</strong>される制度が採られています（例外あり）。</p>
-          <span class="note">※ 当社はOECD／PwCの認定・提携機関ではありません。記載は公表資料を参照した一般情報で、助言や保証を目的とするものではありません。</span>
-          <p><strong>留意事項（居住国側の税制）</strong></p>
-          <ul>
-            <li>居住国の税法（CFC、移転価格等）の適用可能性があります。</li>
-            <li>実際の税務効果は居住地・所得区分・資本構成など個別事情で大きく異なります。</li>
-            <li><strong>税務・法務の助言は行いません。必ず有資格の専門家にご相談ください。</strong></li>
-          </ul>
-          <p>渡航・英語・オンライン会議は不要で、文面ベースのやりとりで完了します。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>よくある検討動機（一般的な例）</summary>
-        <div class="content">
-          <ul>
-            <li>海外法人を検討したいが、言語や現地手続きに不安がある</li>
-            <li>将来的な税務・コンプライアンス対応を見据え、制度面を理解しておきたい</li>
-            <li>暗号資産の取扱いに関する制度面の情報を収集しておきたい</li>
-          </ul>
-          <span class="note">※ CFC＝タックスヘイブン対策税制（Controlled Foreign Company）</span>
-          <p>本ページは<strong>制度理解のための一般情報</strong>であり、特定の行為を推奨・勧誘するものではありません。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>暗号資産に関する一般的注意点</summary>
-        <div class="content">
-          <p><strong>移管・構成変更の課税タイミングは居住国の税制に依存</strong>します。移管自体が課税対象となる場合もあるため、事前に専門家確認が必要です。</p>
-          <ul>
-            <li>ジョージア法人への移管は現地法上の手続に過ぎません。</li>
-            <li>居住国での課税関係は各国税制により異なります。</li>
-            <li>税務リスク低減には、<strong>帳簿・証憑の厳格な整備</strong>が重要です（当社は<strong>記入・収集の事務サポートのみ</strong>）。</li>
-          </ul>
-          <span class="note">※ 証憑＝請求書・契約書・送金記録など、取引の裏づけ資料</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>制度・運用上のポイント</summary>
-        <div class="content">
-          <ul>
-            <li>根拠法：ジョージア商法／MoU連携のもとでの正規手続き</li>
-            <li>公開資料（PwC・OECD等）の参照に基づく一般情報の提供</li>
-            <li>現地法律事務所「TREX LEGAL」との連携体制（MoU）</li>
-            <li>帳簿・用途証憑の整備を事務的に支援（助言は含まず）</li>
-          </ul>
-          <span class="note">※ MoU＝覚書（Memorandum of Understanding）。開設や審査結果の保証ではありません。</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>法人税の課税タイミング（再投資型の一般説明）</summary>
-        <div class="content">
-          <p><strong>現地法上、再投資中は原則として法人税は発生せず</strong>、配当等の分配時に（現地法上15%）課税される制度です（例外あり）。<br><span class="text-sm muted">※ 居住国によってはCFC適用等の可能性があります。必ず専門家にご確認ください。</span></p>
-          <p>出典例：</p>
-          <ul>
-            <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener noreferrer" aria-label="PwCの資料（外部サイト）">PwCの資料（外部）</a></li>
-            <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener noreferrer" aria-label="OECDの資料（外部サイト）">OECDの資料（外部）</a></li>
-          </ul>
-          <p class="text-sm muted">※ 当社はいずれの機関の認定・提携を受けていません。リンクは公表資料の参照です。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>法律事務所との提携（MoU）</summary>
-        <div class="content">
-          <ul>
-            <li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li>
-            <!-- MoU締結日の記載を削除 -->
-            <li>提携範囲：登記、各種登録、帳簿・契約の事務サポート等</li>
-            <li>法人ID：406365525</li>
-          </ul>
-          <span class="note">※ MoUは業務連携の覚書であり、審査・結果の保証を意味しません。</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>初年度の事務サポート範囲</summary>
-        <div class="content">
-          <ul>
-            <li>法人登記（目安：現地営業日ベース7〜10営業日／変動あり）</li>
-            <li>バーチャルオフィス（12ヶ月）</li>
-            <li>英文契約書の取得・公証（アポスティーユ手配案内含む）</li>
-            <li>IBAN法人口座<strong>開設手続の支援（取次・事務連絡）</strong></li>
-            <li>eSIM設定の案内</li>
-          </ul>
-          <span class="note">
-            ※ IBAN＝国際銀行口座番号。
-            RS.ge（ジョージア税務ポータル）開設支援はオプション
-            （<strong>¥33,000〜</strong>・詳細は「料金プラン」の追加オプション欄をご確認ください）。
-          </span>
-        </div>
-      </details>
-
-      <details>
-        <summary>Nominee構成（UBO開示を含む一般説明）</summary>
-        <div class="content">
-          <ul>
-            <li>名義：ジョージア国籍の代表者・株主を設定する構成（任意）</li>
-            <li>MoU＋委任状＋支配者証明に基づく正規の手続き</li>
-            <li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）開示が必要</strong>です</li>
-            <li>年額：€2,500<span class="text-sm">（税込／2025年8月時点）</span></li>
-            <li>国際的な情報交換制度の対象となり得ます</li>
-          </ul>
-          <span class="note">※ UBO＝Ultimate Beneficial Owner（実質的支配者）</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>KYC・監督当局（FMS）に関する注意</summary>
-        <div class="content">
-          <p><strong>KYC（本人確認）</strong>：パスポート・住所証明・（暗号資産取引時は）取引履歴等。</p>
-          <p><strong>FMS（金融監督当局）</strong>：高額送受金や暗号資産取引の状況により、追加提出や確認が求められることがあります。</p>
-          <p class="text-sm muted">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service（ジョージア）</p>
-          <p class="text-sm muted">※ 反社該当・AML/CFT上の合理的疑いがある場合は支援不可です。</p>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- =========================
-    料金プラン
-  ========================== -->
-  <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
-    <div class="space-y-3 accordion">
-      <details>
-        <summary>料金プラン（範囲は事務サポート）</summary>
-        <div class="content">
-
-          <!-- 料金＋手続き日数の早見表 -->
-          <h3 class="smallish">料金と手続き日数の早見表</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>内容</th>
-                <th>サポート料金（税込）</th>
-                <th>手続きの目安</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>法人設立 基本プラン</td>
-                <td>¥330,000〜</td>
-                <td>法人登記：現地営業日ベース 7〜10営業日程度</td>
-              </tr>
-              <tr>
-                <td>個人事業主（IE＋SBS）</td>
-                <td>¥288,000</td>
-                <td>登録完了：オンライン申請ベース 7〜10営業日程度</td>
-              </tr>
-              <tr>
-                <td>個人口座開設サポート</td>
-                <td>¥258,000</td>
-                <td>開設完了：書類到着〜審査完了まで 数週間〜</td>
-              </tr>
-            </tbody>
-          </table>
-          <p class="text-sm muted">※ <strong>いずれも目安です。</strong>案件や時期、銀行・当局の方針により<strong>前後します。</strong></p>
-
-          <details>
-            <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
-            <div class="content">
-              <ul>
-                <li>法人登記（現地登記官との連絡含む）</li>
-                <li>法人口座<strong>開設手続支援</strong>（TBC／BOG 他・審査は銀行判断）</li>
-                <li>登記住所（1年）</li>
-                <li>書類翻訳・郵送の事務サポート</li>
-                <li>自国のことばベースで文面完結（オンライン会議・英語不要）</li>
-              </ul>
-              <span class="note">※ 表示価格は<strong>紹介・取次・事務サポートの対価</strong>であり、銀行手数料・預入金等とは無関係です。成功保証はありません。</span>
-            </div>
-          </details>
-
-          <details>
-            <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
-            <div class="content">
-              <ul>
-                <li>基本プランの範囲に加え：</li>
-                <li>.geドメイン取得手続（金融仲介とは無関係）</li>
-                <li>初期LP（問い合わせフォーム＋運用ガイドPDF）</li>
-                <li>月1回の軽微な相談（チャットベース）</li>
-                <li>ライティング構成アドバイス（一般情報）</li>
-              </ul>
-              <span class="note">※ LP＝ランディングページ。勧誘表示は行いません。</span>
-            </div>
-          </details>
-
-          <details>
-            <summary><strong>フルサポートパック</strong>：¥598,000 <span class="text-sm">（税込）</span></summary>
-            <div class="content">
-              <ul>
-                <li>設立＋LPパックの範囲に加え：</li>
-                <li><strong>【情報提供】CFCや経費管理の参考資料</strong>（助言ではありません）</li>
-                <li>帳簿テンプレート／経費リストPDF</li>
-                <li>職業別の一般的留意点（個別送付）</li>
-                <li>月1回の運用レビュー（文面型）</li>
-              </ul>
-              <span class="note">※ 税務・法務の助言は含みません（参考情報の提供）。</span>
-            </div>
-          </details>
-
-          <details>
-            <summary><strong>追加オプション</strong></summary>
-            <div class="content">
-              <ul>
-                <li><strong>Nominee構成</strong>：€2,500/年 <span class="text-sm">（税込／2025年8月時点）</span><br><span class="text-sm muted">UBO開示が必要です（国際的な情報交換制度の対象となり得ます）。</span></li>
-                <li><strong>LP＋.geドメイン（2年目以降）</strong>：¥250,000 <span class="text-sm">（税込）</span></li>
-                <li><strong>RS.ge税務ポータル開設支援（希望者のみ）</strong>：¥33,000〜<span class="text-sm muted">（IE＋SBS登録の基本料金には含まれません）</span></li>
-                <li><strong>公証／アポスティーユ</strong>：¥15,000〜／書類</li>
-                <li><strong>国際郵送</strong>（DHL）：¥5,000〜</li>
-              </ul>
-              <span class="note">※ 価格は時期・条件により変動し得ます。最新は事前確認ください。</span>
-            </div>
-          </details>
-
-          <p class="text-sm muted" style="margin-top:10px;">※ €建ての表示は請求時点の為替で円換算します。為替により請求額は変動する場合があります。</p>
-
-        </div>
-      </details>
-
-      <details>
-        <summary>2年目以降の維持・保守</summary>
-        <div class="content">
-          <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong> <span class="text-sm">（税込）</span></h4>
-          <ul>
-            <li>登記住所更新（1年）</li>
-            <li>書類更新の事務サポート（登記官との連絡等）</li>
-            <li>現地パートナー連携（文面ベース）</li>
-          </ul>
-
-          <h4>B.【法人維持＋LP保守】（設立＋LP／フル契約者向け）　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
-          <ul>
-            <li>Aの範囲すべて</li>
-            <li>問い合わせフォームの保守・小修正</li>
-            <li>年1回の軽微なLP調整・掲載相談</li>
-          </ul>
-
-          <div class="price-promo" aria-label="LP/ドメイン追加（基本プラン利用者向け）">
-            <div class="row">
-              <span class="label">LP＋.geドメイン追加（2年目以降）</span>
-              <span class="now">¥250,000</span><span class="text-sm">（税込）</span>
-            </div>
-            <div class="meta">
-              <small>※ 初年度「基本プラン」ご利用でLP・ドメイン未整備の方向け追加メニュー。</small>
-            </div>
-          </div>
-
-          <div class="progress-steps">
-            <div class="step completed">1. 相談</div>
-            <div class="step">2. 申込</div>
-            <div class="step">3. 維持更新</div>
-          </div>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- =========================
-    個人事業主（IE + SBS）
-  ========================== -->
-  <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主｜税率1%（条件あり）／オンライン申請</h2>
-    <p class="text-sm muted" style="margin-top:-0.5rem;margin-bottom:0.5rem;">
-      <strong>※「税率1%」はジョージア現地制度の一般情報であり、日本を含む居住国での最終的な税負担とは異なる場合があります。日本での申告義務や税務判断については、必ず居住国の税理士等の専門家にご相談ください。</strong>
-    </p>
-
-    <!-- サクッと要点（Quick summary：IE＋SBS） -->
-    <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
-
-      <p class="qs-tag">こんな方におすすめ</p>
-      <ul class="qs-list">
-        <li>海外向けのビジネスを個人事業主でやりたい方、やっている方</li>
-        <li>海外ビジネスをフリーランス・副業でやりたい方、やっている方</li>
-      </ul>
-
-      <p class="qs-tag">サポート内容</p>
-      <ul class="qs-list">
-        <li>IE（個人事業主）＋Small Business Status（SBS）のオンライン登録サポート</li>
-        <li>書類テンプレ・提出サポートなど、やり方を自国のことばベースで案内</li>
-      </ul>
-
-      <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>IE＋SBS 登録一式：<strong>¥288,000（税込）</strong></li>
-        <li>公証費用や郵送費などの実費は別途ご負担となります</li>
-        <li>登録完了までの目安：オンライン申請ベースで<strong>7〜10営業日</strong>（<strong>時期により変動します</strong>）</li>
-      </ul>
-
-      <p class="meta">※ 制度の詳細・税率区分などは、下の各アコーディオン項目をご確認ください。</p>
-    </div>
-
-    <div class="space-y-3 accordion">
-
-      <details>
-        <summary>IE＋Small Business Statusの一般説明</summary>
-        <div class="content">
-          <p><strong>Small Business Status（SBS）</strong>を取得すると、年収30,001〜500,000ラリの範囲で<strong>税率1%</strong>（条件あり）となる制度があります。</p>
-          <ul>
-            <li>登録対象：IE（個人事業主）＋SBS</li>
-            <li>所要期間：7〜10営業日（2025年実績 平均8.2日・変動あり）</li>
-            <li>言語：複数言語（例：英語・ジョージア語等）に対応</li>
-            <li>申請はオンライン（渡航不要）</li>
-            <li>MoU提携：TREX LEGAL（ジョージア現地法律事務所）</li>
-          </ul>
-          <span class="note">※ IE＝Individual Entrepreneur／SBS＝Small Business Status／MoU＝覚書</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>本サービスの想定利用者（例）</summary>
-        <div class="content">
-          <ul>
-            <li>海外クライアントと直接契約する個人事業者</li>
-            <li>副業の海外展開をオンラインで整備したい個人</li>
-            <li>節税よりも制度準拠と帳簿整備を重視する方</li>
-          </ul>
-        </div>
-      </details>
-
-      <details open>
-        <summary>サポート範囲と料金</summary>
-        <div class="content">
-          <ul>
-            <li>登録一式（IE＋SBS）／登録証明（複数言語）／納税ID</li>
-            <li>書類テンプレ一式・提出サポート（オンライン）</li>
-          </ul>
-
-          <div class="price-promo" aria-label="IE/SBS 登録料金">
-            <div class="row">
-              <span class="label">料金：</span>
-              <span class="now">¥288,000</span><span class="text-sm">（税込）</span>
-            </div>
-            <div class="meta">
-              <small>※ 表示額は<strong>事務サポートの対価</strong>です。公証・郵送などの実費は別途。</small>
-              <small>※ 税務・法務の助言は含まれません（登録事務の支援）。</small>
-              <small>※ 個人事業主登録と個人口座開設を同時に希望される方向けに、セット料金（<strong>¥498,000（税込）</strong>）を別途ご用意しています。詳細は「ジョージア銀行｜個人口座開設」のセクションをご覧ください。</small>
-            </div>
-            <div class="proof">
-              <span>MoU：TREX LEGAL</span>
-              <span>オンライン完結</span>
-              <span>複数言語対応</span>
-            </div>
-          </div>
-
-          <h5>別途費用（必要に応じ実費）</h5>
-          <ul>
-            <li>国際郵送（DHL）：¥5,000〜</li>
-            <li>公証／アポスティーユ：各¥15,000〜／書類</li>
-            <li>RS.ge税務ポータル開設支援（希望者のみ）：¥33,000〜<span class="text-sm muted">（IE＋SBS登録の基本料金には含まれません）</span></li>
-          </ul>
-          <span class="note">※ RS.ge＝税務ポータル／DHL＝国際宅配便</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>Small Business Statusの区分</summary>
-        <div class="content">
-          <table>
-            <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>税率</th><th>条件</th></tr></thead>
-            <tbody>
-              <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
-              <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
-              <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
-            </tbody>
-          </table>
-          <p>適用業種例：IT開発、コンサル、デザイン、翻訳、小規模輸出入 等</p>
-          <p class="text-sm">※ 居住国によっては国外所得の申告義務等が生じ得ます。各国の案内等をご確認ください。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>KYC・FMSに関する一般的留意点／FAQ</summary>
-        <div class="content">
-          <p><strong>KYC（本人確認）</strong>：パスポート・住所証明。</p>
-          <p><strong>FMS</strong>：高額送金・暗号資産規模に応じ確認が行われ得ます。</p>
-
-          <h5>FAQ</h5>
-          <ul>
-            <li>Q. 海外から申請可能？ → A. 可能（オンライン完結）。</li>
-            <li>Q. 個人口座開設は含まれる？ → A. 別サービスです（下記参照）。</li>
-            <li>Q. 上位区分へ移行する目安は？ → A. 収入規模に応じ各制度の要件を確認。</li>
-          </ul>
-          <span class="note">※ 助言は行いません。制度・手順の一般情報および事務サポート範囲です。</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>個人 → 法人化の検討パス（一般論）</summary>
-        <div class="content">
-          <ul>
-            <li>売上規模や商流に応じ、法人化で国際取引の実務が整理しやすい場合があります。</li>
-            <li>IE登録者限定で、法人設立の基本プランを割引提供（内部枠管理・予告なく終了し得ます）。</li>
-          </ul>
-          <div class="price-promo" aria-label="IE登録者限定割引">
-            <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（税込）</span></div>
-            <div class="row"><span class="label">IE登録者限定：</span><span class="now">¥298,000</span><span class="text-sm">（税込）</span><span class="badge">先着枠・期間限定</span></div>
-            <div class="meta"><small>※ 枠・期間は内部管理。適用条件はお問い合わせ時点のご案内に従います。</small></div>
-          </div>
-          <span class="note">※ IE＝Individual Entrepreneur</span>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- =========================
-    個人口座開設（銀行）
-  ========================== -->
-  <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設の事務サポート（非居住者の取扱いは銀行審査判断）</h2>
-
-    <!-- サクッと要点（Quick summary：個人口座） -->
-    <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
-
-      <p class="qs-tag">こんな方におすすめ</p>
-      <ul class="qs-list">
-        <li>海外通貨での資金管理用に、ジョージアの個人口座を持っておきたい方</li>
-        <li>渡航は難しいが、正規ルートで口座開設を検討したい方</li>
-      </ul>
-
-      <p class="qs-tag">サポート内容</p>
-      <ul class="qs-list">
-        <li>必要書類の案内とチェック、公証・アポスティーユ取得方法のガイド</li>
-        <li>提携法律事務所経由での申請取次と進捗連絡</li>
-        <li>Wise登録など、実務で使いやすくするための初期サポート</li>
-      </ul>
-
-      <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>個人口座開設サポート：<strong>¥258,000（税込）</strong></li>
-        <li>IE＋個人口座セット：<strong>¥498,000（税込）</strong>（IE登録と口座開設をまとめて進めたい方向け）</li>
-        <li>銀行・公証・郵送などの実費は別途ご負担となります</li>
-        <li>開設完了までの目安：書類到着〜審査完了まで<strong>数週間〜</strong>（<strong>銀行・時期により変動します</strong>）</li>
-      </ul>
-
-      <p class="meta">※ 金融商品の勧誘ではなく、口座開設に関する一般情報と事務サポートのみを提供します。</p>
-    </div>
-
-    <div class="space-y-3 accordion">
-
-      <details>
-        <summary>制度・市場の背景（参考情報）</summary>
-        <div class="content">
-          <ul>
-            <li>主要行は国際市場で資金調達・英語対応・SWIFT送金可</li>
-            <li>預金保護制度あり（上限額や条件は各行および時点の規定によります。詳しくは
-              <a href="https://www.diagency.ge" target="_blank" rel="noopener noreferrer nofollow">Deposit Insurance Agency of Georgia</a>
-              などの公式情報で最新の条件をご確認ください）</li>
-            <li>非居住者の受付可否：<strong>各銀行の審査判断</strong>（対象となる銀行が存在）</li>
-          </ul>
-          <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋しません。契約はお客様と各銀行の直接契約です。</p>
-          <p class="text-sm muted">※ 金融商品取引法上の勧誘・媒介・代理に該当する行為は行いません。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>必要書類（海外在住・非居住者例）</summary>
-        <div class="content">
-          <ul>
-            <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
-            <li>英語の住所証明（銀行残高証明／公共料金請求書 等・3ヶ月以内）</li>
-            <li>署名（パスポート一致の筆跡／公証書への記載）</li>
-            <li>原本郵送（PDF不可）</li>
-          </ul>
-          <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
-          <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
-        </div>
-      </details>
-
-      <details open>
-        <summary>開設サポートの範囲と費用（事務サポートの対価）</summary>
-        <div class="content">
-          <ul>
-            <li>提携法律事務所による正規ルート申請（MoU連携）</li>
-            <li>公証・アポスティーユ取得案内、翻訳補助、最終チェック</li>
-            <li>Wise登録支援、連絡窓口（チャットベース）</li>
-            <li>必要書類・マニュアル一式＋最終チェック</li>
-          </ul>
-
-          <!-- 価値ポイント：渡航不要（原則） -->
-          <div class="value-box" role="region" aria-label="渡航不要のご案内">
-            <h5 class="value-title">渡航不要（原則）</h5>
-            <p><strong>わざわざ現地に行く必要はありません。</strong>自国のことばの文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
-            <ul class="value-list">
-              <li>航空券・宿泊・移動リスク・言語対応の負担を<strong>オンラインで代替</strong></li>
-              <li>MoU連携の正規ルート申請／書類の最終チェック</li>
-              <li>連絡はチャット中心（履歴が残って安心）</li>
-            </ul>
-            <p class="text-sm muted">※ 開設可否は各銀行の審査判断です。方針・時期により、例外的に追加書類や来店を求められる場合があります。</p>
-          </div>
-
-          <div class="price-promo" aria-label="個人口座開設サポート費用">
-            <div class="row"><span class="label">サポート費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
-            <div class="row">
-              <span class="label">IE＋個人口座セット（通常）：</span>
-              <span class="old">通常合計 ¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span>
-            </div>
-            <div class="meta">
-              <small>対価の範囲：書類案内・最終チェック・翻訳補助・公証/アポスティーユ取得方法の案内・現地法律事務所への取次・申請進捗連絡。</small><br>
-              <small>含まれないもの：銀行の審査/結果・銀行/公証/郵送の実費・為替/送金手数料・税務/法務の助言。</small><br>
-              <small>当社の業務は、お客様ご本人が自力でジョージア語等で行うことや、自力渡航に伴うリスク負担が大きい書類準備・連絡・翻訳等の事務手続を、提携法律事務所との間で整理・橋渡しするものであり、<strong>銀行側のための募集・勧誘・代理行為ではありません。</strong></small><br>
-              <small>当社は、いかなる銀行・金融機関からも紹介料・コミッション等を受け取っておらず、お客様の指示に基づく事務的な取次のみを行います。</small><br>
-              <small>重要：開設可否は各銀行の審査判断であり、<strong>成功保証はありません</strong>（不許可でも性質上ご返金対象外）。</small><br>
-              <small>地域制限：法域によっては当社の免許・登録が求められるため、対象外となる場合があります。</small>
-            </div>
-            <div class="proof"><span>MoU：TREX LEGAL</span><span>SWIFT対応行あり</span></div>
-          </div>
-        </div>
-      </details>
-
-      <!-- 複利の概算ツール -->
-      <details id="cf-tool-sec" class="calc-wrap">
-        <summary>複利の概算ツール（参考・商品非特定）</summary>
-        <div class="content">
-          <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
-            <h4 id="cf-title" class="smallish">複利の概算ツール（通貨を問わない一般的な数式ベース／商品・銀行は特定しません）</h4>
-
-            <div class="cf-grid">
-              <label for="cf-currency">通貨</label>
-              <select id="cf-currency" aria-label="通貨">
-                <option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option>
-                <option value="USD" data-locale="en-US" data-symbol="$">USD（ドル）</option>
-                <option value="EUR" data-locale="de-DE" data-symbol="€">EUR（ユーロ）</option>
-                <option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL（ラリ）</option>
-              </select>
-
-              <label for="cf-principal">元本</label>
-              <input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
-
-              <label for="cf-rate">年率（%・任意入力）</label>
-              <input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
-              <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
-
-              <label for="cf-years">年数</label>
-              <input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
-
-              <label for="cf-nper">回数/年</label>
-              <select id="cf-nper">
-                <option value="1">年1回</option>
-                <option value="4">四半期</option>
-                <option value="12" selected>月次</option>
-                <option value="365">日次</option>
-              </select>
-
-              <label for="cf-is-comp">複利で計算</label>
-              <input id="cf-is-comp" type="checkbox" checked>
-            </div>
-
-            <div class="cf-preset" aria-label="年率の例（商品非特定）">
-              <span class="cf-hint">年率の例：</span>
-              <button type="button" class="cf-chip" data-rate="5">5%</button>
-              <button type="button" class="cf-chip" data-rate="8">8%</button>
-              <button type="button" class="cf-chip" data-rate="10">10%</button>
-              <button type="button" class="cf-chip" data-rate="12">12%</button>
-              <small class="note">※ 例示の数値であり、特定の商品・銀行を示すものではありません。</small>
-            </div>
-
-            <div class="cf-ack">
-              <input id="cf-ack" type="checkbox">
-              <label for="cf-ack">
-                一般的な<strong>数学計算</strong>の参考ツールです。特定の商品・銀行・利回りの示唆ではありません。税・手数料・為替・課税関係は加味していません。結果は将来の成果を示唆・保証しません。
-              </label>
-            </div>
-
-            <div class="cf-actions">
-              <button id="cf-run" class="btn secondary" disabled>結果を表示</button>
-              <button id="cf-clear" class="btn neutral" type="button">クリア</button>
-            </div>
-
-            <div id="cf-out" class="cf-out" aria-live="polite"></div>
-
-            <!-- 金利ページへのリンクのみ -->
-            <div class="cf-ref" style="margin-top:10px;">
-              <details>
-                <summary>参考：公式の預金金利ページ（外部リンク）</summary>
-                <ul class="cf-links">
-                  <li><a href="https://bankofgeorgia.ge/en/retail/deposits" target="_blank" rel="noopener noreferrer nofollow">Bank of Georgia – Deposits</a></li>
-                  <li><a href="https://www.tbcbank.ge/web/en/web/guest/deposits" target="_blank" rel="noopener noreferrer nofollow">TBC Bank – Deposits</a></li>
-                </ul>
-                <p class="text-sm muted">※ 当社は各行の金利を表示・保証しません。最新値は各行の公式情報をご確認の上、「年率」欄にご自身で入力してください。</p>
-              </details>
-            </div>
-
-            <!-- 為替レート参考リンク -->
-            <div class="cf-ref" style="margin-top:10px;">
-              <details>
-                <summary>参考：為替レート（外部チャート）</summary>
-                <ul class="cf-links">
-                  <li><a href="https://www.xe.com" target="_blank" rel="noopener noreferrer nofollow">XE.com（通貨チャート）</a></li>
-                  <li><a href="https://www.investing.com/currencies/" target="_blank" rel="noopener noreferrer nofollow">Investing.com – Currencies</a></li>
-                </ul>
-                <p class="text-sm muted">※ USD/GEL・EUR/GEL・JPY/GELなどのレートは、各サイト内で通貨ペアを選んでご確認ください。</p>
-              </details>
-            </div>
-
-            <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。各国の法令・税制は居住国・個別事情で異なります。必要に応じて専門家にご相談ください。</p>
-          </div>
-        </div>
-      </details>
-
-    </div>
-  </section>
-
-  <!-- =========================
-    こんな方にはおすすめしません
-  ========================== -->
-  <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
-    <h2 class="text-xl md:text-2xl font-bold mb-4">こんな方にはおすすめしません</h2>
-    <ul class="qs-list">
-      <li>「節税だけ」を目的にしており、自国での申告やルールを守る気がない方</li>
-      <li>短期の投機目的だけを考えている方</li>
-      <li>必要書類の準備や帳簿づけを、まったく行うつもりがない方</li>
-    </ul>
-    <p class="text-sm muted" style="margin-top:.5rem;">※ 制度に沿って長く続けたい方向けのサービスです。ルールを軽視したい方とは相性がよくありません。</p>
-  </section>
-
-  <!-- =========================
-    相談前チェックリスト
-  ========================== -->
-  <section id="precheck" class="container mx-auto max-w-4xl px-4 py-8">
-    <h2 class="text-xl md:text-2xl font-bold mb-4">相談前に考えておいていただけるとスムーズです</h2>
-    <ul class="qs-list">
-      <li>主な収入の種類（IT・コンサル・デザイン・輸出入 など）</li>
-      <li>だいたいの売上規模（ざっくりでOK）</li>
-      <li>最初は「法人」から始めたいか、「個人事業主」から始めたいか</li>
-      <li>口座を主に使うのは「生活用」か「事業用」か</li>
-    </ul>
-    <p class="text-sm muted" style="margin-top:.5rem;">※ 全部決まっていなくても大丈夫です。「なんとなくこうしたい」で構いません。</p>
-  </section>
-
-  <!-- =========================
-    免責事項・キャンセル
-  ========================== -->
-  <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
-    <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
-
-    <div class="accordion">
-      <details>
-        <summary>免責事項（必ずお読みください）</summary>
-        <div class="content">
-          <ul>
-            <li>当サービスは<strong>情報提供・紹介・取次・事務サポート</strong>であり、<strong>銀行口座の代理開設</strong>や特定金融商品の勧誘は行いません。</li>
-            <li>実際の口座開設は、現地の正規パートナー（法律事務所等）が、委任状・現地法・各銀行規程に基づき直接実施します。</li>
-            <li>当社の受領する料金は<strong>事務サポートの対価</strong>であり、銀行に支払う手数料・預入金等とは一切関係がありません。</li>
-            <li>当社は、いかなる銀行・金融機関からも紹介料・コミッション等を受け取っておらず、お客様の指示に基づく事務的な取次と、提携法律事務所との間の書類準備・連絡・翻訳等の事務手続の整理・橋渡しのみを行います。銀行側のための募集・勧誘・代理行為ではありません。</li>
-            <li><strong>税務・法務の助言は行いません。</strong>税務効果は居住国・個別事情により異なります。必ず税理士・弁護士へご相談ください。</li>
-            <li>ここで記載している『税率1%』は、ジョージア現地の制度に関する一般情報です。日本を含む居住国での最終的な税負担とは異なる場合があり、日本での申告義務や税務判断については、必ず日本の税理士等の専門家にご相談ください。</li>
-            <li>銀行口座開設・金利・商品条件は各行の審査・方針により変動し、<strong>開設や条件は保証できません。</strong></li>
-            <li>利率・試算・事例等は参考情報であり、<strong>将来の成果を保証しません。</strong></li>
-            <li>個人情報は、ジョージアでの登記・登録・口座開設等に必要な範囲および当社サービス運営の目的でのみ利用し、提携法律事務所・実務連携先の範囲でのみ共有します（ご相談用のLINEアカウント等を含みます）。目的外利用・第三者提供は行いません。当社は口座・パスワードにアクセスせず、運用にも関与しません。</li>
-            <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします（詳細は利用規約）。</li>
-            <li>一部の法域（例：特定の金融ライセンスを要する地域）の居住者は対象外です。</li>
-            <li>日本の居住者の方は、国外財産調書、国外転出時課税、CFC税制（タックスヘイブン対策税制）などの対象となり得ます。詳細は必ず日本の所轄税務署または税理士にご確認ください。</li>
-            <li>国外財産に関する届出義務が生じ得ます。各自で所管官庁・専門家にご確認ください。</li>
-          </ul>
-          <p class="text-sm muted">※ 本サイトの情報は公表資料の参照に基づく一般情報で、特定行為の勧誘や意思決定のための助言を目的としません。</p>
-        </div>
-      </details>
-
-      <details>
-        <summary>キャンセルポリシー（返金条件）</summary>
-        <div class="content">
-          <ul>
-            <li>お客様都合のキャンセルは次のとおり：
-              <ul>
-                <li>現地パートナーへの依頼開始前：返金手数料（1万円）を差し引いた金額を返金</li>
-                <li>現地パートナーへの依頼開始後：お支払い金額の100%がキャンセル料となり、<strong>ご返金はありません。</strong></li>
-              </ul>
-            </li>
-            <li>当社の明確な不履行（例：当社原因の送付漏れ）がある場合は、<strong>返金・再対応</strong>等の適切な措置を講じます。</li>
-            <li>AML/CFT対応：虚偽申告・反社会的勢力該当は支援不可。疑義により凍結・調査が生じても当社は責任を負いかねます。</li>
-            <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、日本の特定商取引法のクーリングオフは適用対象外です。</li>
-          </ul>
-        </div>
-      </details>
-    </div>
-  </section>
-
-  <!-- 画面最下部 固定CTA -->
-  <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
-    <div class="row">
-      <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">相談はこちら</a>
-      <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">今すぐ申し込み</a>
-    </div>
-  </div>
-</main>
-
-<footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 GRENA GROUP LLC｜Since 2025｜ジョージア法人ID：406365525｜お問い合わせ：<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜本サイトは一般情報の提供であり、勧誘・媒介ではありません。｜<a href="/terms" target="_blank" rel="noopener noreferrer">利用規約</a>｜<a href="/privacy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a></small>
-  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜Mail：<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜一般情報の提供のみ</small>
-</footer>
-
-<!-- 追加：カードから既存セクションへスクロールするスクリプト -->
-<script>
-(function() {
-  var landing = document.getElementById('glp-landing');
-  if (!landing) return;
-
-  // 既存LPに実際にある文言に合わせたキーワード
-  var keywordMap = {
-    "lp-start": "ジョージア法人設立・個人事業主・個人口座",
-    "corp":     "ジョージア法人設立",
-    "ie":       "ジョージア個人事業主｜税率1%",
-    "bank":     "ジョージア銀行｜個人口座開設",
-    "washoku":  "相談前に考えておいていただけるとスムーズです",
-    "realestate": "相談前に考えておいていただけるとスムーズです",
-    "others":   "免責事項・キャンセルポリシー（重要）"
-  };
-
-  function scrollToKeyword(keyword) {
-    if (!keyword) return;
-
-    var tags = ["h1","h2","h3","h4","h5","h6","p","div","span","section"];
-    var nodes = [];
-    for (var i = 0; i < tags.length; i++) {
-      var list = document.getElementsByTagName(tags[i]);
-      for (var j = 0; j < list.length; j++) {
-        nodes.push(list[j]);
-      }
-    }
-
-    var target = null;
-    for (var k = 0; k < nodes.length; k++) {
-      var text = nodes[k].textContent || "";
-      if (text.indexOf(keyword) !== -1) {
-        target = nodes[k];
-        break;
-      }
-    }
-
-    if (target) {
-      var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
-      try {
-        window.scrollTo({ top: y, behavior: "smooth" });
-      } catch (e) {
-        window.scrollTo(0, y);
-      }
-    }
-  }
-
-  var links = landing.querySelectorAll("[data-glp-target]");
-  for (var n = 0; n < links.length; n++) {
-    links[n].addEventListener("click", function(ev) {
-      ev.preventDefault();
-      var key = this.getAttribute("data-glp-target");
-      scrollToKeyword(keywordMap[key]);
-    });
-  }
-})();
-</script>
-
-<!-- 末尾読み込み -->
-<script src="./script.js?v=20251110a" defer></script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
-</body>
-</html>
+  .sp-only{ display: inline; }
+  .pc-only{ display: none; }
+}
+
+@media (min-width: 1024px){
+  .glp-hero{ padding-inline: 24px; }
+  .glp-hero-content{ padding: 26px 32px 26px; }
+}
