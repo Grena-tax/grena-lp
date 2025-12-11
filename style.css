@@ -9,7 +9,7 @@
   --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
 }
 html,body{margin:0;padding:0}
-html, body { overflow:auto !important; height:auto !important; }
+html, body { overflow:auto !important; height:auto ! important; }
 body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
 
 /* --- アコーディオン ------------------------------- */
@@ -493,7 +493,7 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 
 /* =========================================
-   TOPヒーロー（背景写真＋白カード）
+   TOPヒーロー（背景写真＋白ガラスカード）
    ========================================= */
 
 .glp-hero{
@@ -516,7 +516,7 @@ h1, .hero h1, .page-title, .hero .lead {
   overflow: hidden;
 }
 
-/* 背景写真本体 */
+/* 背景写真本体（少し明るめ＆色出し） */
 .glp-hero-img{
   width: 100%;
   height: 100%;
@@ -525,7 +525,7 @@ h1, .hero h1, .page-title, .hero .lead {
   filter: brightness(1.12) saturate(1.08);
 }
 
-/* 上はやや暗く、下に行くほど少し明るくするベール */
+/* 上はやや暗く、下に行くほど明るくするベール */
 .glp-hero-imgwrap::before{
   content: "";
   position: absolute;
@@ -541,7 +541,7 @@ h1, .hero h1, .page-title, .hero .lead {
   z-index: 1;
 }
 
-/* ★ 中央のカード：真っ白＋グレー文字 */
+/* 中央のカード：透明度40％の白ガラス＋濃い文字色 */
 .glp-hero-content{
   position: relative;
   z-index: 2;
@@ -549,12 +549,19 @@ h1, .hero h1, .page-title, .hero .lead {
   margin: 0 auto;
   padding: 22px 24px 24px;
   border-radius: 24px;
-  background: #ffffff;                          /* ← グレーガラス → 真っ白 */
-  border: 1px solid #e5e7eb;
+  background: rgba(255,255,255,0.40);               /* ← ここが「10％薄くした白」 */
+  border: 1px solid rgba(255,255,255,0.90);
   box-shadow:
     0 18px 40px rgba(15,23,42,0.32),
-    0 0 0 1px rgba(148,163,184,0.30);
-  color: #111827;                               /* 文字はダークグレー */
+    0 0 0 1px rgba(148,163,184,0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #111827;
+}
+
+/* カード内の基本テキストを濃い目に統一 */
+.glp-hero-content :where(p, span, small, li){
+  color: #0b1120;
 }
 
 /* 上部の小見出し（EU候補国〜） */
@@ -562,9 +569,9 @@ h1, .hero h1, .page-title, .hero .lead {
   margin: 0 0 8px;
   font-size: clamp(13px, 2.1vw, 15px);
   font-weight: 600;
-  letter-spacing: .12em;
+  letter-spacing: .10em;
   text-transform: uppercase;
-  color: #e5f2ff;
+  color: #f9fafb;
   background: rgba(15,23,42,0.85);
   padding: 6px 12px;
   border-radius: 999px;
@@ -574,32 +581,40 @@ h1, .hero h1, .page-title, .hero .lead {
   box-shadow: 0 8px 18px rgba(15,23,42,0.45);
 }
 
-/* メインタイトル：濃いグレー＋シャドウなし */
+/* メインタイトル：ほぼ黒でクッキリ、影なし */
 .glp-hero-title{
   margin: 10px 0 10px;
   font-size: clamp(26px, 5vw, 36px);
   line-height: 1.3;
   font-weight: 800;
-  color: #111827;
+  color: #0b1120;
   text-shadow: none;
 }
 
-/* リード文：普通のグレー＋シャドウなし */
+/* リード文：濃いグレー＋影なし */
 .glp-hero-lead{
   margin: 0 0 10px;
   font-size: clamp(14px, 2.5vw, 16px);
   line-height: 1.7;
-  color: #374151;
+  color: #111827;
   text-shadow: none;
 }
 
-/* 補足本文：少し明るめのグレー＋シャドウなし */
+/* 補足本文：少し明るいグレー＋影なし */
 .glp-hero-note{
   margin: 4px 0 16px;
   font-size: clamp(13px, 2.2vw, 15px);
   line-height: 1.7;
-  color: #4b5563;
+  color: #1f2937;
   text-shadow: none;
+}
+
+/* 注釈などの小さい文字 */
+.glp-hero-content small{
+  font-size: 0.80rem;
+  color: #111827;
+  opacity: 0.98;
+  font-weight: 500;
 }
 
 /* ボタン行 */
@@ -650,7 +665,7 @@ h1, .hero h1, .page-title, .hero .lead {
   .glp-hero-content{
     padding: 18px 16px 20px;
     border-radius: 20px;
-    background: #ffffff;   /* スマホも完全に白 */
+    background: rgba(255,255,255,0.40);  /* スマホも同じ透明度40％ */
   }
   .glp-hero-title{
     font-size: clamp(24px, 6vw, 30px);
@@ -665,38 +680,4 @@ h1, .hero h1, .page-title, .hero .lead {
 @media (min-width: 1024px){
   .glp-hero{ padding-inline: 24px; }
   .glp-hero-content{ padding: 26px 32px 26px; }
-}
-/* === ヒーロー微調整 v2（文字を濃く・カードを半透明に） ================= */
-
-/* カードを半透明の白に＆文字を濃いグレーに */
-.glp-hero-content{
-  background: rgba(255, 255, 255, 0.5);  /* 真っ白 → 50%のガラス白 */
-  color: #111827;                         /* 基本文字色を濃いグレーに */
-}
-
-/* タイトル／リード／補足をそれぞれ少し濃く */
-.glp-hero-title{
-  color: #0b1120;   /* 見出しはほぼ黒に */
-}
-
-.glp-hero-lead{
-  color: #111827;   /* リード文：濃いグレー */
-}
-
-.glp-hero-note{
-  color: #1f2937;   /* 補足文：少しだけ明るいグレー */
-}
-
-/* カード内の小さいグレー文字も濃くする */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: #4b5563;
-  opacity: 0.98;
-}
-
-/* スマホ時もカードを半透明に */
-@media (max-width: 767px){
-  .glp-hero-content{
-    background: rgba(255, 255, 255, 0.5);
-  }
 }
