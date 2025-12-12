@@ -695,3 +695,68 @@ h1, .hero h1, .page-title, .hero .lead {
     padding-inline:32px;
   }
 }
+/* === HERO polish v3（トップ画だけ：読みやすさ＋高級感）=== */
+
+/* 背景の暗幕を少し強くして、白文字のコントラストを上げる */
+.glp-hero-imgwrap::before{
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(15,23,42,0.18) 0%,
+      rgba(15,23,42,0.42) 45%,
+      rgba(15,23,42,0.88) 100%
+    ) !important;
+}
+
+/* 文字の“居場所”を作る：カードではなく、薄い暗ベール＋ぼかし */
+.glp-hero-content{
+  position: relative !important;
+  padding: 14px 14px 18px !important;
+}
+
+.glp-hero-content::before{
+  content:"";
+  position:absolute;
+  inset:-10px -10px -14px -10px;
+  border-radius:18px;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,23,42,0.12) 0%,
+    rgba(15,23,42,0.55) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index:-1;
+}
+
+/* タイトルの視認性をさらに安定（影を上品に） */
+.glp-hero-title{
+  text-shadow:
+    0 2px 10px rgba(0,0,0,0.55),
+    0 0 1px rgba(0,0,0,0.50) !important;
+}
+
+/* リードと補足を読みやすく（白寄りに寄せる） */
+.glp-hero-lead{
+  color: rgba(255,255,255,0.92) !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.55) !important;
+}
+
+.glp-hero-note{
+  color: rgba(255,255,255,0.82) !important;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.55) !important;
+}
+
+/* ※の小さい注意書き（.text-sm）がある場合：読める明るさにする */
+.glp-hero-content .text-sm{
+  color: rgba(255,255,255,0.76) !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 5px rgba(0,0,0,0.55) !important;
+}
+
+/* 上のピル（EU加盟候補国…）は「白でOK」：白寄りにして安定 */
+.glp-hero-kicker{
+  color: rgba(255,255,255,0.95) !important;
+  background: rgba(15,23,42,0.82) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+}
