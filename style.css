@@ -492,9 +492,10 @@ h1, .hero h1, .page-title, .hero .lead {
   width: 40%;
 }
 
-/* =========================================
-   TOPヒーロー（写真フル幅＋シンプル白文字）
-   ========================================= */
+/* =========================================================
+   TOPヒーロー（写真フル幅＋“高級感”の暗透過カード）
+   ※iPhoneのモザイク回避：backdrop-filterは使わない
+   ========================================================= */
 
 .glp-hero{
   position: relative;
@@ -519,10 +520,11 @@ h1, .hero h1, .page-title, .hero .lead {
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:scale(1.03);
+  transform:scale(1.02);
+  filter: brightness(1.03) saturate(1.04) contrast(1.02);
 }
 
-/* 上は少し明るく／下に向かってしっかり暗くして、白文字を読みやすく */
+/* 写真の上に“上品な暗幕”を敷く（白文字を安定して読ませる） */
 .glp-hero-imgwrap::before{
   content:"";
   position:absolute;
@@ -530,83 +532,118 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(15,23,42,0.20) 0%,
-      rgba(15,23,42,0.40) 45%,
-      rgba(15,23,42,0.78) 100%
+      rgba(2, 6, 23, 0.52) 0%,
+      rgba(2, 6, 23, 0.44) 35%,
+      rgba(2, 6, 23, 0.52) 70%,
+      rgba(2, 6, 23, 0.64) 100%
     );
 }
 
-/* 余計な枠・カードをすべて無効化 */
+/* 余計な枠が出るのを防止 */
 .glp-hero::before,
 .glp-hero::after{
   content:none !important;
 }
 
-/* テキストブロック：カードにせず、そのまま乗せる */
+/* テキストブロック：暗い半透明 + “細い光る縁” + 影で高級感 */
 .glp-hero-content{
   position:relative;
   z-index:2;
   max-width:min(980px, 94vw);
   margin:0 auto;
-  padding:0 4px 0;
-  color:#f9fafb;
-  background:none !important;
-  border:none !important;
-  box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+  padding: 18px 18px 20px;
+  border-radius: 24px;
+
+  /* 重要：モザイク回避（iPhone Safariで荒れるのでオフ） */
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+
+  /* “中身の面”と“縁”をbackground-clipで作る（Safariでも安定） */
+  border: 1px solid transparent;
+  background:
+    linear-gradient(rgba(6, 12, 28, 0.78), rgba(6, 12, 28, 0.74)) padding-box,
+    linear-gradient(135deg,
+      rgba(255,255,255,0.22),
+      rgba(255,255,255,0.06),
+      rgba(255,255,255,0.16)
+    ) border-box;
+
+  box-shadow:
+    0 24px 62px rgba(0,0,0,0.38),
+    0 1px 0 rgba(255,255,255,0.06) inset;
+
+  color:#ffffff;
   text-align:left;
 }
 
-/* 上部の小見出しピル */
+/* 表面の“ガラスっぽいハイライト”（ぼかし無しで上品に） */
+.glp-hero-content::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  background:
+    radial-gradient(120% 70% at 18% 0%,
+      rgba(255,255,255,0.11) 0%,
+      rgba(255,255,255,0.05) 38%,
+      rgba(255,255,255,0.00) 70%
+    );
+  pointer-events:none;
+}
+
+/* 上部の小見出しピル（白文字でOK） */
 .glp-hero-kicker{
   display:inline-flex;
   align-items:center;
   gap:6px;
   margin:0 0 12px;
-  padding:6px 12px;
+  padding:7px 12px;
   font-size:clamp(12px,2vw,14px);
   font-weight:600;
   letter-spacing:.12em;
   text-transform:uppercase;
-  color:#e5f2ff;
-  background:rgba(15,23,42,0.9);
+  color:#ffffff;
+  background:rgba(2, 6, 23, 0.72);
+  border:1px solid rgba(255,255,255,0.14);
   border-radius:999px;
-  box-shadow:0 10px 24px rgba(15,23,42,0.55);
+  box-shadow:0 10px 24px rgba(0,0,0,0.28);
 }
 
 /* メインタイトル */
 .glp-hero-title{
   margin:6px 0 8px;
   font-size:clamp(28px, 6.2vw, 38px);
-  line-height:1.26;
+  line-height:1.22;
   font-weight:800;
-  color:#f9fafb;
-  text-shadow:
-    0 2px 6px rgba(15,23,42,0.9),
-    0 0 1px rgba(15,23,42,0.9);
+  color:#ffffff;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.35);
 }
 
-/* リード文（サブタイトル） */
+/* リード文 */
 .glp-hero-lead{
-  margin:0 0 8px;
+  margin:0 0 10px;
   max-width:40rem;
   font-size:clamp(15px,2.6vw,17px);
-  line-height:1.7;
-  color:#e5e7eb;
-  text-shadow:
-    0 1px 4px rgba(15,23,42,0.9);
+  line-height:1.72;
+  color: rgba(255,255,255,0.90);
+  text-shadow: 0 8px 22px rgba(0,0,0,0.28);
 }
 
-/* 補足本文（現地提携〜） */
+/* 補足本文 */
 .glp-hero-note{
   margin:4px 0 16px;
   max-width:40rem;
   font-size:clamp(13px,2.3vw,15px);
-  line-height:1.7;
-  color:#cbd5f5;
-  text-shadow:
-    0 1px 3px rgba(15,23,42,0.85);
+  line-height:1.72;
+  color: rgba(255,255,255,0.86);
+  text-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+/* 「※」の小さい注意書き（薄すぎない白） */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: rgba(255,255,255,0.78);
+  opacity: 1;
 }
 
 /* ボタン行 */
@@ -622,29 +659,47 @@ h1, .hero h1, .page-title, .hero .lead {
   align-items:center;
   justify-content:center;
   gap:6px;
-  padding:.6rem 1.6rem;
+  min-height:44px;
+  padding:.65rem 1.6rem;
   border-radius:999px;
   font-size:.95rem;
   font-weight:700;
   text-decoration:none;
-  border:1px solid rgba(255,255,255,0.35);
-  box-shadow:0 14px 32px rgba(15,23,42,0.8);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.22);
+  box-shadow:
+    0 16px 34px rgba(0,0,0,0.30),
+    0 1px 0 rgba(255,255,255,0.08) inset;
+  position:relative;
+  overflow:hidden;
 }
 .glp-hero-cta{
   background:#22a3ff;
-  color:#f9fafb;
+  color:#ffffff;
 }
 .glp-hero-cta:hover{
   background:#1d8fe0;
 }
 .glp-hero-secondary{
-  background:rgba(15,23,42,0.75);
-  color:#e5e7eb;
+  background:rgba(2, 6, 23, 0.40);
+  color:rgba(255,255,255,0.92);
 }
 .glp-hero-secondary:hover{
-  background:rgba(15,23,42,0.92);
+  background:rgba(2, 6, 23, 0.55);
+}
+
+/* ボタン上面の薄いハイライト（上品な質感） */
+.glp-hero-cta::before,
+.glp-hero-secondary::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.18),
+    rgba(255,255,255,0.00) 60%
+  );
+  opacity:.55;
+  pointer-events:none;
 }
 
 /* 下の小タグ群（もし使っていれば） */
@@ -659,22 +714,23 @@ h1, .hero h1, .page-title, .hero .lead {
 .glp-hero-subpoints span{
   padding:3px 7px;
   border-radius:999px;
-  background:rgba(15,23,42,0.88);
-  border:1px solid rgba(148,163,184,0.65);
+  background:rgba(2, 6, 23, 0.55);
+  border:1px solid rgba(148,163,184,0.55);
 }
 
 /* SP・PC切り替え */
 .sp-only{ display:none; }
 .pc-only{ display:inline; }
 
-/* レイアウト崩れ防止：モバイル時 */
+/* モバイル時 */
 @media (max-width:767px){
   .glp-hero{
     padding:84px 16px 64px;
     align-items:flex-end;
   }
   .glp-hero-content{
-    padding:0;
+    padding: 18px 16px 18px;
+    border-radius: 22px;
   }
   .glp-hero-title{
     font-size:clamp(24px, 7vw, 30px);
@@ -689,169 +745,9 @@ h1, .hero h1, .page-title, .hero .lead {
   .pc-only{ display:none; }
 }
 
-/* 横幅が広いときは、少し左右の余白を増やす */
+/* 横幅が広いとき */
 @media (min-width:1024px){
   .glp-hero{
     padding-inline:32px;
-  }
-}
-/* === HERO polish v3（トップ画だけ：読みやすさ＋高級感）=== */
-
-/* 背景の暗幕を少し強くして、白文字のコントラストを上げる */
-.glp-hero-imgwrap::before{
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(15,23,42,0.18) 0%,
-      rgba(15,23,42,0.42) 45%,
-      rgba(15,23,42,0.88) 100%
-    ) !important;
-}
-
-/* 文字の“居場所”を作る：カードではなく、薄い暗ベール＋ぼかし */
-.glp-hero-content{
-  position: relative !important;
-  padding: 14px 14px 18px !important;
-}
-
-.glp-hero-content::before{
-  content:"";
-  position:absolute;
-  inset:-10px -10px -14px -10px;
-  border-radius:18px;
-  background: linear-gradient(
-    to bottom,
-    rgba(15,23,42,0.12) 0%,
-    rgba(15,23,42,0.55) 100%
-  );
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  z-index:-1;
-}
-
-/* タイトルの視認性をさらに安定（影を上品に） */
-.glp-hero-title{
-  text-shadow:
-    0 2px 10px rgba(0,0,0,0.55),
-    0 0 1px rgba(0,0,0,0.50) !important;
-}
-
-/* リードと補足を読みやすく（白寄りに寄せる） */
-.glp-hero-lead{
-  color: rgba(255,255,255,0.92) !important;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.55) !important;
-}
-
-.glp-hero-note{
-  color: rgba(255,255,255,0.82) !important;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.55) !important;
-}
-
-/* ※の小さい注意書き（.text-sm）がある場合：読める明るさにする */
-.glp-hero-content .text-sm{
-  color: rgba(255,255,255,0.76) !important;
-  opacity: 1 !important;
-  text-shadow: 0 1px 5px rgba(0,0,0,0.55) !important;
-}
-
-/* 上のピル（EU加盟候補国…）は「白でOK」：白寄りにして安定 */
-.glp-hero-kicker{
-  color: rgba(255,255,255,0.95) !important;
-  background: rgba(15,23,42,0.82) !important;
-  border: 1px solid rgba(255,255,255,0.10) !important;
-}
-/* =========================================================
-   HERO 上だけ最終調整 v3（iPhoneのモザイク防止 + 高級感）
-   ※アコーディオン/フォント等には触れない
-   ※HTMLは触らない（.glp-hero〜 だけ上書き）
-   ========================================================= */
-
-/* 背景写真の上に“上品な暗幕”を作って文字のコントラストを安定させる */
-.glp-hero-imgwrap::before{
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(2, 6, 23, 0.55) 0%,
-      rgba(2, 6, 23, 0.45) 35%,
-      rgba(2, 6, 23, 0.52) 70%,
-      rgba(2, 6, 23, 0.62) 100%
-    ) !important;
-}
-
-/* 背景写真は少しだけ整える（やりすぎると安っぽくなるので控えめ） */
-.glp-hero-img{
-  transform: scale(1.02) !important;
-  filter: brightness(1.03) saturate(1.04) contrast(1.02) !important;
-}
-
-/* ▼▼ ここが“モザイク防止”の本体：ぼかしを完全に無効化 ▼▼ */
-.glp-hero-content{
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-
-  /* 高級感は「濃い半透明 + 細い縁 + 柔らかい影」で作る */
-  position: relative !important;
-  background: rgba(6, 12, 28, 0.76) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  box-shadow:
-    0 22px 55px rgba(0, 0, 0, 0.35),
-    0 1px 0 rgba(255, 255, 255, 0.06) inset !important;
-  color: #ffffff !important;
-}
-
-/* カード表面に“ガラスっぽいハイライト”だけ乗せる（ぼかし無しで上品に） */
-.glp-hero-content::before{
-  content: "" !important;
-  position: absolute !important;
-  inset: 0 !important;
-  border-radius: inherit !important;
-  background:
-    radial-gradient(120% 70% at 20% 0%,
-      rgba(255,255,255,0.10) 0%,
-      rgba(255,255,255,0.04) 35%,
-      rgba(255,255,255,0.00) 70%
-    ) !important;
-  pointer-events: none !important;
-}
-
-/* 中身は前面に出す */
-.glp-hero-content > *{
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* 見出し・本文の読みやすさ（フォントは変えず、色と影だけで上質に） */
-.glp-hero-title{
-  color: #ffffff !important;
-  text-shadow: 0 10px 28px rgba(0,0,0,0.35) !important;
-}
-.glp-hero-lead{
-  color: rgba(255,255,255,0.90) !important;
-  text-shadow: 0 8px 22px rgba(0,0,0,0.28) !important;
-}
-.glp-hero-note{
-  color: rgba(255,255,255,0.86) !important;
-  text-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
-}
-
-/* 「※」の注意書き（白のまま・薄すぎない） */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: rgba(255,255,255,0.78) !important;
-  opacity: 1 !important;
-}
-
-/* 上のラベル（EU加盟候補国〜）は“白文字のままでOK”。背景だけ上品に締める */
-.glp-hero-kicker{
-  color: #ffffff !important;
-  background: rgba(2, 6, 23, 0.72) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.28) !important;
-}
-
-/* モバイルでも同じ（モザイク回避を優先） */
-@media (max-width: 767px){
-  .glp-hero-content{
-    background: rgba(6, 12, 28, 0.78) !important;
   }
 }
