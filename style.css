@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋ヒーロー調整・世界クラス寄せ）===== */
+/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ）===== */
 
 /* --- スクロール/安全域/CTA高さ --------------------- */
 :root{
@@ -7,9 +7,6 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
   --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
-
-  --hero-card-bg: rgba(15,23,42,0.76);  /* ヒーローカードのベース（深い紺） */
-  --hero-card-tint: rgba(148,163,184,0.16); /* ガラス感用の淡いブルーグレー */
 }
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -364,9 +361,9 @@ h1, .hero h1, .page-title, .hero .lead {
 /* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{
-    animation: none !重要;
-    transition: none !重要;
-    scroll-behavior: auto !重要;
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -496,245 +493,205 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 
 /* =========================================
-   TOPヒーロー（背景写真＋ガラスカード）
+   TOPヒーロー（写真フル幅＋シンプル白文字）
    ========================================= */
 
 .glp-hero{
   position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   box-sizing: border-box;
-  padding: clamp(72px, 11vh, 104px) 16px 60px;
+  padding: clamp(80px, 14vh, 110px) 16px 72px;
   min-height: min(540px, 92vh);
-  background: #020617;
+  background:#0b1120;
   overflow: hidden;
 }
 
-/* 背景写真ラッパー */
+/* 背景写真 */
 .glp-hero-imgwrap{
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  position:absolute;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
 }
-
-/* 背景写真本体：コントラスト＆彩度を少しだけ上げる */
 .glp-hero-img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.03);
-  filter: brightness(1.06) contrast(1.08) saturate(1.08);
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transform:scale(1.03);
 }
 
-/* 上部を暗く・中央をやや見せて・下を柔らかく */
+/* 上は少し明るく／下に向かってしっかり暗くして、白文字を読みやすく */
 .glp-hero-imgwrap::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 0%, rgba(15,23,42,0.45) 0, transparent 42%),
-    radial-gradient(circle at 80% 0%, rgba(15,23,42,0.52) 0, transparent 48%),
-    linear-gradient(to bottom,
-      rgba(15,23,42,0.78) 0%,
-      rgba(15,23,42,0.70) 26%,
-      rgba(15,23,42,0.58) 48%,
-      rgba(15,23,42,0.46) 68%,
-      rgba(15,23,42,0.38) 100%
-    );
-  z-index: 1;
-}
-
-/* カードの外側にほんのり縁どりの光を追加 */
-.glp-hero::after{
   content:"";
   position:absolute;
-  inset: clamp(18px,3.2vw,28px);
-  border-radius: 32px;
-  border: 1px solid rgba(148,163,184,0.28);
-  box-shadow:
-    0 0 0 1px rgba(15,23,42,0.92),
-    0 26px 80px rgba(15,23,42,0.75);
-  z-index:0;
-  pointer-events:none;
-}
-
-/* 中央のガラスカード */
-.glp-hero-content{
-  position: relative;
-  z-index: 2;
-  max-width: min(960px, 92vw);
-  margin: 0 auto;
-  padding: 26px 26px 24px;
-  border-radius: 26px;
+  inset:0;
   background:
-    linear-gradient(135deg,
-      rgba(15,23,42,0.95),
-      rgba(15,23,42,0.86)
+    linear-gradient(
+      to bottom,
+      rgba(15,23,42,0.20) 0%,
+      rgba(15,23,42,0.40) 45%,
+      rgba(15,23,42,0.78) 100%
     );
-  background-blend-mode: soft-light;
-  border: 1px solid rgba(148,163,184,0.45);
-  box-shadow:
-    0 32px 80px rgba(15,23,42,0.85),
-    0 0 0 1px rgba(15,23,42,0.6);
-  backdrop-filter: blur(22px) saturate(130%);
-  -webkit-backdrop-filter: blur(22px) saturate(130%);
-  color: #e5e7eb;
 }
 
-/* 上部の小見出し（EU候補国〜） */
-.glp-hero-kicker{
-  margin: 0 0 10px;
-  font-size: clamp(13px, 2.1vw, 15px);
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: #e5f2ff;
-  background: radial-gradient(circle at 0 50%, #22d3ee 0, #1d4ed8 40%, #0f172a 85%);
-  padding: 6px 14px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow:
-    0 10px 26px rgba(15,23,42,0.82),
-    0 0 0 1px rgba(15,23,42,0.8);
+/* 余計な枠・カードをすべて無効化 */
+.glp-hero::before,
+.glp-hero::after{
+  content:none !important;
 }
-.glp-hero-kicker span{
+
+/* テキストブロック：カードにせず、そのまま乗せる */
+.glp-hero-content{
+  position:relative;
+  z-index:2;
+  max-width:min(980px, 94vw);
+  margin:0 auto;
+  padding:0 4px 0;
+  color:#f9fafb;
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  text-align:left;
+}
+
+/* 上部の小見出しピル */
+.glp-hero-kicker{
   display:inline-flex;
   align-items:center;
-  justify-content:center;
+  gap:6px;
+  margin:0 0 12px;
+  padding:6px 12px;
+  font-size:clamp(12px,2vw,14px);
+  font-weight:600;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#e5f2ff;
+  background:rgba(15,23,42,0.9);
+  border-radius:999px;
+  box-shadow:0 10px 24px rgba(15,23,42,0.55);
 }
 
-/* メインタイトル：白寄りにして抜け良く */
+/* メインタイトル */
 .glp-hero-title{
-  margin: 12px 0 10px;
-  font-size: clamp(28px, 5vw, 38px);
-  line-height: 1.28;
-  font-weight: 800;
-  color: #f9fafb;
+  margin:6px 0 8px;
+  font-size:clamp(28px, 6.2vw, 38px);
+  line-height:1.26;
+  font-weight:800;
+  color:#f9fafb;
+  text-shadow:
+    0 2px 6px rgba(15,23,42,0.9),
+    0 0 1px rgba(15,23,42,0.9);
 }
 
-/* リード文：やや明るめのグレー */
+/* リード文（サブタイトル） */
 .glp-hero-lead{
-  margin: 0 0 8px;
-  font-size: clamp(14px, 2.5vw, 16px);
-  line-height: 1.7;
-  color: #e5e7eb;
+  margin:0 0 8px;
+  max-width:40rem;
+  font-size:clamp(15px,2.6vw,17px);
+  line-height:1.7;
+  color:#e5e7eb;
+  text-shadow:
+    0 1px 4px rgba(15,23,42,0.9);
 }
 
-/* 補足本文：一段だけトーンを落とす */
+/* 補足本文（現地提携〜） */
 .glp-hero-note{
-  margin: 4px 0 16px;
-  font-size: clamp(13px, 2.2vw, 15px);
-  line-height: 1.7;
-  color: #cbd5f5;
-}
-
-/* カード内の小さいグレー文字（免責など） */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: #cbd5f5;
-  opacity: 0.96;
+  margin:4px 0 16px;
+  max-width:40rem;
+  font-size:clamp(13px,2.3vw,15px);
+  line-height:1.7;
+  color:#cbd5f5;
+  text-shadow:
+    0 1px 3px rgba(15,23,42,0.85);
 }
 
 /* ボタン行 */
 .glp-hero-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 10px 0 12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin:10px 0 10px;
 }
-
-/* メインCTAボタン */
-.glp-hero-cta{
-  border-radius: 999px;
-  padding-inline: 1.7rem;
-  padding-block: .65rem;
-  font-size: 0.96rem;
-  font-weight: 700;
-  background: radial-gradient(circle at 0 50%, #38bdf8 0, #0ea5e9 40%, #0c4a6e 100%);
-  color: #f9fafb;
-  box-shadow:
-    0 18px 38px rgba(8,47,73,0.95),
-    0 0 0 1px rgba(56,189,248,0.25);
-  border: none;
-}
-
-/* セカンダリボタン */
+.glp-hero-cta,
 .glp-hero-secondary{
-  border-radius: 999px;
-  padding-inline: 1.6rem;
-  padding-block: .63rem;
-  font-size: 0.94rem;
-  font-weight: 700;
-  background: radial-gradient(circle at 100% 0, #0f172a 0, #020617 55%);
-  color: #e5e7eb;
-  border: 1px solid rgba(148,163,184,0.55);
-  box-shadow:
-    0 14px 32px rgba(15,23,42,0.9),
-    0 0 0 1px rgba(15,23,42,0.7);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:.6rem 1.6rem;
+  border-radius:999px;
+  font-size:.95rem;
+  font-weight:700;
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,0.35);
+  box-shadow:0 14px 32px rgba(15,23,42,0.8);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
 }
-
-/* ボタンのホバー */
+.glp-hero-cta{
+  background:#22a3ff;
+  color:#f9fafb;
+}
 .glp-hero-cta:hover{
-  filter: brightness(1.06);
+  background:#1d8fe0;
+}
+.glp-hero-secondary{
+  background:rgba(15,23,42,0.75);
+  color:#e5e7eb;
 }
 .glp-hero-secondary:hover{
-  background: radial-gradient(circle at 100% 0, #111827 0, #020617 55%);
+  background:rgba(15,23,42,0.92);
 }
 
-/* 下の小さなポイント */
+/* 下の小タグ群（もし使っていれば） */
 .glp-hero-subpoints{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 11px;
-  color: #cbd5e1;
-  margin-top: 6px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
+  font-size:12px;
+  color:#e5e7eb;
 }
 .glp-hero-subpoints span{
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: rgba(15,23,42,0.92);
-  border: 1px solid rgba(51,65,85,0.85);
+  padding:3px 7px;
+  border-radius:999px;
+  background:rgba(15,23,42,0.88);
+  border:1px solid rgba(148,163,184,0.65);
 }
 
-/* PC・スマホ切り替え用ユーティリティ */
-.sp-only{ display: none; }
-.pc-only{ display: inline; }
+/* SP・PC切り替え */
+.sp-only{ display:none; }
+.pc-only{ display:inline; }
 
-/* スマホ最適化 ------------------------------------ */
-@media (max-width: 767px){
+/* レイアウト崩れ防止：モバイル時 */
+@media (max-width:767px){
   .glp-hero{
-    padding-top: 88px;
-    padding-bottom: 56px;
-  }
-  .glp-hero::after{
-    inset: 18px 10px 22px;
-    border-radius: 28px;
+    padding:84px 16px 64px;
+    align-items:flex-end;
   }
   .glp-hero-content{
-    padding: 20px 16px 20px;
-    border-radius: 22px;
+    padding:0;
   }
   .glp-hero-title{
-    font-size: clamp(24px, 6.2vw, 30px);
+    font-size:clamp(24px, 7vw, 30px);
   }
-  .glp-hero-subpoints{
-    font-size: 10.5px;
+  .glp-hero-lead{
+    font-size:clamp(14px, 3.5vw, 16px);
   }
-  .sp-only{ display: inline; }
-  .pc-only{ display: none; }
+  .glp-hero-note{
+    font-size:clamp(12px, 3.2vw, 14px);
+  }
+  .sp-only{ display:inline; }
+  .pc-only{ display:none; }
 }
 
-/* PC横幅広め ------------------------------------- */
-@media (min-width: 1024px){
+/* 横幅が広いときは、少し左右の余白を増やす */
+@media (min-width:1024px){
   .glp-hero{
-    padding-inline: 32px;
-  }
-  .glp-hero-content{
-    padding: 30px 32px 28px;
+    padding-inline:32px;
   }
 }
