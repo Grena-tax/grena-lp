@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋ヒーロー調整）===== */
+/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋ヒーロー調整・世界クラス寄せ）===== */
 
 /* --- スクロール/安全域/CTA高さ --------------------- */
 :root{
@@ -7,9 +7,12 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
   --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+
+  --hero-card-bg: rgba(15,23,42,0.76);  /* ヒーローカードのベース（深い紺） */
+  --hero-card-tint: rgba(148,163,184,0.16); /* ガラス感用の淡いブルーグレー */
 }
 html,body{margin:0;padding:0}
-html, body { overflow:auto !important; height:auto ! important; }
+html, body { overflow:auto !important; height:auto !important; }
 body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
 
 /* --- アコーディオン ------------------------------- */
@@ -361,9 +364,9 @@ h1, .hero h1, .page-title, .hero .lead {
 /* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
+    animation: none !重要;
+    transition: none !重要;
+    scroll-behavior: auto !重要;
   }
 }
 
@@ -493,7 +496,7 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 
 /* =========================================
-   TOPヒーロー（背景写真＋白ガラスカード）
+   TOPヒーロー（背景写真＋ガラスカード）
    ========================================= */
 
 .glp-hero{
@@ -502,9 +505,9 @@ h1, .hero h1, .page-title, .hero .lead {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  padding: clamp(64px, 10vh, 96px) 16px 56px;
-  min-height: min(520px, 90vh);
-  background: #0b1120;
+  padding: clamp(72px, 11vh, 104px) 16px 60px;
+  min-height: min(540px, 92vh);
+  background: #020617;
   overflow: hidden;
 }
 
@@ -516,415 +519,222 @@ h1, .hero h1, .page-title, .hero .lead {
   overflow: hidden;
 }
 
-/* 背景写真本体（少し明るめ＆色出し） */
+/* 背景写真本体：コントラスト＆彩度を少しだけ上げる */
 .glp-hero-img{
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.02);
-  filter: brightness(1.12) saturate(1.08);
+  transform: scale(1.03);
+  filter: brightness(1.06) contrast(1.08) saturate(1.08);
 }
 
-/* 上はやや暗く、下に行くほど明るくするベール */
+/* 上部を暗く・中央をやや見せて・下を柔らかく */
 .glp-hero-imgwrap::before{
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(
-      to bottom,
-      rgba(15,23,42,0.38) 0%,
-      rgba(15,23,42,0.28) 40%,
-      rgba(15,23,42,0.20) 70%,
-      rgba(15,23,42,0.12) 100%
+    radial-gradient(circle at 20% 0%, rgba(15,23,42,0.45) 0, transparent 42%),
+    radial-gradient(circle at 80% 0%, rgba(15,23,42,0.52) 0, transparent 48%),
+    linear-gradient(to bottom,
+      rgba(15,23,42,0.78) 0%,
+      rgba(15,23,42,0.70) 26%,
+      rgba(15,23,42,0.58) 48%,
+      rgba(15,23,42,0.46) 68%,
+      rgba(15,23,42,0.38) 100%
     );
   z-index: 1;
 }
 
-/* 中央のカード：透明度40％の白ガラス＋濃い文字色 */
+/* カードの外側にほんのり縁どりの光を追加 */
+.glp-hero::after{
+  content:"";
+  position:absolute;
+  inset: clamp(18px,3.2vw,28px);
+  border-radius: 32px;
+  border: 1px solid rgba(148,163,184,0.28);
+  box-shadow:
+    0 0 0 1px rgba(15,23,42,0.92),
+    0 26px 80px rgba(15,23,42,0.75);
+  z-index:0;
+  pointer-events:none;
+}
+
+/* 中央のガラスカード */
 .glp-hero-content{
   position: relative;
   z-index: 2;
   max-width: min(960px, 92vw);
   margin: 0 auto;
-  padding: 22px 24px 24px;
-  border-radius: 24px;
-  background: rgba(255,255,255,0.40);               /* ← ここが「10％薄くした白」 */
-  border: 1px solid rgba(255,255,255,0.90);
+  padding: 26px 26px 24px;
+  border-radius: 26px;
+  background:
+    linear-gradient(135deg,
+      rgba(15,23,42,0.95),
+      rgba(15,23,42,0.86)
+    );
+  background-blend-mode: soft-light;
+  border: 1px solid rgba(148,163,184,0.45);
   box-shadow:
-    0 18px 40px rgba(15,23,42,0.32),
-    0 0 0 1px rgba(148,163,184,0.28);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: #111827;
-}
-
-/* カード内の基本テキストを濃い目に統一 */
-.glp-hero-content :where(p, span, small, li){
-  color: #0b1120;
+    0 32px 80px rgba(15,23,42,0.85),
+    0 0 0 1px rgba(15,23,42,0.6);
+  backdrop-filter: blur(22px) saturate(130%);
+  -webkit-backdrop-filter: blur(22px) saturate(130%);
+  color: #e5e7eb;
 }
 
 /* 上部の小見出し（EU候補国〜） */
 .glp-hero-kicker{
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-size: clamp(13px, 2.1vw, 15px);
   font-weight: 600;
-  letter-spacing: .10em;
+  letter-spacing: .14em;
   text-transform: uppercase;
-  color: #f9fafb;
-  background: rgba(15,23,42,0.85);
-  padding: 6px 12px;
+  color: #e5f2ff;
+  background: radial-gradient(circle at 0 50%, #22d3ee 0, #1d4ed8 40%, #0f172a 85%);
+  padding: 6px 14px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  box-shadow: 0 8px 18px rgba(15,23,42,0.45);
+  gap: 8px;
+  box-shadow:
+    0 10px 26px rgba(15,23,42,0.82),
+    0 0 0 1px rgba(15,23,42,0.8);
+}
+.glp-hero-kicker span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
 }
 
-/* メインタイトル：ほぼ黒でクッキリ、影なし */
+/* メインタイトル：白寄りにして抜け良く */
 .glp-hero-title{
-  margin: 10px 0 10px;
-  font-size: clamp(26px, 5vw, 36px);
-  line-height: 1.3;
+  margin: 12px 0 10px;
+  font-size: clamp(28px, 5vw, 38px);
+  line-height: 1.28;
   font-weight: 800;
-  color: #0b1120;
-  text-shadow: none;
+  color: #f9fafb;
 }
 
-/* リード文：濃いグレー＋影なし */
+/* リード文：やや明るめのグレー */
 .glp-hero-lead{
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   font-size: clamp(14px, 2.5vw, 16px);
   line-height: 1.7;
-  color: #111827;
-  text-shadow: none;
+  color: #e5e7eb;
 }
 
-/* 補足本文：少し明るいグレー＋影なし */
+/* 補足本文：一段だけトーンを落とす */
 .glp-hero-note{
   margin: 4px 0 16px;
   font-size: clamp(13px, 2.2vw, 15px);
   line-height: 1.7;
-  color: #1f2937;
-  text-shadow: none;
+  color: #cbd5f5;
 }
 
-/* 注釈などの小さい文字 */
-.glp-hero-content small{
-  font-size: 0.80rem;
-  color: #111827;
-  opacity: 0.98;
-  font-weight: 500;
+/* カード内の小さいグレー文字（免責など） */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: #cbd5f5;
+  opacity: 0.96;
 }
 
 /* ボタン行 */
 .glp-hero-actions{
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 6px 0 12px;
+  gap: 10px;
+  margin: 10px 0 12px;
 }
-.glp-hero-cta,
+
+/* メインCTAボタン */
+.glp-hero-cta{
+  border-radius: 999px;
+  padding-inline: 1.7rem;
+  padding-block: .65rem;
+  font-size: 0.96rem;
+  font-weight: 700;
+  background: radial-gradient(circle at 0 50%, #38bdf8 0, #0ea5e9 40%, #0c4a6e 100%);
+  color: #f9fafb;
+  box-shadow:
+    0 18px 38px rgba(8,47,73,0.95),
+    0 0 0 1px rgba(56,189,248,0.25);
+  border: none;
+}
+
+/* セカンダリボタン */
 .glp-hero-secondary{
   border-radius: 999px;
-  padding-inline: 1.5rem;
-  padding-block: .55rem;
-  font-size: 0.95rem;
-  box-shadow: 0 10px 20px rgba(15,23,42,0.25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.40);
+  padding-inline: 1.6rem;
+  padding-block: .63rem;
+  font-size: 0.94rem;
+  font-weight: 700;
+  background: radial-gradient(circle at 100% 0, #0f172a 0, #020617 55%);
+  color: #e5e7eb;
+  border: 1px solid rgba(148,163,184,0.55);
+  box-shadow:
+    0 14px 32px rgba(15,23,42,0.9),
+    0 0 0 1px rgba(15,23,42,0.7);
 }
-.glp-hero-secondary{ font-size: 0.9rem; }
+
+/* ボタンのホバー */
+.glp-hero-cta:hover{
+  filter: brightness(1.06);
+}
+.glp-hero-secondary:hover{
+  background: radial-gradient(circle at 100% 0, #111827 0, #020617 55%);
+}
 
 /* 下の小さなポイント */
 .glp-hero-subpoints{
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  font-size: 12px;
-  color: #0b1220;
-  margin-top: 4px;
+  font-size: 11px;
+  color: #cbd5e1;
+  margin-top: 6px;
 }
 .glp-hero-subpoints span{
-  padding: 3px 7px;
+  padding: 3px 8px;
   border-radius: 999px;
-  background: rgba(241,245,249,0.94);
-  border: 1px solid rgba(226,232,240,0.92);
+  background: rgba(15,23,42,0.92);
+  border: 1px solid rgba(51,65,85,0.85);
 }
 
 /* PC・スマホ切り替え用ユーティリティ */
 .sp-only{ display: none; }
 .pc-only{ display: inline; }
 
-@media (max-width: 767px){
-  .glp-hero{
-    padding-top: 80px;
-    padding-bottom: 52px;
-  }
-  .glp-hero-content{
-    padding: 18px 16px 20px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.40);  /* スマホも同じ透明度40％ */
-  }
-  .glp-hero-title{
-    font-size: clamp(24px, 6vw, 30px);
-  }
-  .glp-hero-subpoints{
-    font-size: 11px;
-  }
-  .sp-only{ display: inline; }
-  .pc-only{ display: none; }
-}
-
-@media (min-width: 1024px){
-  .glp-hero{ padding-inline: 24px; }
-  .glp-hero-content{ padding: 26px 32px 26px; }
-}
-/* =========================================
-   ヒーロー v3：元のSTUDIOのイメージ寄せ
-   （HTMLはいじらず、見た目だけフラット寄せ）
-   ========================================= */
-
-/* 背景写真の上に文字をのせるイメージに寄せる */
-.glp-hero{
-  position: relative;
-  display: flex;
-  align-items: flex-end;                 /* 下寄せ */
-  justify-content: center;
-  box-sizing: border-box;
-  padding: clamp(80px, 12vh, 120px) 16px 40px;
-  min-height: min(520px, 90vh);
-  background: #0b1120;
-  overflow: hidden;
-}
-
-/* 背景写真は少し明るめ＋下側だけうっすら白 */
-.glp-hero-img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.02);
-  filter: brightness(1.10) saturate(1.05);
-}
-
-/* 下に向かって「うすい白ベール」をかけて文字を読みやすく */
-.glp-hero-imgwrap::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.00) 0%,
-      rgba(255,255,255,0.10) 35%,
-      rgba(255,255,255,0.26) 70%,
-      rgba(255,255,255,0.46) 100%
-    );
-  z-index: 1;
-}
-
-/* カード感は消して、フラットなテキストブロックに */
-.glp-hero-content{
-  position: relative;
-  z-index: 2;
-  max-width: min(760px, 92vw);
-  margin: 0 auto;
-  padding: 0 0 8px;                      /* 余白は下だけ少し */
-  border-radius: 0;
-  background: transparent;               /* カード背景を無くす */
-  border: none;                          /* 枠線も消す */
-  box-shadow: none;                      /* 影も消す */
-  color: #111827;                        /* 基本文字色：濃いグレー */
-}
-
-/* 一番上の帯：白文字＋少し濃い紺 */
-.glp-hero-kicker{
-  margin: 0 0 14px;
-  font-size: clamp(13px, 2.1vw, 15px);
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: #ffffff;                          /* 文字を白 */
-  background: rgba(15,23,42,0.92);        /* 背景は濃い紺 */
-  padding: 6px 12px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  box-shadow: 0 8px 18px rgba(15,23,42,0.45);
-}
-.glp-hero-kicker span,
-.glp-hero-kicker small{
-  color: inherit;
-}
-
-/* メインタイトル：ほぼ黒でくっきり */
-.glp-hero-title{
-  margin: 6px 0 10px;
-  font-size: clamp(28px, 5.4vw, 38px);
-  line-height: 1.25;
-  font-weight: 800;
-  color: #0b1120;                        /* ほぼ黒 */
-  text-shadow: none;
-}
-
-/* リード文：やや濃いグレー */
-.glp-hero-lead{
-  margin: 0 0 8px;
-  font-size: clamp(14px, 2.5vw, 16px);
-  line-height: 1.7;
-  color: #111827;
-  text-shadow: none;
-}
-
-/* 補足本文：少しだけ明るいグレー */
-.glp-hero-note{
-  margin: 2px 0 14px;
-  font-size: clamp(13px, 2.2vw, 15px);
-  line-height: 1.7;
-  color: #374151;
-  text-shadow: none;
-}
-
-/* 免責など小さい文字も、今より少し濃く */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: #4b5563;
-  opacity: 0.98;
-}
-
-/* ボタン行はそのまま・少しだけ下に余白 */
-.glp-hero-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 8px 0 10px;
-}
-
-/* 下の小さなポイント */
-.glp-hero-subpoints{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  font-size: 12px;
-  color: #0b1220;
-  margin-top: 2px;
-}
-.glp-hero-subpoints span{
-  padding: 3px 7px;
-  border-radius: 999px;
-  background: rgba(241,245,249,0.94);
-  border: 1px solid rgba(226,232,240,0.92);
-}
-
-/* PC・スマホ切り替え */
-.sp-only{ display: none; }
-.pc-only{ display: inline; }
-
+/* スマホ最適化 ------------------------------------ */
 @media (max-width: 767px){
   .glp-hero{
     padding-top: 88px;
-    padding-bottom: 40px;
+    padding-bottom: 56px;
+  }
+  .glp-hero::after{
+    inset: 18px 10px 22px;
+    border-radius: 28px;
   }
   .glp-hero-content{
-    max-width: min(92vw, 720px);
-    padding: 0 4px 6px;
+    padding: 20px 16px 20px;
+    border-radius: 22px;
   }
   .glp-hero-title{
     font-size: clamp(24px, 6.2vw, 30px);
   }
   .glp-hero-subpoints{
-    font-size: 11px;
+    font-size: 10.5px;
   }
   .sp-only{ display: inline; }
   .pc-only{ display: none; }
 }
 
+/* PC横幅広め ------------------------------------- */
 @media (min-width: 1024px){
   .glp-hero{
-    padding-inline: 24px;
+    padding-inline: 32px;
   }
   .glp-hero-content{
-    padding-bottom: 12px;
-  }
-}
-/* === ヒーロー v3.1：読みやすさアップ（カードを少し戻す） ===== */
-
-/* 背景のベールをもう少し明るくする */
-.glp-hero-imgwrap::before{
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.08) 0%,
-      rgba(255,255,255,0.24) 35%,
-      rgba(255,255,255,0.48) 70%,
-      rgba(255,255,255,0.68) 100%
-    );
-  z-index: 1;
-}
-
-/* テキスト部分に、うすい白カードをもう一度かける */
-.glp-hero-content{
-  position: relative;
-  z-index: 2;
-  max-width: min(760px, 92vw);
-  margin: 0 auto;
-  padding: 20px 22px 22px;
-  border-radius: 24px;
-  background: rgba(255,255,255,0.72); /* ← うすい白ガラス */
-  border: 1px solid rgba(148,163,184,0.35);
-  box-shadow:
-    0 18px 40px rgba(15,23,42,0.30),
-    0 0 0 1px rgba(255,255,255,0.18);
-  color: #111827;
-}
-
-/* タイトルと本文の色をはっきりさせる */
-.glp-hero-title{
-  margin: 6px 0 10px;
-  font-size: clamp(28px, 5.4vw, 38px);
-  line-height: 1.25;
-  font-weight: 800;
-  color: #0b1120;      /* ほぼ黒 */
-  text-shadow: none;
-}
-
-.glp-hero-lead{
-  margin: 0 0 8px;
-  font-size: clamp(14px, 2.5vw, 16px);
-  line-height: 1.7;
-  color: #111827;      /* 濃いグレー */
-  text-shadow: none;
-}
-
-.glp-hero-note{
-  margin: 2px 0 14px;
-  font-size: clamp(13px, 2.2vw, 15px);
-  line-height: 1.7;
-  color: #374151;      /* 少し明るいグレー */
-  text-shadow: none;
-}
-
-/* 小さいグレー文字も少し濃く */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: #4b5563;
-  opacity: 0.98;
-}
-
-/* スマホ時も同じトーンに揃える */
-@media (max-width: 767px){
-  .glp-hero{
-    padding-top: 88px;
-    padding-bottom: 40px;
-  }
-  .glp-hero-content{
-    padding: 18px 16px 20px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.72);
+    padding: 30px 32px 28px;
   }
 }
