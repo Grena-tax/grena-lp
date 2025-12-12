@@ -760,3 +760,98 @@ h1, .hero h1, .page-title, .hero .lead {
   background: rgba(15,23,42,0.82) !important;
   border: 1px solid rgba(255,255,255,0.10) !important;
 }
+/* =========================================================
+   HERO 上だけ最終調整 v3（iPhoneのモザイク防止 + 高級感）
+   ※アコーディオン/フォント等には触れない
+   ※HTMLは触らない（.glp-hero〜 だけ上書き）
+   ========================================================= */
+
+/* 背景写真の上に“上品な暗幕”を作って文字のコントラストを安定させる */
+.glp-hero-imgwrap::before{
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(2, 6, 23, 0.55) 0%,
+      rgba(2, 6, 23, 0.45) 35%,
+      rgba(2, 6, 23, 0.52) 70%,
+      rgba(2, 6, 23, 0.62) 100%
+    ) !important;
+}
+
+/* 背景写真は少しだけ整える（やりすぎると安っぽくなるので控えめ） */
+.glp-hero-img{
+  transform: scale(1.02) !important;
+  filter: brightness(1.03) saturate(1.04) contrast(1.02) !important;
+}
+
+/* ▼▼ ここが“モザイク防止”の本体：ぼかしを完全に無効化 ▼▼ */
+.glp-hero-content{
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+
+  /* 高級感は「濃い半透明 + 細い縁 + 柔らかい影」で作る */
+  position: relative !important;
+  background: rgba(6, 12, 28, 0.76) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow:
+    0 22px 55px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset !important;
+  color: #ffffff !important;
+}
+
+/* カード表面に“ガラスっぽいハイライト”だけ乗せる（ぼかし無しで上品に） */
+.glp-hero-content::before{
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  background:
+    radial-gradient(120% 70% at 20% 0%,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.04) 35%,
+      rgba(255,255,255,0.00) 70%
+    ) !important;
+  pointer-events: none !important;
+}
+
+/* 中身は前面に出す */
+.glp-hero-content > *{
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* 見出し・本文の読みやすさ（フォントは変えず、色と影だけで上質に） */
+.glp-hero-title{
+  color: #ffffff !important;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.35) !important;
+}
+.glp-hero-lead{
+  color: rgba(255,255,255,0.90) !important;
+  text-shadow: 0 8px 22px rgba(0,0,0,0.28) !important;
+}
+.glp-hero-note{
+  color: rgba(255,255,255,0.86) !important;
+  text-shadow: 0 8px 20px rgba(0,0,0,0.25) !important;
+}
+
+/* 「※」の注意書き（白のまま・薄すぎない） */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: rgba(255,255,255,0.78) !important;
+  opacity: 1 !important;
+}
+
+/* 上のラベル（EU加盟候補国〜）は“白文字のままでOK”。背景だけ上品に締める */
+.glp-hero-kicker{
+  color: #ffffff !important;
+  background: rgba(2, 6, 23, 0.72) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28) !important;
+}
+
+/* モバイルでも同じ（モザイク回避を優先） */
+@media (max-width: 767px){
+  .glp-hero-content{
+    background: rgba(6, 12, 28, 0.78) !important;
+  }
+}
