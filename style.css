@@ -849,3 +849,82 @@ h1, .hero h1, .page-title, .hero .lead {
     padding-bottom: 12px;
   }
 }
+/* === ヒーロー v3.1：読みやすさアップ（カードを少し戻す） ===== */
+
+/* 背景のベールをもう少し明るくする */
+.glp-hero-imgwrap::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.08) 0%,
+      rgba(255,255,255,0.24) 35%,
+      rgba(255,255,255,0.48) 70%,
+      rgba(255,255,255,0.68) 100%
+    );
+  z-index: 1;
+}
+
+/* テキスト部分に、うすい白カードをもう一度かける */
+.glp-hero-content{
+  position: relative;
+  z-index: 2;
+  max-width: min(760px, 92vw);
+  margin: 0 auto;
+  padding: 20px 22px 22px;
+  border-radius: 24px;
+  background: rgba(255,255,255,0.72); /* ← うすい白ガラス */
+  border: 1px solid rgba(148,163,184,0.35);
+  box-shadow:
+    0 18px 40px rgba(15,23,42,0.30),
+    0 0 0 1px rgba(255,255,255,0.18);
+  color: #111827;
+}
+
+/* タイトルと本文の色をはっきりさせる */
+.glp-hero-title{
+  margin: 6px 0 10px;
+  font-size: clamp(28px, 5.4vw, 38px);
+  line-height: 1.25;
+  font-weight: 800;
+  color: #0b1120;      /* ほぼ黒 */
+  text-shadow: none;
+}
+
+.glp-hero-lead{
+  margin: 0 0 8px;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.7;
+  color: #111827;      /* 濃いグレー */
+  text-shadow: none;
+}
+
+.glp-hero-note{
+  margin: 2px 0 14px;
+  font-size: clamp(13px, 2.2vw, 15px);
+  line-height: 1.7;
+  color: #374151;      /* 少し明るいグレー */
+  text-shadow: none;
+}
+
+/* 小さいグレー文字も少し濃く */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: #4b5563;
+  opacity: 0.98;
+}
+
+/* スマホ時も同じトーンに揃える */
+@media (max-width: 767px){
+  .glp-hero{
+    padding-top: 88px;
+    padding-bottom: 40px;
+  }
+  .glp-hero-content{
+    padding: 18px 16px 20px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.72);
+  }
+}
