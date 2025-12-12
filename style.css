@@ -681,3 +681,171 @@ h1, .hero h1, .page-title, .hero .lead {
   .glp-hero{ padding-inline: 24px; }
   .glp-hero-content{ padding: 26px 32px 26px; }
 }
+/* =========================================
+   ヒーロー v3：元のSTUDIOのイメージ寄せ
+   （HTMLはいじらず、見た目だけフラット寄せ）
+   ========================================= */
+
+/* 背景写真の上に文字をのせるイメージに寄せる */
+.glp-hero{
+  position: relative;
+  display: flex;
+  align-items: flex-end;                 /* 下寄せ */
+  justify-content: center;
+  box-sizing: border-box;
+  padding: clamp(80px, 12vh, 120px) 16px 40px;
+  min-height: min(520px, 90vh);
+  background: #0b1120;
+  overflow: hidden;
+}
+
+/* 背景写真は少し明るめ＋下側だけうっすら白 */
+.glp-hero-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  filter: brightness(1.10) saturate(1.05);
+}
+
+/* 下に向かって「うすい白ベール」をかけて文字を読みやすく */
+.glp-hero-imgwrap::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.00) 0%,
+      rgba(255,255,255,0.10) 35%,
+      rgba(255,255,255,0.26) 70%,
+      rgba(255,255,255,0.46) 100%
+    );
+  z-index: 1;
+}
+
+/* カード感は消して、フラットなテキストブロックに */
+.glp-hero-content{
+  position: relative;
+  z-index: 2;
+  max-width: min(760px, 92vw);
+  margin: 0 auto;
+  padding: 0 0 8px;                      /* 余白は下だけ少し */
+  border-radius: 0;
+  background: transparent;               /* カード背景を無くす */
+  border: none;                          /* 枠線も消す */
+  box-shadow: none;                      /* 影も消す */
+  color: #111827;                        /* 基本文字色：濃いグレー */
+}
+
+/* 一番上の帯：白文字＋少し濃い紺 */
+.glp-hero-kicker{
+  margin: 0 0 14px;
+  font-size: clamp(13px, 2.1vw, 15px);
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #ffffff;                          /* 文字を白 */
+  background: rgba(15,23,42,0.92);        /* 背景は濃い紺 */
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 8px 18px rgba(15,23,42,0.45);
+}
+.glp-hero-kicker span,
+.glp-hero-kicker small{
+  color: inherit;
+}
+
+/* メインタイトル：ほぼ黒でくっきり */
+.glp-hero-title{
+  margin: 6px 0 10px;
+  font-size: clamp(28px, 5.4vw, 38px);
+  line-height: 1.25;
+  font-weight: 800;
+  color: #0b1120;                        /* ほぼ黒 */
+  text-shadow: none;
+}
+
+/* リード文：やや濃いグレー */
+.glp-hero-lead{
+  margin: 0 0 8px;
+  font-size: clamp(14px, 2.5vw, 16px);
+  line-height: 1.7;
+  color: #111827;
+  text-shadow: none;
+}
+
+/* 補足本文：少しだけ明るいグレー */
+.glp-hero-note{
+  margin: 2px 0 14px;
+  font-size: clamp(13px, 2.2vw, 15px);
+  line-height: 1.7;
+  color: #374151;
+  text-shadow: none;
+}
+
+/* 免責など小さい文字も、今より少し濃く */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: #4b5563;
+  opacity: 0.98;
+}
+
+/* ボタン行はそのまま・少しだけ下に余白 */
+.glp-hero-actions{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+
+/* 下の小さなポイント */
+.glp-hero-subpoints{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  color: #0b1220;
+  margin-top: 2px;
+}
+.glp-hero-subpoints span{
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(241,245,249,0.94);
+  border: 1px solid rgba(226,232,240,0.92);
+}
+
+/* PC・スマホ切り替え */
+.sp-only{ display: none; }
+.pc-only{ display: inline; }
+
+@media (max-width: 767px){
+  .glp-hero{
+    padding-top: 88px;
+    padding-bottom: 40px;
+  }
+  .glp-hero-content{
+    max-width: min(92vw, 720px);
+    padding: 0 4px 6px;
+  }
+  .glp-hero-title{
+    font-size: clamp(24px, 6.2vw, 30px);
+  }
+  .glp-hero-subpoints{
+    font-size: 11px;
+  }
+  .sp-only{ display: inline; }
+  .pc-only{ display: none; }
+}
+
+@media (min-width: 1024px){
+  .glp-hero{
+    padding-inline: 24px;
+  }
+  .glp-hero-content{
+    padding-bottom: 12px;
+  }
+}
