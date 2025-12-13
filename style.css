@@ -493,8 +493,8 @@ h1, .hero h1, .page-title, .hero .lead {
 }
 
 /* =========================================================
-   TOPヒーロー（写真フル幅＋“高級感”の暗透過カード）
-   ※iPhoneのモザイク回避：backdrop-filterは使わない
+   TOPヒーロー（世界基準：カード無し / 写真＋上品な暗幕＋白文字）
+   ※ここだけを刷新（アコーディオン/フォントは触らない）
    ========================================================= */
 
 .glp-hero{
@@ -503,8 +503,8 @@ h1, .hero h1, .page-title, .hero .lead {
   align-items: flex-end;
   justify-content: center;
   box-sizing: border-box;
-  padding: clamp(80px, 14vh, 110px) 16px 72px;
-  min-height: min(540px, 92vh);
+  padding: clamp(84px, 14vh, 112px) 16px 72px;
+  min-height: min(560px, 92vh);
   background:#0b1120;
   overflow: hidden;
 }
@@ -521,77 +521,70 @@ h1, .hero h1, .page-title, .hero .lead {
   height:100%;
   object-fit:cover;
   transform:scale(1.02);
-  filter: brightness(1.03) saturate(1.04) contrast(1.02);
+  filter: brightness(1.02) saturate(1.03) contrast(1.02);
 }
 
-/* 写真の上に“上品な暗幕”を敷く（白文字を安定して読ませる） */
+/* 写真全体の上品な暗幕（上は軽く、下は強く） */
 .glp-hero-imgwrap::before{
   content:"";
   position:absolute;
   inset:0;
+  z-index:1;
   background:
     linear-gradient(
       to bottom,
-      rgba(2, 6, 23, 0.52) 0%,
-      rgba(2, 6, 23, 0.44) 35%,
-      rgba(2, 6, 23, 0.52) 70%,
-      rgba(2, 6, 23, 0.64) 100%
+      rgba(2, 6, 23, 0.18) 0%,
+      rgba(2, 6, 23, 0.28) 35%,
+      rgba(2, 6, 23, 0.62) 78%,
+      rgba(2, 6, 23, 0.78) 100%
     );
 }
 
-/* 余計な枠が出るのを防止 */
+/* 下側だけ “さらに” 読みやすくするスクリーン（カードではなく、画面全体にかかる） */
+.glp-hero-imgwrap::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  background:
+    linear-gradient(
+      to top,
+      rgba(2, 6, 23, 0.60) 0%,
+      rgba(2, 6, 23, 0.35) 28%,
+      rgba(2, 6, 23, 0.00) 62%
+    );
+  pointer-events:none;
+}
+
+/* 余計な枠・カード・疑似要素が残っても消す */
 .glp-hero::before,
 .glp-hero::after{
   content:none !important;
 }
 
-/* テキストブロック：暗い半透明 + “細い光る縁” + 影で高級感 */
+/* テキストブロック：カード禁止（背景/枠/影/ぼかし 全部OFF） */
 .glp-hero-content{
   position:relative;
-  z-index:2;
+  z-index:3;
   max-width:min(980px, 94vw);
   margin:0 auto;
-  padding: 18px 18px 20px;
-  border-radius: 24px;
-
-  /* 重要：モザイク回避（iPhone Safariで荒れるのでオフ） */
-  -webkit-backdrop-filter: none !important;
-  backdrop-filter: none !important;
-
-  /* “中身の面”と“縁”をbackground-clipで作る（Safariでも安定） */
-  border: 1px solid transparent;
-  background:
-    linear-gradient(rgba(6, 12, 28, 0.78), rgba(6, 12, 28, 0.74)) padding-box,
-    linear-gradient(135deg,
-      rgba(255,255,255,0.22),
-      rgba(255,255,255,0.06),
-      rgba(255,255,255,0.16)
-    ) border-box;
-
-  box-shadow:
-    0 24px 62px rgba(0,0,0,0.38),
-    0 1px 0 rgba(255,255,255,0.06) inset;
-
+  padding: 0;
+  background:none !important;
+  border:none !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
   color:#ffffff;
   text-align:left;
 }
 
-/* 表面の“ガラスっぽいハイライト”（ぼかし無しで上品に） */
-.glp-hero-content::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  background:
-    radial-gradient(120% 70% at 18% 0%,
-      rgba(255,255,255,0.11) 0%,
-      rgba(255,255,255,0.05) 38%,
-      rgba(255,255,255,0.00) 70%
-    );
-  pointer-events:none;
+/* 万一、以前のカード用疑似要素が残っても殺す */
+.glp-hero-content::before,
+.glp-hero-content::after{
+  content:none !important;
 }
 
-/* 上部の小見出しピル（白文字でOK） */
+/* 上部の小見出し（EU加盟候補国…）は白でOK：小さなピルで締める */
 .glp-hero-kicker{
   display:inline-flex;
   align-items:center;
@@ -599,51 +592,54 @@ h1, .hero h1, .page-title, .hero .lead {
   margin:0 0 12px;
   padding:7px 12px;
   font-size:clamp(12px,2vw,14px);
-  font-weight:600;
-  letter-spacing:.12em;
+  font-weight:700;
+  letter-spacing:.10em;
   text-transform:uppercase;
   color:#ffffff;
-  background:rgba(2, 6, 23, 0.72);
-  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(2, 6, 23, 0.52);
+  border:1px solid rgba(255,255,255,0.16);
   border-radius:999px;
-  box-shadow:0 10px 24px rgba(0,0,0,0.28);
+  box-shadow:0 12px 28px rgba(0,0,0,.28);
 }
 
 /* メインタイトル */
 .glp-hero-title{
   margin:6px 0 8px;
-  font-size:clamp(28px, 6.2vw, 38px);
-  line-height:1.22;
+  font-size:clamp(28px, 6.2vw, 40px);
+  line-height:1.24;
   font-weight:800;
   color:#ffffff;
-  text-shadow: 0 10px 28px rgba(0,0,0,0.35);
+  text-shadow:
+    0 10px 28px rgba(0,0,0,0.34),
+    0 2px 10px rgba(0,0,0,0.30);
 }
 
-/* リード文 */
+/* リード文（サブタイトル） */
 .glp-hero-lead{
   margin:0 0 10px;
-  max-width:40rem;
+  max-width:42rem;
   font-size:clamp(15px,2.6vw,17px);
-  line-height:1.72;
-  color: rgba(255,255,255,0.90);
-  text-shadow: 0 8px 22px rgba(0,0,0,0.28);
+  line-height:1.75;
+  color:rgba(255,255,255,0.92);
+  text-shadow: 0 8px 20px rgba(0,0,0,0.26);
 }
 
-/* 補足本文 */
+/* 補足本文（現地提携〜） */
 .glp-hero-note{
-  margin:4px 0 16px;
-  max-width:40rem;
+  margin:6px 0 18px;
+  max-width:42rem;
   font-size:clamp(13px,2.3vw,15px);
-  line-height:1.72;
-  color: rgba(255,255,255,0.86);
-  text-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  line-height:1.8;
+  color:rgba(255,255,255,0.82);
+  text-shadow: 0 8px 20px rgba(0,0,0,0.24);
 }
 
-/* 「※」の小さい注意書き（薄すぎない白） */
+/* ※の注意書き（小さい文字が薄すぎないように） */
 .glp-hero-content .text-sm,
 .glp-hero-content .note{
-  color: rgba(255,255,255,0.78);
-  opacity: 1;
+  color: rgba(255,255,255,0.78) !important;
+  opacity: 1 !important;
+  text-shadow: 0 6px 16px rgba(0,0,0,0.22);
 }
 
 /* ボタン行 */
@@ -651,89 +647,69 @@ h1, .hero h1, .page-title, .hero .lead {
   display:flex;
   flex-wrap:wrap;
   gap:10px;
-  margin:10px 0 10px;
+  margin:10px 0 0;
 }
+
+/* ボタン：ぼかし禁止（iPhoneのモザイク回避） */
 .glp-hero-cta,
 .glp-hero-secondary{
   display:inline-flex;
   align-items:center;
   justify-content:center;
   gap:6px;
-  min-height:44px;
   padding:.65rem 1.6rem;
   border-radius:999px;
   font-size:.95rem;
-  font-weight:700;
+  font-weight:800;
   text-decoration:none;
   border:1px solid rgba(255,255,255,0.22);
-  box-shadow:
-    0 16px 34px rgba(0,0,0,0.30),
-    0 1px 0 rgba(255,255,255,0.08) inset;
-  position:relative;
-  overflow:hidden;
+  box-shadow:0 16px 36px rgba(0,0,0,0.30);
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
 }
+
+/* メインCTA */
 .glp-hero-cta{
   background:#22a3ff;
   color:#ffffff;
 }
-.glp-hero-cta:hover{
-  background:#1d8fe0;
-}
+.glp-hero-cta:hover{ background:#1d8fe0; }
+
+/* サブCTA */
 .glp-hero-secondary{
-  background:rgba(2, 6, 23, 0.40);
+  background:rgba(2, 6, 23, 0.52);
   color:rgba(255,255,255,0.92);
 }
-.glp-hero-secondary:hover{
-  background:rgba(2, 6, 23, 0.55);
-}
-
-/* ボタン上面の薄いハイライト（上品な質感） */
-.glp-hero-cta::before,
-.glp-hero-secondary::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.18),
-    rgba(255,255,255,0.00) 60%
-  );
-  opacity:.55;
-  pointer-events:none;
-}
+.glp-hero-secondary:hover{ background:rgba(2, 6, 23, 0.66); }
 
 /* 下の小タグ群（もし使っていれば） */
 .glp-hero-subpoints{
   display:flex;
   flex-wrap:wrap;
   gap:6px;
-  margin-top:6px;
+  margin-top:10px;
   font-size:12px;
-  color:#e5e7eb;
+  color:rgba(255,255,255,0.86);
 }
 .glp-hero-subpoints span{
   padding:3px 7px;
   border-radius:999px;
-  background:rgba(2, 6, 23, 0.55);
-  border:1px solid rgba(148,163,184,0.55);
+  background:rgba(2, 6, 23, 0.46);
+  border:1px solid rgba(255,255,255,0.14);
 }
 
 /* SP・PC切り替え */
 .sp-only{ display:none; }
 .pc-only{ display:inline; }
 
-/* モバイル時 */
+/* モバイル最適化 */
 @media (max-width:767px){
   .glp-hero{
-    padding:84px 16px 64px;
+    padding:88px 16px 64px;
     align-items:flex-end;
   }
-  .glp-hero-content{
-    padding: 18px 16px 18px;
-    border-radius: 22px;
-  }
   .glp-hero-title{
-    font-size:clamp(24px, 7vw, 30px);
+    font-size:clamp(24px, 7vw, 32px);
   }
   .glp-hero-lead{
     font-size:clamp(14px, 3.5vw, 16px);
@@ -745,9 +721,7 @@ h1, .hero h1, .page-title, .hero .lead {
   .pc-only{ display:none; }
 }
 
-/* 横幅が広いとき */
+/* 横幅が広いときは余白を少し増やす */
 @media (min-width:1024px){
-  .glp-hero{
-    padding-inline:32px;
-  }
+  .glp-hero{ padding-inline:32px; }
 }
