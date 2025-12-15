@@ -724,3 +724,105 @@ h1, .hero h1, .page-title, .hero .lead {
     padding-inline:32px;
   }
 }
+/* =========================================================
+   HERO FINAL OVERRIDE（トップ画だけ）
+   目的：
+   - カード（四角い板）を完全に消す
+   - 写真を暗くしすぎない（高級感＝暗幕は“薄く上品に”）
+   - iPhoneの“モザイク”原因（backdrop-filter）を使わない
+   ※アコーディオン/フォント等は触らない
+   ========================================================= */
+
+/* 1) まずカード系を完全無効化（ここが最重要） */
+.glp-hero-content{
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+}
+.glp-hero-content::before{
+  content: none !important;
+}
+
+/* 2) 写真は“少しだけ”明るく・鮮やかに（やりすぎると安っぽいので控えめ） */
+.glp-hero-img{
+  transform: scale(1.02) !important;
+  filter: brightness(1.10) saturate(1.06) contrast(1.03) !important;
+}
+
+/* 3) 暗幕（グラデーション）を「暗すぎ」から「上品」に調整 */
+.glp-hero-imgwrap::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+
+  /* 上は明るめ、下だけ締める。文字のある下半分だけ読みやすくする設計 */
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(2, 6, 23, 0.18) 0%,
+      rgba(2, 6, 23, 0.22) 35%,
+      rgba(2, 6, 23, 0.45) 70%,
+      rgba(2, 6, 23, 0.62) 100%
+    ),
+    /* 下のボタン周りだけ、ほんの少しだけ濃くする（カード無しでも読める） */
+    radial-gradient(
+      120% 80% at 30% 100%,
+      rgba(2, 6, 23, 0.35) 0%,
+      rgba(2, 6, 23, 0.00) 60%
+    ) !important;
+}
+
+/* 4) 文字の“世界観”を整える（フォントは変えず、余白・影・色だけ） */
+.glp-hero-content{
+  max-width: min(980px, 94vw) !important;
+  margin: 0 auto !important;
+  color: #ffffff !important;
+  text-align: left !important;
+}
+
+.glp-hero-kicker{
+  color: rgba(255,255,255,0.96) !important;
+  background: rgba(2, 6, 23, 0.55) !important;
+  border: 1px solid rgba(255,255,255,0.14) !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.22) !important;
+}
+
+.glp-hero-title{
+  color: #ffffff !important;
+  text-shadow: 0 10px 28px rgba(0,0,0,0.38) !important;
+  letter-spacing: 0.02em !important;
+}
+
+.glp-hero-lead{
+  color: rgba(255,255,255,0.90) !important;
+  text-shadow: 0 8px 20px rgba(0,0,0,0.28) !important;
+}
+
+.glp-hero-note{
+  color: rgba(255,255,255,0.84) !important;
+  text-shadow: 0 8px 18px rgba(0,0,0,0.26) !important;
+}
+
+/* 小さい注意書き（※）が薄すぎないようにする */
+.glp-hero-content .text-sm,
+.glp-hero-content .note{
+  color: rgba(255,255,255,0.78) !important;
+  opacity: 1 !important;
+  text-shadow: 0 7px 16px rgba(0,0,0,0.26) !important;
+}
+
+/* 5) 余白（見た目の“高級感”は余白で作る） */
+.glp-hero{
+  padding: clamp(84px, 14vh, 120px) 16px 76px !important;
+  min-height: min(560px, 92vh) !important;
+}
+
+/* モバイル微調整 */
+@media (max-width: 767px){
+  .glp-hero{
+    padding: 86px 16px 68px !important;
+  }
+}
