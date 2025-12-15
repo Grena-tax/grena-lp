@@ -1,4 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ）===== */
+/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋HERO統合）===== */
 
 /* --- スクロール/安全域/CTA高さ --------------------- */
 :root{
@@ -7,7 +7,13 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --cta-h: 72px;
   --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
+
+  /* footer */
+  --foot-bg:#0b1220;
+  --foot-fg:#cbd5e1;
+  --foot-border:#1f2937;
 }
+
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
 body{ padding-bottom: calc(var(--cta-h) + var(--safe-bottom)); }
@@ -291,11 +297,6 @@ iframe.goog-te-menu-frame,
 html.gtbar body{ padding-top:44px; }
 
 /* --- フッター（常に黒） ------------------------- */
-:root{
-  --foot-bg:#0b1220;
-  --foot-fg:#cbd5e1;
-  --foot-border:#1f2937;
-}
 .site-foot{
   background:var(--foot-bg) !important;
   color:var(--foot-fg) !important;
@@ -494,8 +495,8 @@ h1, .hero h1, .page-title, .hero .lead {
 
 
 /* =========================================================
-   TOPヒーロー（世界基準：カード無し / 暗すぎない / 白帯を消す）
-   ※ここ以降が「トップ画だけ」
+   TOPヒーロー（世界基準：カード無し／暗すぎない／文字強め／iPhoneモザイク回避）
+   ※ここから下は「トップ画だけ」
    ========================================================= */
 
 .glp-hero{
@@ -504,8 +505,8 @@ h1, .hero h1, .page-title, .hero .lead {
   align-items: flex-end;
   justify-content: center;
   box-sizing: border-box;
-  padding: clamp(80px, 14vh, 110px) 16px 72px;
-  min-height: min(540px, 92vh);
+  padding: clamp(88px, 14vh, 124px) 16px 78px;
+  min-height: min(560px, 92vh);
   background:#0b1120;
   overflow: hidden;
 }
@@ -518,16 +519,17 @@ h1, .hero h1, .page-title, .hero .lead {
   overflow:hidden;
 }
 
-/* 写真：暗くしすぎない（控えめに補正） */
+/* 写真：できるだけ“引き”に見せる（拡大をやめる）＋少しだけ補正 */
 .glp-hero-img{
   width:100%;
   height:100%;
   object-fit:cover;
-  transform:scale(1.03);
-  filter: brightness(1.10) saturate(1.06) contrast(1.05);
+  transform: scale(1.00);            /* ← 1.02〜1.03が入ると“寄って見える” */
+  object-position: 50% 22%;          /* ← 街並みを見せたいので上寄り。好みで 18%〜30% */
+  filter: brightness(1.06) saturate(1.06) contrast(1.03);
 }
 
-/* 暗幕：写真の抜けを残しつつ、白文字を安定 */
+/* 暗幕：上は薄く、下だけ締める（カード無しでも読める設計） */
 .glp-hero-imgwrap::before{
   content:"";
   position:absolute;
@@ -535,10 +537,15 @@ h1, .hero h1, .page-title, .hero .lead {
   background:
     linear-gradient(
       to bottom,
-      rgba(2, 6, 23, 0.34) 0%,
-      rgba(2, 6, 23, 0.28) 38%,
+      rgba(2, 6, 23, 0.16) 0%,
+      rgba(2, 6, 23, 0.22) 40%,
       rgba(2, 6, 23, 0.46) 72%,
-      rgba(2, 6, 23, 0.62) 100%
+      rgba(2, 6, 23, 0.66) 100%
+    ),
+    radial-gradient(
+      120% 78% at 30% 100%,
+      rgba(2, 6, 23, 0.36) 0%,
+      rgba(2, 6, 23, 0.00) 62%
     );
 }
 
@@ -548,21 +555,22 @@ h1, .hero h1, .page-title, .hero .lead {
   content:none !important;
 }
 
-/* テキストブロック：カード無し（背景なし） */
+/* テキストブロック：カード無し（背景・枠・影・ぼかし全部無し） */
 .glp-hero-content{
   position:relative;
   z-index:2;
-  max-width:min(980px, 92vw);
+  max-width:min(980px, 94vw);
   margin:0 auto;
   padding:0 6px;
-  color:#f9fafb;
-  background:none !important;
+  color:#ffffff;
+  background:transparent !important;
   border:none !important;
   box-shadow:none !important;
-  backdrop-filter:none !important;
-  -webkit-backdrop-filter:none !important;
+  backdrop-filter:none !important;          /* iPhone “モザイク”回避 */
+  -webkit-backdrop-filter:none !important;  /* iPhone “モザイク”回避 */
   text-align:left;
 }
+.glp-hero-content::before{ content:none !important; }
 
 /* 上部の小見出しピル */
 .glp-hero-kicker{
@@ -574,22 +582,22 @@ h1, .hero h1, .page-title, .hero .lead {
   font-size:clamp(11px,2vw,13px);
   font-weight:600;
   letter-spacing:.08em;
-  color: rgba(255,255,255,0.95);
-  background: rgba(2, 6, 23, 0.62);
-  border: 1px solid rgba(255,255,255,0.16);
+  color: rgba(255,255,255,0.96);
+  background: rgba(2, 6, 23, 0.56);
+  border: 1px solid rgba(255,255,255,0.14);
   border-radius:999px;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.20);
 }
 
-/* メインタイトル */
+/* メインタイトル：世界向けに“1発で強い”サイズ感へ */
 .glp-hero-title{
   margin:10px 0 12px;
-  font-size:clamp(28px, 6.2vw, 38px);
-  line-height:1.18;
+  font-size:clamp(32px, 7.0vw, 46px);
+  line-height:1.16;
   font-weight:800;
-  letter-spacing:-0.02em;
+  letter-spacing:0.01em;
   color:#ffffff;
-  text-shadow: 0 10px 28px rgba(0,0,0,0.28);
+  text-shadow: 0 10px 28px rgba(0,0,0,0.36);
 }
 
 /* 見出し内の“白い帯（マーカー感）”を強制的に消す */
@@ -601,24 +609,24 @@ h1, .hero h1, .page-title, .hero .lead {
   box-decoration-break: initial !important;
 }
 
-/* リード文（サブタイトル） */
+/* リード文 */
 .glp-hero-lead{
   margin:0 0 12px;
   max-width:46ch;
-  font-size:clamp(15px,2.6vw,17px);
-  line-height:1.75;
+  font-size:clamp(17px,3.6vw,20px);
+  line-height:1.72;
   color: rgba(255,255,255,0.92);
-  text-shadow: 0 8px 22px rgba(0,0,0,0.22);
+  text-shadow: 0 8px 22px rgba(0,0,0,0.26);
 }
 
-/* 補足本文（現地提携〜） */
+/* 補足本文 */
 .glp-hero-note{
   margin:0 0 18px;
   max-width:52ch;
-  font-size:clamp(13px,2.3vw,15px);
+  font-size:clamp(14px,3.0vw,16px);
   line-height:1.75;
   color: rgba(255,255,255,0.86);
-  text-shadow: 0 8px 20px rgba(0,0,0,0.20);
+  text-shadow: 0 8px 20px rgba(0,0,0,0.22);
 }
 
 /* ※の注意書き（ヒーロー内にある場合） */
@@ -627,7 +635,7 @@ h1, .hero h1, .page-title, .hero .lead {
   color: rgba(255,255,255,0.78) !important;
   opacity: 1 !important;
   line-height: 1.7 !important;
-  text-shadow: 0 8px 18px rgba(0,0,0,0.20);
+  text-shadow: 0 7px 16px rgba(0,0,0,0.22);
 }
 
 /* ボタン行 */
@@ -643,30 +651,27 @@ h1, .hero h1, .page-title, .hero .lead {
   align-items:center;
   justify-content:center;
   gap:6px;
-  height:46px;
+  height:48px;
   padding:0 18px;
   border-radius:999px;
-  font-size:.95rem;
+  font-size:1.02rem;
   font-weight:700;
   text-decoration:none;
-  border:1px solid rgba(255,255,255,0.20);
+  border:1px solid rgba(255,255,255,0.18);
   box-shadow: 0 14px 34px rgba(0,0,0,0.22);
 }
 .glp-hero-cta{
   background: linear-gradient(135deg, #22a3ff 0%, #1d8fe0 100%);
   color:#f9fafb;
 }
-.glp-hero-cta:hover{
-  opacity:.95;
-}
+.glp-hero-cta:hover{ opacity:.95; }
+
 .glp-hero-secondary{
   background: rgba(2, 6, 23, 0.52);
   color:#e5e7eb;
-  border:1px solid rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.16);
 }
-.glp-hero-secondary:hover{
-  opacity:.95;
-}
+.glp-hero-secondary:hover{ opacity:.95; }
 
 /* 下の小タグ群（もし使っていれば） */
 .glp-hero-subpoints{
@@ -680,28 +685,28 @@ h1, .hero h1, .page-title, .hero .lead {
 .glp-hero-subpoints span{
   padding:3px 7px;
   border-radius:999px;
-  background: rgba(2, 6, 23, 0.55);
-  border:1px solid rgba(255,255,255,0.16);
+  background: rgba(2, 6, 23, 0.54);
+  border:1px solid rgba(255,255,255,0.14);
 }
 
 /* SP・PC切り替え */
 .sp-only{ display:none; }
 .pc-only{ display:inline; }
 
-/* モバイル：写真が暗く見えやすいので暗幕を少しだけ弱める */
+/* モバイル：暗く見えやすいので暗幕をさらに少し弱める */
 @media (max-width:767px){
   .glp-hero{
-    padding:84px 16px 64px;
+    padding: 90px 16px 70px;
     align-items:flex-end;
   }
   .glp-hero-title{
-    font-size:clamp(24px, 7vw, 30px);
+    font-size:clamp(28px, 8.0vw, 38px);
   }
   .glp-hero-lead{
-    font-size:clamp(14px, 3.5vw, 16px);
+    font-size:clamp(16px, 4.2vw, 18px);
   }
   .glp-hero-note{
-    font-size:clamp(12px, 3.2vw, 14px);
+    font-size:clamp(13px, 3.6vw, 15px);
   }
   .sp-only{ display:inline; }
   .pc-only{ display:none; }
@@ -710,10 +715,15 @@ h1, .hero h1, .page-title, .hero .lead {
     background:
       linear-gradient(
         to bottom,
-        rgba(2, 6, 23, 0.30) 0%,
-        rgba(2, 6, 23, 0.24) 40%,
-        rgba(2, 6, 23, 0.42) 74%,
-        rgba(2, 6, 23, 0.58) 100%
+        rgba(2, 6, 23, 0.14) 0%,
+        rgba(2, 6, 23, 0.20) 42%,
+        rgba(2, 6, 23, 0.40) 76%,
+        rgba(2, 6, 23, 0.60) 100%
+      ),
+      radial-gradient(
+        120% 78% at 30% 100%,
+        rgba(2, 6, 23, 0.32) 0%,
+        rgba(2, 6, 23, 0.00) 62%
       );
   }
 }
@@ -722,107 +732,5 @@ h1, .hero h1, .page-title, .hero .lead {
 @media (min-width:1024px){
   .glp-hero{
     padding-inline:32px;
-  }
-}
-/* =========================================================
-   HERO FINAL OVERRIDE（トップ画だけ）
-   目的：
-   - カード（四角い板）を完全に消す
-   - 写真を暗くしすぎない（高級感＝暗幕は“薄く上品に”）
-   - iPhoneの“モザイク”原因（backdrop-filter）を使わない
-   ※アコーディオン/フォント等は触らない
-   ========================================================= */
-
-/* 1) まずカード系を完全無効化（ここが最重要） */
-.glp-hero-content{
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  padding: 0 !important;
-}
-.glp-hero-content::before{
-  content: none !important;
-}
-
-/* 2) 写真は“少しだけ”明るく・鮮やかに（やりすぎると安っぽいので控えめ） */
-.glp-hero-img{
-  transform: scale(1.02) !important;
-  filter: brightness(1.10) saturate(1.06) contrast(1.03) !important;
-}
-
-/* 3) 暗幕（グラデーション）を「暗すぎ」から「上品」に調整 */
-.glp-hero-imgwrap::before{
-  content:"" !important;
-  position:absolute !important;
-  inset:0 !important;
-
-  /* 上は明るめ、下だけ締める。文字のある下半分だけ読みやすくする設計 */
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(2, 6, 23, 0.18) 0%,
-      rgba(2, 6, 23, 0.22) 35%,
-      rgba(2, 6, 23, 0.45) 70%,
-      rgba(2, 6, 23, 0.62) 100%
-    ),
-    /* 下のボタン周りだけ、ほんの少しだけ濃くする（カード無しでも読める） */
-    radial-gradient(
-      120% 80% at 30% 100%,
-      rgba(2, 6, 23, 0.35) 0%,
-      rgba(2, 6, 23, 0.00) 60%
-    ) !important;
-}
-
-/* 4) 文字の“世界観”を整える（フォントは変えず、余白・影・色だけ） */
-.glp-hero-content{
-  max-width: min(980px, 94vw) !important;
-  margin: 0 auto !important;
-  color: #ffffff !important;
-  text-align: left !important;
-}
-
-.glp-hero-kicker{
-  color: rgba(255,255,255,0.96) !important;
-  background: rgba(2, 6, 23, 0.55) !important;
-  border: 1px solid rgba(255,255,255,0.14) !important;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.22) !important;
-}
-
-.glp-hero-title{
-  color: #ffffff !important;
-  text-shadow: 0 10px 28px rgba(0,0,0,0.38) !important;
-  letter-spacing: 0.02em !important;
-}
-
-.glp-hero-lead{
-  color: rgba(255,255,255,0.90) !important;
-  text-shadow: 0 8px 20px rgba(0,0,0,0.28) !important;
-}
-
-.glp-hero-note{
-  color: rgba(255,255,255,0.84) !important;
-  text-shadow: 0 8px 18px rgba(0,0,0,0.26) !important;
-}
-
-/* 小さい注意書き（※）が薄すぎないようにする */
-.glp-hero-content .text-sm,
-.glp-hero-content .note{
-  color: rgba(255,255,255,0.78) !important;
-  opacity: 1 !important;
-  text-shadow: 0 7px 16px rgba(0,0,0,0.26) !important;
-}
-
-/* 5) 余白（見た目の“高級感”は余白で作る） */
-.glp-hero{
-  padding: clamp(84px, 14vh, 120px) 16px 76px !important;
-  min-height: min(560px, 92vh) !important;
-}
-
-/* モバイル微調整 */
-@media (max-width: 767px){
-  .glp-hero{
-    padding: 86px 16px 68px !important;
   }
 }
