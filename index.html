@@ -1281,5 +1281,219 @@
 <!-- 末尾読み込み -->
 <script src="./script.js?v=20251110a" defer></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
+
+<!-- ==============================
+  JP/EN 切替（ヒーロートップだけ）＋ Google翻訳UIの除去
+  ※アコーディオン/ハンバーガー/複利計算などには干渉しません
+================================== -->
+
+<style id="lp-lang-switch-style">
+  /* Google 翻訳UIを強制的に非表示（念のため） */
+  .goog-te-banner-frame,
+  #goog-gt-tt,
+  .goog-te-balloon-frame,
+  .goog-te-menu-frame,
+  .goog-te-gadget,
+  #google_translate_element,
+  iframe.goog-te-banner-frame {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+  }
+  body { top: 0px !important; }
+
+  /* 言語スイッチ（右上固定・小さめ） */
+  #lpLangSwitch {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    backdrop-filter: blur(6px);
+  }
+  #lpLangSwitch button{
+    appearance: none;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #lpLangSwitch button[aria-pressed="true"]{
+    border-color: #111827;
+  }
+</style>
+
+<script id="lp-lang-switch-script">
+(() => {
+  "use strict";
+
+  /* ========= 0) Google翻訳UIを消す（表示もDOMも） ========= */
+  function removeGoogleTranslateUI() {
+    const selectors = [
+      ".goog-te-banner-frame",
+      "#goog-gt-tt",
+      ".goog-te-balloon-frame",
+      ".goog-te-menu-frame",
+      ".goog-te-gadget",
+      "#google_translate_element",
+      "iframe.goog-te-banner-frame"
+    ];
+    selectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => el.remove());
+    });
+
+    // 「Select language」「Powered by Google Translate」を含む塊も削除（HTML構造が不明でも確実に消す）
+    const killWords = [/Select language/i, /Powered by Google Translate/i];
+    const all = Array.from(document.querySelectorAll("body *"));
+    all.forEach(el => {
+      if (!el || el.childElementCount > 0) return;
+      const t = (el.textContent || "").trim();
+      if (!t) return;
+      if (killWords.some(r => r.test(t))) {
+        const box = el.parentElement;
+        if (box) box.remove();
+      }
+    });
+
+    // 変な余白が残るのを防ぐ
+    document.body.style.top = "0px";
+    document.documentElement.classList.remove("translated-ltr", "translated-rtl");
+  }
+
+  /* ========= 1) ヒーロートップ領域を特定 =========
+     まず「ジョージアで、はじめる。」を含む要素を探し、
+     その近い親（section/header/main/div）をヒーローとして扱います。
+  */
+  function getHeroRoot() {
+    const needle = "ジョージアで、はじめる。";
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const txt = (node.nodeValue || "").trim();
+      if (txt.includes(needle)) {
+        const el = node.parentElement;
+        if (!el) return null;
+        return el.closest("header, section, main, div") || el.parentElement || el;
+      }
+    }
+    return null;
+  }
+
+  /* ========= 2) 翻訳（ヒーロー内だけ置換） ========= */
+  const HERO_MAP = [
+    ["EU加盟候補国ジョージア × 現地提携の法律事務所",
+     "EU Candidate Country Georgia × Partnered Local Law Firm"],
+
+    ["ジョージアで、はじめる。",
+     "Start in Georgia."],
+
+    ["国に縛られない、合法的で安心な資産とビジネスの持ち方。",
+     "A lawful and secure way to hold assets and run a business beyond borders."],
+
+    ["現地提携の法律事務所・会計士と連携し、",
+     "In cooperation with partnered local law firms and accountants,"],
+
+    ["制度に沿った法人・個人事業主・銀行口座の開設をサポートします。",
+     "we provide administrative support for company setup, sole proprietor registration, and bank account opening in line with the applicable systems."],
+
+    ["※ 当社は各国の税務・法務判断は行わず、公開資料に基づく一般情報の共有と手続きの事務サポートのみ行います。",
+     "* We do not provide tax/legal advice or make tax/legal determinations. We only share general information based on publicly available materials and provide administrative support for procedures."],
+
+    ["※ 最終的な税務・法務判断は、お住まいの国の有資格専門家にご確認ください。",
+     "* For final tax and legal decisions, please consult a licensed professional in your country of residence."]
+  ];
+
+  function replaceInTextNodes(root, from, to) {
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = tw.nextNode())) {
+      if (!n.nodeValue) continue;
+      if (n.nodeValue.includes(from)) {
+        n.nodeValue = n.nodeValue.split(from).join(to);
+      }
+    }
+  }
+
+  function setLang(lang) {
+    const hero = getHeroRoot();
+    if (!hero) return;
+
+    // JP→EN / EN→JP を“ヒーロー内だけ”で実行
+    if (lang === "en") {
+      HERO_MAP.forEach(([ja, en]) => replaceInTextNodes(hero, ja, en));
+    } else {
+      HERO_MAP.forEach(([ja, en]) => replaceInTextNodes(hero, en, ja));
+    }
+
+    // ボタンの見た目
+    const jpBtn = document.getElementById("lpLangJP");
+    const enBtn = document.getElementById("lpLangEN");
+    if (jpBtn && enBtn) {
+      jpBtn.setAttribute("aria-pressed", String(lang === "ja"));
+      enBtn.setAttribute("aria-pressed", String(lang === "en"));
+    }
+
+    localStorage.setItem("lp_lang", lang);
+  }
+
+  /* ========= 3) スイッチUIを追加 ========= */
+  function mountSwitch() {
+    if (document.getElementById("lpLangSwitch")) return;
+
+    const box = document.createElement("div");
+    box.id = "lpLangSwitch";
+    box.setAttribute("role", "group");
+    box.setAttribute("aria-label", "Language switch");
+
+    const jp = document.createElement("button");
+    jp.id = "lpLangJP";
+    jp.type = "button";
+    jp.textContent = "JP";
+    jp.setAttribute("aria-pressed", "true");
+
+    const en = document.createElement("button");
+    en.id = "lpLangEN";
+    en.type = "button";
+    en.textContent = "EN";
+    en.setAttribute("aria-pressed", "false");
+
+    jp.addEventListener("click", () => setLang("ja"));
+    en.addEventListener("click", () => setLang("en"));
+
+    box.appendChild(jp);
+    box.appendChild(en);
+    document.body.appendChild(box);
+  }
+
+  /* ========= 起動 ========= */
+  function boot() {
+    removeGoogleTranslateUI();
+    mountSwitch();
+
+    const saved = localStorage.getItem("lp_lang");
+    if (saved === "en" || saved === "ja") {
+      setLang(saved);
+    } else {
+      setLang("ja"); // まずは日本語固定（勝手に英語にしない）
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+
 </body>
 </html>
