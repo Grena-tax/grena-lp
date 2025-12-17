@@ -1362,5 +1362,91 @@
 })();
 </script>
 
+  <!-- ===== 強制：JP/EN切替（末尾追加・上書き版）ここから ===== -->
+<style>
+  /* ほかのCSSに負けないよう !important で上書き */
+  body.glp-lang-ja .lang-ja{ display:inline !important; }
+  body.glp-lang-ja .lang-en{ display:none  !important; }
+
+  body.glp-lang-en .lang-ja{ display:none  !important; }
+  body.glp-lang-en .lang-en{ display:inline !important; }
+
+  /* 右上にJP/ENを必ず出す（既存の「JP」ボタンがあってもOK） */
+  #glpLangSwitchFix{
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 72px); /* ハンバーガーの左に逃がす */
+    z-index: 99999;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    backdrop-filter: blur(6px);
+  }
+  #glpLangSwitchFix button{
+    appearance: none;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #glpLangSwitchFix button[aria-pressed="true"]{
+    border-color: #111827;
+  }
+</style>
+
+<script>
+(function(){
+  "use strict";
+
+  // ① 必ずスイッチUIを作る（既にあってもこのfixを優先）
+  var box = document.getElementById("glpLangSwitchFix");
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "glpLangSwitchFix";
+    box.setAttribute("role","group");
+    box.setAttribute("aria-label","Language switch");
+    box.innerHTML =
+      '<button type="button" id="glpFixJP" aria-pressed="true">JP</button>' +
+      '<button type="button" id="glpFixEN" aria-pressed="false">EN</button>';
+    document.body.appendChild(box);
+  }
+
+  var jpBtn = document.getElementById("glpFixJP");
+  var enBtn = document.getElementById("glpFixEN");
+
+  function apply(lang){
+    // ② classを2つで管理（glp-lang-ja / glp-lang-en）
+    document.body.classList.remove("glp-lang-ja","glp-lang-en");
+    if (lang === "en") {
+      document.body.classList.add("glp-lang-en");
+      document.documentElement.setAttribute("lang","en");
+      if (jpBtn) jpBtn.setAttribute("aria-pressed","false");
+      if (enBtn) enBtn.setAttribute("aria-pressed","true");
+    } else {
+      document.body.classList.add("glp-lang-ja");
+      document.documentElement.setAttribute("lang","ja");
+      if (jpBtn) jpBtn.setAttribute("aria-pressed","true");
+      if (enBtn) enBtn.setAttribute("aria-pressed","false");
+    }
+    try { localStorage.setItem("glp_lang_fix", lang); } catch(e){}
+  }
+
+  if (jpBtn) jpBtn.addEventListener("click", function(){ apply("ja"); });
+  if (enBtn) enBtn.addEventListener("click", function(){ apply("en"); });
+
+  // ③ 初期表示：まず日本語にする（英語の保存があれば英語）
+  var saved = null;
+  try { saved = localStorage.getItem("glp_lang_fix"); } catch(e){}
+  if (saved === "en") apply("en"); else apply("ja");
+})();
+</script>
+<!-- ===== 強制：JP/EN切替（末尾追加・上書き版）ここまで ===== -->
 </body>
 </html>
