@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立LP</title>
 
-<!-- 自動翻訳の誘導を抑止 -->
+<!-- 自動翻訳の誘導を抑止（Google翻訳などの自動翻訳を想定） -->
 <meta name="google" content="notranslate">
 
 <!-- 既存：差し替え確認用ピンクバー -->
@@ -16,8 +16,27 @@
 <link rel="stylesheet" href="./patch.css?v=20251110a">
 <meta name="theme-color" content="#111827">
 
-<!-- ▼ Grena LP 用 追加スタイル -->
+<!-- ============================================================
+  ▼ Grena LP 追加スタイル（画像は後から差し替えOK / JP-EN切替あり）
+  - 画像を差し替えるときは、下の :root のURLだけ変えればOK
+  - 画像ファイルは ./images/ に置く想定
+============================================================ -->
 <style>
+  :root{
+    /* ===== 画像の差し替えはここだけ ===== */
+    --glp-hero-bg: url("./images/tbilisi-hero.jpg");          /* ヒーロー背景 */
+    --glp-country-1: url("./images/country-1.jpg");           /* 国の写真1 */
+    --glp-country-2: url("./images/country-2.jpg");           /* 国の写真2 */
+    --glp-country-3: url("./images/country-3.jpg");           /* 国の写真3 */
+    --glp-flag: url("./images/georgia-flag.jpg");             /* 国旗 */
+    --glp-washoku: url("./images/washoku.jpg");               /* 和食 */
+    --glp-realestate: url("./images/realestate.jpg");         /* 不動産 */
+    --glp-support: url("./images/support.jpg");               /* その他 */
+
+    /* ===== 表示調整 ===== */
+    --glp-card-img-h: 46px;
+  }
+
   /* ほかと被らないように glp- で統一 */
   .glp-wrapper {
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
@@ -30,7 +49,43 @@
     padding: 24px 16px 40px;
   }
 
-  /* ヒーロー：背景写真＋オーバーレイ（Studioのイメージに寄せる） */
+  /* ========== 言語切替（追加ブロック内だけ） ========== */
+  .glp-wrapper .lang-ja { display: inline; }
+  .glp-wrapper .lang-en { display: none; }
+
+  body.glp-lang-en .glp-wrapper .lang-ja { display: none; }
+  body.glp-lang-en .glp-wrapper .lang-en { display: inline; }
+
+  /* 言語スイッチ（右上固定・小さめ） */
+  #glpLangSwitch {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    z-index: 9999;
+    display: flex;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    backdrop-filter: blur(6px);
+  }
+  #glpLangSwitch button{
+    appearance: none;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 1;
+  }
+  #glpLangSwitch button[aria-pressed="true"]{
+    border-color: #111827;
+  }
+
+  /* ヒーロー：背景写真＋オーバーレイ（画像なしでも崩れない） */
   .glp-hero {
     position: relative;
     border-radius: 16px;
@@ -39,16 +94,15 @@
     margin-bottom: 24px;
     color: #ffffff;
     box-shadow: 0 10px 24px rgba(0,0,0,0.35);
+    background: #0b1020;
   }
   .glp-hero-bg {
     position: absolute;
     inset: 0;
-  }
-  .glp-hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    background-image: var(--glp-hero-bg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     filter: brightness(0.78);
     transform: scale(1.02);
   }
@@ -64,7 +118,7 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    max-width: 540px;
+    max-width: 620px;
   }
   .glp-hero-kicker {
     display: inline-flex;
@@ -75,9 +129,6 @@
     background: rgba(15,23,42,0.72);
     font-size: 11px;
     margin-bottom: 10px;
-  }
-  .glp-hero-kicker span {
-    display: inline-block;
   }
   .glp-hero-title {
     font-size: 20px;
@@ -122,26 +173,15 @@
     color: #fff;
     box-shadow: 0 8px 18px rgba(37,99,235,0.45);
   }
-  .glp-btn-main:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
+  .glp-btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
   .glp-btn-sub {
     background: rgba(15,23,42,0.86);
     color: #e0f2fe;
     border: 1px solid rgba(148,163,184,0.9);
   }
-  .glp-btn-sub:hover {
-    opacity: 0.9;
-  }
-  .glp-btn-green {
-    background: #18a34a;
-    color: #fff;
-  }
-  .glp-btn-gray {
-    background: #d4d4d8;
-    color: #333;
-  }
+  .glp-btn-sub:hover { opacity: 0.9; }
+  .glp-btn-green { background: #18a34a; color: #fff; }
+  .glp-btn-gray  { background: #d4d4d8; color: #333; }
 
   /* 法人税などの帯 */
   .glp-band {
@@ -161,19 +201,15 @@
     margin: 0;
     padding-left: 16px;
   }
-  .glp-band-list li {
-    margin: 2px 0;
-  }
+  .glp-band-list li { margin: 2px 0; }
   .glp-band-note {
     font-size: 10px;
     color: #9ca3af;
     margin-top: 6px;
   }
 
-  /* ジョージアってどんな国？ */
-  .glp-country {
-    margin-bottom: 24px;
-  }
+  /* ジョージアってどんな国？（背景画像方式） */
+  .glp-country { margin-bottom: 24px; }
   .glp-country-title {
     font-size: 15px;
     font-weight: 700;
@@ -184,13 +220,18 @@
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 6px;
   }
-  .glp-country-photos img {
+  .glp-photo {
     width: 100%;
-    display: block;
     border-radius: 10px;
-    object-fit: cover;
     height: 96px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #cbd5e1; /* 画像がなくても見える */
   }
+  .glp-photo.p1 { background-image: var(--glp-country-1); }
+  .glp-photo.p2 { background-image: var(--glp-country-2); }
+  .glp-photo.p3 { background-image: var(--glp-country-3); }
 
   /* カードグリッド（スマホ2列） */
   .glp-cardgrid {
@@ -207,13 +248,21 @@
     flex-direction: column;
     justify-content: space-between;
   }
-  .glp-card-flag {
-    width: 32px;
-    height: auto;
-    display: block;
-    margin-bottom: 6px;
-    border-radius: 6px;
+  .glp-card-img {
+    width: 46px;
+    height: var(--glp-card-img-h);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #e2e8f0;
   }
+  .glp-card-img.flag { background-image: var(--glp-flag); }
+  .glp-card-img.washoku { background-image: var(--glp-washoku); }
+  .glp-card-img.realestate { background-image: var(--glp-realestate); }
+  .glp-card-img.support { background-image: var(--glp-support); }
+
   .glp-card-title {
     font-size: 13px;
     font-weight: 700;
@@ -232,83 +281,22 @@
 
   /* 少し広い画面（PC）用 */
   @media (min-width: 768px) {
-    .glp-inner {
-      padding: 32px 16px 48px;
-    }
-    .glp-hero {
-      min-height: 360px;
-      border-radius: 18px;
-    }
-    .glp-hero-content {
-      padding: 32px 32px 34px;
-      max-width: 620px;
-    }
-    .glp-hero-title {
-      font-size: 26px;
-    }
-    .glp-hero-lead {
-      font-size: 14px;
-    }
-    .glp-hero-note {
-      font-size: 12px;
-    }
-    .glp-country-photos img {
-      height: 120px;
-    }
-    .glp-cardgrid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .glp-inner { padding: 32px 16px 48px; }
+    .glp-hero { min-height: 360px; border-radius: 18px; }
+    .glp-hero-content { padding: 32px 32px 34px; max-width: 680px; }
+    .glp-hero-title { font-size: 26px; }
+    .glp-hero-lead  { font-size: 14px; }
+    .glp-hero-note  { font-size: 12px; }
+    .glp-photo { height: 120px; }
+    .glp-cardgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 </style>
-
-<!-- ▼ 初期状態が英語化しないための事前クッキー掃除（既存） -->
-<script>
-(function(){
-  try{
-    var host = location.hostname.replace(/^www\./,'');
-    var m = document.cookie.match(/(?:^|;\s*)Googtrans=([^;]+)/);
-    if (m) {
-      var v = decodeURIComponent(m[1]||'');
-      if (v && v !== '/ja/ja') {
-        var exp='Thu, 01 Jan 1970 00:00:00 GMT';
-        document.cookie='googtrans=; expires='+exp+'; path=/';
-        document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+host;
-        document.cookie='googtrans=; expires='+exp+'; path=/; domain='+host;
-        if (/#googtrans/.test(location.hash)) {
-          history.replaceState('', document.title, location.pathname + location.search);
-        }
-      }
-    }
-  }catch(_){}
-})();
-</script>
 </head>
+
 <body>
 
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
-
-<!-- 右上：言語スイッチ（既存のまま） -->
-<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
-  <span class="globe" aria-hidden="true">🌐</span>
-</button>
-<div class="lang-wrap" id="langDrawer" aria-hidden="true">
-  <div class="lang-backdrop" id="langBackdrop"></div>
-  <aside class="lang-panel" role="dialog" aria-modal="true" aria-label="Select language">
-    <div class="lang-head">
-      <strong class="lang-title">Select language</strong>
-      <button class="lang-close" id="langClose" aria-label="Close">×</button>
-    </div>
-    <div class="lang-body">
-      <div class="ls-search">
-        <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
-      </div>
-      <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
-      <div id="google_translate_element"></div>
-      <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
-    </div>
-  </aside>
-</div>
 
 <!-- 右上ハンバーガー（既存のまま） -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
@@ -325,39 +313,56 @@
   </aside>
 </nav>
 
+<!-- 言語スイッチ（Google翻訳ではなく自前） -->
+<div id="glpLangSwitch" role="group" aria-label="Language switch">
+  <button type="button" id="glpLangJP" aria-pressed="true">JP</button>
+  <button type="button" id="glpLangEN" aria-pressed="false">EN</button>
+</div>
+
 <!-- ======== Grena LP 追加ブロック：ここから ======== -->
 <div id="glp-landing" class="glp-wrapper">
   <div class="glp-inner">
 
-    <!-- ヒーロー（写真＋テキストオーバーレイ） -->
-    <section class="glp-hero">
-      <div class="glp-hero-bg">
-        <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img">
-        <div class="glp-hero-gradient"></div>
-      </div>
+    <!-- ヒーロー（背景はCSS変数で後から差し替え） -->
+    <section class="glp-hero" aria-label="Hero">
+      <div class="glp-hero-bg" aria-hidden="true"></div>
+      <div class="glp-hero-gradient" aria-hidden="true"></div>
+
       <div class="glp-hero-content">
         <div class="glp-hero-kicker">
-          <span>🌍 EU加盟候補国ジョージア</span>
+          <span class="lang-ja">🌍 EU加盟候補国ジョージア</span>
+          <span class="lang-en">🌍 EU Candidate Country Georgia</span>
           <span>×</span>
-          <span>現地提携の法律事務所</span>
+          <span class="lang-ja">現地提携の法律事務所</span>
+          <span class="lang-en">Partnered Local Law Firm</span>
         </div>
+
         <p class="glp-hero-title">
-          ジョージアで、はじめる。<br>国に縛られない、合法的で安心な資産とビジネスの持ち方。
+          <span class="lang-ja">ジョージアで、はじめる。<br>国に縛られない、合法的で安心な資産とビジネスの持ち方。</span>
+          <span class="lang-en">Start in Georgia.<br>A lawful and secure way to hold assets and run a business beyond borders.</span>
         </p>
+
         <p class="glp-hero-lead">
-          現地提携の法律事務所・会計士と連携し、<br>
-          制度に沿った法人・個人事業主・銀行口座の開設をサポートします。
+          <span class="lang-ja">現地提携の法律事務所・会計士と連携し、<br>制度に沿った法人・個人事業主・銀行口座の開設をサポートします。</span>
+          <span class="lang-en">In cooperation with partnered local law firms and accountants,<br>we provide administrative support for company setup, sole proprietor registration, and bank account opening in line with the applicable systems.</span>
         </p>
+
         <p class="glp-hero-note">
-          ※ 当社は各国の税務・法務判断は行わず、公開資料に基づく一般情報の共有と手続きの事務サポートのみ行います。<br>
-          ※ 最終的な税務・法務判断は、お住まいの国の有資格専門家にご確認ください。
+          <span class="lang-ja">※ 当社は各国の税務・法務判断は行わず、公開資料に基づく一般情報の共有と手続きの事務サポートのみ行います。<br>
+          ※ 最終的な税務・法務判断は、お住まいの国の有資格専門家にご確認ください。</span>
+
+          <span class="lang-en">* We do not provide tax/legal advice or make tax/legal determinations. We only share general information based on publicly available materials and provide administrative support for procedures.<br>
+          * For final tax and legal decisions, please consult a licensed professional in your country of residence.</span>
         </p>
+
         <div class="glp-hero-actions">
           <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main" data-glp-target="lp-start">
-            無料相談はこちら
+            <span class="lang-ja">無料相談はこちら</span>
+            <span class="lang-en">Free Consultation</span>
           </a>
           <a href="#corp-setup" class="glp-btn glp-btn-sub">
-            まずは制度の全体像を見る
+            <span class="lang-ja">まずは制度の全体像を見る</span>
+            <span class="lang-en">View the overview first</span>
           </a>
         </div>
       </div>
@@ -366,28 +371,41 @@
     <!-- 法人税などの帯 -->
     <section class="glp-band">
       <p class="glp-band-title">
-        ジョージアの税制・銀行制度を活用した国際ビジネス拠点
+        <span class="lang-ja">ジョージアの税制・銀行制度を活用した国際ビジネス拠点</span>
+        <span class="lang-en">An international business base leveraging Georgia’s tax and banking systems</span>
       </p>
+
       <ul class="glp-band-list">
-        <li>EU加盟候補国・ジョージアの制度に沿った法人・口座開設をサポート</li>
-        <li>渡航せずにオンライン完結を目指せるワークフローを構築</li>
-        <li>現地法律事務所との提携により、手続き内容を事前に確認したうえでご案内</li>
+        <li>
+          <span class="lang-ja">EU加盟候補国・ジョージアの制度に沿った法人・口座開設をサポート</span>
+          <span class="lang-en">Administrative support for company setup and account opening in line with Georgia’s systems</span>
+        </li>
+        <li>
+          <span class="lang-ja">渡航せずにオンライン完結を目指せるワークフローを構築</span>
+          <span class="lang-en">A workflow designed to aim for online completion without travel</span>
+        </li>
+        <li>
+          <span class="lang-ja">現地法律事務所との提携により、手続き内容を事前に確認したうえでご案内</span>
+          <span class="lang-en">We coordinate with a local law firm partner and confirm procedures in advance</span>
+        </li>
       </ul>
+
       <p class="glp-band-note">
-        ※当社は各国の税務・法務判断を行わず、制度や手続きの一般的な情報共有・実務サポートのみ行います。
+        <span class="lang-ja">※当社は各国の税務・法務判断を行わず、制度や手続きの一般的な情報共有・実務サポートのみ行います。</span>
+        <span class="lang-en">* We do not provide tax/legal advice; we only share general information and provide administrative support.</span>
       </p>
     </section>
 
-    <!-- ジョージアってどんな国？ 写真3枚 -->
+    <!-- ジョージアってどんな国？（画像はCSS変数で後から差し替え） -->
     <section class="glp-country">
-      <p class="glp-country-title">ジョージアってどんな国？</p>
+      <p class="glp-country-title">
+        <span class="lang-ja">ジョージアってどんな国？</span>
+        <span class="lang-en">What is Georgia like?</span>
+      </p>
       <div class="glp-country-photos">
-        <!-- 城・教会 -->
-        <img src="田舎の教会のデザイン.jpg 3.jpg" alt="ジョージアの教会と城塞">
-        <!-- 伝統料理（ハチャプリ） -->
-        <img src="Untitled design 3.jpg" alt="ジョージアのチーズパン・ハチャプリ">
-        <!-- 自由広場など -->
-        <img src="Untitled design 2.jpg" alt="ジョージア・トビリシの広場">
+        <div class="glp-photo p1" role="img" aria-label="Georgia photo 1"></div>
+        <div class="glp-photo p2" role="img" aria-label="Georgia photo 2"></div>
+        <div class="glp-photo p3" role="img" aria-label="Georgia photo 3"></div>
       </div>
     </section>
 
@@ -396,62 +414,104 @@
 
       <!-- 1. ジョージア法人設立 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア法人設立</h3>
+        <div class="glp-card-img flag" role="img" aria-label="Georgia flag"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">ジョージア法人設立</span>
+          <span class="lang-en">Company Setup in Georgia</span>
+        </h3>
         <p class="glp-card-text">
-          渡航不要でも手続き可能な法人設立フローを、現地の専門家と連携してサポートします。
+          <span class="lang-ja">渡航不要でも手続き可能な法人設立フローを、現地の専門家と連携してサポートします。</span>
+          <span class="lang-en">We support a company setup workflow that may be possible without travel, in coordination with local professionals.</span>
         </p>
-        <a href="#corp-setup" class="glp-btn glp-btn-sub" data-glp-target="corp">詳しくはこちら</a>
+        <a href="#corp-setup" class="glp-btn glp-btn-sub" data-glp-target="corp">
+          <span class="lang-ja">詳しくはこちら</span>
+          <span class="lang-en">Learn more</span>
+        </a>
       </article>
 
       <!-- 2. ジョージア個人事業主 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア個人事業主（IE）登録</h3>
+        <div class="glp-card-img flag" role="img" aria-label="Georgia flag"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">ジョージア個人事業主（IE）登録</span>
+          <span class="lang-en">Sole Proprietor (IE) Registration</span>
+        </h3>
         <p class="glp-card-text">
-          ジョージア政府が認める正規制度「IE登録」のご案内と、登録手続きの実務サポート（条件あり）。
+          <span class="lang-ja">ジョージア政府が認める正規制度「IE登録」のご案内と、登録手続きの実務サポート（条件あり）。</span>
+          <span class="lang-en">General guidance and administrative support for the official IE registration process (conditions apply).</span>
         </p>
-        <a href="#sole-setup" class="glp-btn glp-btn-sub" data-glp-target="ie">詳しくはこちら</a>
+        <a href="#sole-setup" class="glp-btn glp-btn-sub" data-glp-target="ie">
+          <span class="lang-ja">詳しくはこちら</span>
+          <span class="lang-en">Learn more</span>
+        </a>
       </article>
 
       <!-- 3. ジョージア銀行口座開設 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
-        <h3 class="glp-card-title">ジョージア銀行口座開設</h3>
+        <div class="glp-card-img flag" role="img" aria-label="Georgia flag"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">ジョージア銀行口座開設</span>
+          <span class="lang-en">Bank Account Opening Support</span>
+        </h3>
         <p class="glp-card-text">
-          非居住者でも開設が検討できる銀行口座について、リスク・条件を含めた一般情報と手続きサポートを提供します。
+          <span class="lang-ja">非居住者でも開設が検討できる銀行口座について、リスク・条件を含めた一般情報と手続きサポートを提供します。</span>
+          <span class="lang-en">We share general information (including risks/conditions) and provide administrative support; eligibility is subject to bank review.</span>
         </p>
-        <a href="#personal-account" class="glp-btn glp-btn-sub" data-glp-target="bank">今すぐチェック</a>
+        <a href="#personal-account" class="glp-btn glp-btn-sub" data-glp-target="bank">
+          <span class="lang-ja">今すぐチェック</span>
+          <span class="lang-en">Check details</span>
+        </a>
       </article>
 
       <!-- 4. 和食店をあなたの国に -->
       <article class="glp-card">
-        <img src="Untitled design 3.jpg" alt="寿司など和食イメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">和食店をあなたの国に</h3>
+        <div class="glp-card-img washoku" role="img" aria-label="Washoku"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">和食店をあなたの国に</span>
+          <span class="lang-en">Bring Japanese Cuisine to Your Country</span>
+        </h3>
         <p class="glp-card-text">
-          寿司が握れなくても大丈夫。現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認までをサポートします。
+          <span class="lang-ja">寿司が握れなくても大丈夫。現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認までをサポートします。</span>
+          <span class="lang-en">No need to be a sushi chef. We support planning, partner matching, and contract process coordination.</span>
         </p>
-        <a href="#precheck" class="glp-btn glp-btn-green" data-glp-target="washoku">無料相談する</a>
+        <a href="#precheck" class="glp-btn glp-btn-green" data-glp-target="washoku">
+          <span class="lang-ja">無料相談する</span>
+          <span class="lang-en">Get free consultation</span>
+        </a>
       </article>
 
       <!-- 5. 海外不動産購入・賃貸 -->
       <article class="glp-card">
-        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">海外不動産購入・賃貸</h3>
+        <div class="glp-card-img realestate" role="img" aria-label="Real estate"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">海外不動産購入・賃貸</span>
+          <span class="lang-en">Overseas Real Estate</span>
+        </h3>
         <p class="glp-card-text">
-          ジョージアを含む海外不動産について、現地パートナーと連携しながら、物件選び・契約プロセスのサポートを行います。
+          <span class="lang-ja">ジョージアを含む海外不動産について、現地パートナーと連携しながら、物件選び・契約プロセスのサポートを行います。</span>
+          <span class="lang-en">We coordinate with local partners to support property selection and contract processes.</span>
         </p>
-        <a href="#precheck" class="glp-btn glp-btn-gray" data-glp-target="realestate">準備中</a>
+        <a href="#precheck" class="glp-btn glp-btn-gray" data-glp-target="realestate">
+          <span class="lang-ja">準備中</span>
+          <span class="lang-en">Coming soon</span>
+        </a>
       </article>
 
       <!-- 6. その他・企画サポート -->
       <article class="glp-card">
-        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag">
-        <h3 class="glp-card-title">その他・企画サポート</h3>
+        <div class="glp-card-img support" role="img" aria-label="Support"></div>
+        <h3 class="glp-card-title">
+          <span class="lang-ja">その他・企画サポート</span>
+          <span class="lang-en">Other / Planning Support</span>
+        </h3>
         <p class="glp-card-text">
-          企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計をお手伝いします。
+          <span class="lang-ja">企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計をお手伝いします。</span>
+          <span class="lang-en">We help design and validate business ideas starting from Georgia, including planning and PR.</span>
         </p>
-        <a href="#disclaimer" class="glp-btn glp-btn-sub" data-glp-target="others">詳しくはこちら</a>
+        <a href="#disclaimer" class="glp-btn glp-btn-sub" data-glp-target="others">
+          <span class="lang-ja">詳しくはこちら</span>
+          <span class="lang-en">Learn more</span>
+        </a>
       </article>
 
     </section>
@@ -459,6 +519,7 @@
   </div>
 </div>
 <!-- ======== Grena LP 追加ブロック：ここまで ======== -->
+
 
 <main id="main">
   <!-- フル文言は画面に出さず、SEO用にのみ保持（強制的に非表示にしておく） -->
@@ -586,7 +647,6 @@
         <div class="content">
           <ul>
             <li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li>
-            <!-- MoU締結日の記載を削除 -->
             <li>提携範囲：登記、各種登録、帳簿・契約の事務サポート等</li>
             <li>法人ID：406365525</li>
           </ul>
@@ -1005,7 +1065,6 @@
             <li>必要書類・マニュアル一式＋最終チェック</li>
           </ul>
 
-          <!-- 価値ポイント：渡航不要（原則） -->
           <div class="value-box" role="region" aria-label="渡航不要のご案内">
             <h5 class="value-title">渡航不要（原則）</h5>
             <p><strong>わざわざ現地に行く必要はありません。</strong>自国のことばの文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
@@ -1097,7 +1156,6 @@
 
             <div id="cf-out" class="cf-out" aria-live="polite"></div>
 
-            <!-- 金利ページへのリンクのみ -->
             <div class="cf-ref" style="margin-top:10px;">
               <details>
                 <summary>参考：公式の預金金利ページ（外部リンク）</summary>
@@ -1109,7 +1167,6 @@
               </details>
             </div>
 
-            <!-- 為替レート参考リンク -->
             <div class="cf-ref" style="margin-top:10px;">
               <details>
                 <summary>参考：為替レート（外部チャート）</summary>
@@ -1219,13 +1276,12 @@
   <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜Mail：<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜一般情報の提供のみ</small>
 </footer>
 
-<!-- 追加：カードから既存セクションへスクロールするスクリプト -->
+<!-- 追加：カードから既存セクションへスクロールするスクリプト（既存文言検索方式） -->
 <script>
 (function() {
   var landing = document.getElementById('glp-landing');
   if (!landing) return;
 
-  // 既存LPに実際にある文言に合わせたキーワード
   var keywordMap = {
     "lp-start": "ジョージア法人設立・個人事業主・個人口座",
     "corp":     "ジョージア法人設立",
@@ -1243,27 +1299,19 @@
     var nodes = [];
     for (var i = 0; i < tags.length; i++) {
       var list = document.getElementsByTagName(tags[i]);
-      for (var j = 0; j < list.length; j++) {
-        nodes.push(list[j]);
-      }
+      for (var j = 0; j < list.length; j++) nodes.push(list[j]);
     }
 
     var target = null;
     for (var k = 0; k < nodes.length; k++) {
       var text = nodes[k].textContent || "";
-      if (text.indexOf(keyword) !== -1) {
-        target = nodes[k];
-        break;
-      }
+      if (text.indexOf(keyword) !== -1) { target = nodes[k]; break; }
     }
 
     if (target) {
       var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
-      try {
-        window.scrollTo({ top: y, behavior: "smooth" });
-      } catch (e) {
-        window.scrollTo(0, y);
-      }
+      try { window.scrollTo({ top: y, behavior: "smooth" }); }
+      catch (e) { window.scrollTo(0, y); }
     }
   }
 
@@ -1278,220 +1326,39 @@
 })();
 </script>
 
-<!-- 末尾読み込み -->
+<!-- 末尾読み込み（既存） -->
 <script src="./script.js?v=20251110a" defer></script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 
-<!-- ==============================
-  JP/EN 切替（ヒーロートップだけ）＋ Google翻訳UIの除去
-  ※アコーディオン/ハンバーガー/複利計算などには干渉しません
-================================== -->
-
-<style id="lp-lang-switch-style">
-  /* Google 翻訳UIを強制的に非表示（念のため） */
-  .goog-te-banner-frame,
-  #goog-gt-tt,
-  .goog-te-balloon-frame,
-  .goog-te-menu-frame,
-  .goog-te-gadget,
-  #google_translate_element,
-  iframe.goog-te-banner-frame {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-  }
-  body { top: 0px !important; }
-
-  /* 言語スイッチ（右上固定・小さめ） */
-  #lpLangSwitch {
-    position: fixed;
-    top: calc(env(safe-area-inset-top, 0px) + 12px);
-    right: calc(env(safe-area-inset-right, 0px) + 12px);
-    z-index: 9999;
-    display: flex;
-    gap: 8px;
-    padding: 8px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.92);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-    backdrop-filter: blur(6px);
-  }
-  #lpLangSwitch button{
-    appearance: none;
-    border: 1px solid #e5e7eb;
-    background: #fff;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    line-height: 1;
-  }
-  #lpLangSwitch button[aria-pressed="true"]{
-    border-color: #111827;
-  }
-</style>
-
-<script id="lp-lang-switch-script">
-(() => {
+<!-- 自前のJP/EN切替（追加ブロックだけ切り替える） -->
+<script>
+(function(){
   "use strict";
 
-  /* ========= 0) Google翻訳UIを消す（表示もDOMも） ========= */
-  function removeGoogleTranslateUI() {
-    const selectors = [
-      ".goog-te-banner-frame",
-      "#goog-gt-tt",
-      ".goog-te-balloon-frame",
-      ".goog-te-menu-frame",
-      ".goog-te-gadget",
-      "#google_translate_element",
-      "iframe.goog-te-banner-frame"
-    ];
-    selectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => el.remove());
-    });
+  var jpBtn = document.getElementById("glpLangJP");
+  var enBtn = document.getElementById("glpLangEN");
 
-    // 「Select language」「Powered by Google Translate」を含む塊も削除（HTML構造が不明でも確実に消す）
-    const killWords = [/Select language/i, /Powered by Google Translate/i];
-    const all = Array.from(document.querySelectorAll("body *"));
-    all.forEach(el => {
-      if (!el || el.childElementCount > 0) return;
-      const t = (el.textContent || "").trim();
-      if (!t) return;
-      if (killWords.some(r => r.test(t))) {
-        const box = el.parentElement;
-        if (box) box.remove();
-      }
-    });
-
-    // 変な余白が残るのを防ぐ
-    document.body.style.top = "0px";
-    document.documentElement.classList.remove("translated-ltr", "translated-rtl");
-  }
-
-  /* ========= 1) ヒーロートップ領域を特定 =========
-     まず「ジョージアで、はじめる。」を含む要素を探し、
-     その近い親（section/header/main/div）をヒーローとして扱います。
-  */
-  function getHeroRoot() {
-    const needle = "ジョージアで、はじめる。";
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-    let node;
-    while ((node = walker.nextNode())) {
-      const txt = (node.nodeValue || "").trim();
-      if (txt.includes(needle)) {
-        const el = node.parentElement;
-        if (!el) return null;
-        return el.closest("header, section, main, div") || el.parentElement || el;
-      }
-    }
-    return null;
-  }
-
-  /* ========= 2) 翻訳（ヒーロー内だけ置換） ========= */
-  const HERO_MAP = [
-    ["EU加盟候補国ジョージア × 現地提携の法律事務所",
-     "EU Candidate Country Georgia × Partnered Local Law Firm"],
-
-    ["ジョージアで、はじめる。",
-     "Start in Georgia."],
-
-    ["国に縛られない、合法的で安心な資産とビジネスの持ち方。",
-     "A lawful and secure way to hold assets and run a business beyond borders."],
-
-    ["現地提携の法律事務所・会計士と連携し、",
-     "In cooperation with partnered local law firms and accountants,"],
-
-    ["制度に沿った法人・個人事業主・銀行口座の開設をサポートします。",
-     "we provide administrative support for company setup, sole proprietor registration, and bank account opening in line with the applicable systems."],
-
-    ["※ 当社は各国の税務・法務判断は行わず、公開資料に基づく一般情報の共有と手続きの事務サポートのみ行います。",
-     "* We do not provide tax/legal advice or make tax/legal determinations. We only share general information based on publicly available materials and provide administrative support for procedures."],
-
-    ["※ 最終的な税務・法務判断は、お住まいの国の有資格専門家にご確認ください。",
-     "* For final tax and legal decisions, please consult a licensed professional in your country of residence."]
-  ];
-
-  function replaceInTextNodes(root, from, to) {
-    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    let n;
-    while ((n = tw.nextNode())) {
-      if (!n.nodeValue) continue;
-      if (n.nodeValue.includes(from)) {
-        n.nodeValue = n.nodeValue.split(from).join(to);
-      }
-    }
-  }
-
-  function setLang(lang) {
-    const hero = getHeroRoot();
-    if (!hero) return;
-
-    // JP→EN / EN→JP を“ヒーロー内だけ”で実行
+  function apply(lang){
     if (lang === "en") {
-      HERO_MAP.forEach(([ja, en]) => replaceInTextNodes(hero, ja, en));
+      document.body.classList.add("glp-lang-en");
+      document.documentElement.setAttribute("lang","en");
+      if (jpBtn) jpBtn.setAttribute("aria-pressed","false");
+      if (enBtn) enBtn.setAttribute("aria-pressed","true");
     } else {
-      HERO_MAP.forEach(([ja, en]) => replaceInTextNodes(hero, en, ja));
+      document.body.classList.remove("glp-lang-en");
+      document.documentElement.setAttribute("lang","ja");
+      if (jpBtn) jpBtn.setAttribute("aria-pressed","true");
+      if (enBtn) enBtn.setAttribute("aria-pressed","false");
     }
-
-    // ボタンの見た目
-    const jpBtn = document.getElementById("lpLangJP");
-    const enBtn = document.getElementById("lpLangEN");
-    if (jpBtn && enBtn) {
-      jpBtn.setAttribute("aria-pressed", String(lang === "ja"));
-      enBtn.setAttribute("aria-pressed", String(lang === "en"));
-    }
-
-    localStorage.setItem("lp_lang", lang);
+    try { localStorage.setItem("glp_lang", lang); } catch(e){}
   }
 
-  /* ========= 3) スイッチUIを追加 ========= */
-  function mountSwitch() {
-    if (document.getElementById("lpLangSwitch")) return;
+  if (jpBtn) jpBtn.addEventListener("click", function(){ apply("ja"); });
+  if (enBtn) enBtn.addEventListener("click", function(){ apply("en"); });
 
-    const box = document.createElement("div");
-    box.id = "lpLangSwitch";
-    box.setAttribute("role", "group");
-    box.setAttribute("aria-label", "Language switch");
-
-    const jp = document.createElement("button");
-    jp.id = "lpLangJP";
-    jp.type = "button";
-    jp.textContent = "JP";
-    jp.setAttribute("aria-pressed", "true");
-
-    const en = document.createElement("button");
-    en.id = "lpLangEN";
-    en.type = "button";
-    en.textContent = "EN";
-    en.setAttribute("aria-pressed", "false");
-
-    jp.addEventListener("click", () => setLang("ja"));
-    en.addEventListener("click", () => setLang("en"));
-
-    box.appendChild(jp);
-    box.appendChild(en);
-    document.body.appendChild(box);
-  }
-
-  /* ========= 起動 ========= */
-  function boot() {
-    removeGoogleTranslateUI();
-    mountSwitch();
-
-    const saved = localStorage.getItem("lp_lang");
-    if (saved === "en" || saved === "ja") {
-      setLang(saved);
-    } else {
-      setLang("ja"); // まずは日本語固定（勝手に英語にしない）
-    }
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
+  // 初期表示：勝手に英語にしない（保存があればそれを使う）
+  var saved = null;
+  try { saved = localStorage.getItem("glp_lang"); } catch(e){}
+  if (saved === "en") apply("en"); else apply("ja");
 })();
 </script>
 
