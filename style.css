@@ -734,3 +734,13 @@ h1, .hero h1, .page-title, .hero .lead {
     padding-inline:32px;
   }
 }
+/* ===== 追加：料金と手続き日数の早見表だけ横スクロール ===== */
+.plan-table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling: touch;
+  width:100%;
+}
+
+.plan-table-wrap > table{
+  min-width: 720px; /* 画面が狭い時に潰れないための保険 */
+}
