@@ -373,3 +373,106 @@
   tbl.parentNode.insertBefore(wrap, tbl);
   wrap.appendChild(tbl);
 })();
+/* ===== FIX: JP/EN quick toggle flicker (iOS double-fire & JP reset) ===== */
+(function(){
+  // 1) JP/ENボタンを「見た目の文字」で特定（画像の右上のJP/EN想定）
+  function findBtnByText(txt){
+    const nodes = Array.from(document.querySelectorAll('button,a'));
+    return nodes.find(el => (el.textContent || '').trim() === txt && el.offsetParent !== null);
+  }
+
+  // 2) 既存のイベントを“物理的に削除”する（cloneして差し替え）
+  function stripAllHandlers(el){
+    if(!el || !el.parentNode) return el;
+    const clone = el.cloneNode(true);
+
+    // inline on* 属性があれば削除
+    Array.from(clone.attributes || []).forEach(attr=>{
+      if(/^on/i.test(attr.name)) clone.removeAttribute(attr.name);
+    });
+
+    el.parentNode.replaceChild(clone, el);
+    return clone;
+  }
+
+  // 3) googtrans cookie を消す（JP=翻訳解除）
+  function clearGoogTransCookie(){
+    const host = location.hostname.replace(/^www\./,'');
+    const domains = ['', `.${host}`];
+    const paths = ['/'];
+    const expires = 'Thu, 01 Jan 1970 00:00:00 GMT';
+
+    domains.forEach(dm=>{
+      paths.forEach(p=>{
+        document.cookie = `googtrans=; expires=${expires}; path=${p}` + (dm ? `; domain=${dm}` : '');
+      });
+    });
+  }
+
+  // 4) googtrans cookie をセット（EN=英語）
+  function setGoogTransCookie(code){
+    const exp  = new Date(Date.now()+365*864e5).toUTCString();
+    const host = location.hostname.replace(/^www\./,'');
+    const vals = [`/ja/${code}`, `/auto/${code}`];
+    const domains = ['', `.${host}`];
+
+    vals.forEach(v=>domains.forEach(dm=>{
+      document.cookie = `googtrans=${encodeURIComponent(v)}; expires=${exp}; path=/` + (dm?`; domain=${dm}`:'');
+    }));
+  }
+
+  // 5) 二重発火ガード（500ms以内の連打/二重イベントを無視）
+  let last = 0;
+  function guard(){
+    const now = Date.now();
+    if(now - last < 500) return false;
+    last = now;
+    return true;
+  }
+
+  function reloadClean(){
+    try{
+      sessionStorage.removeItem('gt-desired');
+      sessionStorage.removeItem('gt-once');
+    }catch(_){}
+    location.reload();
+  }
+
+  function bind(){
+    let jp = findBtnByText('JP');
+    let en = findBtnByText('EN');
+    if(!jp || !en){
+      setTimeout(bind, 200);
+      return;
+    }
+
+    // 既存のリスナーを消してから自分のを付ける
+    jp = stripAllHandlers(jp);
+    en = stripAllHandlers(en);
+
+    // “touchstart + click”の二重を止めるため、pointer系を優先
+    const onJP = (e)=>{
+      e.preventDefault();
+      if(!guard()) return;
+      clearGoogTransCookie();   // 翻訳解除がJPの正解
+      reloadClean();
+    };
+    const onEN = (e)=>{
+      e.preventDefault();
+      if(!guard()) return;
+      setGoogTransCookie('en');
+      try{ sessionStorage.setItem('gt-desired','en'); }catch(_){}
+      reloadClean();
+    };
+
+    // クリックだけにする（iOSの二重発火を避ける）
+    jp.addEventListener('click', onJP, {passive:false});
+    en.addEventListener('click', onEN, {passive:false});
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', bind);
+  }else{
+    bind();
+  }
+})();
