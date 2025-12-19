@@ -1468,5 +1468,119 @@
   });
 })();
 </script>
+<!-- ===== 最終：JP/EN切替（script.jsの後でも必ず勝つ）===== -->
+<script>
+(function(){
+  "use strict";
+  if (window.__glpLangFinalFix) return;
+  window.__glpLangFinalFix = true;
+
+  function qsa(sel){ return document.querySelectorAll(sel); }
+
+  function setHidden(lang){
+    var ja = qsa(".lang-ja");
+    var en = qsa(".lang-en");
+    for (var i=0; i<ja.length; i++) ja[i].hidden = (lang !== "ja");
+    for (var j=0; j<en.length; j++) en[j].hidden = (lang !== "en");
+  }
+
+  function apply(lang, fromUser){
+    lang = (lang === "en") ? "en" : "ja";
+
+    // classも付ける（既存CSSも活かす）
+    document.body.classList.remove("glp-lang-ja","glp-lang-en");
+    document.body.classList.add(lang === "en" ? "glp-lang-en" : "glp-lang-ja");
+
+    // HTMLのlangも更新
+    document.documentElement.setAttribute("lang", lang);
+    document.body.setAttribute("data-glp-lang", lang);
+
+    // hiddenで確実に切替（CSS競合しても勝つ）
+    setHidden(lang);
+
+    // ボタン見た目
+    var jpBtn = document.getElementById("glpLangJP");
+    var enBtn = document.getElementById("glpLangEN");
+    if (jpBtn) jpBtn.setAttribute("aria-pressed", (lang === "ja") ? "true" : "false");
+    if (enBtn) enBtn.setAttribute("aria-pressed", (lang === "en") ? "true" : "false");
+
+    // 保存：ユーザーが押した時だけ「選択済み」扱いにする
+    if (fromUser) {
+      try {
+        localStorage.setItem("glp_lang", lang);
+        localStorage.setItem("glp_lang_user_selected", "1");
+      } catch(e){}
+    } else {
+      // 初期上書きで英語固定を潰す（過去のenが残ってても日本語優先に戻す）
+      try {
+        if (localStorage.getItem("glp_lang_user_selected") !== "1") {
+          localStorage.setItem("glp_lang", "ja");
+        }
+      } catch(e){}
+    }
+  }
+
+  function getInitial(){
+    try {
+      var selected = localStorage.getItem("glp_lang_user_selected");
+      var lang = localStorage.getItem("glp_lang");
+      if (selected === "1" && (lang === "ja" || lang === "en")) return lang;
+    } catch(e){}
+    return "ja";
+  }
+
+  // 他のクリック処理を全部止めて、これだけを通す（captureで先に取る）
+  function bindKillAndApply(){
+    var jp = document.getElementById("glpLangJP");
+    var en = document.getElementById("glpLangEN");
+    if (!jp || !en) return;
+
+    function hijack(el, lang){
+      ["pointerdown","touchstart","click"].forEach(function(type){
+        el.addEventListener(type, function(ev){
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+          ev.stopPropagation();
+          apply(lang, true);
+          reinforce(lang, 2500); // 上書きされても押し返す
+        }, true); // capture
+      });
+    }
+
+    hijack(jp, "ja");
+    hijack(en, "en");
+  }
+
+  // 上書き対策：短時間だけ何度も確定させる
+  function reinforce(lang, ms){
+    var end = Date.now() + ms;
+    (function loop(){
+      apply(lang, false);
+      if (Date.now() < end) setTimeout(loop, 150);
+    })();
+  }
+
+  // 1) その場で一旦日本語に（初期英語を即潰す）
+  apply(getInitial(), false);
+
+  // 2) DOMできたらバインド（クリックを乗っ取る）
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function(){
+      bindKillAndApply();
+      apply(getInitial(), false);
+    });
+  } else {
+    bindKillAndApply();
+  }
+
+  // 3) 重要：load後（deferのscript.js実行後）に最終確定して押し返す
+  window.addEventListener("load", function(){
+    var init = getInitial();
+    apply(init, false);
+    bindKillAndApply();
+    reinforce(init, 3000);
+  }, { once:true });
+})();
+</script>
 </body>
 </html>
