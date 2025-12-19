@@ -35,7 +35,20 @@
 
     /* ===== 表示調整 ===== */
     --glp-card-img-h: 46px;
+
+    /* 右上の言語スイッチが「右上ハンバーガー」に被らないようにする逃げ幅 */
+    --glp-menu-safe-right: 72px;
   }
+
+  /* ===== 言語切替：全体（.lang-ja /.lang-en を確実に切替） ===== */
+  .lang-ja { display: inline; }
+  .lang-en { display: none; }
+
+  body.glp-lang-ja .lang-ja { display: inline !important; }
+  body.glp-lang-ja .lang-en { display: none  !important; }
+
+  body.glp-lang-en .lang-ja { display: none  !important; }
+  body.glp-lang-en .lang-en { display: inline !important; }
 
   /* ほかと被らないように glp- で統一 */
   .glp-wrapper {
@@ -49,20 +62,13 @@
     padding: 24px 16px 40px;
   }
 
-  /* ========== 言語切替（追加ブロック内だけ） ========== */
-  .glp-wrapper .lang-ja { display: inline; }
-  .glp-wrapper .lang-en { display: none; }
-
-  body.glp-lang-en .glp-wrapper .lang-ja { display: none; }
-  body.glp-lang-en .glp-wrapper .lang-en { display: inline; }
-
-  /* 言語スイッチ（右上固定・小さめ） */
+  /* 言語スイッチ（右上固定・必ず JP/EN 2つ表示） */
   #glpLangSwitch {
     position: fixed;
     top: calc(env(safe-area-inset-top, 0px) + 12px);
-    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 12px + var(--glp-menu-safe-right));
     z-index: 9999;
-    display: flex;
+    display: inline-flex;
     gap: 8px;
     padding: 8px;
     border-radius: 12px;
@@ -293,7 +299,7 @@
 </style>
 </head>
 
-<body>
+<body class="glp-lang-ja">
 
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
@@ -313,7 +319,7 @@
   </aside>
 </nav>
 
-<!-- 言語スイッチ（Google翻訳ではなく自前） -->
+<!-- 言語スイッチ（JP/ENの2つを必ず表示） -->
 <div id="glpLangSwitch" role="group" aria-label="Language switch">
   <button type="button" id="glpLangJP" aria-pressed="true">JP</button>
   <button type="button" id="glpLangEN" aria-pressed="false">EN</button>
@@ -522,6 +528,7 @@
 
 
 <main id="main">
+  <!-- フル文言は画面に出さず、SEO用にのみ保持（強制的に非表示にしておく） -->
   <h1 class="sr-only" style="position:absolute;left:-9999px;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden;">
     ジョージア法人設立・個人事業主・個人口座｜公開資料の参照に基づく一般情報／MoU契約／オンライン手続き
   </h1>
@@ -535,6 +542,7 @@
       サポート
     </h2>
 
+    <!-- サクッと要点（Quick summary：法人） -->
     <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
       <div class="row">
         <span class="label">サクッと要点（Quick summary）</span>
@@ -564,6 +572,7 @@
       <p class="meta">※ 制度の詳細や注意事項は、下の各アコーディオン項目をご確認ください。</p>
     </div>
 
+    <!-- 3ステップの流れ -->
     <div class="progress-steps" aria-label="ご利用の3ステップ">
       <div class="step">1. メッセージで相談</div>
       <div class="step">2. ヒアリングシート記入 → ご提案</div>
@@ -704,6 +713,8 @@
       <details>
         <summary>料金プラン（範囲は事務サポート）</summary>
         <div class="content">
+
+          <!-- 料金＋手続き日数の早見表 -->
           <h3 class="smallish">料金と手続き日数の早見表</h3>
           <table>
             <thead>
@@ -790,6 +801,7 @@
           </details>
 
           <p class="text-sm muted" style="margin-top:10px;">※ €建ての表示は請求時点の為替で円換算します。為替により請求額は変動する場合があります。</p>
+
         </div>
       </details>
 
@@ -827,6 +839,7 @@
           </div>
         </div>
       </details>
+
     </div>
   </section>
 
@@ -839,6 +852,7 @@
       <strong>※「税率1%」はジョージア現地制度の一般情報であり、日本を含む居住国での最終的な税負担とは異なる場合があります。日本での申告義務や税務判断については、必ず居住国の税理士等の専門家にご相談ください。</strong>
     </p>
 
+    <!-- サクッと要点（Quick summary：IE＋SBS） -->
     <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
       <div class="row">
         <span class="label">サクッと要点（Quick summary）</span>
@@ -986,6 +1000,7 @@
   <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜個人口座開設の事務サポート（非居住者の取扱いは銀行審査判断）</h2>
 
+    <!-- サクッと要点（Quick summary：個人口座） -->
     <div class="price-promo quick-summary" aria-label="サクッと要点（Quick summary）">
       <div class="row">
         <span class="label">サクッと要点（Quick summary）</span>
@@ -1086,6 +1101,7 @@
         </div>
       </details>
 
+      <!-- 複利の概算ツール -->
       <details id="cf-tool-sec" class="calc-wrap">
         <summary>複利の概算ツール（参考・商品非特定）</summary>
         <div class="content">
@@ -1176,6 +1192,9 @@
     </div>
   </section>
 
+  <!-- =========================
+    こんな方にはおすすめしません
+  ========================== -->
   <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4">こんな方にはおすすめしません</h2>
     <ul class="qs-list">
@@ -1186,6 +1205,9 @@
     <p class="text-sm muted" style="margin-top:.5rem;">※ 制度に沿って長く続けたい方向けのサービスです。ルールを軽視したい方とは相性がよくありません。</p>
   </section>
 
+  <!-- =========================
+    相談前チェックリスト
+  ========================== -->
   <section id="precheck" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4">相談前に考えておいていただけるとスムーズです</h2>
     <ul class="qs-list">
@@ -1197,6 +1219,9 @@
     <p class="text-sm muted" style="margin-top:.5rem;">※ 全部決まっていなくても大丈夫です。「なんとなくこうしたい」で構いません。</p>
   </section>
 
+  <!-- =========================
+    免責事項・キャンセル
+  ========================== -->
   <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
     <h2 class="smallish">免責事項・キャンセルポリシー（重要）</h2>
 
@@ -1242,11 +1267,21 @@
     </div>
   </section>
 
+  <!-- 画面最下部 固定CTA（ここもJP/ENで切替） -->
   <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
     <div class="row">
-      <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
-      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">相談はこちら</a>
-      <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">今すぐ申し込み</a>
+      <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">
+        <span class="lang-ja">トップへ</span>
+        <span class="lang-en">Top</span>
+      </a>
+      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">
+        <span class="lang-ja">相談はこちら</span>
+        <span class="lang-en">Consultation here</span>
+      </a>
+      <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">
+        <span class="lang-ja">今すぐ申し込み</span>
+        <span class="lang-en">Apply now</span>
+      </a>
     </div>
   </div>
 </main>
@@ -1309,7 +1344,7 @@
 <!-- 末尾読み込み（既存） -->
 <script src="./script.js?v=20251110a" defer></script>
 
-<!-- 自前のJP/EN切替（追加ブロックだけ切り替える） -->
+<!-- 自前のJP/EN切替（1つだけ・確実に効く版） -->
 <script>
 (function(){
   "use strict";
@@ -1318,28 +1353,120 @@
   var enBtn = document.getElementById("glpLangEN");
 
   function apply(lang){
+    document.body.classList.remove("glp-lang-ja","glp-lang-en");
+
     if (lang === "en") {
       document.body.classList.add("glp-lang-en");
       document.documentElement.setAttribute("lang","en");
       if (jpBtn) jpBtn.setAttribute("aria-pressed","false");
       if (enBtn) enBtn.setAttribute("aria-pressed","true");
     } else {
-      document.body.classList.remove("glp-lang-en");
+      document.body.classList.add("glp-lang-ja");
       document.documentElement.setAttribute("lang","ja");
       if (jpBtn) jpBtn.setAttribute("aria-pressed","true");
       if (enBtn) enBtn.setAttribute("aria-pressed","false");
     }
+
     try { localStorage.setItem("glp_lang", lang); } catch(e){}
   }
 
   if (jpBtn) jpBtn.addEventListener("click", function(){ apply("ja"); });
   if (enBtn) enBtn.addEventListener("click", function(){ apply("en"); });
 
+  // 初期表示：保存がなければ必ず日本語
   var saved = null;
   try { saved = localStorage.getItem("glp_lang"); } catch(e){}
   if (saved === "en") apply("en"); else apply("ja");
 })();
 </script>
 
+  <!-- ===== JP/EN 切替：確実に効く修正版（末尾に追加するだけ） ===== -->
+<script>
+(function(){
+  "use strict";
+  if (window.__glpLangPatched) return;
+  window.__glpLangPatched = true;
+
+  function onReady(fn){
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", fn);
+    } else {
+      fn();
+    }
+  }
+
+  function setHidden(lang){
+    var jaNodes = document.querySelectorAll(".lang-ja");
+    var enNodes = document.querySelectorAll(".lang-en");
+
+    for (var i = 0; i < jaNodes.length; i++) {
+      jaNodes[i].hidden = (lang !== "ja");
+    }
+    for (var j = 0; j < enNodes.length; j++) {
+      enNodes[j].hidden = (lang !== "en");
+    }
+  }
+
+  function apply(lang){
+    lang = (lang === "en") ? "en" : "ja";
+
+    // 状態を明示（CSS競合があっても、hiddenで必ず切替）
+    document.body.setAttribute("data-glp-lang", lang);
+    document.documentElement.setAttribute("lang", lang);
+
+    setHidden(lang);
+
+    var jpBtn = document.getElementById("glpLangJP");
+    var enBtn = document.getElementById("glpLangEN");
+    if (jpBtn) jpBtn.setAttribute("aria-pressed", (lang === "ja") ? "true" : "false");
+    if (enBtn) enBtn.setAttribute("aria-pressed", (lang === "en") ? "true" : "false");
+
+    try { localStorage.setItem("glp_lang", lang); } catch(e){}
+  }
+
+  onReady(function(){
+    var wrap = document.getElementById("glpLangSwitch");
+    if (!wrap) return;
+
+    // ★重要：ボタンDOMを「作り直して」過去のクリック処理を全部消す
+    var oldJP = document.getElementById("glpLangJP");
+    var oldEN = document.getElementById("glpLangEN");
+
+    if (oldJP && oldJP.parentNode) {
+      var newJP = oldJP.cloneNode(true);
+      oldJP.parentNode.replaceChild(newJP, oldJP);
+    }
+    if (oldEN && oldEN.parentNode) {
+      var newEN = oldEN.cloneNode(true);
+      oldEN.parentNode.replaceChild(newEN, oldEN);
+    }
+
+    var jpBtn = document.getElementById("glpLangJP");
+    var enBtn = document.getElementById("glpLangEN");
+
+    if (jpBtn) jpBtn.addEventListener("click", function(ev){
+      ev.preventDefault();
+      apply("ja");
+    });
+
+    if (enBtn) enBtn.addEventListener("click", function(ev){
+      ev.preventDefault();
+      apply("en");
+    });
+
+    // 初期：保存がなければ必ず日本語
+    var saved = null;
+    try { saved = localStorage.getItem("glp_lang"); } catch(e){}
+    apply(saved === "en" ? "en" : "ja");
+
+    // 他スクリプトに上書きされても、読み込み完了後にもう1回だけ確定させる
+    window.addEventListener("load", function(){
+      var again = null;
+      try { again = localStorage.getItem("glp_lang"); } catch(e){}
+      apply(again === "en" ? "en" : "ja");
+    }, { once: true });
+  });
+})();
+</script>
 </body>
 </html>
