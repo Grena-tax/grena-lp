@@ -1,378 +1,509 @@
-/* ===== script.js (Full Replace / v2.1 – only new calculator) ===== */
-(function(){
-  const $  = (s, r=document) => r.querySelector(s);
-  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
-  const html = document.documentElement;
+/* =========================================================
+   script.js（全文）
+   - ハンバーガーメニュー：開閉／目次自動生成
+   - 固定CTA：「トップへ」スムーズスクロール
+   - 複利ツール（#cf-tool）：計算・表示・バリデーション
+   ※ 既存のHTML要素が無い場合でもエラーにならないよう防御しています
+========================================================= */
 
-  /* --- 0) Google青バナー/吹き出しの抑止（Observerのみ） --- */
-  function killGoogleBar(){
-    try{
-      document.body.style.top = '0px';
-      const tip = document.getElementById('goog-gt-tt');
-      if (tip) (tip.remove ? tip.remove() : (tip.style.display='none'));
-      const bar = document.querySelector('iframe.goog-te-banner-frame');
-      if (bar) (bar.remove ? bar.remove() : (bar.style.display='none'));
-      html.classList.remove('gtbar');
-    }catch(_){}
-  }
-  new MutationObserver(killGoogleBar).observe(document.documentElement,{childList:true,subtree:true});
-  window.addEventListener('load', killGoogleBar, {once:true});
-  window.addEventListener('pageshow', killGoogleBar, {once:true});
+(() => {
+  "use strict";
 
-  /* --- 0.1) 公式翻訳スクリプトの遅延ロード（多重読込ガード） --- */
-  function hasGTranslateTag(){
-    return !!document.querySelector('script[src*="translate_a/element.js"]');
-  }
-  function loadGTranslate(){
-    if ((window.google && window.google.translate) || hasGTranslateTag()) return;
-    const s = document.createElement('script');
-    s.id  = 'gt-script';
-    s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
-    s.defer = true;
-    document.head.appendChild(s);
-  }
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', loadGTranslate);
-  }else{
-    loadGTranslate();
+  /* -----------------------------
+     小物：安全な取得
+  ----------------------------- */
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  function on(el, evt, fn, opt) {
+    if (!el) return;
+    el.addEventListener(evt, fn, opt);
   }
 
-  /* --- 1) ハンバーガー --- */
-  const menuBtn      = $('#menuBtn');
-  const menuDrawer   = $('#menuDrawer');
-  const menuBackdrop = $('#menuBackdrop');
-  const menuClose    = $('#menuClose');
-
-  function setMenu(open){
-    html.classList.toggle('menu-open', open);
-    if (menuDrawer) menuDrawer.setAttribute('aria-hidden', String(!open));
-    if (menuBtn)    menuBtn.setAttribute('aria-expanded', String(open));
+  function setAriaExpanded(btn, expanded) {
+    if (!btn) return;
+    btn.setAttribute("aria-expanded", expanded ? "true" : "false");
   }
-  const toggleMenu = (e)=>{ e?.preventDefault(); setMenu(!html.classList.contains('menu-open')); };
-  const closeMenu  = ()=> setMenu(false);
 
-  menuBtn      && ['click','touchstart'].forEach(ev=>menuBtn.addEventListener(ev, toggleMenu, {passive:false}));
-  menuBackdrop && menuBackdrop.addEventListener('click', closeMenu);
-  menuClose    && menuClose.addEventListener('click', closeMenu);
-  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape') closeMenu(); });
+  function setAriaHidden(el, hidden) {
+    if (!el) return;
+    el.setAttribute("aria-hidden", hidden ? "true" : "false");
+  }
 
-  /* --- 2) サイド目次（トップ項目は作らない） --- */
-  (function buildMenuNoTop(){
-    const wrap = $('#menuGroups'); if (!wrap) return;
-    const SECTIONS = [
-      ['corp-setup',       '法人設立'],
-      ['plans',            '料金プラン'],
-      ['sole-setup',       '個人事業主（IE/SBS）'],
-      ['personal-account', '個人口座開設（銀行）'],
-      ['disclaimer',       '免責事項・キャンセル']
+  /* -----------------------------
+     スムーズスクロール（固定ヘッダー分だけオフセット）
+  ----------------------------- */
+  function smoothScrollToId(id, offsetPx = 80) {
+    const target = document.getElementById(id);
+    if (!target) return;
+
+    const y = target.getBoundingClientRect().top + window.pageYOffset - offsetPx;
+    try {
+      window.scrollTo({ top: y, behavior: "smooth" });
+    } catch (e) {
+      window.scrollTo(0, y);
+    }
+  }
+
+  /* =========================================================
+     1) ハンバーガーメニュー：開閉
+  ========================================================= */
+  function initMenuDrawer() {
+    const html = document.documentElement;
+
+    const menuBtn = $("#menuBtn");
+    const menuDrawer = $("#menuDrawer");
+    const menuBackdrop = $("#menuBackdrop");
+    const menuClose = $("#menuClose");
+    const menuGroups = $("#menuGroups");
+
+    if (!menuBtn || !menuDrawer || !menuGroups) return;
+
+    function openMenu() {
+      html.classList.add("menu-open");
+      setAriaExpanded(menuBtn, true);
+      setAriaHidden(menuDrawer, false);
+
+      // 直近で目次を更新（セクションが増減しても追随）
+      buildMenu(menuGroups, closeMenu);
+
+      // フォーカスを「閉じる」に寄せる（あれば）
+      if (menuClose) menuClose.focus();
+    }
+
+    function closeMenu() {
+      html.classList.remove("menu-open");
+      setAriaExpanded(menuBtn, false);
+      setAriaHidden(menuDrawer, true);
+
+      // フォーカスをハンバーガーに戻す
+      menuBtn.focus();
+    }
+
+    on(menuBtn, "click", () => {
+      const isOpen = html.classList.contains("menu-open");
+      if (isOpen) closeMenu();
+      else openMenu();
+    });
+
+    on(menuBackdrop, "click", closeMenu);
+    on(menuClose, "click", closeMenu);
+
+    // ESCで閉じる
+    on(document, "keydown", (e) => {
+      if (e.key !== "Escape") return;
+      if (!html.classList.contains("menu-open")) return;
+      closeMenu();
+    });
+
+    // 画面がリサイズされたときに無理に開いたままにならないように
+    on(window, "resize", () => {
+      if (!html.classList.contains("menu-open")) return;
+      // iOS回転などでレイアウト崩れを避けるため一旦閉じる
+      closeMenu();
+    });
+  }
+
+  /* =========================================================
+     2) 目次自動生成：実在する section[id] を拾う
+        - 「どのUIがあるか」は index.html に書かれているものだけ前提
+  ========================================================= */
+  function getSectionTitle(sectionEl) {
+    // 優先：h2 → h3 → data-title → id
+    const h2 = $("h2", sectionEl);
+    if (h2 && (h2.textContent || "").trim()) return (h2.textContent || "").trim();
+
+    const h3 = $("h3", sectionEl);
+    if (h3 && (h3.textContent || "").trim()) return (h3.textContent || "").trim();
+
+    const dt = sectionEl.getAttribute("data-title");
+    if (dt) return dt;
+
+    return sectionEl.id || "section";
+  }
+
+  function buildMenu(menuGroupsEl, closeMenuFn) {
+    if (!menuGroupsEl) return;
+
+    // 既存をクリア
+    menuGroupsEl.innerHTML = "";
+
+    const main = $("#main");
+    if (!main) return;
+
+    // section[id] を収集（固定CTAやfooter等は除外）
+    const sections = $$("section[id]", main).filter((s) => {
+      const id = (s.id || "").trim();
+      if (!id) return false;
+      if (id === "page-top") return false;
+      return true;
+    });
+
+    // 追加ブロック（glp-landing）は main の外なので個別に拾う
+    const glpLanding = $("#glp-landing");
+    const extra = [];
+    if (glpLanding && glpLanding.id) extra.push(glpLanding);
+
+    const allSections = [...extra, ...sections];
+
+    // グループ分け（idで固定）
+    const groupDefs = [
+      {
+        title: "はじめに",
+        ids: ["glp-landing"]
+      },
+      {
+        title: "法人・登録",
+        ids: ["corp-setup", "plans", "sole-setup", "personal-account"]
+      },
+      {
+        title: "確認・規約",
+        ids: ["not-for", "precheck", "disclaimer"]
+      }
     ];
-    const sanitize = s => (s||'').trim().replace(/\s+/g,' ').slice(0,120);
-    function ensureId(detailsEl, secId, label, idx){
-      if (detailsEl.id) return detailsEl.id;
-      const base = (secId + '-' + (label||'item') + '-' + (idx+1))
-        .toLowerCase().replace(/[^\w\-]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-      let id = base || `${secId}-d-${idx+1}`, n=2;
-      while (document.getElementById(id)) id = `${base}-${n++}`;
-      detailsEl.id = id; return id;
-    }
-    function closeMenuSoft(){
-      html.classList.remove('menu-open');
-      menuDrawer?.setAttribute('aria-hidden','true');
-      menuBtn?.setAttribute('aria-expanded','false');
-    }
-    wrap.innerHTML = '';
-    SECTIONS.forEach(([secId, label])=>{
-      const sec = document.getElementById(secId); if (!sec) return;
-      const group = document.createElement('div'); group.className='menu-group';
-      if (secId!=='plans'){ const h4=document.createElement('h4'); h4.textContent=label; group.appendChild(h4); }
-      const ul=document.createElement('ul'); ul.className='menu-list';
-      sec.querySelectorAll(':scope .accordion > details > summary').forEach((sum, idx)=>{
-        const det = sum.closest('details'); if (!det) return;
-        const id  = ensureId(det, secId, sum.textContent, idx);
-        const li=document.createElement('li'); const a=document.createElement('a');
-        a.href=`#${id}`; a.textContent=sanitize(sum.textContent);
-        a.addEventListener('click', ()=>{ det.open=true; closeMenuSoft(); });
-        li.appendChild(a); ul.appendChild(li);
+
+    // まずは「見つかったものだけ」作る
+    const byId = new Map(allSections.map((s) => [s.id, s]));
+    const used = new Set();
+
+    groupDefs.forEach((g) => {
+      const items = g.ids
+        .map((id) => byId.get(id))
+        .filter(Boolean);
+
+      if (items.length === 0) return;
+
+      usedAddAll(items, used);
+
+      const groupEl = document.createElement("div");
+      groupEl.className = "menu-group";
+
+      const h = document.createElement("h4");
+      h.textContent = g.title;
+      groupEl.appendChild(h);
+
+      const ul = document.createElement("ul");
+      ul.className = "menu-list";
+
+      items.forEach((sec) => {
+        ul.appendChild(makeMenuItem(sec.id, getSectionTitle(sec), closeMenuFn));
       });
-      group.appendChild(ul); wrap.appendChild(group);
+
+      groupEl.appendChild(ul);
+      menuGroupsEl.appendChild(groupEl);
     });
-  })();
 
-  /* --- 3) 言語ドロワー --- */
-  const langBtn      = $('#langBtn');
-  const langDrawer   = $('#langDrawer');
-  const langBackdrop = $('#langBackdrop');
-  const langClose    = $('#langClose');
-  const langList     = $('#langList');
-  const langSearch   = $('#langSearch');
+    // グループ定義に入っていない section も「その他」として追加
+    const rest = allSections.filter((s) => !used.has(s.id));
+    if (rest.length > 0) {
+      const groupEl = document.createElement("div");
+      groupEl.className = "menu-group";
 
-  function setLang(open){
-    html.classList.toggle('lang-open', open);
-    if (langDrawer) langDrawer.setAttribute('aria-hidden', String(!open));
-    if (langBtn)    langBtn.setAttribute('aria-expanded', String(open));
-  }
-  const openLang  = ()=> { loadGTranslate(); setLang(true); setTimeout(buildLangList, 0); };
-  const closeLang = ()=> setLang(false);
+      const h = document.createElement("h4");
+      h.textContent = "その他";
+      groupEl.appendChild(h);
 
-  langBtn      && ['click','touchstart'].forEach(ev=>langBtn.addEventListener(ev, (e)=>{ e.preventDefault(); openLang(); }, {passive:false}));
-  langBackdrop && langBackdrop.addEventListener('click', closeLang);
-  langClose    && langClose.addEventListener('click', closeLang);
-  document.addEventListener('keydown', (e)=>{ if (e.key==='Escape') closeLang(); });
+      const ul = document.createElement("ul");
+      ul.className = "menu-list";
 
-  const dn = (window.Intl && Intl.DisplayNames) ? new Intl.DisplayNames(['en'], {type:'language'}) : null;
-
-  function setGoogTransCookie(code){
-    const exp  = new Date(Date.now()+365*864e5).toUTCString();
-    const host = location.hostname.replace(/^www\./,'');
-    const vals = [`/ja/${code}`, `/auto/${code}`];
-    const domains = ['', `.${host}`];
-    vals.forEach(v=>domains.forEach(dm=>{
-      document.cookie = `googtrans=${encodeURIComponent(v)}; expires=${exp}; path=/` + (dm?`; domain=${dm}`:'');
-    }));
-  }
-  function applyTranslate(code){
-    try{
-      const once = sessionStorage.getItem('gt-once') === '1';
-      setGoogTransCookie(code);
-      if (!once){
-        sessionStorage.setItem('gt-desired', code);
-        sessionStorage.setItem('gt-once', '1');
-        location.reload();
-        return;
-      }
-      const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-      if (sel){
-        sel.value = code;
-        const evt = document.createEvent('HTMLEvents'); evt.initEvent('change', true, true);
-        sel.dispatchEvent(evt);
-      }
-    }catch(_){}
-  }
-  function buildLangList(){
-    const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-    if (!sel || !langList){ setTimeout(buildLangList, 200); return; }
-    const curCookie = decodeURIComponent((document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/)||[])[1] || '');
-    const items = Array.from(sel.options)
-      .filter(o => o.value && o.value !== 'auto')
-      .map(o => {
-        const code = o.value.trim();
-        const name = (dn && dn.of(code.replace('_','-'))) || (o.textContent||code).trim();
-        return {code, name};
-      })
-      .sort((a,b)=> a.name.localeCompare(b.name,'en',{sensitivity:'base'}));
-
-    langList.innerHTML = '';
-    const frag = document.createDocumentFragment();
-    items.forEach(({code,name})=>{
-      const el = document.createElement('div');
-      el.className = 'ls-item' + (curCookie.endsWith('/'+code) ? ' ls-active' : '');
-      el.setAttribute('role','option');
-      el.innerHTML = `<span>${name}</span><span class="ls-code">${code}</span>`;
-      el.addEventListener('click', ()=>{
-        setLang(false);
-        applyTranslate(code);
-        killGoogleBar();
+      rest.forEach((sec) => {
+        ul.appendChild(makeMenuItem(sec.id, getSectionTitle(sec), closeMenuFn));
       });
-      frag.appendChild(el);
-    });
-    langList.appendChild(frag);
 
-    if (langSearch){
-      langSearch.value = '';
-      langSearch.oninput = ()=> {
-        const q = langSearch.value.trim().toLowerCase();
-        $$('.ls-item', langList).forEach(el=>{
-          const txt = (el.textContent||'').toLowerCase();
-          el.style.display = (!q || txt.includes(q)) ? '' : 'none';
-        });
-      };
+      groupEl.appendChild(ul);
+      menuGroupsEl.appendChild(groupEl);
     }
   }
 
-  /* --- 4) Googleの初期化コールバック（グローバルに必要） --- */
-  window.googleTranslateElementInit = function(){
-    try{
-      new google.translate.TranslateElement({pageLanguage:'ja', autoDisplay:false}, 'google_translate_element');
-    }catch(_){}
-    setTimeout(()=>{
-      const desired = sessionStorage.getItem('gt-desired');
-      if (desired){
-        const sel = document.querySelector('#google_translate_element select.goog-te-combo');
-        if (sel){
-          sel.value = desired;
-          const evt = document.createEvent('HTMLEvents'); evt.initEvent('change', true, true);
-          sel.dispatchEvent(evt);
-          sessionStorage.removeItem('gt-desired');
+  function usedAddAll(items, usedSet) {
+    items.forEach((el) => usedSet.add(el.id));
+  }
+
+  function makeMenuItem(targetId, label, closeMenuFn) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.href = `#${targetId}`;
+    a.textContent = label;
+
+    on(a, "click", (e) => {
+      e.preventDefault();
+      // メニューを閉じてから移動
+      if (typeof closeMenuFn === "function") closeMenuFn();
+      // 固定ボタン分オフセットしてスムーズスクロール
+      smoothScrollToId(targetId, 86);
+    });
+
+    li.appendChild(a);
+    return li;
+  }
+
+  /* =========================================================
+     3) 固定CTA：「トップへ」
+  ========================================================= */
+  function initTopButton() {
+    const toTop = $("#toTop");
+    if (!toTop) return;
+
+    on(toTop, "click", (e) => {
+      e.preventDefault();
+      // #page-top があればそこへ。無ければ 0 へ。
+      const topAnchor = $("#page-top");
+      if (topAnchor && topAnchor.id) {
+        smoothScrollToId(topAnchor.id, 0);
+      } else {
+        try {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (err) {
+          window.scrollTo(0, 0);
         }
       }
-    }, 400);
-    setTimeout(buildLangList, 600);
-    const host = $('#google_translate_element');
-    if (host){
-      new MutationObserver(()=>setTimeout(buildLangList,0)).observe(host,{childList:true,subtree:true});
-    }
-  };
-
-  /* --- 5) 見出しの不自然な改行抑止 --- */
-  (function fixHeroHeading(){
-    function patch(el){
-      if (!el || el.dataset.jpFixed) return;
-      const raw = el.textContent || '';
-      if (!raw) return;
-      const withBreakPoints = raw.replace(/([｜|／/])/g, '$1\u200B');
-      el.textContent = '';
-      el.insertAdjacentText('afterbegin', withBreakPoints);
-      el.classList.add('no-jp-break');
-      el.dataset.jpFixed = '1';
-    }
-    const targets = $$('main h1, main h2');
-    targets.forEach(patch);
-    new MutationObserver(()=>targets.forEach(patch)).observe(document.body,{childList:true,subtree:true});
-  })();
-
-  /* --- 6) 為替表の横はみ出し対策 --- */
-  (function () {
-    function markFxTable(){
-      try{
-        document.querySelectorAll('table').forEach(tbl=>{
-          if (tbl.classList.contains('fx-sim')) return;
-          const heads = Array.from(
-            tbl.querySelectorAll('thead th, tr:first-child th, thead td, tr:first-child td')
-          ).map(th => (th.textContent || '').trim());
-          const need  = ['為替シナリオ','1GEL','満期残高','円換算額','損益'];
-          const hit   = need.every(k => heads.some(h => h.includes(k)));
-          if (!hit) return;
-          tbl.classList.add('fx-sim');
-          if (!tbl.parentElement || !tbl.parentElement.classList.contains('fx-wrap')) {
-            const wrap = document.createElement('div'); wrap.className = 'fx-wrap';
-            tbl.parentNode.insertBefore(wrap, tbl); wrap.appendChild(tbl);
-          }
-        });
-      }catch(_){}
-    }
-    if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', markFxTable);
-    }else{
-      markFxTable();
-    }
-  })();
-
-})(); // --- end of base UI scripts ---
-
-/* ===== Compounding Tool v2.1 (currency-safe / only this tool) ===== */
-(function(){
-  const $ = (id)=>document.getElementById(id);
-  const el = {
-    currency: $('cf-currency'),
-    principal: $('cf-principal'),
-    rate: $('cf-rate'),
-    years: $('cf-years'),
-    nper: $('cf-nper'),
-    isComp: $('cf-is-comp'),
-    ack: $('cf-ack'),
-    run: $('cf-run'),
-    clear: $('cf-clear'),
-    out: $('cf-out'),
-    rateDisp: $('cf-rate-display')
-  };
-  if(!el.currency) return; // 未配置なら何もしない
-
-  const fmtMoney = (val, ccy, locale) => {
-    try {
-      return new Intl.NumberFormat(locale || undefined, { style:'currency', currency: ccy, maximumFractionDigits: 2 }).format(val);
-    } catch(_) {
-      return (val.toLocaleString()) + ' ' + ccy;
-    }
-  };
-  const getLocale = ()=> {
-    const opt = el.currency.options[el.currency.selectedIndex];
-    return opt && opt.dataset.locale || undefined;
-  };
-
-  // 年率表示の同期
-  const syncRate = ()=>{
-    const r = parseFloat(el.rate.value || '0');
-    el.rateDisp.textContent = isFinite(r) ? r.toFixed(2) + '%' : '--';
-  };
-  el.rate.addEventListener('input', syncRate);
-  syncRate();
-
-  // 年率プリセット
-  document.querySelectorAll('.cf-chip[data-rate]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      el.rate.value = parseFloat(b.dataset.rate).toFixed(2);
-      syncRate();
     });
-  });
+  }
 
-  // 同意チェックでボタン有効化
-  const toggleRun = ()=> { el.run.disabled = !el.ack.checked; };
-  el.ack.addEventListener('change', toggleRun);
-  toggleRun();
+  /* =========================================================
+     4) 複利ツール（#cf-tool）
+        - 計算式：
+          複利：A = P(1 + r/n)^(n*t)
+          単利：A = P(1 + r*t)
+========================================================= */
+  function initCompoundTool() {
+    const tool = $("#cf-tool");
+    if (!tool) return;
 
-  // 実行
-  el.run.addEventListener('click', (e)=>{
-    e.preventDefault();
-    const ccy = el.currency.value;
-    const locale = getLocale();
-    const P = Math.max(0, parseFloat(el.principal.value || '0'));
-    const r = (parseFloat(el.rate.value || '0')/100);
-    const t = Math.max(0, parseFloat(el.years.value || '0'));
-    const m = Math.max(1, parseInt(el.nper.value || '1', 10));
-    const isComp = el.isComp.checked;
+    const currencySel = $("#cf-currency", tool);
+    const principalInp = $("#cf-principal", tool);
+    const rateInp = $("#cf-rate", tool);
+    const rateDisp = $("#cf-rate-display", tool);
+    const yearsInp = $("#cf-years", tool);
+    const nperSel = $("#cf-nper", tool);
+    const isCompChk = $("#cf-is-comp", tool);
+    const ackChk = $("#cf-ack", tool);
+    const runBtn = $("#cf-run", tool);
+    const clearBtn = $("#cf-clear", tool);
+    const out = $("#cf-out", tool);
 
-    if(!isFinite(P) || !isFinite(r) || !isFinite(t) || !isFinite(m)){
-      el.out.innerHTML = '<p class="muted">入力値を確認してください。</p>';
+    if (!currencySel || !principalInp || !rateInp || !yearsInp || !nperSel || !isCompChk || !ackChk || !runBtn || !clearBtn || !out) {
       return;
     }
 
-    const A = isComp ? P * Math.pow(1 + r/m, m*t) : P * (1 + r * t);
-    const interest = Math.max(0, A - P);
+    // 表示更新：年率の表示
+    function updateRateDisplay() {
+      const r = safeNumber(rateInp.value, 0);
+      rateDisp.textContent = `${toFixed2(r)}%`;
+    }
 
-    el.out.innerHTML = `
-      <h5>計算結果（概算）</h5>
-      <div class="cf-kv">
-        <div>通貨</div><div>${ccy}</div>
-        <div>年率</div><div>${(r*100).toFixed(2)}%</div>
-        <div>期間</div><div>${t} 年</div>
-        <div>複利回数</div><div>${isComp ? (m + ' 回/年') : '単利（年1回換算）'}</div>
-        <div>元本</div><div>${fmtMoney(P, ccy, locale)}</div>
-        <div>総利息（概算）</div><div>${fmtMoney(interest, ccy, locale)}</div>
-        <div>満期残高（概算）</div><div><strong>${fmtMoney(A, ccy, locale)}</strong></div>
-      </div>
-      <p class="text-sm muted" style="margin-top:.5rem;">※ 税・手数料・為替・課税関係は含みません。教育・参考目的であり、投資の勧誘・推奨ではありません。</p>
-    `;
-  });
+    // 同意チェックで「結果を表示」をON/OFF
+    function updateRunEnabled() {
+      runBtn.disabled = !ackChk.checked;
+    }
 
-  // クリア
-  el.clear.addEventListener('click', ()=>{
-    el.principal.value = '1000000';
-    el.rate.value = '10.00';
-    el.years.value = '7';
-    el.nper.value = '12';
-    el.isComp.checked = true;
-    syncRate();
-    el.out.innerHTML = '';
-  });
-})();
-/* --- plans: 料金と手続き日数の表だけを横スク対応にする --- */
-(function(){
-  // 料金プランのセクションだけを見る
-  const sec = document.getElementById('plans');
-  if (!sec) return;
+    // 通貨フォーマット
+    function getCurrencyMeta() {
+      const opt = currencySel.options[currencySel.selectedIndex];
+      const locale = opt ? (opt.getAttribute("data-locale") || "ja-JP") : "ja-JP";
+      const symbol = opt ? (opt.getAttribute("data-symbol") || "") : "";
+      const code = opt ? (opt.value || "JPY") : "JPY";
+      return { locale, symbol, code };
+    }
 
-  // セクション内の最初の table（早見表）だけを対象にする
-  const tbl = sec.querySelector('table');
-  if (!tbl) return;
+    function formatMoney(value, meta) {
+      // symbol を付ける（JPYでも「¥」にする）
+      const v = Number.isFinite(value) ? value : 0;
+      try {
+        // 通貨コードでのformatだとシンボルが変わる場合があるので、数値フォーマット＋symbolで統一
+        const num = new Intl.NumberFormat(meta.locale, { maximumFractionDigits: 2 }).format(v);
+        return `${meta.symbol}${num}`;
+      } catch (e) {
+        // Intlが無い環境の保険
+        return `${meta.symbol}${String(round2(v))}`;
+      }
+    }
 
-  // すでにラップ済みなら二重にラップしない
-  if (tbl.parentElement && tbl.parentElement.classList.contains('plan-table-wrap')) {
-    return;
+    function renderResult(kvPairs, title) {
+      out.innerHTML = "";
+
+      const h = document.createElement("h5");
+      h.textContent = title;
+      out.appendChild(h);
+
+      const kv = document.createElement("div");
+      kv.className = "cf-kv";
+
+      kvPairs.forEach(([k, v]) => {
+        const dk = document.createElement("div");
+        dk.textContent = k;
+
+        const dv = document.createElement("div");
+        dv.style.fontWeight = "800";
+        dv.textContent = v;
+
+        kv.appendChild(dk);
+        kv.appendChild(dv);
+      });
+
+      out.appendChild(kv);
+    }
+
+    function validateInputs() {
+      const principal = safeNumber(principalInp.value, NaN);
+      const rate = safeNumber(rateInp.value, NaN);
+      const years = safeNumber(yearsInp.value, NaN);
+      const nper = safeNumber(nperSel.value, NaN);
+
+      const errors = [];
+      if (!Number.isFinite(principal) || principal < 0) errors.push("元本は 0 以上の数字にしてください。");
+      if (!Number.isFinite(rate) || rate < 0) errors.push("年率（%）は 0 以上の数字にしてください。");
+      if (!Number.isFinite(years) || years < 0) errors.push("年数は 0 以上の数字にしてください。");
+      if (!Number.isFinite(nper) || nper <= 0) errors.push("回数/年は 1 以上を選んでください。");
+
+      return {
+        ok: errors.length === 0,
+        errors,
+        principal,
+        rate,
+        years,
+        nper
+      };
+    }
+
+    function calcCompound(P, ratePercent, years, nper) {
+      const r = ratePercent / 100;
+      // A = P(1 + r/n)^(n*t)
+      const A = P * Math.pow(1 + (r / nper), nper * years);
+      const interest = A - P;
+      return { A, interest };
+    }
+
+    function calcSimple(P, ratePercent, years) {
+      const r = ratePercent / 100;
+      // A = P(1 + r*t)
+      const A = P * (1 + r * years);
+      const interest = A - P;
+      return { A, interest };
+    }
+
+    function run() {
+      if (!ackChk.checked) return;
+
+      const meta = getCurrencyMeta();
+      const v = validateInputs();
+
+      if (!v.ok) {
+        renderResult(
+          [
+            ["エラー", "入力が正しくありません"],
+            ["内容", v.errors.join(" / ")]
+          ],
+          "計算できません"
+        );
+        return;
+      }
+
+      const isComp = !!isCompChk.checked;
+      const modeLabel = isComp ? "複利" : "単利";
+
+      let res;
+      if (isComp) {
+        res = calcCompound(v.principal, v.rate, v.years, v.nper);
+      } else {
+        res = calcSimple(v.principal, v.rate, v.years);
+      }
+
+      const total = res.A;
+      const interest = res.interest;
+
+      // 参考：年率を固定して、nperを変えたときの差も少しだけ提示
+      const resYearly = calcCompound(v.principal, v.rate, v.years, 1);
+      const diffVsYearly = total - resYearly.A;
+
+      const kvPairs = [
+        ["計算モード", modeLabel],
+        ["通貨", `${meta.code}`],
+        ["元本", formatMoney(v.principal, meta)],
+        ["年率", `${toFixed2(v.rate)}%`],
+        ["年数", `${stripTrailingZeros(v.years)} 年`],
+        ...(isComp ? [["回数/年", `${Math.round(v.nper)}`]] : []),
+        ["最終金額（概算）", formatMoney(round2(total), meta)],
+        ["増えた分（概算）", formatMoney(round2(interest), meta)],
+        ...(isComp ? [["参考：年1回複利との差（概算）", formatMoney(round2(diffVsYearly), meta)]] : [])
+      ];
+
+      renderResult(kvPairs, "結果（概算）");
+    }
+
+    function clear() {
+      // 初期値に戻す（HTMLのvalueに合わせる）
+      currencySel.value = "JPY";
+      principalInp.value = "1000000";
+      rateInp.value = "10.00";
+      yearsInp.value = "7";
+      nperSel.value = "12";
+      isCompChk.checked = true;
+      ackChk.checked = false;
+
+      updateRateDisplay();
+      updateRunEnabled();
+
+      out.innerHTML = "";
+    }
+
+    // チップ（5%,8%,10%,12%）
+    $$(".cf-chip", tool).forEach((chip) => {
+      on(chip, "click", () => {
+        const r = chip.getAttribute("data-rate");
+        if (r == null) return;
+        rateInp.value = String(r);
+        updateRateDisplay();
+      });
+    });
+
+    on(rateInp, "input", updateRateDisplay);
+    on(ackChk, "change", updateRunEnabled);
+    on(runBtn, "click", run);
+    on(clearBtn, "click", clear);
+
+    // 初期表示
+    updateRateDisplay();
+    updateRunEnabled();
   }
 
-  // ラッパーを作って table を中に入れる
-  const wrap = document.createElement('div');
-  wrap.className = 'plan-table-wrap';
-  tbl.parentNode.insertBefore(wrap, tbl);
-  wrap.appendChild(tbl);
+  /* -----------------------------
+     数値ヘルパー
+  ----------------------------- */
+  function safeNumber(v, fallback) {
+    const n = Number(String(v).trim());
+    return Number.isFinite(n) ? n : fallback;
+  }
+
+  function round2(n) {
+    return Math.round(n * 100) / 100;
+  }
+
+  function toFixed2(n) {
+    const x = Number.isFinite(n) ? n : 0;
+    return (Math.round(x * 100) / 100).toFixed(2);
+  }
+
+  function stripTrailingZeros(n) {
+    // 7.0 → "7" / 7.5 → "7.5"
+    const x = Number.isFinite(n) ? n : 0;
+    const s = String(x);
+    if (s.includes(".")) return s.replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1");
+    return s;
+  }
+
+  /* =========================================================
+     起動
+  ========================================================= */
+  function boot() {
+    initMenuDrawer();
+    initTopButton();
+    initCompoundTool();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
 })();
