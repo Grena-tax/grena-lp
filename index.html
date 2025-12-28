@@ -13,7 +13,7 @@
 
 <!-- キャッシュバスター更新（任意で更新してください） -->
 <link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20251110a">
+<link rel="stylesheet" href="./patch.css?v=20251229a">
 <meta name="theme-color" content="#111827">
 
 <!-- ▼ Grena LP 用 追加スタイル -->
@@ -30,42 +30,8 @@
     padding: 24px 16px 40px;
   }
 
-  /* ヒーロー：背景写真＋オーバーレイ（Studioのイメージに寄せる） */
-  .glp-hero {
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    min-height: 260px;
-    margin-bottom: 24px;
-    color: #ffffff;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  }
-  .glp-hero-bg {
-    position: absolute;
-    inset: 0;
-  }
-  .glp-hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: brightness(0.78);
-    transform: scale(1.02);
-  }
-  .glp-hero-gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.20) 0%, rgba(0,0,0,0.65) 65%, rgba(0,0,0,0.9) 100%);
-  }
-  .glp-hero-content {
-    position: relative;
-    z-index: 1;
-    padding: 24px 18px 26px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    max-width: 540px;
-  }
+  /* ヒーロー：※ patch.css 側で統合管理（ここには置かない） */
+
   .glp-hero-kicker {
     display: inline-flex;
     align-items: center;
@@ -76,32 +42,7 @@
     font-size: 11px;
     margin-bottom: 10px;
   }
-  .glp-hero-kicker span {
-    display: inline-block;
-  }
-  .glp-hero-title {
-    font-size: 20px;
-    font-weight: 800;
-    line-height: 1.4;
-    margin: 0 0 8px;
-    letter-spacing: .06em;
-  }
-  .glp-hero-lead {
-    font-size: 13px;
-    line-height: 1.7;
-    margin: 0 0 10px;
-  }
-  .glp-hero-note {
-    font-size: 11px;
-    line-height: 1.6;
-    color: #e5e7eb;
-    margin: 0 0 14px;
-  }
-  .glp-hero-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+  .glp-hero-kicker span { display: inline-block; }
 
   /* 水色のボタン共通 */
   .glp-btn {
@@ -122,26 +63,15 @@
     color: #fff;
     box-shadow: 0 8px 18px rgba(37,99,235,0.45);
   }
-  .glp-btn-main:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-  }
+  .glp-btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
   .glp-btn-sub {
     background: rgba(15,23,42,0.86);
     color: #e0f2fe;
     border: 1px solid rgba(148,163,184,0.9);
   }
-  .glp-btn-sub:hover {
-    opacity: 0.9;
-  }
-  .glp-btn-green {
-    background: #18a34a;
-    color: #fff;
-  }
-  .glp-btn-gray {
-    background: #d4d4d8;
-    color: #333;
-  }
+  .glp-btn-sub:hover { opacity: 0.9; }
+  .glp-btn-green { background: #18a34a; color: #fff; }
+  .glp-btn-gray { background: #d4d4d8; color: #333; }
 
   /* 法人税などの帯 */
   .glp-band {
@@ -161,9 +91,7 @@
     margin: 0;
     padding-left: 16px;
   }
-  .glp-band-list li {
-    margin: 2px 0;
-  }
+  .glp-band-list li { margin: 2px 0; }
   .glp-band-note {
     font-size: 10px;
     color: #9ca3af;
@@ -171,9 +99,7 @@
   }
 
   /* ジョージアってどんな国？ */
-  .glp-country {
-    margin-bottom: 24px;
-  }
+  .glp-country { margin-bottom: 24px; }
   .glp-country-title {
     font-size: 15px;
     font-weight: 700;
@@ -232,32 +158,9 @@
 
   /* 少し広い画面（PC）用 */
   @media (min-width: 768px) {
-    .glp-inner {
-      padding: 32px 16px 48px;
-    }
-    .glp-hero {
-      min-height: 360px;
-      border-radius: 18px;
-    }
-    .glp-hero-content {
-      padding: 32px 32px 34px;
-      max-width: 620px;
-    }
-    .glp-hero-title {
-      font-size: 26px;
-    }
-    .glp-hero-lead {
-      font-size: 14px;
-    }
-    .glp-hero-note {
-      font-size: 12px;
-    }
-    .glp-country-photos img {
-      height: 120px;
-    }
-    .glp-cardgrid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
+    .glp-inner { padding: 32px 16px 48px; }
+    .glp-country-photos img { height: 120px; }
+    .glp-cardgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   }
 </style>
 
@@ -288,7 +191,7 @@
 <!-- ページ最上部アンカー -->
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ（既存のまま） -->
+<!-- 右上：言語スイッチ（既存のまま：ただし patch.css で完全非表示） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -331,9 +234,9 @@
 
     <!-- ヒーロー（写真＋テキストオーバーレイ） -->
     <section class="glp-hero">
-      <div class="glp-hero-bg">
-        <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img">
-        <div class="glp-hero-gradient"></div>
+      <div class="glp-hero-bg" aria-hidden="true">
+        <img src="tbilisi-hero.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img" decoding="async" fetchpriority="high">
+        <div class="glp-hero-gradient" aria-hidden="true"></div>
       </div>
       <div class="glp-hero-content">
         <div class="glp-hero-kicker">
@@ -383,11 +286,11 @@
       <p class="glp-country-title">ジョージアってどんな国？</p>
       <div class="glp-country-photos">
         <!-- 城・教会 -->
-        <img src="田舎の教会のデザイン.jpg 3.jpg" alt="ジョージアの教会と城塞">
+        <img src="田舎の教会のデザイン.jpg 3.jpg" alt="ジョージアの教会と城塞" loading="lazy" decoding="async">
         <!-- 伝統料理（ハチャプリ） -->
-        <img src="Untitled design 3.jpg" alt="ジョージアのチーズパン・ハチャプリ">
+        <img src="Untitled design 3.jpg" alt="ジョージアのチーズパン・ハチャプリ" loading="lazy" decoding="async">
         <!-- 自由広場など -->
-        <img src="Untitled design 2.jpg" alt="ジョージア・トビリシの広場">
+        <img src="Untitled design 2.jpg" alt="ジョージア・トビリシの広場" loading="lazy" decoding="async">
       </div>
     </section>
 
@@ -396,7 +299,7 @@
 
       <!-- 1. ジョージア法人設立 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">ジョージア法人設立</h3>
         <p class="glp-card-text">
           渡航不要でも手続き可能な法人設立フローを、現地の専門家と連携してサポートします。
@@ -406,7 +309,7 @@
 
       <!-- 2. ジョージア個人事業主 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">ジョージア個人事業主（IE）登録</h3>
         <p class="glp-card-text">
           ジョージア政府が認める正規制度「IE登録」のご案内と、登録手続きの実務サポート（条件あり）。
@@ -416,7 +319,7 @@
 
       <!-- 3. ジョージア銀行口座開設 -->
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag">
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">ジョージア銀行口座開設</h3>
         <p class="glp-card-text">
           非居住者でも開設が検討できる銀行口座について、リスク・条件を含めた一般情報と手続きサポートを提供します。
@@ -426,7 +329,7 @@
 
       <!-- 4. 和食店をあなたの国に -->
       <article class="glp-card">
-        <img src="Untitled design 3.jpg" alt="寿司など和食イメージ" class="glp-card-flag">
+        <img src="Untitled design 3.jpg" alt="寿司など和食イメージ" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">和食店をあなたの国に</h3>
         <p class="glp-card-text">
           寿司が握れなくても大丈夫。現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認までをサポートします。
@@ -436,7 +339,7 @@
 
       <!-- 5. 海外不動産購入・賃貸 -->
       <article class="glp-card">
-        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag">
+        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">海外不動産購入・賃貸</h3>
         <p class="glp-card-text">
           ジョージアを含む海外不動産について、現地パートナーと連携しながら、物件選び・契約プロセスのサポートを行います。
@@ -446,7 +349,7 @@
 
       <!-- 6. その他・企画サポート -->
       <article class="glp-card">
-        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag">
+        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag" loading="lazy" decoding="async">
         <h3 class="glp-card-title">その他・企画サポート</h3>
         <p class="glp-card-text">
           企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計をお手伝いします。
@@ -586,7 +489,6 @@
         <div class="content">
           <ul>
             <li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li>
-            <!-- MoU締結日の記載を削除 -->
             <li>提携範囲：登記、各種登録、帳簿・契約の事務サポート等</li>
             <li>法人ID：406365525</li>
           </ul>
@@ -650,32 +552,37 @@
 
           <!-- 料金＋手続き日数の早見表 -->
           <h3 class="smallish">料金と手続き日数の早見表</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>内容</th>
-                <th>サポート料金（税込）</th>
-                <th>手続きの目安</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>法人設立 基本プラン</td>
-                <td>¥330,000〜</td>
-                <td>法人登記：現地営業日ベース 7〜10営業日程度</td>
-              </tr>
-              <tr>
-                <td>個人事業主（IE＋SBS）</td>
-                <td>¥288,000</td>
-                <td>登録完了：オンライン申請ベース 7〜10営業日程度</td>
-              </tr>
-              <tr>
-                <td>個人口座開設サポート</td>
-                <td>¥258,000</td>
-                <td>開設完了：書類到着〜審査完了まで 数週間〜</td>
-              </tr>
-            </tbody>
-          </table>
+
+          <!-- ★修正：横スク対応のラッパーを追加 -->
+          <div class="plan-table-wrap" aria-label="料金と手続き日数の早見表（横スクロール対応）">
+            <table>
+              <thead>
+                <tr>
+                  <th>内容</th>
+                  <th>サポート料金（税込）</th>
+                  <th>手続きの目安</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>法人設立 基本プラン</td>
+                  <td>¥330,000〜</td>
+                  <td>法人登記：現地営業日ベース 7〜10営業日程度</td>
+                </tr>
+                <tr>
+                  <td>個人事業主（IE＋SBS）</td>
+                  <td>¥288,000</td>
+                  <td>登録完了：オンライン申請ベース 7〜10営業日程度</td>
+                </tr>
+                <tr>
+                  <td>個人口座開設サポート</td>
+                  <td>¥258,000</td>
+                  <td>開設完了：書類到着〜審査完了まで 数週間〜</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <p class="text-sm muted">※ <strong>いずれも目安です。</strong>案件や時期、銀行・当局の方針により<strong>前後します。</strong></p>
 
           <details>
@@ -1280,33 +1187,18 @@
 
 <!-- 末尾読み込み -->
 <script src="./script.js?v=20251110a" defer></script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&hl=en" async></script>
 
 <!-- ==============================
-  JP/EN 切替（ヒーロートップだけ）＋ Google翻訳UIの除去
-  ※アコーディオン/ハンバーガー/複利計算などには干渉しません
+  JP/EN 切替（ヒーロートップだけ）
+  ※Google翻訳は使用しません（UI除去・外部翻訳JSは読み込みません）
 ================================== -->
 
 <style id="lp-lang-switch-style">
-  /* Google 翻訳UIを強制的に非表示（念のため） */
-  .goog-te-banner-frame,
-  #goog-gt-tt,
-  .goog-te-balloon-frame,
-  .goog-te-menu-frame,
-  .goog-te-gadget,
-  #google_translate_element,
-  iframe.goog-te-banner-frame {
-    display: none !important;
-    visibility: hidden !important;
-    height: 0 !important;
-  }
-  body { top: 0px !important; }
-
   /* 言語スイッチ（右上固定・小さめ） */
   #lpLangSwitch {
     position: fixed;
     top: calc(env(safe-area-inset-top, 0px) + 12px);
-    right: calc(env(safe-area-inset-right, 0px) + 12px);
+    right: calc(env(safe-area-inset-right, 0px) + 12px + 48px + 10px); /* ハンバーガーの左に置く */
     z-index: 9999;
     display: flex;
     gap: 8px;
@@ -1336,43 +1228,7 @@
 (() => {
   "use strict";
 
-  /* ========= 0) Google翻訳UIを消す（表示もDOMも） ========= */
-  function removeGoogleTranslateUI() {
-    const selectors = [
-      ".goog-te-banner-frame",
-      "#goog-gt-tt",
-      ".goog-te-balloon-frame",
-      ".goog-te-menu-frame",
-      ".goog-te-gadget",
-      "#google_translate_element",
-      "iframe.goog-te-banner-frame"
-    ];
-    selectors.forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => el.remove());
-    });
-
-    // 「Select language」「Powered by Google Translate」を含む塊も削除（HTML構造が不明でも確実に消す）
-    const killWords = [/Select language/i, /Powered by Google Translate/i];
-    const all = Array.from(document.querySelectorAll("body *"));
-    all.forEach(el => {
-      if (!el || el.childElementCount > 0) return;
-      const t = (el.textContent || "").trim();
-      if (!t) return;
-      if (killWords.some(r => r.test(t))) {
-        const box = el.parentElement;
-        if (box) box.remove();
-      }
-    });
-
-    // 変な余白が残るのを防ぐ
-    document.body.style.top = "0px";
-    document.documentElement.classList.remove("translated-ltr", "translated-rtl");
-  }
-
-  /* ========= 1) ヒーロートップ領域を特定 =========
-     まず「ジョージアで、はじめる。」を含む要素を探し、
-     その近い親（section/header/main/div）をヒーローとして扱います。
-  */
+  /* ========= 1) ヒーロートップ領域を特定 ========= */
   function getHeroRoot() {
     const needle = "ジョージアで、はじめる。";
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
@@ -1382,10 +1238,10 @@
       if (txt.includes(needle)) {
         const el = node.parentElement;
         if (!el) return null;
-        return el.closest("header, section, main, div") || el.parentElement || el;
+        return el.closest("section.glp-hero") || el.closest("header, section, main, div") || el.parentElement || el;
       }
     }
-    return null;
+    return document.querySelector("section.glp-hero") || null;
   }
 
   /* ========= 2) 翻訳（ヒーロー内だけ置換） ========= */
@@ -1476,7 +1332,6 @@
 
   /* ========= 起動 ========= */
   function boot() {
-    removeGoogleTranslateUI();
     mountSwitch();
 
     const saved = localStorage.getItem("lp_lang");
