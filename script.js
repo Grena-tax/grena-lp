@@ -1,6 +1,6 @@
 /* =========================================================
    script.js（全文）
-   - ハンバーガーメニュー：開閉／目次自動生成
+   - ハンバーガーメニュー：開閉／目次自動生成（section + accordion details も拾う）
    - 固定CTA：「トップへ」スムーズスクロール
    - 複利ツール（#cf-tool）：計算・表示・バリデーション
    ※ 既存のHTML要素が無い場合でもエラーにならないよう防御しています
@@ -31,6 +31,59 @@
   }
 
   /* -----------------------------
+     現在の言語判定（可能な範囲で安全に推定）
+     - 優先：html[lang] / html[data-lang]
+     - 補助：class名（lang-en 等）
+     - 補助：ENボタンがaria-selected/pressed等でアクティブ
+  ----------------------------- */
+  function getCurrentLang() {
+    const html = document.documentElement;
+
+    const langAttr = String(html.getAttribute("lang") || "").toLowerCase();
+    if (langAttr.startsWith("en")) return "en";
+    if (langAttr.startsWith("ja")) return "ja";
+
+    const dataLang = String(html.getAttribute("data-lang") || "").toLowerCase();
+    if (dataLang === "en") return "en";
+    if (dataLang === "ja") return "ja";
+
+    if (
+      html.classList.contains("lang-en") ||
+      html.classList.contains("en") ||
+      document.body.classList.contains("lang-en") ||
+      document.body.classList.contains("en")
+    ) {
+      return "en";
+    }
+
+    const pressedEn =
+      document.querySelector('[data-lang="en"][aria-pressed="true"]') ||
+      document.querySelector('[data-lang="en"][aria-selected="true"]') ||
+      document.querySelector('[data-lang="en"][aria-current="true"]');
+    if (pressedEn) return "en";
+
+    const likelyEnActive = $$(".lang-switch button, .lang-switch a, button, a")
+      .slice(0, 80)
+      .some((el) => {
+        const t = String(el.textContent || "").trim().toUpperCase();
+        if (t !== "EN") return false;
+        const ap = el.getAttribute("aria-pressed");
+        const as = el.getAttribute("aria-selected");
+        const ac = el.getAttribute("aria-current");
+        return (
+          ap === "true" ||
+          as === "true" ||
+          ac === "true" ||
+          el.classList.contains("active") ||
+          el.classList.contains("is-active")
+        );
+      });
+    if (likelyEnActive) return "en";
+
+    return "ja";
+  }
+
+  /* -----------------------------
      スムーズスクロール（固定ヘッダー分だけオフセット）
   ----------------------------- */
   function smoothScrollToId(id, offsetPx = 80) {
@@ -43,6 +96,17 @@
     } catch (e) {
       window.scrollTo(0, y);
     }
+  }
+
+  function makeSafeId(s) {
+    const base = String(s || "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w\-]+/g, "-")
+      .replace(/\-+/g, "-")
+      .replace(/^\-|\-$/g, "");
+    return base || "item";
   }
 
   /* =========================================================
@@ -99,27 +163,56 @@
     // 画面がリサイズされたときに無理に開いたままにならないように
     on(window, "resize", () => {
       if (!html.classList.contains("menu-open")) return;
-      // iOS回転などでレイアウト崩れを避けるため一旦閉じる
       closeMenu();
     });
   }
 
   /* =========================================================
-     2) 目次自動生成：実在する section[id] を拾う
-        - 「どのUIがあるか」は index.html に書かれているものだけ前提
+     2) 目次自動生成
+        - section[id] を拾う
+        - さらに「.accordion > details」も拾ってメニューに入れる
+        - EN表示にしたい場合は data-title-en / data-title-ja を使える（あれば）
   ========================================================= */
-  function getSectionTitle(sectionEl) {
-    // 優先：h2 → h3 → data-title → id
+  function getSectionTitle(sectionEl, lang) {
+    // まず data-title-* を最優先（あれば）
+    if (lang === "en") {
+      const en = sectionEl.getAttribute("data-title-en");
+      if (en && String(en).trim()) return String(en).trim();
+    } else {
+      const ja = sectionEl.getAttribute("data-title-ja");
+      if (ja && String(ja).trim()) return String(ja).trim();
+    }
+
+    const dt = sectionEl.getAttribute("data-title");
+    if (dt && String(dt).trim()) return String(dt).trim();
+
+    // 次に見出し
     const h2 = $("h2", sectionEl);
     if (h2 && (h2.textContent || "").trim()) return (h2.textContent || "").trim();
 
     const h3 = $("h3", sectionEl);
     if (h3 && (h3.textContent || "").trim()) return (h3.textContent || "").trim();
 
-    const dt = sectionEl.getAttribute("data-title");
-    if (dt) return dt;
-
     return sectionEl.id || "section";
+  }
+
+  function getDetailsTitle(detailsEl, lang) {
+    // data-title-* を最優先（あれば）
+    if (lang === "en") {
+      const en = detailsEl.getAttribute("data-title-en");
+      if (en && String(en).trim()) return String(en).trim();
+    } else {
+      const ja = detailsEl.getAttribute("data-title-ja");
+      if (ja && String(ja).trim()) return String(ja).trim();
+    }
+
+    const dt = detailsEl.getAttribute("data-title");
+    if (dt && String(dt).trim()) return String(dt).trim();
+
+    const sum = $("summary", detailsEl);
+    if (sum && (sum.textContent || "").trim()) return (sum.textContent || "").trim();
+
+    return detailsEl.id || "detail";
   }
 
   function buildMenu(menuGroupsEl, closeMenuFn) {
@@ -127,6 +220,8 @@
 
     // 既存をクリア
     menuGroupsEl.innerHTML = "";
+
+    const lang = getCurrentLang();
 
     const main = $("#main");
     if (!main) return;
@@ -148,18 +243,9 @@
 
     // グループ分け（idで固定）
     const groupDefs = [
-      {
-        title: "はじめに",
-        ids: ["glp-landing"]
-      },
-      {
-        title: "法人・登録",
-        ids: ["corp-setup", "plans", "sole-setup", "personal-account"]
-      },
-      {
-        title: "確認・規約",
-        ids: ["not-for", "precheck", "disclaimer"]
-      }
+      { title: lang === "en" ? "Getting started" : "はじめに", ids: ["glp-landing"] },
+      { title: lang === "en" ? "Company / Registration" : "法人・登録", ids: ["corp-setup", "plans", "sole-setup", "personal-account"] },
+      { title: lang === "en" ? "Check / Terms" : "確認・規約", ids: ["not-for", "precheck", "disclaimer"] }
     ];
 
     // まずは「見つかったものだけ」作る
@@ -167,10 +253,7 @@
     const used = new Set();
 
     groupDefs.forEach((g) => {
-      const items = g.ids
-        .map((id) => byId.get(id))
-        .filter(Boolean);
-
+      const items = g.ids.map((id) => byId.get(id)).filter(Boolean);
       if (items.length === 0) return;
 
       usedAddAll(items, used);
@@ -186,7 +269,7 @@
       ul.className = "menu-list";
 
       items.forEach((sec) => {
-        ul.appendChild(makeMenuItem(sec.id, getSectionTitle(sec), closeMenuFn));
+        appendSectionAndAccordionItems(ul, sec, closeMenuFn, lang);
       });
 
       groupEl.appendChild(ul);
@@ -195,19 +278,27 @@
 
     // グループ定義に入っていない section も「その他」として追加
     const rest = allSections.filter((s) => !used.has(s.id));
-    if (rest.length > 0) {
+    const looseDetails = collectLooseDetails(main, allSections);
+
+    if (rest.length > 0 || looseDetails.length > 0) {
       const groupEl = document.createElement("div");
       groupEl.className = "menu-group";
 
       const h = document.createElement("h4");
-      h.textContent = "その他";
+      h.textContent = lang === "en" ? "Others" : "その他";
       groupEl.appendChild(h);
 
       const ul = document.createElement("ul");
       ul.className = "menu-list";
 
       rest.forEach((sec) => {
-        ul.appendChild(makeMenuItem(sec.id, getSectionTitle(sec), closeMenuFn));
+        appendSectionAndAccordionItems(ul, sec, closeMenuFn, lang);
+      });
+
+      // section外にいるdetailsも拾う（あれば）
+      looseDetails.forEach((d) => {
+        const id = ensureDetailsId(d, "misc", looseDetails.indexOf(d));
+        ul.appendChild(makeMenuItem(id, getDetailsTitle(d, lang), closeMenuFn, { isSub: false }));
       });
 
       groupEl.appendChild(ul);
@@ -219,16 +310,75 @@
     items.forEach((el) => usedSet.add(el.id));
   }
 
-  function makeMenuItem(targetId, label, closeMenuFn) {
+  function collectLooseDetails(mainEl, knownSections) {
+    const sectionSet = new Set(knownSections);
+    const allDetails = $$("details", mainEl);
+
+    // section内にいるものは appendSectionAndAccordionItems 側で拾うので、ここでは「section外」を拾う
+    const loose = allDetails.filter((d) => {
+      const sec = d.closest("section");
+      if (!sec) return true;
+      return !sectionSet.has(sec);
+    });
+
+    return loose;
+  }
+
+  function ensureDetailsId(detailsEl, sectionId, idx) {
+    if (detailsEl.id && String(detailsEl.id).trim()) return detailsEl.id;
+
+    const sum = $("summary", detailsEl);
+    const label = sum ? (sum.textContent || "").trim() : "";
+    const slug = makeSafeId(label || `detail-${idx + 1}`);
+
+    const newId = `${sectionId}--${slug}--${idx + 1}`;
+    detailsEl.id = newId;
+    return newId;
+  }
+
+  function appendSectionAndAccordionItems(ul, sectionEl, closeMenuFn, lang) {
+    if (!ul || !sectionEl || !sectionEl.id) return;
+
+    // まず section 自体
+    ul.appendChild(makeMenuItem(sectionEl.id, getSectionTitle(sectionEl, lang), closeMenuFn, { isSub: false }));
+
+    // 次に accordion 内の details を拾う（優先）
+    let detailsList = $$(".accordion > details", sectionEl);
+
+    // accordionが無い構造でも一応 details を拾う（ただし多すぎる場合もあるので控えめに）
+    if (detailsList.length === 0) {
+      detailsList = $$("details", sectionEl);
+    }
+
+    detailsList.forEach((d, i) => {
+      const did = ensureDetailsId(d, sectionEl.id, i);
+      ul.appendChild(makeMenuItem(did, getDetailsTitle(d, lang), closeMenuFn, { isSub: true }));
+    });
+  }
+
+  function makeMenuItem(targetId, label, closeMenuFn, opt) {
+    const options = opt || {};
     const li = document.createElement("li");
+    if (options.isSub) li.classList.add("sub");
+
     const a = document.createElement("a");
     a.href = `#${targetId}`;
     a.textContent = label;
 
     on(a, "click", (e) => {
       e.preventDefault();
+
       // メニューを閉じてから移動
       if (typeof closeMenuFn === "function") closeMenuFn();
+
+      // detailsへのジャンプなら、開いてからスクロール（閉じたままだと目的が見えにくい）
+      const el = document.getElementById(targetId);
+      if (el && el.tagName === "DETAILS") {
+        try {
+          el.open = true;
+        } catch (_) {}
+      }
+
       // 固定ボタン分オフセットしてスムーズスクロール
       smoothScrollToId(targetId, 86);
     });
@@ -307,14 +457,11 @@
     }
 
     function formatMoney(value, meta) {
-      // symbol を付ける（JPYでも「¥」にする）
       const v = Number.isFinite(value) ? value : 0;
       try {
-        // 通貨コードでのformatだとシンボルが変わる場合があるので、数値フォーマット＋symbolで統一
         const num = new Intl.NumberFormat(meta.locale, { maximumFractionDigits: 2 }).format(v);
         return `${meta.symbol}${num}`;
       } catch (e) {
-        // Intlが無い環境の保険
         return `${meta.symbol}${String(round2(v))}`;
       }
     }
@@ -368,7 +515,6 @@
 
     function calcCompound(P, ratePercent, years, nper) {
       const r = ratePercent / 100;
-      // A = P(1 + r/n)^(n*t)
       const A = P * Math.pow(1 + (r / nper), nper * years);
       const interest = A - P;
       return { A, interest };
@@ -376,7 +522,6 @@
 
     function calcSimple(P, ratePercent, years) {
       const r = ratePercent / 100;
-      // A = P(1 + r*t)
       const A = P * (1 + r * years);
       const interest = A - P;
       return { A, interest };
@@ -412,7 +557,6 @@
       const total = res.A;
       const interest = res.interest;
 
-      // 参考：年率を固定して、nperを変えたときの差も少しだけ提示
       const resYearly = calcCompound(v.principal, v.rate, v.years, 1);
       const diffVsYearly = total - resYearly.A;
 
@@ -432,7 +576,6 @@
     }
 
     function clear() {
-      // 初期値に戻す（HTMLのvalueに合わせる）
       currencySel.value = "JPY";
       principalInp.value = "1000000";
       rateInp.value = "10.00";
@@ -447,7 +590,6 @@
       out.innerHTML = "";
     }
 
-    // チップ（5%,8%,10%,12%）
     $$(".cf-chip", tool).forEach((chip) => {
       on(chip, "click", () => {
         const r = chip.getAttribute("data-rate");
@@ -462,7 +604,6 @@
     on(runBtn, "click", run);
     on(clearBtn, "click", clear);
 
-    // 初期表示
     updateRateDisplay();
     updateRunEnabled();
   }
@@ -485,7 +626,6 @@
   }
 
   function stripTrailingZeros(n) {
-    // 7.0 → "7" / 7.5 → "7.5"
     const x = Number.isFinite(n) ? n : 0;
     const s = String(x);
     if (s.includes(".")) return s.replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1");
