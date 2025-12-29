@@ -153,12 +153,15 @@ th:first-child,td:first-child{text-align:left;}
   background:#fff;color:#111827;
 }
 .menu-close:hover{background:#f3f4f6;}
+
+/* ★修正ポイント：上の大きすぎるpaddingを撤去して「中身が無い」誤認を防ぐ */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto !important;
-  padding: calc(var(--menu-head-h) + 10px) 0 12px;
+  padding: 10px 0 12px;
   scroll-padding-top: calc(var(--menu-head-h) + 8px);
   -webkit-overflow-scrolling: touch;
 }
+
 .menu-group{padding:8px 10px 6px;}
 .menu-group h4{
   margin:0 0 6px;padding:0 6px;
@@ -171,6 +174,13 @@ th:first-child,td:first-child{text-align:left;}
   color:#334155;background:#fff;border:1px solid #e5e7eb;
 }
 .menu-list li a:hover{background:#eef2f7;border-color:#d4d8de;}
+
+/* ★追加：accordion(details) をメニューで子項目表示するための見た目 */
+.menu-list li.sub a{
+  padding-left: 22px;
+  font-size: 0.95em;
+  opacity: 0.95;
+}
 
 html.menu-open .menu-wrap{pointer-events:auto;}
 html.menu-open .menu-backdrop{opacity:1;}
@@ -259,7 +269,6 @@ details[id]{ scroll-margin-top: 70px; }
 
 /* --- スマホ時の上辺マージン ---------------------- */
 @media (max-width: 480px){
-  .menu-panel{ width:58vw; }
   body{ padding-top:66px; }
   html.gtbar body{ padding-top: calc(66px + 44px); }
 }
