@@ -1350,5 +1350,55 @@
 })();
 </script>
 
+<script id="lp-lang-switch-router">
+(() => {
+  "use strict";
+
+  function isEnPath() {
+    return location.pathname === "/en" || location.pathname.startsWith("/en/");
+  }
+
+  function replaceButton(id, onClick) {
+    const oldBtn = document.getElementById(id);
+    if (!oldBtn || !oldBtn.parentNode) return null;
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    newBtn.addEventListener("click", onClick);
+    return newBtn;
+  }
+
+  function go(lang) {
+    const hash = location.hash || "";
+    if (lang === "en") {
+      if (isEnPath()) return;
+      location.href = "/en/" + hash;
+    } else {
+      if (!isEnPath()) return;
+      location.href = "/" + hash;
+    }
+  }
+
+  function updatePressed() {
+    const jp = document.getElementById("lpLangJP");
+    const en = document.getElementById("lpLangEN");
+    if (!jp || !en) return;
+    const enMode = isEnPath();
+    jp.setAttribute("aria-pressed", String(!enMode));
+    en.setAttribute("aria-pressed", String(enMode));
+  }
+
+  function boot() {
+    replaceButton("lpLangJP", () => go("ja"));
+    replaceButton("lpLangEN", () => go("en"));
+    updatePressed();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
 </body>
 </html>
