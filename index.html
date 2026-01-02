@@ -1446,5 +1446,72 @@ function lpGoogleTranslateInit() {
   }
 })();
 </script>
+  <!-- ==============================
+  FIX2: ハンバーガーを開いた瞬間に翻訳を再実行して
+        メニュー内も100% EN/JＰを揃える
+================================== -->
+<script id="retranslate-on-open">
+(() => {
+  "use strict";
+
+  function getSavedLang(){
+    try { return localStorage.getItem("lp_lang") || "ja"; }
+    catch(_) { return "ja"; }
+  }
+
+  function waitForCombo(cb, tries = 60){
+    const combo = document.querySelector(".goog-te-combo");
+    if (combo) return cb(combo);
+    if (tries <= 0) return;
+    setTimeout(() => waitForCombo(cb, tries - 1), 100);
+  }
+
+  // Google翻訳を「もう一回」動かす
+  function retranslate(lang){
+    // lang: "en" or "ja"
+    waitForCombo((combo) => {
+      // すでにその言語でも、もう一回 change を投げると再適用されやすい
+      combo.value = lang;
+      combo.dispatchEvent(new Event("change"));
+      // 念のため2回（環境によって1回目が無視されることがある）
+      setTimeout(() => {
+        combo.value = lang;
+        combo.dispatchEvent(new Event("change"));
+      }, 250);
+    });
+  }
+
+  function boot(){
+    // 1) ページ表示直後にも一度合わせる（本文＋生成物のズレ対策）
+    const saved = getSavedLang();
+    retranslate(saved);
+
+    // 2) 右上の黒い四角ボタン（≡）を押してメニューを開いた直後に再翻訳
+    const menuBtn = document.getElementById("menuBtn");
+    if (menuBtn) {
+      menuBtn.addEventListener("click", () => {
+        const saved2 = getSavedLang();
+
+        // メニューが表示状態になってから翻訳をかけたいので少し待つ
+        setTimeout(() => retranslate(saved2), 200);
+      });
+    }
+
+    // 3) JP/EN 切替で localStorage が変わる運用にも追従
+    window.addEventListener("storage", (ev) => {
+      if (ev.key === "lp_lang") {
+        const saved3 = getSavedLang();
+        setTimeout(() => retranslate(saved3), 200);
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
 </body>
 </html>
