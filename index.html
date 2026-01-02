@@ -1310,5 +1310,141 @@ function lpGoogleTranslateInit() {
 <!-- Google 翻訳本体 -->
 <script src="https://translate.google.com/translate_a/element.js?cb=lpGoogleTranslateInit"></script>
 
+  <!-- ==============================
+  FIX: ハンバーガー内の文言も英語に同期
+  （本文の見出しテキストに合わせてメニュー項目名を更新）
+================================== -->
+<script id="menu-lang-sync">
+(() => {
+  "use strict";
+
+  function norm(s){
+    return (s || "").replace(/\s+/g, " ").trim();
+  }
+
+  function isEnMode(){
+    // 1) /en/ パス
+    if (location.pathname === "/en" || location.pathname.startsWith("/en/")) return true;
+
+    // 2) Google翻訳cookie（入っている場合）
+    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i) || document.cookie.match(/(?:^|;\s*)Googtrans=([^;]+)/);
+    if (m) {
+      const v = decodeURIComponent(m[1] || "");
+      if (v.includes("/en")) return true;
+    }
+
+    // 3) あなたのlp_lang（使っている場合）
+    try {
+      const ls = localStorage.getItem("lp_lang");
+      if (ls === "en") return true;
+    } catch(_) {}
+
+    return false;
+  }
+
+  function getSectionTitleById(id){
+    const sec = document.getElementById(id);
+    if (!sec) return "";
+    const h = sec.querySelector("h2,h3,h4,h5,h6");
+    if (!h) return "";
+    return norm(h.textContent);
+  }
+
+  function getTargetId(el){
+    // href="#xxx"
+    const href = el.getAttribute("href");
+    if (href && href.startsWith("#")) return decodeURIComponent(href.slice(1));
+
+    // data-target="#xxx" / data-href="#xxx"
+    const dt = el.getAttribute("data-target") || el.getAttribute("data-href");
+    if (dt && dt.startsWith("#")) return decodeURIComponent(dt.slice(1));
+
+    return "";
+  }
+
+  function syncMenuStaticTexts(){
+    // メニュー見出し「目次（各セクションへ移動）」など固定文字も切替
+    const t = document.querySelector(".menu-title");
+    if (t) {
+      if (isEnMode()) {
+        t.textContent = "Contents";
+      } else {
+        // 日本語に戻したい場合（元の文言がこれなら）
+        t.textContent = "目次（各セクションへ移動）";
+      }
+    }
+
+    const closeBtn = document.getElementById("menuClose");
+    if (closeBtn) {
+      closeBtn.setAttribute("aria-label", isEnMode() ? "Close" : "閉じる");
+    }
+
+    const menuBtn = document.getElementById("menuBtn");
+    if (menuBtn) {
+      menuBtn.setAttribute("aria-label", isEnMode() ? "Open menu" : "メニューを開閉");
+    }
+  }
+
+  function syncMenuLabels(){
+    const menu = document.getElementById("menuGroups");
+    if (!menu) return;
+
+    // メニュー内の「移動先を持つ要素」を拾う（aでもbuttonでもOK）
+    const nodes = menu.querySelectorAll(
+      'a[href^="#"], button[data-target^="#"], button[data-href^="#"], [data-target^="#"], [data-href^="#"]'
+    );
+    if (!nodes.length) return;
+
+    nodes.forEach((el) => {
+      const id = getTargetId(el);
+      if (!id) return;
+
+      const title = getSectionTitleById(id);
+      if (!title) return;
+
+      // ここで「メニュー表示名」を本文の見出し名に合わせる
+      el.textContent = title;
+    });
+  }
+
+  function runSync(){
+    syncMenuStaticTexts();
+    syncMenuLabels();
+  }
+
+  function boot(){
+    // 1) 初回：翻訳が走った後に合わせたいので少し待つ
+    setTimeout(runSync, 900);
+
+    // 2) 本文が翻訳などで変化したら追従（MutationObserver）
+    const main = document.getElementById("main") || document.querySelector("main");
+    if (main) {
+      let t;
+      const obs = new MutationObserver(() => {
+        clearTimeout(t);
+        t = setTimeout(runSync, 250);
+      });
+      obs.observe(main, { subtree: true, childList: true, characterData: true });
+    }
+
+    // 3) ハンバーガーを開いた直後にも同期（非表示要素が翻訳されないケースの決定打）
+    document.addEventListener("click", (e) => {
+      const btn = e.target && e.target.closest ? e.target.closest("#menuBtn") : null;
+      if (btn) setTimeout(runSync, 60);
+    });
+
+    // 4) EN/JPボタンでURL遷移しない方式でも対応（lp_lang切替など）
+    window.addEventListener("storage", (ev) => {
+      if (ev.key === "lp_lang") setTimeout(runSync, 200);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
 </body>
 </html>
