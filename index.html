@@ -1310,39 +1310,118 @@ function lpGoogleTranslateInit() {
 <!-- Google 翻訳本体 -->
 <script src="https://translate.google.com/translate_a/element.js?cb=lpGoogleTranslateInit"></script>
 
-  <!-- ==============================
-  FIX: ハンバーガー内の文言も英語に同期
-  （本文の見出しテキストに合わせてメニュー項目名を更新）
+<!-- ==============================
+  FIX（修正版）: ハンバーガー内も100% EN/JＰを揃える
+  - メニューが生成された後も追従
+  - メニューを開いた瞬間に再翻訳 → 文字の取り残しを潰す
+  - 取り残しは辞書で英語に確定変換
 ================================== -->
-<script id="menu-lang-sync">
+<script id="menu-translate-fix">
 (() => {
   "use strict";
+
+  const JP = "ja";
+  const EN = "en";
 
   function norm(s){
     return (s || "").replace(/\s+/g, " ").trim();
   }
 
-  function isEnMode(){
-    // 1) /en/ パス
-    if (location.pathname === "/en" || location.pathname.startsWith("/en/")) return true;
+  function hasJapanese(text){
+    return /[ぁ-んァ-ン一-龥]/.test(text || "");
+  }
 
-    // 2) Google翻訳cookie（入っている場合）
-    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i) || document.cookie.match(/(?:^|;\s*)Googtrans=([^;]+)/);
+  function getSavedLang(){
+    try { return localStorage.getItem("lp_lang") || JP; }
+    catch(_) { return JP; }
+  }
+
+  function isEnMode(){
+    const saved = getSavedLang();
+    if (saved === EN) return true;
+
+    const m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
     if (m) {
       const v = decodeURIComponent(m[1] || "");
       if (v.includes("/en")) return true;
     }
-
-    // 3) あなたのlp_lang（使っている場合）
-    try {
-      const ls = localStorage.getItem("lp_lang");
-      if (ls === "en") return true;
-    } catch(_) {}
-
     return false;
   }
 
-  function getSectionTitleById(id){
+  // 取り残しが起きやすい「メニュー内」の日本語 → 英語確定辞書
+  const TEXT_MAP_EN = new Map([
+    ["目次（各セクションへ移動）", "Contents"],
+    ["閉じる", "Close"],
+    ["メニューを開閉", "Open menu"],
+
+    ["料金プラン（範囲は事務サポート）", "Pricing plans (administrative support only)"],
+    ["料金と手続き日数の早見表", "Quick reference table of fees and processing times"],
+    ["2年目以降の維持・保守", "Maintenance from year 2 onward"],
+
+    ["ジョージア個人事業主｜税率1%（条件あり）／オンライン申請", "Georgia Individual Entrepreneur | 1% tax rate (conditions apply) / Online application"],
+    ["IE＋Small Business Statusの一般説明", "General description of IE + Small Business Status"],
+    ["本サービスの想定利用者（例）", "Expected users of this service (examples)"],
+    ["別途費用（必要に応じ実費）", "Additional costs (as needed; actual expenses)"],
+    ["Small Business Statusの区分", "Small Business Status classification"],
+    ["KYC・FMSに関する一般的留意点／FAQ", "General notes on KYC/FMS / FAQ"],
+    ["個人 → 法人化の検討パス（一般論）", "Consideration path from individual to incorporation (general)"],
+
+    ["ジョージア銀行｜個人口座開設の事務サポート（非居住者の取扱いは銀行審査判断）", "Georgia banks | Administrative support for opening a personal account (subject to bank review)"],
+    ["制度・市場の背景（参考情報）", "Background of the system and market (reference information)"],
+    ["必要書類（海外在住・非居住者例）", "Required documents (for overseas residents and non-residents)"],
+    ["開設サポートの範囲と費用（事務サポートの対価）", "Scope and fee of the opening support (administrative support)"],
+    ["複利の概算ツール（参考・商品非特定）", "Compound interest estimator (reference; non-specific)"],
+
+    ["こんな方にはおすすめしません", "Not recommended for"],
+    ["相談前に考えておいていただけるとスムーズです", "Pre-consultation checklist"],
+    ["免責事項・キャンセルポリシー（重要）", "Disclaimers & cancellation policy (important)"],
+    ["免責事項（必ずお読みください）", "Disclaimers (please read)"],
+    ["キャンセルポリシー（返金条件）", "Cancellation policy (refund conditions)"]
+  ]);
+
+  // id（移動先）から英語見出しを確定できる場合の保険
+  const ID_MAP_EN = new Map([
+    ["corp-setup", "Georgia incorporation | Support"],
+    ["plans", "Pricing plans (administrative support only)"],
+    ["sole-setup", "Georgia Individual Entrepreneur | 1% tax rate (conditions apply) / Online application"],
+    ["personal-account", "Georgia banks | Administrative support for opening a personal account (subject to bank review)"],
+    ["not-for", "Not recommended for"],
+    ["precheck", "Pre-consultation checklist"],
+    ["disclaimer", "Disclaimers & cancellation policy (important)"]
+  ]);
+
+  function translateToEn(text){
+    const t = norm(text);
+    if (!t) return t;
+
+    if (TEXT_MAP_EN.has(t)) return TEXT_MAP_EN.get(t);
+
+    // A/Bの年額ラインは、数字を残して置換
+    if (t.startsWith("A.【法人維持のみ】")) {
+      return t
+        .replace("A.【法人維持のみ】", "A. Corporate maintenance only")
+        .replace("（税込）", "(incl. tax)")
+        .replace("／年", "/year");
+    }
+    if (t.startsWith("B.【法人維持＋LP保守】")) {
+      return t
+        .replace("B.【法人維持＋LP保守】", "B. Corporate maintenance + LP upkeep")
+        .replace("（税込）", "(incl. tax)")
+        .replace("／年", "/year");
+    }
+
+    return t;
+  }
+
+  function getTargetId(el){
+    const href = el.getAttribute("href");
+    if (href && href.startsWith("#")) return decodeURIComponent(href.slice(1));
+    const dt = el.getAttribute("data-target") || el.getAttribute("data-href");
+    if (dt && dt.startsWith("#")) return decodeURIComponent(dt.slice(1));
+    return "";
+  }
+
+  function getSectionHeadingText(id){
     const sec = document.getElementById(id);
     if (!sec) return "";
     const h = sec.querySelector("h2,h3,h4,h5,h6");
@@ -1350,113 +1429,52 @@ function lpGoogleTranslateInit() {
     return norm(h.textContent);
   }
 
-  function getTargetId(el){
-    // href="#xxx"
-    const href = el.getAttribute("href");
-    if (href && href.startsWith("#")) return decodeURIComponent(href.slice(1));
+  function applyMenuStatic(){
+    const en = isEnMode();
 
-    // data-target="#xxx" / data-href="#xxx"
-    const dt = el.getAttribute("data-target") || el.getAttribute("data-href");
-    if (dt && dt.startsWith("#")) return decodeURIComponent(dt.slice(1));
-
-    return "";
-  }
-
-  function syncMenuStaticTexts(){
-    // メニュー見出し「目次（各セクションへ移動）」など固定文字も切替
-    const t = document.querySelector(".menu-title");
-    if (t) {
-      if (isEnMode()) {
-        t.textContent = "Contents";
-      } else {
-        // 日本語に戻したい場合（元の文言がこれなら）
-        t.textContent = "目次（各セクションへ移動）";
-      }
-    }
-
-    const closeBtn = document.getElementById("menuClose");
-    if (closeBtn) {
-      closeBtn.setAttribute("aria-label", isEnMode() ? "Close" : "閉じる");
-    }
+    const title = document.querySelector(".menu-title");
+    if (title) title.textContent = en ? "Contents" : "目次（各セクションへ移動）";
 
     const menuBtn = document.getElementById("menuBtn");
-    if (menuBtn) {
-      menuBtn.setAttribute("aria-label", isEnMode() ? "Open menu" : "メニューを開閉");
-    }
+    if (menuBtn) menuBtn.setAttribute("aria-label", en ? "Open menu" : "メニューを開閉");
+
+    const closeBtn = document.getElementById("menuClose");
+    if (closeBtn) closeBtn.setAttribute("aria-label", en ? "Close" : "閉じる");
+
+    const panel = document.querySelector(".menu-panel");
+    if (panel) panel.setAttribute("aria-label", en ? "Contents" : "目次（各セクションへ移動）");
   }
 
-  function syncMenuLabels(){
+  function applyMenuItems(){
+    const en = isEnMode();
     const menu = document.getElementById("menuGroups");
     if (!menu) return;
 
-    // メニュー内の「移動先を持つ要素」を拾う（aでもbuttonでもOK）
-    const nodes = menu.querySelectorAll(
-      'a[href^="#"], button[data-target^="#"], button[data-href^="#"], [data-target^="#"], [data-href^="#"]'
-    );
-    if (!nodes.length) return;
+    const items = menu.querySelectorAll("a, button, [role='button']");
+    if (!items.length) return;
 
-    nodes.forEach((el) => {
-      const id = getTargetId(el);
-      if (!id) return;
+    items.forEach((el) => {
+      const before = norm(el.textContent);
+      if (!before) return;
 
-      const title = getSectionTitleById(id);
-      if (!title) return;
+      if (!en) return; // JPはGoogle翻訳に任せる（触りすぎない）
 
-      // ここで「メニュー表示名」を本文の見出し名に合わせる
-      el.textContent = title;
+      let out = translateToEn(before);
+
+      // まだ日本語なら、移動先idで確定 or 見出しから拾う
+      if (hasJapanese(out)) {
+        const id = getTargetId(el);
+        if (id && ID_MAP_EN.has(id)) {
+          out = ID_MAP_EN.get(id);
+        } else if (id) {
+          const h = getSectionHeadingText(id);
+          if (h && !hasJapanese(h)) out = h;
+          else if (h && hasJapanese(h)) out = translateToEn(h);
+        }
+      }
+
+      if (out && out !== before) el.textContent = out;
     });
-  }
-
-  function runSync(){
-    syncMenuStaticTexts();
-    syncMenuLabels();
-  }
-
-  function boot(){
-    // 1) 初回：翻訳が走った後に合わせたいので少し待つ
-    setTimeout(runSync, 900);
-
-    // 2) 本文が翻訳などで変化したら追従（MutationObserver）
-    const main = document.getElementById("main") || document.querySelector("main");
-    if (main) {
-      let t;
-      const obs = new MutationObserver(() => {
-        clearTimeout(t);
-        t = setTimeout(runSync, 250);
-      });
-      obs.observe(main, { subtree: true, childList: true, characterData: true });
-    }
-
-    // 3) ハンバーガーを開いた直後にも同期（非表示要素が翻訳されないケースの決定打）
-    document.addEventListener("click", (e) => {
-      const btn = e.target && e.target.closest ? e.target.closest("#menuBtn") : null;
-      if (btn) setTimeout(runSync, 60);
-    });
-
-    // 4) EN/JPボタンでURL遷移しない方式でも対応（lp_lang切替など）
-    window.addEventListener("storage", (ev) => {
-      if (ev.key === "lp_lang") setTimeout(runSync, 200);
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot);
-  } else {
-    boot();
-  }
-})();
-</script>
-  <!-- ==============================
-  FIX2: ハンバーガーを開いた瞬間に翻訳を再実行して
-        メニュー内も100% EN/JＰを揃える
-================================== -->
-<script id="retranslate-on-open">
-(() => {
-  "use strict";
-
-  function getSavedLang(){
-    try { return localStorage.getItem("lp_lang") || "ja"; }
-    catch(_) { return "ja"; }
   }
 
   function waitForCombo(cb, tries = 60){
@@ -1466,14 +1484,11 @@ function lpGoogleTranslateInit() {
     setTimeout(() => waitForCombo(cb, tries - 1), 100);
   }
 
-  // Google翻訳を「もう一回」動かす
-  function retranslate(lang){
-    // lang: "en" or "ja"
+  // Google翻訳を「もう一回」実行（メニュー表示後に効く）
+  function retranslateTo(lang){
     waitForCombo((combo) => {
-      // すでにその言語でも、もう一回 change を投げると再適用されやすい
       combo.value = lang;
       combo.dispatchEvent(new Event("change"));
-      // 念のため2回（環境によって1回目が無視されることがある）
       setTimeout(() => {
         combo.value = lang;
         combo.dispatchEvent(new Event("change"));
@@ -1481,27 +1496,43 @@ function lpGoogleTranslateInit() {
     });
   }
 
-  function boot(){
-    // 1) ページ表示直後にも一度合わせる（本文＋生成物のズレ対策）
-    const saved = getSavedLang();
-    retranslate(saved);
+  function runAll(){
+    applyMenuStatic();
+    applyMenuItems();
+  }
 
-    // 2) 右上の黒い四角ボタン（≡）を押してメニューを開いた直後に再翻訳
+  function boot(){
+    // 初回も揃える（本文とメニューのズレ対策）
+    retranslateTo(isEnMode() ? EN : JP);
+    setTimeout(runAll, 800);
+
+    // メニュー内のDOM変化（script.js生成・翻訳変化）に追従
+    const menu = document.getElementById("menuGroups");
+    if (menu) {
+      let t;
+      const obs = new MutationObserver(() => {
+        clearTimeout(t);
+        t = setTimeout(runAll, 150);
+      });
+      obs.observe(menu, { subtree: true, childList: true, characterData: true });
+    }
+
+    // 右上の黒い四角メニューを開いた瞬間に再翻訳 → 取り残し潰し
     const menuBtn = document.getElementById("menuBtn");
     if (menuBtn) {
       menuBtn.addEventListener("click", () => {
-        const saved2 = getSavedLang();
-
-        // メニューが表示状態になってから翻訳をかけたいので少し待つ
-        setTimeout(() => retranslate(saved2), 200);
+        const lang = isEnMode() ? EN : JP;
+        setTimeout(() => retranslateTo(lang), 150);
+        setTimeout(runAll, 500);
       });
     }
 
-    // 3) JP/EN 切替で localStorage が変わる運用にも追従
+    // JP/EN切替（localStorage変更）にも追従
     window.addEventListener("storage", (ev) => {
       if (ev.key === "lp_lang") {
-        const saved3 = getSavedLang();
-        setTimeout(() => retranslate(saved3), 200);
+        const lang = isEnMode() ? EN : JP;
+        setTimeout(() => retranslateTo(lang), 150);
+        setTimeout(runAll, 500);
       }
     });
   }
@@ -1513,5 +1544,6 @@ function lpGoogleTranslateInit() {
   }
 })();
 </script>
+
 </body>
 </html>
