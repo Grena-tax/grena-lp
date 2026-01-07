@@ -4,6 +4,7 @@
    - 固定CTA：「トップへ」スムーズスクロール
    - 複利ツール（#cf-tool）：計算・表示・バリデーション
    ※ 既存のHTML要素が無い場合でもエラーにならないよう防御しています
+   ※ メニュー要素は「IDがあればID優先、無ければclassでも拾う」ように強化
 ========================================================= */
 
 (() => {
@@ -32,9 +33,6 @@
 
   /* -----------------------------
      現在の言語判定（可能な範囲で安全に推定）
-     - 優先：html[lang] / html[data-lang]
-     - 補助：class名（lang-en 等）
-     - 補助：ENボタンがaria-selected/pressed等でアクティブ
   ----------------------------- */
   function getCurrentLang() {
     const html = document.documentElement;
@@ -110,28 +108,48 @@
   }
 
   /* =========================================================
-     1) ハンバーガーメニュー：開閉
+     1) ハンバーガーメニュー：開閉（堅牢版）
   ========================================================= */
   function initMenuDrawer() {
     const html = document.documentElement;
 
-    const menuBtn = $("#menuBtn");
-    const menuDrawer = $("#menuDrawer");
-    const menuBackdrop = $("#menuBackdrop");
-    const menuClose = $("#menuClose");
-    const menuGroups = $("#menuGroups");
+    // ID優先 → 無ければ class
+    const menuBtn =
+      $("#menuBtn") ||
+      $(".menu-button");
+
+    // ID優先 → 無ければ .menu-panel
+    const menuDrawer =
+      $("#menuDrawer") ||
+      $(".menu-panel");
+
+    const menuBackdrop =
+      $("#menuBackdrop") ||
+      $(".menu-backdrop");
+
+    const menuClose =
+      $("#menuClose") ||
+      $(".menu-close");
+
+    const menuGroups =
+      $("#menuGroups") ||
+      $(".menu-groups");
 
     if (!menuBtn || !menuDrawer || !menuGroups) return;
+
+    // ×が空なら補完
+    if (menuClose && String(menuClose.textContent || "").trim() === "") {
+      menuClose.textContent = "×";
+    }
 
     function openMenu() {
       html.classList.add("menu-open");
       setAriaExpanded(menuBtn, true);
       setAriaHidden(menuDrawer, false);
 
-      // 直近で目次を更新（セクションが増減しても追随）
+      // 直近で目次を更新
       buildMenu(menuGroups, closeMenu);
 
-      // フォーカスを「閉じる」に寄せる（あれば）
       if (menuClose) menuClose.focus();
     }
 
@@ -139,12 +157,12 @@
       html.classList.remove("menu-open");
       setAriaExpanded(menuBtn, false);
       setAriaHidden(menuDrawer, true);
-
-      // フォーカスをハンバーガーに戻す
       menuBtn.focus();
     }
 
-    on(menuBtn, "click", () => {
+    // 右上ボタンは必ずトグル
+    on(menuBtn, "click", (e) => {
+      if (e && typeof e.preventDefault === "function") e.preventDefault();
       const isOpen = html.classList.contains("menu-open");
       if (isOpen) closeMenu();
       else openMenu();
@@ -153,14 +171,21 @@
     on(menuBackdrop, "click", closeMenu);
     on(menuClose, "click", closeMenu);
 
+    // パネル内リンクでも閉じる（保険）
+    on(menuDrawer, "click", (e) => {
+      const a = e && e.target ? e.target.closest("a") : null;
+      if (!a) return;
+      if (html.classList.contains("menu-open")) closeMenu();
+    });
+
     // ESCで閉じる
     on(document, "keydown", (e) => {
-      if (e.key !== "Escape") return;
+      if (!e || e.key !== "Escape") return;
       if (!html.classList.contains("menu-open")) return;
       closeMenu();
     });
 
-    // 画面がリサイズされたときに無理に開いたままにならないように
+    // リサイズで閉じる
     on(window, "resize", () => {
       if (!html.classList.contains("menu-open")) return;
       closeMenu();
@@ -169,12 +194,8 @@
 
   /* =========================================================
      2) 目次自動生成
-        - section[id] を拾う
-        - さらに「.accordion > details」も拾ってメニューに入れる
-        - EN表示にしたい場合は data-title-en / data-title-ja を使える（あれば）
   ========================================================= */
   function getSectionTitle(sectionEl, lang) {
-    // まず data-title-* を最優先（あれば）
     if (lang === "en") {
       const en = sectionEl.getAttribute("data-title-en");
       if (en && String(en).trim()) return String(en).trim();
@@ -186,7 +207,6 @@
     const dt = sectionEl.getAttribute("data-title");
     if (dt && String(dt).trim()) return String(dt).trim();
 
-    // 次に見出し
     const h2 = $("h2", sectionEl);
     if (h2 && (h2.textContent || "").trim()) return (h2.textContent || "").trim();
 
@@ -197,7 +217,6 @@
   }
 
   function getDetailsTitle(detailsEl, lang) {
-    // data-title-* を最優先（あれば）
     if (lang === "en") {
       const en = detailsEl.getAttribute("data-title-en");
       if (en && String(en).trim()) return String(en).trim();
@@ -218,7 +237,6 @@
   function buildMenu(menuGroupsEl, closeMenuFn) {
     if (!menuGroupsEl) return;
 
-    // 既存をクリア
     menuGroupsEl.innerHTML = "";
 
     const lang = getCurrentLang();
@@ -226,7 +244,6 @@
     const main = $("#main");
     if (!main) return;
 
-    // section[id] を収集（固定CTAやfooter等は除外）
     const sections = $$("section[id]", main).filter((s) => {
       const id = (s.id || "").trim();
       if (!id) return false;
@@ -234,21 +251,18 @@
       return true;
     });
 
-    // 追加ブロック（glp-landing）は main の外なので個別に拾う
     const glpLanding = $("#glp-landing");
     const extra = [];
     if (glpLanding && glpLanding.id) extra.push(glpLanding);
 
     const allSections = [...extra, ...sections];
 
-    // グループ分け（idで固定）
     const groupDefs = [
       { title: lang === "en" ? "Getting started" : "はじめに", ids: ["glp-landing"] },
       { title: lang === "en" ? "Company / Registration" : "法人・登録", ids: ["corp-setup", "plans", "sole-setup", "personal-account"] },
       { title: lang === "en" ? "Check / Terms" : "確認・規約", ids: ["not-for", "precheck", "disclaimer"] }
     ];
 
-    // まずは「見つかったものだけ」作る
     const byId = new Map(allSections.map((s) => [s.id, s]));
     const used = new Set();
 
@@ -276,7 +290,6 @@
       menuGroupsEl.appendChild(groupEl);
     });
 
-    // グループ定義に入っていない section も「その他」として追加
     const rest = allSections.filter((s) => !used.has(s.id));
     const looseDetails = collectLooseDetails(main, allSections);
 
@@ -295,7 +308,6 @@
         appendSectionAndAccordionItems(ul, sec, closeMenuFn, lang);
       });
 
-      // section外にいるdetailsも拾う（あれば）
       looseDetails.forEach((d) => {
         const id = ensureDetailsId(d, "misc", looseDetails.indexOf(d));
         ul.appendChild(makeMenuItem(id, getDetailsTitle(d, lang), closeMenuFn, { isSub: false }));
@@ -314,7 +326,6 @@
     const sectionSet = new Set(knownSections);
     const allDetails = $$("details", mainEl);
 
-    // section内にいるものは appendSectionAndAccordionItems 側で拾うので、ここでは「section外」を拾う
     const loose = allDetails.filter((d) => {
       const sec = d.closest("section");
       if (!sec) return true;
@@ -339,13 +350,9 @@
   function appendSectionAndAccordionItems(ul, sectionEl, closeMenuFn, lang) {
     if (!ul || !sectionEl || !sectionEl.id) return;
 
-    // まず section 自体
     ul.appendChild(makeMenuItem(sectionEl.id, getSectionTitle(sectionEl, lang), closeMenuFn, { isSub: false }));
 
-    // 次に accordion 内の details を拾う（優先）
     let detailsList = $$(".accordion > details", sectionEl);
-
-    // accordionが無い構造でも一応 details を拾う（ただし多すぎる場合もあるので控えめに）
     if (detailsList.length === 0) {
       detailsList = $$("details", sectionEl);
     }
@@ -368,18 +375,13 @@
     on(a, "click", (e) => {
       e.preventDefault();
 
-      // メニューを閉じてから移動
       if (typeof closeMenuFn === "function") closeMenuFn();
 
-      // detailsへのジャンプなら、開いてからスクロール（閉じたままだと目的が見えにくい）
       const el = document.getElementById(targetId);
       if (el && el.tagName === "DETAILS") {
-        try {
-          el.open = true;
-        } catch (_) {}
+        try { el.open = true; } catch (_) {}
       }
 
-      // 固定ボタン分オフセットしてスムーズスクロール
       smoothScrollToId(targetId, 86);
     });
 
@@ -396,26 +398,19 @@
 
     on(toTop, "click", (e) => {
       e.preventDefault();
-      // #page-top があればそこへ。無ければ 0 へ。
       const topAnchor = $("#page-top");
       if (topAnchor && topAnchor.id) {
         smoothScrollToId(topAnchor.id, 0);
       } else {
-        try {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } catch (err) {
-          window.scrollTo(0, 0);
-        }
+        try { window.scrollTo({ top: 0, behavior: "smooth" }); }
+        catch (err) { window.scrollTo(0, 0); }
       }
     });
   }
 
   /* =========================================================
      4) 複利ツール（#cf-tool）
-        - 計算式：
-          複利：A = P(1 + r/n)^(n*t)
-          単利：A = P(1 + r*t)
-========================================================= */
+  ========================================================= */
   function initCompoundTool() {
     const tool = $("#cf-tool");
     if (!tool) return;
@@ -436,18 +431,15 @@
       return;
     }
 
-    // 表示更新：年率の表示
     function updateRateDisplay() {
       const r = safeNumber(rateInp.value, 0);
       rateDisp.textContent = `${toFixed2(r)}%`;
     }
 
-    // 同意チェックで「結果を表示」をON/OFF
     function updateRunEnabled() {
       runBtn.disabled = !ackChk.checked;
     }
 
-    // 通貨フォーマット
     function getCurrencyMeta() {
       const opt = currencySel.options[currencySel.selectedIndex];
       const locale = opt ? (opt.getAttribute("data-locale") || "ja-JP") : "ja-JP";
@@ -503,14 +495,7 @@
       if (!Number.isFinite(years) || years < 0) errors.push("年数は 0 以上の数字にしてください。");
       if (!Number.isFinite(nper) || nper <= 0) errors.push("回数/年は 1 以上を選んでください。");
 
-      return {
-        ok: errors.length === 0,
-        errors,
-        principal,
-        rate,
-        years,
-        nper
-      };
+      return { ok: errors.length === 0, errors, principal, rate, years, nper };
     }
 
     function calcCompound(P, ratePercent, years, nper) {
@@ -535,10 +520,7 @@
 
       if (!v.ok) {
         renderResult(
-          [
-            ["エラー", "入力が正しくありません"],
-            ["内容", v.errors.join(" / ")]
-          ],
+          [["エラー", "入力が正しくありません"], ["内容", v.errors.join(" / ")]],
           "計算できません"
         );
         return;
@@ -547,12 +529,9 @@
       const isComp = !!isCompChk.checked;
       const modeLabel = isComp ? "複利" : "単利";
 
-      let res;
-      if (isComp) {
-        res = calcCompound(v.principal, v.rate, v.years, v.nper);
-      } else {
-        res = calcSimple(v.principal, v.rate, v.years);
-      }
+      const res = isComp
+        ? calcCompound(v.principal, v.rate, v.years, v.nper)
+        : calcSimple(v.principal, v.rate, v.years);
 
       const total = res.A;
       const interest = res.interest;
@@ -586,7 +565,6 @@
 
       updateRateDisplay();
       updateRunEnabled();
-
       out.innerHTML = "";
     }
 
