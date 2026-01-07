@@ -121,6 +121,20 @@ th:first-child,td:first-child{text-align:left;}
 .menu-button .bars span{top:9px;}
 .menu-button .bars::after{bottom:0;}
 
+/* ★追加：開いている時はハンバーガーが×に見える */
+html.menu-open .menu-button .bars::before{
+  top:9px;
+  transform: rotate(45deg);
+}
+html.menu-open .menu-button .bars::after{
+  bottom:auto;
+  top:9px;
+  transform: rotate(-45deg);
+}
+html.menu-open .menu-button .bars span{
+  opacity:0;
+}
+
 /* --- ハンバーガーメニュー本体 ------------------- */
 .menu-wrap{position:fixed;inset:0;z-index:9999;pointer-events:none;}
 .menu-backdrop{
@@ -154,7 +168,7 @@ th:first-child,td:first-child{text-align:left;}
 }
 .menu-close:hover{background:#f3f4f6;}
 
-/* ★修正ポイント：上の大きすぎるpaddingを撤去して「中身が無い」誤認を防ぐ */
+/* ★修正：大きすぎるpaddingを撤去 */
 .menu-groups{
   flex:1 1 auto; overflow:auto; height:auto !important;
   padding: 10px 0 12px;
@@ -175,7 +189,7 @@ th:first-child,td:first-child{text-align:left;}
 }
 .menu-list li a:hover{background:#eef2f7;border-color:#d4d8de;}
 
-/* ★追加：accordion(details) をメニューで子項目表示するための見た目 */
+/* ★追加：detailsの子項目 */
 .menu-list li.sub a{
   padding-left: 22px;
   font-size: 0.95em;
@@ -434,7 +448,6 @@ h1, .hero h1, .page-title, .hero .lead {
 
 /* =========================================================
    TOPヒーロー（統合版：カード無し／暗すぎない／文字強め／iPhoneモザイク回避）
-   ※ここから下は「トップ画だけ」
    ========================================================= */
 
 .glp-hero{
@@ -461,14 +474,13 @@ h1, .hero h1, .page-title, .hero .lead {
   display:block;
   object-fit:cover;
   object-position: 50% 22%;
-  transform: translateZ(0); /* iOSでの描画安定 */
-  filter: none;             /* iPhoneの“モザイク/にじみ”原因になりやすいので切る */
+  transform: translateZ(0);
+  filter: none;
 }
 
 .glp-hero-gradient{
   position:absolute;
   inset:0;
-  /* 上は薄く、下だけ締める（暗すぎない） */
   background:
     linear-gradient(
       to bottom,
@@ -515,7 +527,6 @@ h1, .hero h1, .page-title, .hero .lead {
   gap: 8px;
 }
 
-/* 少し広い画面（PC）用 */
 @media (min-width: 768px) {
   .glp-hero{ border-radius: 18px; }
   .glp-hero-content{ padding: 32px 32px 34px; }
@@ -524,7 +535,6 @@ h1, .hero h1, .page-title, .hero .lead {
   .glp-hero-note{ font-size: 12px; }
 }
 
-/* iOS Safari の画像レンダリング最適化（やりすぎない） */
 @supports (-webkit-touch-callout: none) {
   .glp-hero-img{ backface-visibility: hidden; }
 }
