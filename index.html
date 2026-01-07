@@ -680,7 +680,7 @@
 
     </div>
   </section>
-    <!-- =========================
+      <!-- =========================
     個人事業主（IE + SBS）
   ========================== -->
   <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
@@ -1260,15 +1260,25 @@ function lpGoogleTranslateInit() {
     box.setAttribute("role","group");
     box.setAttribute("aria-label","Language switch");
 
+    /* ▼ FIX: JP/ENがGoogle翻訳で崩れないように翻訳対象外にする */
+    box.className = "notranslate";
+    box.setAttribute("translate","no");
+
     var jp = document.createElement("button");
     jp.type = "button";
     jp.id = "lpLangJP";
-    jp.textContent = "JP";
+    /* ▼ FIX: ボタンも翻訳対象外 */
+    jp.className = "notranslate";
+    jp.setAttribute("translate","no");
+    jp.innerHTML = '<span class="notranslate">JP</span>';
 
     var en = document.createElement("button");
     en.type = "button";
     en.id = "lpLangEN";
-    en.textContent = "EN";
+    /* ▼ FIX: ボタンも翻訳対象外 */
+    en.className = "notranslate";
+    en.setAttribute("translate","no");
+    en.innerHTML = '<span class="notranslate">EN</span>';
 
     jp.addEventListener("click", function(){
       localStorage.setItem("lp_lang","ja");
