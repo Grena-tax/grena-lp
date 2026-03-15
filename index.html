@@ -4,36 +4,117 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア法人設立・個人事業主登録・口座開設｜GRENA GROUP LLC</title>
-
 <link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20260314a">
-<meta name="theme-color" content="#0f2040">
+<link rel="stylesheet" href="./patch.css?v=20260315a">
+<meta name="theme-color" content="#0b1f3a">
 
-<!-- ▼ Grena LP 用 追加スタイル（patch.cssに移行済み・最小限のみ） -->
 <style>
-  /* ほかと被らないように glp- で統一 */
-  .glp-hero-kicker {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 10px;
-    border-radius: 999px;
-    background: rgba(15,23,42,0.72);
-    font-size: 11px;
-    margin-bottom: 10px;
-  }
-  .glp-hero-kicker span { display: inline-block; }
+/* インライン補完スタイル */
+.glp-hero-kicker span { display:inline-block; }
+
+/* 統計バー */
+.glp-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:rgba(201,168,76,0.15);
+  border-radius:16px;
+  overflow:hidden;
+  margin:24px 0;
+  border:1px solid rgba(201,168,76,0.20);
+}
+.glp-stat {
+  background:#fff;
+  padding:18px 12px 14px;
+  text-align:center;
+}
+.glp-stat-num {
+  display:block;
+  font-size:clamp(22px,4vw,32px);
+  font-weight:900;
+  color:#0b1f3a;
+  font-family:'Noto Serif JP',serif;
+  line-height:1.1;
+  margin-bottom:4px;
+}
+.glp-stat-num span { color:#c9a84c; }
+.glp-stat-label {
+  font-size:10px;
+  color:#6b7a99;
+  font-weight:600;
+  letter-spacing:.04em;
+  line-height:1.4;
+}
+
+/* CTAセクション */
+.glp-cta-section {
+  background:linear-gradient(135deg,#0b1f3a 0%,#132f58 100%);
+  border-radius:20px;
+  padding:32px 24px;
+  text-align:center;
+  margin:32px 0 0;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(201,168,76,0.25);
+}
+.glp-cta-section::before {
+  content:"";
+  position:absolute;
+  top:-60px;left:50%;
+  transform:translateX(-50%);
+  width:300px;height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,0.10) 0%,transparent 70%);
+}
+.glp-cta-section h3 {
+  color:#fff;
+  font-size:clamp(18px,3.5vw,24px);
+  font-weight:900;
+  margin:0 0 8px;
+  font-family:'Noto Serif JP',serif;
+  position:relative;
+}
+.glp-cta-section p {
+  color:rgba(255,255,255,0.70);
+  font-size:13px;
+  margin:0 0 20px;
+  line-height:1.7;
+  position:relative;
+}
+.glp-cta-section .glp-btn {
+  position:relative;
+  font-size:15px;
+  padding:16px 36px;
+}
+.glp-cta-section .note {
+  color:rgba(255,255,255,0.40);
+  margin-top:12px;
+  position:relative;
+}
+
+/* 免責バナー */
+.glp-disclaimer-banner {
+  background:#fffdf0;
+  border:1px solid #e8d870;
+  border-left:5px solid #c9a84c;
+  border-radius:14px;
+  padding:14px 18px;
+  font-size:12px;
+  color:#3a2e00;
+  line-height:1.75;
+  margin:24px 0;
+}
+.glp-disclaimer-banner strong { color:#7a5500; }
 </style>
 
-<!-- ▼ 初期状態の翻訳クッキー掃除 -->
 <script>
 (function(){
   try{
-    var host = location.hostname.replace(/^www\./,'');
-    var m = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
-    if (!m) return;
-    var v = decodeURIComponent(m[1]||'');
-    if (v === '/ja/ja' || v === '/ja/en') return;
+    var host=location.hostname.replace(/^www\./,'');
+    var m=document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
+    if(!m)return;
+    var v=decodeURIComponent(m[1]||'');
+    if(v==='/ja/ja'||v==='/ja/en')return;
     var exp='Thu, 01 Jan 1970 00:00:00 GMT';
     document.cookie='googtrans=; expires='+exp+'; path=/';
     document.cookie='googtrans=; expires='+exp+'; path=/; domain=.'+host;
@@ -46,7 +127,7 @@
 
 <div id="page-top" aria-hidden="true"></div>
 
-<!-- 右上：言語スイッチ（patch.cssで非表示） -->
+<!-- 言語スイッチ（patch.cssで非表示） -->
 <button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
@@ -59,7 +140,7 @@
     </div>
     <div class="lang-body">
       <div class="ls-search">
-        <input id="langSearch" type="search" placeholder="Search language (English names)" inputmode="search" autocomplete="off">
+        <input id="langSearch" type="search" placeholder="Search language" inputmode="search" autocomplete="off">
       </div>
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
       <div id="google_translate_element"></div>
@@ -68,7 +149,7 @@
   </aside>
 </div>
 
-<!-- 右上ハンバーガー -->
+<!-- ハンバーガー -->
 <button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
@@ -85,60 +166,94 @@
 
 <!-- ======== Grena LP ======== -->
 <div id="glp-landing" class="glp-wrapper">
+
+  <!-- ヒーロー -->
+  <section class="glp-hero">
+    <div class="glp-hero-bg" aria-hidden="true">
+      <img src="tbilisi-hero.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img" decoding="async" fetchpriority="high">
+      <div class="glp-hero-gradient" aria-hidden="true"></div>
+    </div>
+    <div class="glp-hero-content">
+      <div class="glp-hero-kicker">
+        <span>🌍</span>
+        <span>EU加盟候補国ジョージア × 現地提携の法律事務所</span>
+      </div>
+      <p class="glp-hero-title">
+        ジョージアで、<br>はじめる。
+      </p>
+      <p class="glp-hero-lead">
+        現地制度に沿った法人設立・個人事業主登録・銀行口座開設の<br>
+        書類整備と一般情報の提供を、日本語で丁寧にサポートします。
+      </p>
+      <p class="glp-hero-note">
+        ※ 当社は税務・法務の個別判断を行わず、書類整備の事務サポートと一般情報の共有のみ提供します。<br>
+        ※ 最終的な税務・法務の判断は、お住まいの国の有資格専門家にご確認ください。
+      </p>
+      <div class="glp-hero-actions">
+        <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main">
+          📩 無料相談はこちら
+        </a>
+        <a href="#corp-setup" class="glp-btn glp-btn-sub">
+          サービスを見る →
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 信頼バッジ帯 -->
+  <div class="glp-trust-bar">
+    <div class="glp-trust-item">
+      <span>🏛️</span>
+      <span>現地法律事務所と<br>MoU連携</span>
+    </div>
+    <div class="glp-trust-divider"></div>
+    <div class="glp-trust-item">
+      <span>✅</span>
+      <span>ジョージア法人<br>正式登録済み</span>
+    </div>
+    <div class="glp-trust-divider"></div>
+    <div class="glp-trust-item">
+      <span>🌐</span>
+      <span>渡航不要<br>日本語完結</span>
+    </div>
+    <div class="glp-trust-divider"></div>
+    <div class="glp-trust-item">
+      <span>🔒</span>
+      <span>個人情報<br>厳格管理</span>
+    </div>
+  </div>
+
   <div class="glp-inner">
 
-    <!-- ヒーロー -->
-    <section class="glp-hero">
-      <div class="glp-hero-bg" aria-hidden="true">
-        <img src="tbilisi-hero.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img" decoding="async" fetchpriority="high">
-        <div class="glp-hero-gradient" aria-hidden="true"></div>
+    <!-- 統計 -->
+    <div class="glp-stats">
+      <div class="glp-stat">
+        <span class="glp-stat-num">7<span>〜</span>10</span>
+        <span class="glp-stat-label">営業日<br>法人登記目安</span>
       </div>
-      <div class="glp-hero-content">
-        <div class="glp-hero-kicker">
-          <span>🌍 EU加盟候補国ジョージア</span>
-          <span>×</span>
-          <span>現地提携の法律事務所</span>
-        </div>
-        <p class="glp-hero-title">
-          ジョージアで、はじめる。<br>現地制度に沿った、法人・個人事業主・口座の書類整備サポート。
-        </p>
-        <p class="glp-hero-lead">
-          現地提携の法律事務所・会計士と連携し、<br>
-          公開資料に基づく一般情報の提供と、手続き書類の整備サポートを行います。
-        </p>
-        <p class="glp-hero-note">
-          ※ 当社は税務・法務の個別判断は行わず、公開資料に基づく一般情報の共有と書類整備の事務サポートのみ提供します。<br>
-          ※ 税務・法務の最終判断は、お住まいの国の有資格専門家（税理士・弁護士等）に必ずご確認ください。
-        </p>
-        <div class="glp-hero-actions">
-          <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main" data-glp-target="lp-start">
-            無料相談はこちら
-          </a>
-          <a href="#corp-setup" class="glp-btn glp-btn-sub">
-            制度の全体像を見る
-          </a>
-        </div>
+      <div class="glp-stat">
+        <span class="glp-stat-num">3<span>つ</span></span>
+        <span class="glp-stat-label">主要サービス<br>日本語対応</span>
       </div>
-    </section>
+      <div class="glp-stat">
+        <span class="glp-stat-num">EU</span>
+        <span class="glp-stat-label">加盟候補国<br>安定した環境</span>
+      </div>
+    </div>
 
-    <!-- 免責バナー（最上部に配置） -->
-    <div style="background:#f4f8fd;border:1px solid #c8d8f0;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:12px;color:#334155;line-height:1.7;">
-      <strong style="color:#0f2040;">【重要なご案内】</strong>
-      本サイトは、ジョージアの法人設立・個人事業主登録・銀行口座開設に関する<strong>公開資料に基づく一般情報の提供と、書類整備の事務サポート</strong>のみを目的としています。
-      税務・法務の個別助言、金融商品の勧誘・媒介・代理、銀行口座の代理開設は行いません。
-      開設可否は各銀行の審査判断であり、成功を保証するものではありません。
-      お住まいの国の税理士・弁護士等の専門家に必ずご確認のうえ、ご自身の判断でご利用ください。
+    <!-- 免責バナー -->
+    <div class="glp-disclaimer-banner">
+      <strong>【重要なご案内】</strong>
+      本サイトは、ジョージアの法人設立・個人事業主登録・銀行口座開設に関する<strong>公開資料に基づく一般情報の提供と書類整備の事務サポート</strong>のみを目的としています。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。開設可否は各銀行の審査判断です。必ず税理士・弁護士等の専門家にご確認ください。
     </div>
 
     <!-- 帯 -->
     <section class="glp-band">
-      <p class="glp-band-title">
-        ジョージアの法人・個人事業主制度に関する一般情報と書類整備サポート
-      </p>
+      <p class="glp-band-title">ジョージアの制度に沿った法人・登録の書類整備サポート</p>
       <ul class="glp-band-list">
-        <li>EU加盟候補国・ジョージアの公開制度資料をもとに、一般情報をご案内します</li>
-        <li>書類整備・現地法律事務所との連絡調整を、文面ベースでサポートします</li>
-        <li>税務・法務の個別助言は行いません。専門家へのご相談を推奨しています</li>
+        <li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li>
+        <li>書類整備・現地法律事務所との連絡調整を文面ベースでサポート</li>
+        <li>税務・法務の個別助言は行いません。専門家へのご相談を推奨</li>
       </ul>
       <p class="glp-band-note">
         ※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。
@@ -147,7 +262,7 @@
 
     <!-- ジョージアってどんな国？ -->
     <section class="glp-country">
-      <p class="glp-country-title">ジョージアってどんな国？</p>
+      <p class="glp-country-title">🇬🇪 ジョージアってどんな国？</p>
       <div class="glp-country-photos">
         <img src="田舎の教会のデザイン.jpg 3.jpg" alt="ジョージアの教会と城塞" loading="lazy" decoding="async">
         <img src="Untitled design 3.jpg" alt="ジョージアのチーズパン・ハチャプリ" loading="lazy" decoding="async">
@@ -155,71 +270,81 @@
       </div>
     </section>
 
-    <!-- 6枚のカード -->
+    <!-- 6枚カード -->
     <section class="glp-cardgrid">
 
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">ジョージア法人設立</h3>
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">⚖️ 法人設立<br>書類整備サポート</h3>
         <p class="glp-card-text">
-          現地制度に沿った法人設立の書類整備を、現地の法律事務所と連携してサポートします。
+          現地法律事務所と連携し、法人登記に必要な書類の整備・情報提供を行います。
         </p>
         <a href="#corp-setup" class="glp-btn glp-btn-sub" data-glp-target="corp">詳しくはこちら</a>
       </article>
 
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">ジョージア個人事業主（IE）登録</h3>
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">🧾 個人事業主（IE）<br>登録サポート</h3>
         <p class="glp-card-text">
-          ジョージア政府が定める正規制度「IE登録」の一般情報提供と、登録書類の整備サポートです。
+          正規制度「IE登録」の一般情報提供と、登録書類の整備補助（条件あり）。
         </p>
         <a href="#sole-setup" class="glp-btn glp-btn-sub" data-glp-target="ie">詳しくはこちら</a>
       </article>
 
       <article class="glp-card">
-        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">ジョージア銀行口座（書類整備サポート）</h3>
+        <img src="ジョージア国旗のデザイン.jpg 2.jpg" alt="ジョージア国旗" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">🏦 銀行口座開設<br>書類整備サポート</h3>
         <p class="glp-card-text">
-          口座開設に必要な書類の整備・確認サポートを提供します。開設可否は各銀行の審査判断です。
+          口座開設に必要な書類の整備補助を提供。開設可否は各銀行の審査判断です。
         </p>
         <a href="#personal-account" class="glp-btn glp-btn-sub" data-glp-target="bank">今すぐチェック</a>
       </article>
 
       <article class="glp-card">
-        <img src="Untitled design 3.jpg" alt="寿司など和食イメージ" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">和食店をあなたの国に</h3>
+        <img src="Untitled design 3.jpg" alt="和食イメージ" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">🍱 和食店を<br>あなたの国に</h3>
         <p class="glp-card-text">
-          現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の確認サポートをご提供します。
+          現地パートナーと連携し、店舗立ち上げ・職人紹介・契約面の情報確認をサポート。
         </p>
         <a href="#precheck" class="glp-btn glp-btn-green" data-glp-target="washoku">無料相談する</a>
       </article>
 
       <article class="glp-card">
-        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">海外不動産購入・賃貸</h3>
+        <img src="夜の街並みのデザイン.jpg 4.jpg" alt="海外不動産イメージ" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">🏠 海外不動産<br>購入・賃貸</h3>
         <p class="glp-card-text">
-          ジョージアを含む海外不動産について、現地パートナーと連携した物件選び・契約プロセスのサポートです。
+          ジョージアを含む海外不動産について、物件選び・契約プロセスの情報提供を行います。
         </p>
         <a href="#precheck" class="glp-btn glp-btn-gray" data-glp-target="realestate">準備中</a>
       </article>
 
       <article class="glp-card">
-        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag" loading="lazy" decoding="async">
-        <h3 class="glp-card-title">その他・企画サポート</h3>
+        <img src="Untitled design.jpg" alt="サポートイメージ" class="glp-card-flag" loading="lazy">
+        <h3 class="glp-card-title">💼 その他<br>企画サポート</h3>
         <p class="glp-card-text">
-          企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討・設計サポートです。
+          企画・PR・多拠点展開など、ジョージアを起点にしたビジネスアイデアの検討をお手伝い。
         </p>
         <a href="#disclaimer" class="glp-btn glp-btn-sub" data-glp-target="others">詳しくはこちら</a>
       </article>
 
     </section>
 
+    <!-- CTAセクション -->
+    <div class="glp-cta-section">
+      <h3>まずは無料でご相談ください</h3>
+      <p>ジョージアでの法人設立・個人事業主登録・口座開設について、<br>日本語で丁寧にご案内します。</p>
+      <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main">
+        📩 LINEで無料相談する
+      </a>
+      <p class="note">※ 返信は営業日3日以内を目安にしています</p>
+    </div>
+
   </div>
 </div>
 
 <main id="main">
   <h1 class="sr-only" style="position:absolute;left:-9999px;clip:rect(0 0 0 0);width:1px;height:1px;overflow:hidden;">
-    ジョージア法人設立・個人事業主登録・個人口座書類整備サポート｜公開資料に基づく一般情報提供
+    ジョージア法人設立・個人事業主登録・個人口座書類整備サポート｜GRENA GROUP LLC
   </h1>
 
   <!-- 法人設立 -->
@@ -228,35 +353,38 @@
       ジョージア法人設立｜書類整備・情報提供サポート
     </h2>
 
+    <div class="glp-disclaimer-box">
+      <strong>【重要】本サービスについて</strong><br>
+      当社が提供するのは、ジョージアでの法人登記手続きに関する<strong>一般情報の提供と書類整備の補助のみ</strong>です。税務・法務の個別助言、金融商品の勧誘・媒介・代理は一切行いません。登記完了・銀行審査の結果は保証できません。最終的な税務・法務判断は、お住まいの国の有資格専門家に必ずご相談ください。
+    </div>
+
     <div class="price-promo quick-summary" aria-label="サクッと要点">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
+      <div class="row"><span class="label">サクッと要点（Quick summary）</span></div>
       <p class="qs-tag">こんな方におすすめ</p>
       <ul class="qs-list">
         <li>海外での法人設立を検討しており、現地制度の一般情報を収集したい方</li>
         <li>すでに海外取引があり、現地制度に沿った法人の書類整備をしたい方</li>
         <li>ジョージア語や現地手続きに不安があり、日本語ベースで進めたい方</li>
       </ul>
-      <p class="qs-tag">サポート内容</p>
+      <p class="qs-tag">サポート内容（書類整備・情報提供のみ）</p>
       <ul class="qs-list">
         <li>法人登記に関する書類整備サポート（現地登記官との連絡調整の取次）</li>
         <li>法人口座開設に向けた書類確認・連絡の取次（開設可否は各銀行の審査判断）</li>
-        <li>公開資料をもとにした現地制度の一般情報の共有（税務・法務の個別助言は含みません）</li>
+        <li>公開資料をもとにした現地制度の一般情報の共有（税務・法務の個別助言は含まれません）</li>
       </ul>
       <p class="qs-tag">料金の目安</p>
       <ul class="qs-list">
         <li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li>
-        <li>LP付き・フルサポートなどの上位プランもあります（いずれも書類整備・取次サポートの対価です）</li>
-        <li>書類提出〜登記完了の目安：現地営業日ベースで<strong>7〜10営業日程度</strong>（案件・時期により変動します）</li>
+        <li>LP付き・フルサポートなどの上位プランもあります（書類整備・取次サポートの対価）</li>
+        <li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong>（変動あり）</li>
       </ul>
-      <p class="meta">※ 税務・法務の効果を保証するものではありません。詳細は必ず有資格の専門家にご確認ください。</p>
+      <p class="meta">※ 税務・法務の効果を保証するものではありません。</p>
     </div>
 
-    <div class="progress-steps" aria-label="ご利用の3ステップ">
-      <div class="step">1. メッセージで相談</div>
-      <div class="step">2. ヒアリングシート記入 → ご提案</div>
-      <div class="step">3. お申し込み → 現地手続き → 完了報告</div>
+    <div class="progress-steps">
+      <div class="step">1. LINEで相談</div>
+      <div class="step">2. ヒアリング → ご提案</div>
+      <div class="step">3. 申込 → 現地手続き → 完了</div>
     </div>
 
     <div class="space-y-3 accordion">
@@ -265,7 +393,7 @@
         <summary>ジョージア法人制度の概要（公開資料に基づく一般情報）</summary>
         <div class="content">
           <p>OECDやPwC等が公表している一般資料を参照した、<strong>ジョージアの法人税制度に関する一般的な説明</strong>です。現地法では、利益の分配時に課税される仕組みが採られているとされています（内容・例外は時点により異なります）。</p>
-          <span class="note">※ 当社はOECD／PwCの認定・提携機関ではありません。記載は公表資料を参照した一般情報であり、助言・保証を目的とするものではありません。</span>
+          <span class="note">※ 当社はOECD／PwCの認定・提携機関ではありません。</span>
           <p><strong>必ずご確認ください</strong></p>
           <ul>
             <li>お住まいの国の税法（CFC規制・移転価格規制等）の適用可能性があります。</li>
@@ -284,7 +412,6 @@
             <li>将来的な税務・コンプライアンス対応を見据え、現地制度の情報を収集しておきたい</li>
             <li>国際的なビジネス拠点の選択肢を検討している</li>
           </ul>
-          <span class="note">※ CFC＝タックスヘイブン対策税制（Controlled Foreign Company）。お住まいの国の税理士に必ずご確認ください。</span>
           <p>本ページは<strong>制度理解のための一般情報</strong>であり、特定の行為を推奨・勧誘するものではありません。</p>
         </div>
       </details>
@@ -292,12 +419,11 @@
       <details>
         <summary>暗号資産に関する一般的注意点</summary>
         <div class="content">
-          <p><strong>移管・構成変更の課税タイミングはお住まいの国の税制に依存</strong>します。移管自体が課税対象となる場合もあるため、事前に専門家への確認が必要です。</p>
+          <p><strong>移管・構成変更の課税タイミングはお住まいの国の税制に依存</strong>します。</p>
           <ul>
-            <li>ジョージア法人への移管は現地法上の手続に過ぎず、居住国での課税関係に影響しない場合もあれば、影響する場合もあります。</li>
-            <li>税務リスク低減には、<strong>帳簿・証憑の厳格な整備</strong>が重要です（当社は書類整備の事務サポートのみ行います）。</li>
+            <li>ジョージア法人への移管は現地法上の手続に過ぎず、居住国での課税関係は別途生じる場合があります。</li>
+            <li>税務リスク低減には、<strong>帳簿・証憑の厳格な整備</strong>が重要です（当社は書類整備の事務サポートのみ）。</li>
           </ul>
-          <span class="note">※ 証憑＝請求書・契約書・送金記録など、取引の裏づけ資料</span>
         </div>
       </details>
 
@@ -308,22 +434,20 @@
             <li>根拠法：ジョージア商法に基づく正規手続き</li>
             <li>公開資料（PwC・OECD等）の参照に基づく一般情報の提供</li>
             <li>現地法律事務所「TREX LEGAL」との連携体制（MoU）</li>
-            <li>帳簿・用途証憑の書類整備を事務的にサポートします（助言は含みません）</li>
+            <li>帳簿・証憑の書類整備を事務的にサポート（助言は含まず）</li>
           </ul>
-          <span class="note">※ MoU＝覚書（Memorandum of Understanding）。開設や審査結果の保証ではありません。</span>
+          <span class="note">※ MoU＝覚書。登記完了・審査結果の保証ではありません。</span>
         </div>
       </details>
 
       <details>
         <summary>法人税制の一般説明（公開資料参照）</summary>
         <div class="content">
-          <p>OECDやPwCが公表する資料によれば、ジョージアでは<strong>利益の分配時に課税される仕組み</strong>が採られているとされています（例外あり）。ただし、<strong>お住まいの国のCFC規制等により、実際の税負担は大きく異なります</strong>。必ず専門家にご確認ください。</p>
-          <p>参考資料（外部リンク）：</p>
           <ul>
             <li><a href="https://www.pwc.com/ge/en/assets/pdf/April_2020/OECD_Secretariat_Analysis_EN.pdf" target="_blank" rel="noopener noreferrer">PwCの公表資料（外部）</a></li>
             <li><a href="https://www.oecd.org/tax/transparency/documents/georgia-supplementary-report-2020.htm" target="_blank" rel="noopener noreferrer">OECDの公表資料（外部）</a></li>
           </ul>
-          <p class="text-sm muted">※ 当社は各機関の認定・提携を受けていません。リンクは公表資料の参照です。</p>
+          <p class="text-sm muted">※ 当社は各機関の認定・提携を受けていません。居住国での税務取り扱いは必ず専門家にご確認ください。</p>
         </div>
       </details>
 
@@ -332,27 +456,24 @@
         <div class="content">
           <ul>
             <li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li>
-            <li>提携範囲：登記、各種登録、書類整備・連絡の取次等</li>
+            <li>提携範囲：登記書類の整備補助、各種登録に関する情報提供等</li>
             <li>法人ID：406365525</li>
           </ul>
-          <span class="note">※ MoUは業務連携の覚書であり、審査・結果の保証を意味しません。</span>
+          <span class="note">※ MoUは業務連携の覚書であり、登記完了・審査結果の保証を意味しません。</span>
         </div>
       </details>
 
       <details>
-        <summary>初年度の書類整備サポート範囲</summary>
+        <summary>書類整備サポートの範囲</summary>
         <div class="content">
           <ul>
-            <li>法人登記書類の整備・取次（目安：現地営業日ベース7〜10営業日／変動あり）</li>
-            <li>バーチャルオフィス（12ヶ月）</li>
-            <li>英文契約書の取得・公証（アポスティーユ手配案内含む）</li>
-            <li>法人口座開設に向けた<strong>書類整備支援・取次</strong>（開設可否は各銀行の審査判断）</li>
+            <li>法人登記に必要な書類の案内・整備補助（目安：現地営業日ベース7〜10営業日）</li>
+            <li>バーチャルオフィス（12ヶ月）の手配案内</li>
+            <li>英文書類の取得・公証（アポスティーユ手配案内含む）</li>
+            <li>法人口座開設手続きに向けた書類案内（開設可否は銀行審査判断）</li>
             <li>eSIM設定の案内</li>
           </ul>
-          <span class="note">
-            ※ IBAN＝国際銀行口座番号。
-            RS.ge（ジョージア税務ポータル）開設支援はオプション（<strong>¥33,000〜</strong>）。
-          </span>
+          <span class="note">※ RS.ge（ジョージア税務ポータル）開設支援はオプション（<strong>¥33,000〜</strong>）。当社は銀行の代理・媒介を行わず、書類整備の補助のみです。</span>
         </div>
       </details>
 
@@ -362,21 +483,20 @@
           <ul>
             <li>名義：ジョージア国籍の代表者・株主を設定する構成（任意）</li>
             <li>MoU＋委任状＋支配者証明に基づく正規の手続き</li>
-            <li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）開示が必要</strong>です</li>
-            <li>年額：€2,500<span class="text-sm">（税込／2025年8月時点）</span></li>
+            <li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）の開示が必要</strong>です</li>
+            <li>年額：€2,500<span class="text-sm">（2025年8月時点）</span></li>
             <li>国際的な情報交換制度（CRS等）の対象となり得ます</li>
           </ul>
-          <span class="note">※ UBO＝Ultimate Beneficial Owner（実質的支配者）。脱税・租税回避を目的とした利用はお断りします。</span>
+          <span class="note">※ UBO＝Ultimate Beneficial Owner。国際的な情報交換制度により居住国当局への情報共有が行われる場合があります。</span>
         </div>
       </details>
 
       <details>
         <summary>KYC・監督当局（FMS）に関する注意</summary>
         <div class="content">
-          <p><strong>KYC（本人確認）</strong>：パスポート・住所証明・（暗号資産取引時は）取引履歴等が必要です。</p>
+          <p><strong>KYC（本人確認）</strong>：パスポート・住所証明・（暗号資産取引時は）取引履歴等。</p>
           <p><strong>FMS（金融監督当局）</strong>：高額送受金や暗号資産取引の状況により、追加提出や確認が求められることがあります。</p>
-          <p class="text-sm muted">※ KYC＝Know Your Customer／FMS＝Financial Monitoring Service（ジョージア）</p>
-          <p class="text-sm muted">※ 反社会的勢力該当・AML/CFT上の合理的疑いがある場合は支援をお断りします。</p>
+          <p class="text-sm muted">※ 反社会的勢力に該当する場合・AML/CFT上の合理的な疑いがある場合は支援不可です。</p>
         </div>
       </details>
 
@@ -387,53 +507,41 @@
   <section id="plans" class="container mx-auto max-w-4xl px-4 py-12">
     <div class="space-y-3 accordion">
       <details>
-        <summary>料金プラン（書類整備・情報提供サポートの対価）</summary>
+        <summary>料金プラン（書類整備・情報提供サービスの対価）</summary>
         <div class="content">
 
-          <h3 class="smallish">料金と手続き日数の早見表</h3>
+          <div class="glp-disclaimer-box">
+            ※ 以下の料金はすべて<strong>書類整備・情報提供・事務補助サービスの対価</strong>です。銀行手数料・預入金・登記実費とは無関係です。登記完了・口座開設の成功を保証するものではありません。
+          </div>
 
-          <div class="plan-table-wrap" aria-label="料金と手続き日数の早見表">
+          <h3 class="smallish">料金と手続き日数の早見表</h3>
+          <div class="plan-table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>内容</th>
-                  <th>サポート料金（税込）</th>
-                  <th>手続きの目安</th>
+                  <th>内容</th><th>サービス料金（税込）</th><th>手続きの目安</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>法人設立 基本プラン</td>
-                  <td>¥330,000〜</td>
-                  <td>書類提出〜登記：現地営業日ベース 7〜10営業日程度</td>
-                </tr>
-                <tr>
-                  <td>個人事業主（IE＋SBS）</td>
-                  <td>¥288,000</td>
-                  <td>書類提出〜登録：オンライン申請ベース 7〜10営業日程度</td>
-                </tr>
-                <tr>
-                  <td>口座開設書類サポート</td>
-                  <td>¥258,000</td>
-                  <td>書類到着〜審査完了：数週間〜（銀行判断）</td>
-                </tr>
+                <tr><td>法人登記 書類整備サポート 基本プラン</td><td>¥330,000〜</td><td>登記：7〜10営業日程度</td></tr>
+                <tr><td>個人事業主（IE＋SBS）書類整備サポート</td><td>¥288,000</td><td>登録：7〜10営業日程度</td></tr>
+                <tr><td>銀行口座開設手続き 書類整備サポート</td><td>¥258,000</td><td>審査完了：数週間〜（銀行判断）</td></tr>
               </tbody>
             </table>
           </div>
-
-          <p class="text-sm muted">※ <strong>いずれも目安です。</strong>案件・時期・銀行当局の方針により<strong>前後します。</strong>税務・法務の効果を保証するものではありません。</p>
+          <p class="text-sm muted">※ いずれも目安です。案件や時期により変動します。</p>
 
           <details>
-            <summary><strong>基本プラン</strong>：¥330,000 <span class="text-sm">（税込）</span></summary>
+            <summary><strong>基本プラン</strong>：¥330,000〜 <span class="text-sm">（税込）</span></summary>
             <div class="content">
               <ul>
-                <li>法人登記書類の整備・取次（現地登記官との連絡含む）</li>
-                <li>法人口座<strong>開設書類の整備支援</strong>（TBC／BOG 他・開設可否は各銀行の審査判断）</li>
+                <li>法人登記書類の整備補助（現地登記官との連絡取次含む）</li>
+                <li>法人口座開設手続きに向けた書類案内（TBC／BOG 他・審査は銀行判断）</li>
                 <li>登記住所（1年）</li>
-                <li>書類翻訳・郵送の事務サポート</li>
-                <li>日本語ベースで文面完結（オンライン会議・英語は原則不要）</li>
+                <li>書類翻訳・郵送の事務補助</li>
+                <li>文面ベースで完結（オンライン会議・英語不要）</li>
               </ul>
-              <span class="note">※ 表示価格は<strong>書類整備・取次・情報提供サポートの対価</strong>であり、銀行手数料・預入金等とは無関係です。開設を保証するものではありません。</span>
+              <span class="note">※ 表示価格は<strong>書類整備・情報提供・事務補助の対価</strong>です。銀行手数料・預入金等とは無関係です。</span>
             </div>
           </details>
 
@@ -441,13 +549,10 @@
             <summary><strong>設立＋LPパック</strong>：¥498,000 <span class="text-sm">（税込）</span></summary>
             <div class="content">
               <ul>
-                <li>基本プランの範囲に加え：</li>
-                <li>.geドメイン取得手続</li>
+                <li>基本プランの範囲に加え：.geドメイン取得手続の案内</li>
                 <li>初期LP（問い合わせフォーム＋運用ガイドPDF）</li>
                 <li>月1回の軽微な相談（チャットベース）</li>
-                <li>ライティング構成アドバイス（一般情報）</li>
               </ul>
-              <span class="note">※ LP＝ランディングページ。金融商品の勧誘表示は行いません。</span>
             </div>
           </details>
 
@@ -456,12 +561,11 @@
             <div class="content">
               <ul>
                 <li>設立＋LPパックの範囲に加え：</li>
-                <li><strong>【参考資料提供】</strong>現地制度・書類管理に関する一般参考資料（助言ではありません）</li>
-                <li>帳簿テンプレート／書類リストPDF</li>
-                <li>職業別の一般的留意点（個別送付）</li>
+                <li><strong>【情報提供のみ】</strong>CFC・経費管理に関する参考資料の共有（税務助言ではありません）</li>
+                <li>帳簿テンプレート／経費リストPDF</li>
                 <li>月1回の運用レビュー（文面型）</li>
               </ul>
-              <span class="note">※ 税務・法務の助言は含みません（参考情報の提供・書類整備サポートです）。</span>
+              <span class="note">※ 税務・法務の助言は含みません（参考情報の提供のみ）。</span>
             </div>
           </details>
 
@@ -469,107 +573,79 @@
             <summary><strong>追加オプション</strong></summary>
             <div class="content">
               <ul>
-                <li><strong>Nominee構成</strong>：€2,500/年 <span class="text-sm">（税込／2025年8月時点）</span><br><span class="text-sm muted">UBO開示が必要です（CRS等の国際情報交換制度の対象となり得ます）。</span></li>
-                <li><strong>LP＋.geドメイン（2年目以降）</strong>：¥250,000 <span class="text-sm">（税込）</span></li>
-                <li><strong>RS.ge税務ポータル開設支援（希望者のみ）</strong>：¥33,000〜</li>
+                <li><strong>Nominee構成</strong>：€2,500/年（UBO開示が必要です）</li>
+                <li><strong>LP＋.geドメイン（2年目以降）</strong>：¥250,000（税込）</li>
+                <li><strong>RS.ge税務ポータル開設情報提供</strong>：¥33,000〜</li>
                 <li><strong>公証／アポスティーユ</strong>：¥15,000〜／書類</li>
-                <li><strong>国際郵送</strong>（DHL）：¥5,000〜</li>
+                <li><strong>国際郵送（DHL）</strong>：¥5,000〜</li>
               </ul>
-              <span class="note">※ 価格は時期・条件により変動し得ます。最新は事前にご確認ください。</span>
             </div>
           </details>
-
-          <p class="text-sm muted" style="margin-top:10px;">※ €建ての表示は請求時点の為替で円換算します。</p>
-
         </div>
       </details>
 
       <details>
         <summary>2年目以降の維持・保守</summary>
         <div class="content">
-          <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong> <span class="text-sm">（税込）</span></h4>
+          <h4>A.【法人維持のみ】　<strong>¥198,000／年</strong>（税込）</h4>
           <ul>
             <li>登記住所更新（1年）</li>
-            <li>書類更新の事務サポート（登記官との連絡調整等）</li>
+            <li>書類更新の事務補助（登記官との連絡等）</li>
             <li>現地パートナー連携（文面ベース）</li>
           </ul>
-
-          <h4>B.【法人維持＋LP保守】　<strong>¥298,000／年</strong> <span class="text-sm">（税込）</span></h4>
+          <h4>B.【法人維持＋LP保守】　<strong>¥298,000／年</strong>（税込）</h4>
           <ul>
-            <li>Aの範囲すべて</li>
-            <li>問い合わせフォームの保守・小修正</li>
+            <li>Aの範囲すべて＋問い合わせフォームの保守・小修正</li>
             <li>年1回の軽微なLP調整・掲載相談</li>
           </ul>
-
-          <div class="price-promo">
-            <div class="row">
-              <span class="label">LP＋.geドメイン追加（2年目以降）</span>
-              <span class="now">¥250,000</span><span class="text-sm">（税込）</span>
-            </div>
-            <div class="meta">
-              <small>※ 初年度「基本プラン」ご利用でLP・ドメイン未整備の方向け追加メニュー。</small>
-            </div>
-          </div>
         </div>
       </details>
-
     </div>
   </section>
 
   <!-- 個人事業主 -->
   <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主（IE）登録｜現地制度の一般情報・書類整備サポート</h2>
-    <p class="text-sm muted" style="margin-top:-0.5rem;margin-bottom:1rem;">
-      <strong>※ ジョージア現地の法人税制度は公開資料に基づく一般情報です。日本を含むお住まいの国での税負担・申告義務とは異なる場合があります。必ず居住国の税理士等の専門家にご相談ください。</strong>
-    </p>
+    <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主（IE）登録｜書類整備サポート</h2>
 
-    <div class="price-promo quick-summary" aria-label="サクッと要点">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
+    <div class="glp-disclaimer-box">
+      <strong>【重要】税率に関する注意事項</strong><br>
+      ジョージア現地制度には一定条件下での税率区分が存在しますが、<strong>日本を含む居住国での最終的な税負担とは異なります</strong>。日本での申告義務・税務判断については、必ず日本の税理士等の有資格専門家にご相談ください。
+    </div>
+
+    <div class="price-promo quick-summary">
+      <div class="row"><span class="label">サクッと要点（Quick summary）</span></div>
       <p class="qs-tag">こんな方におすすめ</p>
       <ul class="qs-list">
         <li>海外向けのビジネスを個人事業主として整備したい方</li>
-        <li>現地制度の一般情報を収集し、書類を正規ルートで整えたい方</li>
+        <li>副業の海外展開をフリーランスとして正規の形で進めたい方</li>
       </ul>
-      <p class="qs-tag">サポート内容</p>
+      <p class="qs-tag">サポート内容（書類整備・情報提供のみ）</p>
       <ul class="qs-list">
-        <li>IE（個人事業主）＋Small Business Status（SBS）のオンライン登録書類整備サポート</li>
-        <li>書類テンプレ・提出フロー案内など、日本語ベースでご案内します</li>
+        <li>IE（個人事業主）＋Small Business Status（SBS）のオンライン登録に関する書類整備補助</li>
+        <li>書類テンプレ・提出方法の案内（日本語ベースで対応）</li>
       </ul>
       <p class="qs-tag">料金の目安</p>
       <ul class="qs-list">
-        <li>IE＋SBS 登録書類整備一式：<strong>¥288,000（税込）</strong></li>
-        <li>公証費用や郵送費などの実費は別途ご負担となります</li>
-        <li>書類提出〜登録完了の目安：オンライン申請ベースで<strong>7〜10営業日</strong>（時期により変動します）</li>
+        <li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li>
+        <li>公証費用・郵送費などの実費は別途</li>
+        <li>登録完了までの目安：オンライン申請ベースで<strong>7〜10営業日</strong></li>
       </ul>
-      <p class="meta">※ 税務効果・法務効果は保証しません。お住まいの国の専門家にご相談ください。</p>
+      <p class="meta">※ 税率区分等の制度詳細は下の各項目をご確認ください。税務効果の保証は行いません。</p>
     </div>
 
     <div class="space-y-3 accordion">
 
       <details>
-        <summary>IE＋Small Business Statusの一般説明（公開資料参照）</summary>
+        <summary>IE＋Small Business Statusの制度概要（一般情報）</summary>
         <div class="content">
-          <p>ジョージアには<strong>Small Business Status（SBS）</strong>という制度があり、一定の要件を満たした場合に軽減税率が適用されることが公開資料で示されています。ただし、<strong>お住まいの国での申告義務や税負担については、別途専門家への確認が必要</strong>です。</p>
+          <p>ジョージアには<strong>Small Business Status（SBS）</strong>という個人事業主向けの税率区分制度があります。</p>
           <ul>
             <li>登録対象：IE（個人事業主）＋SBS</li>
             <li>所要期間：7〜10営業日（変動あり）</li>
-            <li>申請はオンライン（渡航は原則不要）</li>
+            <li>申請はオンライン（渡航不要）</li>
             <li>MoU提携：TREX LEGAL（ジョージア現地法律事務所）</li>
           </ul>
-          <span class="note">※ IE＝Individual Entrepreneur／SBS＝Small Business Status／MoU＝覚書</span>
-        </div>
-      </details>
-
-      <details>
-        <summary>本サービスの想定利用者（例）</summary>
-        <div class="content">
-          <ul>
-            <li>海外クライアントと直接契約する個人事業者</li>
-            <li>副業の海外展開をオンラインで書類整備したい個人</li>
-            <li>現地制度への準拠と帳簿整備を重視する方</li>
-          </ul>
+          <p class="text-sm muted"><strong>※ 居住国の税法が優先適用される場合があります。日本居住者の方はCFC税制・海外所得の申告義務が生じ得ます。必ず税理士にご相談ください。</strong></p>
         </div>
       </details>
 
@@ -577,64 +653,52 @@
         <summary>サポート範囲と料金</summary>
         <div class="content">
           <ul>
-            <li>登録書類整備一式（IE＋SBS）／登録証明（複数言語）／納税ID取得サポート</li>
-            <li>書類テンプレ一式・提出フローサポート（オンライン）</li>
+            <li>登録書類一式の整備補助（IE＋SBS）</li>
+            <li>書類テンプレ一式・提出方法の案内（オンライン）</li>
           </ul>
-
           <div class="price-promo">
             <div class="row">
               <span class="label">料金：</span>
               <span class="now">¥288,000</span><span class="text-sm">（税込）</span>
             </div>
             <div class="meta">
-              <small>※ 表示額は<strong>書類整備・情報提供サポートの対価</strong>です。公証・郵送などの実費は別途。</small>
-              <small>※ 税務・法務の助言は含みません。</small>
-              <small>※ 個人事業主登録と口座開設書類サポートを同時に希望される方向けに、セット料金（<strong>¥498,000（税込）</strong>）をご用意しています。</small>
+              <small>※ 書類整備・情報提供・事務補助の対価です。公証・郵送などの実費は別途。</small><br>
+              <small>※ IE登録と銀行口座開設手続きを同時にご希望の方向けセット料金（<strong>¥498,000（税込）</strong>）もございます。</small>
             </div>
             <div class="proof">
               <span>MoU：TREX LEGAL</span>
               <span>オンライン完結</span>
-              <span>複数言語対応</span>
             </div>
           </div>
-
-          <h5>別途費用（必要に応じ実費）</h5>
-          <ul>
-            <li>国際郵送（DHL）：¥5,000〜</li>
-            <li>公証／アポスティーユ：各¥15,000〜／書類</li>
-            <li>RS.ge税務ポータル開設支援（希望者のみ）：¥33,000〜</li>
-          </ul>
-          <span class="note">※ RS.ge＝税務ポータル</span>
         </div>
       </details>
 
       <details>
-        <summary>Small Business Statusの区分（公開資料に基づく一般情報）</summary>
+        <summary>Small Business Statusの税率区分（現地制度の一般情報）</summary>
         <div class="content">
           <table>
-            <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>現地税率（参考）</th><th>条件</th></tr></thead>
+            <thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>現地税率区分</th><th>条件</th></tr></thead>
             <tbody>
               <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td><td>全事業者対象</td></tr>
               <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td><td>SBS取得必須</td></tr>
               <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td><td>段階課税</td></tr>
             </tbody>
           </table>
-          <p class="text-sm muted">※ 上記はジョージア現地制度の公開資料に基づく参考値です。お住まいの国での申告義務・税負担は別途専門家にご確認ください。</p>
+          <p class="text-sm muted"><strong>※ 上記はジョージア現地制度の税率区分です。居住国での税負担とは異なります。日本居住者は日本の税理士にご確認ください。</strong></p>
         </div>
       </details>
 
       <details>
-        <summary>KYC・FMSに関する一般的留意点／FAQ</summary>
+        <summary>KYC・FMSに関する留意点／FAQ</summary>
         <div class="content">
           <p><strong>KYC（本人確認）</strong>：パスポート・住所証明。</p>
           <p><strong>FMS</strong>：高額送金・暗号資産規模に応じ確認が行われ得ます。</p>
           <h5>FAQ</h5>
           <ul>
-            <li>Q. 海外から申請可能？ → A. 可能（原則オンライン）。</li>
-            <li>Q. 口座開設は含まれる？ → A. 別サービスです（下記参照）。</li>
-            <li>Q. 日本での税務申告は？ → A. 必ず日本の税理士にご確認ください（当社では対応していません）。</li>
+            <li>Q. 海外から申請可能？ → A. 可能（オンライン完結）。</li>
+            <li>Q. 個人口座開設は含まれる？ → A. 別サービスです（下記参照）。</li>
+            <li>Q. 日本での申告は必要？ → A. 日本の税理士にご確認ください。</li>
           </ul>
-          <span class="note">※ 助言は行いません。制度・手順の一般情報および書類整備サポート範囲です。</span>
         </div>
       </details>
 
@@ -642,8 +706,7 @@
         <summary>個人 → 法人化の検討パス（一般論）</summary>
         <div class="content">
           <ul>
-            <li>売上規模や商流に応じ、法人化で国際取引の書類整備がしやすくなる場合があります。</li>
-            <li>IE登録者限定で、法人設立の基本プランを割引提供しています（内部枠管理・予告なく終了し得ます）。</li>
+            <li>売上規模や商流に応じ、法人化で国際取引の実務が整理しやすくなる場合があります。</li>
           </ul>
           <div class="price-promo">
             <div class="row"><span class="label">通常価格：</span><span class="old">¥330,000</span><span class="text-sm">（税込）</span></div>
@@ -658,50 +721,51 @@
 
   <!-- 個人口座 -->
   <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア銀行｜口座開設に向けた書類整備サポート（開設可否は各銀行の審査判断）</h2>
+    <h2 class="text-2xl md:text-3xl font-bold mb-6">銀行口座開設手続き｜書類整備サポート</h2>
 
-    <div class="price-promo quick-summary" aria-label="サクッと要点">
-      <div class="row">
-        <span class="label">サクッと要点（Quick summary）</span>
-      </div>
+    <div class="glp-disclaimer-box">
+      <strong>【重要】本サービスの性質について</strong><br>
+      当社が提供するのは、銀行口座開設手続きに必要な<strong>書類整備の補助と一般情報の提供のみ</strong>です。当社は銀行・金融機関の代理人・媒介者・勧誘者ではありません。いかなる銀行からも紹介料・手数料を受け取っておらず、口座開設の成功を保証するものではありません。
+    </div>
+
+    <div class="price-promo quick-summary">
+      <div class="row"><span class="label">サクッと要点（Quick summary）</span></div>
       <p class="qs-tag">こんな方におすすめ</p>
       <ul class="qs-list">
-        <li>ジョージアの個人口座開設に向けた書類を正規ルートで整えたい方</li>
-        <li>渡航は難しいが、書類整備を日本語ベースで進めたい方</li>
+        <li>ジョージアの銀行口座開設を検討しており、必要書類の整備方法を知りたい方</li>
+        <li>渡航が難しいが、正規の手順で書類整備を進めたい方</li>
       </ul>
-      <p class="qs-tag">サポート内容</p>
+      <p class="qs-tag">サポート内容（書類整備・情報提供のみ）</p>
       <ul class="qs-list">
-        <li>必要書類の案内・確認、公証・アポスティーユ取得方法のガイド</li>
-        <li>提携法律事務所経由での書類取次と進捗連絡</li>
-        <li>Wise登録など、実務準備の初期サポート</li>
+        <li>必要書類の案内とチェック、公証・アポスティーユ取得方法のガイド</li>
+        <li>提携法律事務所経由での申請書類の取次補助と進捗連絡</li>
+        <li>Wise登録など、実務で使いやすくするための初期情報提供</li>
       </ul>
       <p class="qs-tag">料金の目安</p>
       <ul class="qs-list">
-        <li>口座開設書類整備サポート：<strong>¥258,000（税込）</strong></li>
-        <li>IE＋口座書類セット：<strong>¥498,000（税込）</strong></li>
-        <li>銀行・公証・郵送などの実費は別途ご負担となります</li>
-        <li>書類到着〜審査完了の目安：<strong>数週間〜</strong>（銀行・時期により変動します）</li>
+        <li>銀行口座開設手続き 書類整備サポート：<strong>¥258,000（税込）</strong></li>
+        <li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li>
+        <li>審査完了の目安：書類到着〜<strong>数週間〜</strong>（銀行・時期により変動します）</li>
       </ul>
-      <p class="meta">※ 口座開設可否は各銀行の審査判断です。当社は金融商品の勧誘・媒介・代理は行いません。</p>
+      <p class="meta">※ 当社は金融商品取引業の登録を有しておらず、金融商品の勧誘・媒介は行いません。</p>
     </div>
 
     <div class="space-y-3 accordion">
 
       <details>
-        <summary>制度・市場の背景（参考情報）</summary>
+        <summary>銀行制度の背景（参考情報）</summary>
         <div class="content">
           <ul>
-            <li>主要行は国際市場で資金調達・英語対応・SWIFT送金が可能です</li>
-            <li>預金保護制度あり（上限・条件は各行・時点の規定によります）</li>
-            <li>非居住者の口座開設受付可否：<strong>各銀行の審査判断</strong>（事前確認を推奨します）</li>
+            <li>ジョージアの主要銀行は国際的な送金（SWIFT）に対応しています</li>
+            <li>預金保護制度あり（上限額・条件は各行および時点の規定によります）</li>
+            <li>非居住者の受付可否：<strong>各銀行の審査判断</strong></li>
           </ul>
           <p class="text-sm muted">※ 当社は特定の金融商品・銀行を推奨・斡旋しません。契約はお客様と各銀行の直接契約です。</p>
-          <p class="text-sm muted">※ 金融商品取引法上の勧誘・媒介・代理に該当する行為は行いません。</p>
         </div>
       </details>
 
       <details>
-        <summary>必要書類（海外在住・非居住者例）</summary>
+        <summary>必要書類（非居住者の一般的な例）</summary>
         <div class="content">
           <ul>
             <li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li>
@@ -709,8 +773,7 @@
             <li>署名（パスポート一致の筆跡／公証書への記載）</li>
             <li>原本郵送（PDF不可）</li>
           </ul>
-          <p>当社提供：eSIM（SMS認証用）／取得マニュアル／委任状・英文書式／郵送先案内 等</p>
-          <span class="note">※ アポスティーユ＝公文書の国際認証／eSIM＝組込型SIM</span>
+          <p>当社提供：eSIM（SMS認証用）情報案内／書類取得マニュアル／委任状・英文書式案内等</p>
         </div>
       </details>
 
@@ -718,36 +781,33 @@
         <summary>書類整備サポートの範囲と費用</summary>
         <div class="content">
           <ul>
-            <li>提携法律事務所を通じた正規ルートでの書類取次（MoU連携）</li>
-            <li>公証・アポスティーユ取得案内、翻訳補助、最終チェック</li>
-            <li>Wise登録支援、連絡窓口（チャットベース）</li>
+            <li>提携法律事務所経由での申請書類取次補助（MoU連携）</li>
+            <li>公証・アポスティーユ取得方法の案内、書類の最終チェック</li>
+            <li>Wise登録の情報提供、連絡窓口（チャットベース）</li>
           </ul>
 
-          <div class="value-box" role="region" aria-label="渡航不要のご案内">
-            <h5 class="value-title">書類整備は原則として渡航不要</h5>
-            <p>自国のことば（日本語）の文面だけで、公証・アポスティーユ・翻訳・郵送の段取りまでご案内します。</p>
+          <div class="value-box">
+            <h5 class="value-title">原則として渡航不要</h5>
+            <p>文面ベースで、公証・アポスティーユ・書類郵送の手順をご案内します。</p>
             <ul class="value-list">
-              <li>書類整備・連絡調整をオンラインでサポート</li>
-              <li>MoU連携の正規ルートでの書類取次</li>
+              <li>MoU連携の正規ルートでの書類取次補助</li>
               <li>連絡はチャット中心（履歴が残って安心）</li>
             </ul>
-            <p class="text-sm muted">※ 口座開設可否は各銀行の審査判断です。方針・時期により、追加書類や来店を求められる場合があります。</p>
+            <p class="text-sm muted">※ 開設可否は各銀行の審査判断です。</p>
           </div>
 
           <div class="price-promo">
-            <div class="row"><span class="label">書類整備サポート費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
+            <div class="row"><span class="label">サービス費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
             <div class="row">
-              <span class="label">IE＋口座書類セット：</span>
+              <span class="label">IE＋口座開設セット：</span>
               <span class="old">通常合計 ¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span>
             </div>
             <div class="meta">
-              <small>対価の範囲：書類案内・最終チェック・翻訳補助・公証/アポスティーユ取得方法の案内・現地法律事務所への書類取次・進捗連絡。</small><br>
-              <small>含まれないもの：銀行の審査/結果・銀行/公証/郵送の実費・為替/送金手数料・税務/法務の助言。</small><br>
-              <small><strong>重要：当社は銀行側のための募集・勧誘・代理行為は行いません。</strong>当社の業務は書類整備・連絡調整・取次の事務サポートのみです。</small><br>
-              <small>当社は、いかなる銀行・金融機関からも紹介料・コミッション等を受け取っていません。</small><br>
-              <small><strong>口座開設可否は各銀行の審査判断であり、成功保証はありません。</strong></small>
+              <small>対価の範囲：書類案内・最終チェック・公証/アポスティーユ取得方法の案内・現地法律事務所への書類取次補助・申請進捗連絡。</small><br>
+              <small>含まれないもの：銀行の審査/結果・銀行/公証/郵送の実費・税務/法務の助言。</small><br>
+              <small><strong>重要：当社は銀行から紹介料・コミッションを一切受け取っておらず、銀行側のための募集・勧誘・代理行為ではありません。</strong></small>
             </div>
-            <div class="proof"><span>MoU：TREX LEGAL</span><span>書類整備サポート</span></div>
+            <div class="proof"><span>MoU：TREX LEGAL</span></div>
           </div>
         </div>
       </details>
@@ -757,7 +817,7 @@
         <summary>複利の概算ツール（参考・商品非特定）</summary>
         <div class="content">
           <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
-            <h4 id="cf-title" class="smallish">複利の概算ツール（一般的な数式ベース／特定の商品・銀行は示しません）</h4>
+            <h4 id="cf-title" class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
 
             <div class="cf-grid">
               <label for="cf-currency">通貨</label>
@@ -769,7 +829,7 @@
               </select>
               <label for="cf-principal">元本</label>
               <input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
-              <label for="cf-rate">年率（%・任意入力）</label>
+              <label for="cf-rate">年率（%）</label>
               <input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
               <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
               <label for="cf-years">年数</label>
@@ -787,17 +847,17 @@
 
             <div class="cf-preset">
               <span class="cf-hint">年率の例：</span>
+              <button type="button" class="cf-chip" data-rate="3">3%</button>
               <button type="button" class="cf-chip" data-rate="5">5%</button>
               <button type="button" class="cf-chip" data-rate="8">8%</button>
               <button type="button" class="cf-chip" data-rate="10">10%</button>
-              <button type="button" class="cf-chip" data-rate="12">12%</button>
-              <small class="note">※ 例示の数値であり、特定の商品・銀行を示すものではありません。</small>
+              <small class="note">※ 例示の数値であり、特定の商品・銀行・利回りを示すものではありません。</small>
             </div>
 
             <div class="cf-ack">
               <input id="cf-ack" type="checkbox">
               <label for="cf-ack">
-                一般的な<strong>数学計算</strong>の参考ツールです。特定の商品・銀行・利回りの示唆ではありません。税・手数料・為替は加味していません。将来の成果を示唆・保証しません。
+                一般的な<strong>数学計算</strong>の参考ツールです。特定の商品・銀行・利回りの示唆ではありません。税・手数料・為替は加味していません。将来の成果を保証しません。
               </label>
             </div>
 
@@ -808,18 +868,18 @@
 
             <div id="cf-out" class="cf-out" aria-live="polite"></div>
 
-            <div class="cf-ref" style="margin-top:10px;">
+            <div style="margin-top:10px;">
               <details>
                 <summary>参考：公式の預金金利ページ（外部リンク）</summary>
                 <ul class="cf-links">
                   <li><a href="https://bankofgeorgia.ge/en/retail/deposits" target="_blank" rel="noopener noreferrer nofollow">Bank of Georgia – Deposits</a></li>
                   <li><a href="https://www.tbcbank.ge/web/en/web/guest/deposits" target="_blank" rel="noopener noreferrer nofollow">TBC Bank – Deposits</a></li>
                 </ul>
-                <p class="text-sm muted">※ 当社は各行の金利を表示・保証しません。最新値は各行の公式情報をご確認の上、「年率」欄にご自身で入力してください。</p>
+                <p class="text-sm muted">※ 当社は各行の金利を表示・保証しません。最新値は各行の公式情報をご確認ください。</p>
               </details>
             </div>
 
-            <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。投資判断の根拠にはなりません。</p>
+            <p class="text-sm muted" style="margin-top:.5rem;">※ 本ツールは教育・参考目的です。投資・預金の勧誘ではありません。</p>
           </div>
         </div>
       </details>
@@ -831,50 +891,45 @@
   <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4">こんな方にはおすすめしません</h2>
     <ul class="qs-list">
-      <li>お住まいの国での申告・納税義務を軽視されている方</li>
-      <li>短期の投機目的だけを考えている方</li>
-      <li>書類整備や帳簿管理を一切行うつもりがない方</li>
-      <li>専門家（税理士・弁護士）への相談を省略したい方</li>
+      <li>居住国での申告義務や法律を守る意思がない方</li>
+      <li>節税・脱税を目的とした助言・スキームを求めている方</li>
+      <li>必要書類の準備や帳簿づけを一切行うつもりがない方</li>
+      <li>違法な資金移動・マネーロンダリングが疑われる取引を検討している方</li>
     </ul>
-    <p class="text-sm muted" style="margin-top:.5rem;">※ 現地制度に沿って適正に運営されたい方向けのサービスです。</p>
+    <p class="text-sm muted" style="margin-top:.5rem;">※ 本サービスは各国の法令を遵守したうえで正規の手続きを進めたい方向けです。</p>
   </section>
 
   <!-- 相談前チェック -->
   <section id="precheck" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4">相談前に考えておいていただけるとスムーズです</h2>
     <ul class="qs-list">
-      <li>主な収入の種類（IT・コンサル・デザイン・翻訳・輸出入 など）</li>
+      <li>主な収入の種類（IT・コンサル・デザイン・輸出入 など）</li>
       <li>だいたいの売上規模（ざっくりでOK）</li>
       <li>「法人」から始めたいか、「個人事業主」から始めたいか</li>
       <li>口座を主に使うのは「生活用」か「事業用」か</li>
-      <li>お住まいの国の税理士・専門家への相談状況</li>
     </ul>
     <p class="text-sm muted" style="margin-top:.5rem;">※ 全部決まっていなくても大丈夫です。「なんとなくこうしたい」で構いません。</p>
   </section>
 
-  <!-- 免責事項 -->
+  <!-- 免責 -->
   <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
     <h2 class="smallish">免責事項・キャンセルポリシー（必ずお読みください）</h2>
-
     <div class="accordion">
       <details>
         <summary>免責事項（必ずお読みください）</summary>
         <div class="content">
           <ul>
-            <li>当サービスは<strong>公開資料に基づく一般情報の提供・書類整備の取次・事務サポート</strong>であり、<strong>銀行口座の代理開設・金融商品の勧誘・媒介・代理は行いません。</strong></li>
-            <li>現地での書類提出・登記手続きは、現地の正規パートナー（法律事務所等）が現地法・各銀行規程に基づき実施します。</li>
-            <li>当社の受領する料金は<strong>書類整備・情報提供・取次サポートの対価</strong>であり、銀行に支払う手数料・預入金等とは一切関係がありません。</li>
-            <li>当社は、いかなる銀行・金融機関からも紹介料・コミッション等を受け取っていません。</li>
-            <li><strong>税務・法務の個別助言は行いません。</strong>税務効果はお住まいの国・個別事情により異なります。必ず税理士・弁護士へご相談ください。</li>
-            <li>ジョージア現地制度に関する情報は公開資料参照の一般情報です。<strong>お住まいの国での税負担・申告義務とは異なる場合があります。</strong></li>
-            <li>口座開設可否・条件は各銀行の審査・方針により変動し、<strong>開設や条件は保証できません。</strong></li>
-            <li>試算・事例等は参考情報であり、<strong>将来の成果を保証しません。</strong></li>
-            <li>個人情報は、現地登記・登録・口座開設書類整備に必要な範囲および当社サービス運営の目的でのみ利用し、提携法律事務所・実務連携先の範囲でのみ共有します。目的外利用・第三者提供は行いません。</li>
-            <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、契約の準拠法はジョージア法、<strong>専属的合意管轄はジョージアの裁判所</strong>とします。</li>
-            <li>一部の法域では当社の免許・登録が求められるため、対象外となる場合があります。</li>
-            <li>日本の居住者の方は、国外財産調書・国外転出時課税・CFC税制などの対象となり得ます。必ず日本の所轄税務署または税理士にご確認ください。</li>
+            <li>当サービスは<strong>一般情報の提供・書類整備の補助・取次</strong>であり、<strong>銀行口座の代理開設・金融商品の勧誘・媒介・代理は一切行いません。</strong></li>
+            <li>当社は金融商品取引法・銀行法・資金決済法上の登録・許可を必要とする業務は行いません。</li>
+            <li>当社の受領する料金は<strong>書類整備・情報提供・事務補助の対価</strong>であり、銀行に支払う手数料・預入金等とは一切関係がありません。</li>
+            <li>当社は、いかなる銀行・金融機関からも紹介料・コミッション等を受け取っておりません。</li>
+            <li><strong>税務・法務の助言は行いません。</strong>必ず税理士・弁護士へご相談ください。</li>
+            <li>ジョージア現地の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります。</strong></li>
+            <li>口座開設の可否・条件は各銀行の審査・方針により変動し、<strong>開設や条件は保証できません。</strong></li>
+            <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、契約の準拠法はジョージア法です。</li>
+            <li>日本居住者の方は、国外財産調書・国外転出時課税・CFC税制等の対象となり得ます。必ず日本の税理士にご確認ください。</li>
+            <li>反社会的勢力・マネーロンダリングが疑われる場合は、法令に基づき関係当局への報告を行う場合があります。</li>
           </ul>
-          <p class="text-sm muted">※ 本サイトの情報は公開資料参照の一般情報であり、特定行為の勧誘・意思決定のための助言を目的としません。</p>
         </div>
       </details>
 
@@ -882,14 +937,13 @@
         <summary>キャンセルポリシー（返金条件）</summary>
         <div class="content">
           <ul>
-            <li>お客様都合のキャンセルは次のとおり：
+            <li>お客様都合のキャンセル：
               <ul>
                 <li>現地パートナーへの依頼開始前：返金手数料（1万円）を差し引いた金額を返金</li>
-                <li>現地パートナーへの依頼開始後：お支払い金額の100%がキャンセル料となり、<strong>ご返金はありません。</strong></li>
+                <li>現地パートナーへの依頼開始後：<strong>ご返金はありません。</strong></li>
               </ul>
             </li>
             <li>当社の明確な不履行がある場合は、返金・再対応等の適切な措置を講じます。</li>
-            <li>虚偽申告・反社会的勢力該当は支援不可。</li>
             <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、日本の特定商取引法のクーリングオフは適用対象外です。</li>
           </ul>
         </div>
@@ -900,16 +954,16 @@
   <!-- 固定CTA -->
   <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
     <div class="row">
-      <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">トップへ</a>
+      <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">↑ トップ</a>
       <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">相談はこちら</a>
-      <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">今すぐ申し込み</a>
+      <a class="btn success" id="applyNow" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer">📩 今すぐ申し込み</a>
     </div>
   </div>
 </main>
 
 <footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 GRENA GROUP LLC｜Since 2025｜ジョージア法人ID：406365525｜お問い合わせ：<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜本サイトは一般情報の提供であり、勧誘・媒介ではありません。｜<a href="/terms" target="_blank" rel="noopener noreferrer">利用規約</a>｜<a href="/privacy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a></small>
-  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜一般情報の提供のみ</small>
+  <small class="foot-pc">© 2025 GRENA GROUP LLC｜ジョージア法人ID：406365525｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜本サービスは書類整備・一般情報提供のみです。税務・法務の助言・金融商品の勧誘は行いません。｜<a href="/terms" target="_blank" rel="noopener noreferrer">利用規約</a>｜<a href="/privacy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a></small>
+  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜書類整備・一般情報提供のみ</small>
 </footer>
 
 <!-- スクロールスクリプト -->
@@ -918,10 +972,10 @@
   var landing = document.getElementById('glp-landing');
   if (!landing) return;
   var keywordMap = {
-    "lp-start": "ジョージア法人設立・個人事業主登録・個人口座",
+    "lp-start": "ジョージアで、はじめる",
     "corp":     "ジョージア法人設立｜書類整備",
     "ie":       "ジョージア個人事業主（IE）登録",
-    "bank":     "ジョージア銀行｜口座開設",
+    "bank":     "銀行口座開設手続き",
     "washoku":  "相談前に考えておいていただけるとスムーズです",
     "realestate": "相談前に考えておいていただけるとスムーズです",
     "others":   "免責事項・キャンセルポリシー"
@@ -936,13 +990,11 @@
     }
     var target = null;
     for (var k = 0; k < nodes.length; k++) {
-      var text = nodes[k].textContent || "";
-      if (text.indexOf(keyword) !== -1) { target = nodes[k]; break; }
+      if ((nodes[k].textContent || "").indexOf(keyword) !== -1) { target = nodes[k]; break; }
     }
     if (target) {
       var y = target.getBoundingClientRect().top + window.pageYOffset - 80;
-      try { window.scrollTo({ top: y, behavior: "smooth" }); }
-      catch (e) { window.scrollTo(0, y); }
+      try { window.scrollTo({ top: y, behavior: "smooth" }); } catch (e) { window.scrollTo(0, y); }
     }
   }
   var links = landing.querySelectorAll("[data-glp-target]");
@@ -961,35 +1013,7 @@
 <style>
 .goog-te-banner-frame{display:none!important}
 body{top:0!important}
-#goog-gt-tt, .goog-te-balloon-frame{display:none!important}
-#lpLangSwitch {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 10px);
-  right: calc(env(safe-area-inset-right, 0px) + 10px + 48px + 10px);
-  z-index: 9999;
-  display: flex;
-  gap: 6px;
-  padding: 6px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.95);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-  backdrop-filter: blur(6px);
-}
-#lpLangSwitch button{
-  appearance: none;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  border-radius: 8px;
-  padding: 7px 10px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-}
-#lpLangSwitch button[aria-pressed="true"]{
-  background: #0f2040;
-  color: #fff;
-  border-color: #0f2040;
-}
+#goog-gt-tt,.goog-te-balloon-frame{display:none!important}
 </style>
 
 <script>
@@ -1008,41 +1032,36 @@ function lpGoogleTranslateInit() {
 (function(){
   "use strict";
   function setGoogTrans(value){
-    var host = location.hostname.replace(/^www\./,'');
-    var exp = new Date(Date.now() + 365*24*60*60*1000).toUTCString();
-    document.cookie = "googtrans=" + encodeURIComponent(value) + "; expires=" + exp + "; path=/";
-    document.cookie = "googtrans=" + encodeURIComponent(value) + "; expires=" + exp + "; path=/; domain=." + host;
-    document.cookie = "googtrans=" + encodeURIComponent(value) + "; expires=" + exp + "; path=/; domain=" + host;
+    var host=location.hostname.replace(/^www\./,'');
+    var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
+    document.cookie="googtrans="+encodeURIComponent(value)+"; expires="+exp+"; path=/";
+    document.cookie="googtrans="+encodeURIComponent(value)+"; expires="+exp+"; path=/; domain=."+host;
+    document.cookie="googtrans="+encodeURIComponent(value)+"; expires="+exp+"; path=/; domain="+host;
   }
   function mountSwitch(){
-    if (document.getElementById("lpLangSwitch")) return;
-    var box = document.createElement("div");
-    box.id = "lpLangSwitch";
-    box.className = "notranslate";
-    box.setAttribute("translate","no");
-    var jp = document.createElement("button");
-    jp.type = "button"; jp.id = "lpLangJP";
-    jp.className = "notranslate"; jp.setAttribute("translate","no");
-    jp.innerHTML = '<span class="notranslate">JP</span>';
-    var en = document.createElement("button");
-    en.type = "button"; en.id = "lpLangEN";
-    en.className = "notranslate"; en.setAttribute("translate","no");
-    en.innerHTML = '<span class="notranslate">EN</span>';
-    jp.addEventListener("click", function(){ localStorage.setItem("lp_lang","ja"); setGoogTrans("/ja/ja"); location.reload(); });
-    en.addEventListener("click", function(){ localStorage.setItem("lp_lang","en"); setGoogTrans("/ja/en"); location.reload(); });
-    box.appendChild(jp); box.appendChild(en);
-    document.body.appendChild(box);
-    var saved = localStorage.getItem("lp_lang") || "ja";
-    jp.setAttribute("aria-pressed", saved === "ja" ? "true" : "false");
-    en.setAttribute("aria-pressed", saved === "en" ? "true" : "false");
+    if(document.getElementById("lpLangSwitch"))return;
+    var box=document.createElement("div");
+    box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");
+    var jp=document.createElement("button");
+    jp.type="button";jp.className="notranslate";jp.setAttribute("translate","no");
+    jp.innerHTML='<span class="notranslate">JP</span>';
+    var en=document.createElement("button");
+    en.type="button";en.className="notranslate";en.setAttribute("translate","no");
+    en.innerHTML='<span class="notranslate">EN</span>';
+    jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});
+    en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});
+    box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);
+    var saved=localStorage.getItem("lp_lang")||"ja";
+    jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");
+    en.setAttribute("aria-pressed",saved==="en"?"true":"false");
   }
   function boot(){
     mountSwitch();
-    var saved = localStorage.getItem("lp_lang") || "ja";
-    if (saved === "en") setGoogTrans("/ja/en");
+    var saved=localStorage.getItem("lp_lang")||"ja";
+    if(saved==="en")setGoogTrans("/ja/en");
     else setGoogTrans("/ja/ja");
   }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
   else boot();
 })();
 </script>
