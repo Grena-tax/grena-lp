@@ -5,48 +5,57 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC</title>
 <link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20260318c">
-<meta name="theme-color" content="#0b1f3a">
-
-<!-- フォント：Shippori Mincho B1（格上げ）＋ Cormorant（数字）＋ Noto Sans JP（本文） -->
+<link rel="stylesheet" href="./patch.css?v=20260318d">
+<meta name="theme-color" content="#0a1c35">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Shippori+Mincho+B1:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Shippori+Mincho+B1:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
-   GRENA LP 2026 — DESIGN 100%
-   Concept: 高級感のある日本語金融LP
-   フォント三層：Cormorant（数字）/ Shippori Mincho（見出し）/ Noto Sans JP（本文）
-   カラー：深紺 × アンティークゴールド × オフホワイト
+   GRENA LP 2026 — DESIGN 100% DEFINITIVE
+   
+   フォント三層：
+   ・見出し  → Shippori Mincho B1（格調・和の洗練）
+   ・数字/英  → Cormorant Garamond（エレガント・高級感）
+   ・本文    → Noto Sans JP（読みやすさ・信頼感）
+   
+   カラー：
+   ・#0a1c35 深紺（権威・信頼）
+   ・#b8973e アンティークゴールド（格調・差別化）
+   ・#faf9f5 クリーム（清潔・上品）
+   
+   デザイン哲学：
+   「証券会社のパンフレット × 銀座の老舗」の質感
 ============================================================ */
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 
 :root{
-  --navy:    #0a1c35;
-  --navy-2:  #112848;
-  --navy-3:  #1a3d6b;
-  --gold:    #b8973e;
-  --gold-l:  #d4b060;
-  --gold-ll: #e8cb7a;
-  --gold-d:  #8a6e28;
-  --gold-bg: rgba(184,151,62,.07);
-  --gold-br: rgba(184,151,62,.25);
-  --white:   #ffffff;
-  --cream:   #faf9f5;
-  --off:     #f4f5f9;
-  --text:    #0d1b2e;
-  --text-2:  #384d66;
-  --text-3:  #7a90aa;
-  --border:  rgba(10,28,53,.09);
-  --r:       12px;
-  --r-lg:    20px;
-  --r-xl:    28px;
-  --sh-sm:   0 2px 12px rgba(10,28,53,.07);
-  --sh:      0 6px 24px rgba(10,28,53,.10);
-  --sh-lg:   0 16px 48px rgba(10,28,53,.16);
-  --sh-xl:   0 28px 72px rgba(10,28,53,.22);
-  /* Safe area */
+  --navy:     #0a1c35;
+  --navy-2:   #112848;
+  --navy-3:   #1a3d6b;
+  --gold:     #b8973e;
+  --gold-l:   #cfa94e;
+  --gold-ll:  #e2c472;
+  --gold-d:   #8a6e28;
+  --gold-pale:#f5edd8;
+  --gold-bg:  rgba(184,151,62,.07);
+  --gold-br:  rgba(184,151,62,.22);
+  --white:    #ffffff;
+  --cream:    #faf9f5;
+  --off:      #f3f4f8;
+  --text:     #0d1b2e;
+  --text-2:   #374d66;
+  --text-3:   #7a8fa8;
+  --border:   rgba(10,28,53,.08);
+  --r:        12px;
+  --r-lg:     20px;
+  --r-xl:     28px;
+  --sh-sm:    0 2px 12px rgba(10,28,53,.06);
+  --sh:       0 6px 24px rgba(10,28,53,.10);
+  --sh-lg:    0 16px 48px rgba(10,28,53,.14);
+  --sh-xl:    0 28px 80px rgba(10,28,53,.20);
   --safe-top:    env(safe-area-inset-top,0px);
   --safe-right:  env(safe-area-inset-right,0px);
   --safe-bottom: env(safe-area-inset-bottom,0px);
@@ -58,13 +67,41 @@ html,body{
   font-family:'Noto Sans JP',-apple-system,sans-serif;
   background:var(--cream);color:var(--text);
   -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
   overflow:auto!important;height:auto!important;
 }
 body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom));}
 
-/* ── 見出しフォント統一 ── */
-h1,h2,h3,.disp{
-  font-family:'Shippori Mincho B1',serif;
+/* ─── ゴールドの横罫線（セクション区切り装飾） ─── */
+.gold-rule{
+  display:flex;align-items:center;gap:16px;
+  margin:0 0 32px;
+}
+.gold-rule::before,.gold-rule::after{
+  content:"";flex:1;
+  height:1px;background:linear-gradient(90deg,transparent,var(--gold-br),transparent);
+}
+.gold-rule-inner{
+  font-family:'Cormorant Garamond',serif;
+  font-size:11px;font-weight:600;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);
+  white-space:nowrap;
+}
+
+/* ─── セクション区切り装飾（菱形） ─── */
+.sec-ornament{
+  text-align:center;margin:48px 0;
+  display:flex;align-items:center;gap:20px;
+}
+.sec-ornament::before,.sec-ornament::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-br),transparent);
+}
+.sec-ornament-diamond{
+  width:8px;height:8px;
+  background:var(--gold);
+  transform:rotate(45deg);
+  flex-shrink:0;
 }
 
 /* ============================================================
@@ -72,7 +109,7 @@ h1,h2,h3,.disp{
 ============================================================ */
 .hero{
   position:relative;
-  min-height:min(720px,96vh);
+  min-height:min(740px,96vh);
   display:flex;align-items:flex-end;
   overflow:hidden;color:#fff;
 }
@@ -81,153 +118,182 @@ h1,h2,h3,.disp{
   width:100%;height:100%;
   object-fit:cover;object-position:50% 35%;
   display:block;
-  transform:scale(1.04);
-  transition:transform 12s ease;
-  backface-visibility:hidden;
+  transform:scale(1.06);
+  transition:transform 14s ease;
+  will-change:transform;
 }
 .hero:hover .hero-img{transform:scale(1.0);}
 
-/* グラデーション：より立体的・シネマティック */
+/* 3層グラデーション：シネマティックな深み */
 .hero-grad{
   position:absolute;inset:0;
   background:
-    linear-gradient(135deg,rgba(10,28,53,.18) 0%,transparent 45%),
+    radial-gradient(ellipse 80% 60% at 20% 80%, rgba(10,28,53,.45) 0%, transparent 60%),
     linear-gradient(to bottom,
       rgba(5,12,28,.04) 0%,
-      rgba(5,12,28,.12) 20%,
-      rgba(5,12,28,.52) 58%,
-      rgba(5,12,28,.90) 100%
+      rgba(5,12,28,.08) 15%,
+      rgba(5,12,28,.48) 55%,
+      rgba(5,12,28,.88) 88%,
+      rgba(5,12,28,.95) 100%
     );
 }
-/* ノイズ風のテクスチャオーバーレイ（軽量） */
-.hero-noise{
-  position:absolute;inset:0;z-index:1;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity:.5;pointer-events:none;mix-blend-mode:overlay;
+
+/* ゴールドの光源エフェクト（ヒーロー右上） */
+.hero-flare{
+  position:absolute;
+  top:-10%;right:-5%;
+  width:500px;height:500px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(184,151,62,.08) 0%,transparent 65%);
+  z-index:1;pointer-events:none;
 }
 
 .hero-body{
   position:relative;z-index:2;
   width:100%;max-width:780px;
-  padding:0 40px 68px;
+  padding:0 44px 72px;
 }
-/* staggered reveal */
-.hero-body>*{opacity:0;animation:revealUp .75s cubic-bezier(.22,.68,0,1.2) forwards;}
+.hero-body>*{opacity:0;animation:revealUp .8s cubic-bezier(.22,.68,0,1.1) forwards;}
 .hero-body>*:nth-child(1){animation-delay:.05s;}
-.hero-body>*:nth-child(2){animation-delay:.20s;}
-.hero-body>*:nth-child(3){animation-delay:.38s;}
-.hero-body>*:nth-child(4){animation-delay:.50s;}
-.hero-body>*:nth-child(5){animation-delay:.62s;}
+.hero-body>*:nth-child(2){animation-delay:.22s;}
+.hero-body>*:nth-child(3){animation-delay:.40s;}
+.hero-body>*:nth-child(4){animation-delay:.54s;}
+.hero-body>*:nth-child(5){animation-delay:.66s;}
+
 @keyframes revealUp{
-  from{opacity:0;transform:translateY(20px);}
+  from{opacity:0;transform:translateY(22px);}
   to{opacity:1;transform:translateY(0);}
 }
 
-/* eyebrow ピル */
+/* Eyebrow pill */
 .hero-pill{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;gap:8px;
   padding:5px 16px;border-radius:999px;
-  border:1px solid rgba(184,151,62,.55);
-  background:rgba(184,151,62,.12);
+  border:1px solid rgba(184,151,62,.50);
+  background:rgba(184,151,62,.11);
+  font-family:'Noto Sans JP',sans-serif;
   font-size:11px;font-weight:700;letter-spacing:.10em;
-  color:var(--gold-ll);margin-bottom:22px;
+  color:var(--gold-ll);
+  margin-bottom:24px;
   backdrop-filter:blur(8px);
   text-transform:uppercase;
-  font-family:'Noto Sans JP',sans-serif;
 }
 
-/* ── ヒーロー見出し（核心修正） ──
-   問題：「に、」だけ行落ちしていた
-   解決：BR削除、max-widthで自然折り返し、サブタイトル2段構成に変更
-   フォント：Shippori Mincho B1（Noto Serif JPより格上）
-*/
-.hero-h1{
-  font-family:'Shippori Mincho B1',serif!important;
-  font-weight:800!important;
-  line-height:1.22!important;
-  color:#fff!important;
-  text-shadow:0 3px 28px rgba(0,0,0,.32);
-  margin-bottom:20px!important;
-  max-width:640px;
-  letter-spacing:-.01em;
-}
-/* 2段構成：上は小さめ・控えめ、下は大きく・強く */
-.hero-h1 .h1-top{
+/* ヒーロー見出し：2段構成 */
+.hero-h1{margin-bottom:22px!important;}
+.hero-h1-top{
   display:block;
-  font-size:clamp(16px,2.2vw,22px);
+  font-family:'Shippori Mincho B1',serif;
+  font-size:clamp(15px,1.8vw,20px);
   font-weight:600;
-  color:rgba(255,255,255,.72);
-  margin-bottom:10px;
-  letter-spacing:.01em;
+  color:rgba(255,255,255,.60);
+  letter-spacing:.04em;
+  margin-bottom:12px;
+  line-height:1.4;
 }
-.hero-h1 .h1-main{
+.hero-h1-main{
   display:block;
-  font-size:clamp(30px,5vw,52px);
+  font-family:'Shippori Mincho B1',serif;
+  font-size:clamp(28px,4.5vw,50px);
   font-weight:800;
   color:#fff;
+  line-height:1.25;
+  letter-spacing:-.01em;
+  text-shadow:0 3px 30px rgba(0,0,0,.30);
 }
-/* "Wise"部分：イタリックではなくゴールド太字に変更 */
-.hero-h1 .h1-main .wise{
+.hero-h1-main .wise{
   color:var(--gold-ll);
-  font-weight:800;
-  font-style:normal;
   position:relative;
-  white-space:nowrap;
+  display:inline-block;
 }
-.hero-h1 .h1-main .wise::after{
+/* Wiseの下にゴールドライン */
+.hero-h1-main .wise::after{
   content:"";
-  position:absolute;
-  bottom:-2px;left:0;right:0;
-  height:2px;
-  background:linear-gradient(90deg,var(--gold-ll),transparent);
-  border-radius:1px;
+  position:absolute;bottom:-3px;left:0;right:0;
+  height:2px;border-radius:1px;
+  background:linear-gradient(90deg,var(--gold-ll),rgba(226,196,114,.0));
 }
 
 .hero-lead{
-  font-size:clamp(14px,1.8vw,16px);
-  line-height:1.9;
-  color:rgba(255,255,255,.82);
+  font-family:'Noto Sans JP',sans-serif;
+  font-size:clamp(14px,1.7vw,16px);
+  line-height:1.95;
+  color:rgba(255,255,255,.80);
   margin-bottom:18px;
   max-width:460px;
+  font-weight:300;
 }
 .hero-disc{
+  font-family:'Noto Sans JP',sans-serif;
   font-size:11px;line-height:1.65;
-  color:rgba(255,255,255,.44);
-  margin-bottom:28px;
+  color:rgba(255,255,255,.40);
+  margin-bottom:30px;
   padding:10px 14px;
   border-radius:8px;
-  background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.07);
-  max-width:460px;backdrop-filter:blur(4px);
+  background:rgba(0,0,0,.26);
+  border:1px solid rgba(255,255,255,.06);
+  max-width:460px;
+  backdrop-filter:blur(4px);
 }
-.hero-btns{display:flex;flex-wrap:wrap;gap:12px;}
+.hero-btns{display:flex;flex-wrap:wrap;gap:14px;}
+
+/* スクロールヒント */
+.hero-scroll{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  z-index:3;display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:revealUp .8s .9s ease forwards;opacity:0;
+}
+.hero-scroll-line{
+  width:1px;height:36px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.5),transparent);
+  animation:scrollLine 1.6s ease-in-out infinite;
+}
+@keyframes scrollLine{
+  0%{transform:scaleY(0);transform-origin:top;}
+  50%{transform:scaleY(1);transform-origin:top;}
+  51%{transform:scaleY(1);transform-origin:bottom;}
+  100%{transform:scaleY(0);transform-origin:bottom;}
+}
+.hero-scroll-txt{
+  font-family:'Cormorant Garamond',serif;
+  font-size:10px;letter-spacing:.2em;
+  color:rgba(255,255,255,.35);text-transform:uppercase;
+}
 
 /* ============================================================
    BUTTONS
 ============================================================ */
 .btn-gold{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:15px 32px;border-radius:999px;
-  background:linear-gradient(135deg,var(--gold-ll) 0%,var(--gold) 60%,var(--gold-d) 100%);
-  color:var(--navy);font-family:'Noto Sans JP',sans-serif;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:15px 34px;border-radius:999px;
+  background:linear-gradient(135deg,var(--gold-ll) 0%,var(--gold) 55%,var(--gold-d) 100%);
+  color:var(--navy);
+  font-family:'Noto Sans JP',sans-serif;
   font-size:14px;font-weight:700;
   text-decoration:none;border:none;cursor:pointer;
-  box-shadow:0 8px 28px rgba(184,151,62,.48),0 2px 8px rgba(0,0,0,.14);
+  box-shadow:0 8px 30px rgba(184,151,62,.48),0 2px 8px rgba(0,0,0,.16);
   transition:all .22s;letter-spacing:.04em;white-space:nowrap;
+  position:relative;overflow:hidden;
 }
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 38px rgba(184,151,62,.58);}
+.btn-gold::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.16),transparent);
+  opacity:0;transition:opacity .22s;
+}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(184,151,62,.58);}
+.btn-gold:hover::after{opacity:1;}
 
 .btn-ghost{
-  display:inline-flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;gap:8px;
   padding:14px 28px;border-radius:999px;
   background:rgba(255,255,255,.10);color:#fff;
   font-family:'Noto Sans JP',sans-serif;
   font-size:14px;font-weight:600;
-  text-decoration:none;border:1.5px solid rgba(255,255,255,.36);
+  text-decoration:none;border:1.5px solid rgba(255,255,255,.34);
   backdrop-filter:blur(6px);
   transition:all .22s;letter-spacing:.04em;white-space:nowrap;cursor:pointer;
 }
-.btn-ghost:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.60);}
+.btn-ghost:hover{background:rgba(255,255,255,.20);border-color:rgba(255,255,255,.58);}
 
 .btn-navy{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -237,7 +303,7 @@ h1,h2,h3,.disp{
   font-size:13px;font-weight:700;
   text-decoration:none;border:none;cursor:pointer;
   box-shadow:0 4px 14px rgba(10,28,53,.26);
-  transition:all .2s;white-space:nowrap;
+  transition:all .2s;white-space:nowrap;letter-spacing:.02em;
 }
 .btn-navy:hover{background:var(--navy-2);transform:translateY(-1px);}
 
@@ -253,7 +319,7 @@ h1,h2,h3,.disp{
 .btn-green:hover{background:#0a7a3f;transform:translateY(-1px);}
 
 .btn-dim{
-  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  display:inline-flex;align-items:center;justify-content:center;
   padding:12px 22px;border-radius:var(--r);
   background:var(--off);color:var(--text-3);
   font-family:'Noto Sans JP',sans-serif;
@@ -269,26 +335,23 @@ h1,h2,h3,.disp{
   background:var(--navy);
   padding:14px 24px;
   display:flex;align-items:center;justify-content:center;
-  gap:24px;flex-wrap:wrap;
-  border-bottom:1px solid rgba(184,151,62,.16);
+  gap:28px;flex-wrap:wrap;
+  border-bottom:1px solid rgba(184,151,62,.14);
 }
-.t-item{
+.ti{
   display:flex;align-items:center;gap:9px;
   font-family:'Noto Sans JP',sans-serif;
-  font-size:12px;font-weight:500;
-  color:rgba(255,255,255,.72);
+  font-size:12px;font-weight:500;color:rgba(255,255,255,.72);
   white-space:nowrap;
 }
-/* アイコンをゴールドリング付きに変更 */
-.t-icon{
-  width:30px;height:30px;
-  border-radius:50%;
-  background:rgba(184,151,62,.14);
-  border:1px solid rgba(184,151,62,.30);
+.ti-ic{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(184,151,62,.12);
+  border:1px solid rgba(184,151,62,.28);
   display:flex;align-items:center;justify-content:center;
   font-size:13px;flex-shrink:0;
 }
-.t-sep{width:1px;height:18px;background:rgba(255,255,255,.10);}
+.ti-sep{width:1px;height:18px;background:rgba(255,255,255,.10);}
 
 /* ============================================================
    LAYOUT
@@ -296,27 +359,37 @@ h1,h2,h3,.disp{
 .page-wrap{max-width:920px;margin:0 auto;padding:0 24px 80px;}
 
 /* ============================================================
-   STATS — Cormorant Garamond で格上げ
+   STATS — Cormorant Garamondで格上げ
 ============================================================ */
 .stats{
   display:grid;grid-template-columns:repeat(3,1fr);
-  gap:2px;
-  margin:40px 0;
+  gap:2px;margin:44px 0 36px;
   background:var(--gold-br);
-  border-radius:18px;overflow:hidden;
+  border-radius:20px;overflow:hidden;
   border:1px solid var(--gold-br);
-  box-shadow:var(--sh);
+  box-shadow:var(--sh-lg);
 }
-.stat{background:var(--white);padding:26px 16px 22px;text-align:center;}
-/* 数字：Cormorant Garamond（エレガントなセリフ数字） */
+.stat{
+  background:var(--white);
+  padding:30px 16px 24px;
+  text-align:center;
+  position:relative;
+}
+/* 各statの上にゴールドライン */
+.stat::before{
+  content:"";position:absolute;
+  top:0;left:16px;right:16px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.5;
+}
 .stat-n{
   display:block;
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(36px,5.5vw,52px);
+  font-size:clamp(40px,6vw,56px);
   font-weight:600;
   color:var(--navy);
   line-height:1;margin-bottom:10px;
-  letter-spacing:-.01em;
+  letter-spacing:-.02em;
 }
 .stat-n em{color:var(--gold);font-style:italic;}
 .stat-l{
@@ -329,14 +402,14 @@ h1,h2,h3,.disp{
    NOTICE
 ============================================================ */
 .notice{
-  background:linear-gradient(135deg,#fffcf0,#fff9e4);
-  border:1px solid rgba(184,151,62,.32);
+  background:linear-gradient(135deg,#fffdf2,#fff9e4);
+  border:1px solid rgba(184,151,62,.28);
   border-left:4px solid var(--gold);
   border-radius:var(--r);
   padding:13px 18px;
   font-family:'Noto Sans JP',sans-serif;
   font-size:12px;color:#5a4800;
-  line-height:1.78;margin:0 0 40px;
+  line-height:1.78;margin:0 0 44px;
   box-shadow:var(--sh-sm);
 }
 .notice strong{color:#8a6500;}
@@ -344,18 +417,22 @@ h1,h2,h3,.disp{
 /* ============================================================
    SECTION HEADER
 ============================================================ */
-.sh{margin:0 0 30px;}
+.sh{margin:0 0 32px;}
+/* Cormorant Garamondのイタリックでエレガントに */
 .sh-eye{
   display:inline-block;
   font-family:'Cormorant Garamond',serif;
-  font-size:11px;font-weight:600;letter-spacing:.22em;
-  text-transform:uppercase;
+  font-size:13px;font-weight:400;font-style:italic;
+  letter-spacing:.16em;
   color:var(--gold);
-  margin-bottom:12px;
-  padding-bottom:8px;
-  /* ゴールドの細線で洗練 */
-  border-bottom:1px solid var(--gold-br);
-  padding-right:4px;
+  margin-bottom:10px;
+}
+/* ゴールドのアンダーライン */
+.sh-line{
+  display:block;width:32px;height:1.5px;
+  background:linear-gradient(90deg,var(--gold),transparent);
+  margin-bottom:14px;
+  border-radius:1px;
 }
 .sh-title{
   font-family:'Shippori Mincho B1',serif;
@@ -367,7 +444,7 @@ h1,h2,h3,.disp{
 .sh-sub{
   font-family:'Noto Sans JP',sans-serif;
   font-size:14px;color:var(--text-3);
-  line-height:1.8;
+  line-height:1.8;font-weight:300;
 }
 
 /* ============================================================
@@ -375,7 +452,7 @@ h1,h2,h3,.disp{
 ============================================================ */
 .emp-grid{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:12px;margin:0 0 44px;
+  gap:12px;margin:0 0 48px;
 }
 .emp-card{
   background:var(--white);
@@ -386,14 +463,18 @@ h1,h2,h3,.disp{
   box-shadow:var(--sh-sm);
   transition:transform .22s,box-shadow .22s,border-color .22s;
 }
-.emp-card:hover{transform:translateY(-3px);box-shadow:var(--sh);border-color:var(--gold-br);}
+.emp-card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--sh);
+  border-color:var(--gold-br);
+}
 .emp-ico{
   width:36px;height:36px;border-radius:10px;
-  background:linear-gradient(135deg,#e8eeff,#d6e2f8);
+  background:linear-gradient(135deg,#e6eeff,#d4dffa);
   display:flex;align-items:center;justify-content:center;
   font-size:17px;flex-shrink:0;
 }
-.emp-text{
+.emp-tx{
   font-family:'Noto Sans JP',sans-serif;
   font-size:13px;color:var(--text-2);
   line-height:1.72;font-weight:400;
@@ -405,19 +486,18 @@ h1,h2,h3,.disp{
 .cmp-wrap{
   overflow-x:auto;border-radius:var(--r-lg);
   box-shadow:var(--sh-lg);margin:0 0 14px;
-  border:1px solid rgba(10,28,53,.14);
+  border:1px solid rgba(10,28,53,.12);
 }
 .cmp{width:100%;min-width:500px;border-collapse:collapse;}
 .cmp thead tr{background:var(--navy);}
 .cmp thead th{
   font-family:'Noto Sans JP',sans-serif;
   color:#fff;font-size:12px;font-weight:700;
-  padding:14px 16px;text-align:center;
-  letter-spacing:.03em;
+  padding:14px 16px;text-align:center;letter-spacing:.03em;
 }
 .cmp thead th:first-child{text-align:left;}
-.cmp thead th.hl{
-  background:linear-gradient(135deg,var(--gold-d) 0%,var(--gold-ll) 100%);
+.cmp thead th.th-hl{
+  background:linear-gradient(135deg,var(--gold-d),var(--gold-ll));
   color:var(--navy);
 }
 .cmp tbody tr:nth-child(even) td{background:#f7f9ff;}
@@ -425,17 +505,17 @@ h1,h2,h3,.disp{
   font-family:'Noto Sans JP',sans-serif;
   padding:12px 16px;font-size:12.5px;
   text-align:center;color:var(--text-2);
-  border-bottom:1px solid rgba(10,28,53,.055);
+  border-bottom:1px solid rgba(10,28,53,.05);
 }
 .cmp tbody td:first-child{text-align:left;font-weight:700;color:var(--navy);white-space:nowrap;}
-.cmp tbody td.hl{background:rgba(184,151,62,.07)!important;font-weight:700;color:var(--navy);}
-.ok{color:#0a8a42;font-weight:800;font-size:14px;}
-.ng{color:#cc2828;font-weight:800;font-size:14px;}
-.so{color:var(--gold-d);font-weight:700;}
+.cmp tbody td.td-hl{background:rgba(184,151,62,.07)!important;font-weight:700;color:var(--navy);}
+.ic-ok{color:#0a8840;font-weight:800;font-size:14px;}
+.ic-ng{color:#cc2828;font-weight:800;font-size:14px;}
+.ic-so{color:var(--gold-d);font-weight:700;}
 .cmp-note{
   font-family:'Noto Sans JP',sans-serif;
   font-size:11px;color:var(--text-3);
-  line-height:1.7;margin:0 0 12px;
+  line-height:1.7;margin:0 0 14px;
   padding:8px 12px;border-radius:8px;
   background:rgba(10,28,53,.04);
 }
@@ -443,7 +523,7 @@ h1,h2,h3,.disp{
 /* ── Why cards ── */
 .why-grid{
   display:grid;grid-template-columns:repeat(2,1fr);
-  gap:14px;margin:0 0 44px;
+  gap:14px;margin:0 0 48px;
 }
 .why-card{
   background:var(--white);
@@ -456,7 +536,7 @@ h1,h2,h3,.disp{
 }
 .why-card::before{
   content:"";position:absolute;
-  top:0;left:0;right:0;height:3px;
+  top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--gold-d),var(--gold-ll));
   opacity:0;transition:opacity .22s;
 }
@@ -470,7 +550,7 @@ h1,h2,h3,.disp{
 }
 .why-text{
   font-family:'Noto Sans JP',sans-serif;
-  font-size:12.5px;color:var(--text-3);line-height:1.72;
+  font-size:12.5px;color:var(--text-3);line-height:1.75;font-weight:300;
 }
 
 /* ============================================================
@@ -479,71 +559,82 @@ h1,h2,h3,.disp{
 .dodont{
   background:linear-gradient(150deg,var(--navy) 0%,var(--navy-2) 100%);
   border-radius:var(--r-xl);
-  padding:38px 32px;margin:0 0 44px;
-  border:1px solid rgba(184,151,62,.16);
+  padding:40px 36px;margin:0 0 48px;
+  border:1px solid rgba(184,151,62,.14);
   box-shadow:var(--sh-xl);
   position:relative;overflow:hidden;
 }
-.dodont::after{
+.dodont::before{
   content:"";position:absolute;
-  top:-100px;right:-80px;
-  width:300px;height:300px;border-radius:50%;
+  top:-80px;right:-60px;
+  width:280px;height:280px;border-radius:50%;
   background:radial-gradient(circle,rgba(184,151,62,.09),transparent 70%);
   pointer-events:none;
 }
 .dodont-title{
   font-family:'Shippori Mincho B1',serif;
   font-size:18px;font-weight:800;color:var(--gold-ll);
-  margin-bottom:26px;position:relative;z-index:1;
+  margin-bottom:28px;position:relative;z-index:1;
 }
 .dodont-cols{
   display:grid;grid-template-columns:1fr 1fr;
-  gap:22px;position:relative;z-index:1;
+  gap:24px;position:relative;z-index:1;
 }
 .dodont-col h4{
   font-family:'Noto Sans JP',sans-serif;
   font-size:11px;font-weight:700;letter-spacing:.12em;
   text-transform:uppercase;margin-bottom:14px;
 }
-.dodont-col.do h4{color:rgba(255,255,255,.46);}
-.dodont-col.dont h4{color:rgba(255,255,255,.26);}
+.dodont-col.do h4{color:rgba(255,255,255,.44);}
+.dodont-col.dont h4{color:rgba(255,255,255,.24);}
 .dodont-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
 .dodont-col ul li{
   font-family:'Noto Sans JP',sans-serif;
   font-size:13px;line-height:1.65;
   padding-left:20px;position:relative;
 }
-.dodont-col.do ul li{color:rgba(255,255,255,.86);}
+.dodont-col.do ul li{color:rgba(255,255,255,.85);}
 .dodont-col.do ul li::before{content:"✓";position:absolute;left:0;color:var(--gold-ll);font-weight:900;}
-.dodont-col.dont ul li{color:rgba(255,255,255,.44);}
+.dodont-col.dont ul li{color:rgba(255,255,255,.42);}
 .dodont-col.dont ul li::before{content:"✕";position:absolute;left:0;color:#e05050;}
 
 /* ============================================================
-   PRICE BOX — 高級感リデザイン
+   PRICE BOX — 最高級版
 ============================================================ */
 .price-box{
   background:var(--white);
   border-radius:var(--r-xl);
   box-shadow:var(--sh-xl);
-  border:1px solid rgba(184,151,62,.25);
+  border:1px solid rgba(184,151,62,.22);
   overflow:hidden;
-  margin:0 0 24px;
+  margin:0 0 28px;
+  /* 微細な内側シャドウで立体感 */
+  box-shadow:var(--sh-xl),inset 0 1px 0 rgba(255,255,255,.8);
 }
 .price-top{
   background:linear-gradient(148deg,var(--navy) 0%,var(--navy-2) 100%);
-  padding:32px 32px 28px;
+  padding:34px 36px 30px;
   position:relative;overflow:hidden;
 }
+/* ゴールドの光源 */
 .price-top::before{
   content:"";position:absolute;
-  top:-50px;right:-50px;
-  width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(184,151,62,.12),transparent 70%);
+  top:-60px;right:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(184,151,62,.13),transparent 70%);
+}
+/* 斜めストライプ（繊細） */
+.price-top::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    -55deg,transparent,transparent 60px,
+    rgba(255,255,255,.015) 60px,rgba(255,255,255,.015) 61px
+  );
 }
 .price-badge{
   display:inline-block;
-  background:rgba(184,151,62,.18);
-  border:1px solid rgba(184,151,62,.38);
+  background:rgba(184,151,62,.16);
+  border:1px solid rgba(184,151,62,.36);
   border-radius:4px;padding:3px 10px;
   font-family:'Noto Sans JP',sans-serif;
   font-size:10px;font-weight:700;letter-spacing:.12em;
@@ -553,146 +644,138 @@ h1,h2,h3,.disp{
 .price-name{
   font-family:'Shippori Mincho B1',serif;
   font-size:18px;font-weight:800;color:#fff;
-  margin-bottom:6px;position:relative;z-index:1;
+  margin-bottom:8px;position:relative;z-index:1;
 }
-/* 料金数字にもCormorant Garamond */
+/* 料金数字：Cormorant Garamond イタリックで最高峰の高級感 */
 .price-num{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(42px,7vw,60px);
+  font-size:clamp(44px,7.5vw,64px);
   font-weight:600;
   color:var(--gold-ll);
   line-height:1;position:relative;z-index:1;
   letter-spacing:-.02em;
 }
 .price-num .unit{
-  font-size:17px;font-weight:400;
-  color:rgba(255,255,255,.48);margin-left:6px;
   font-family:'Noto Sans JP',sans-serif;
+  font-size:15px;font-weight:400;
+  color:rgba(255,255,255,.42);margin-left:8px;
 }
 .price-note-sm{
   font-family:'Noto Sans JP',sans-serif;
-  font-size:11px;color:rgba(255,255,255,.40);
+  font-size:11px;color:rgba(255,255,255,.36);
   margin-top:8px;position:relative;z-index:1;
 }
-.price-body{padding:28px 32px 32px;}
 
-/* 含まれるもの/含まれないもの */
+.price-body{padding:30px 36px 34px;}
 .incl-label{
   font-family:'Noto Sans JP',sans-serif;
   font-size:11px;font-weight:700;letter-spacing:.12em;
-  text-transform:uppercase;margin-bottom:10px;
+  text-transform:uppercase;margin-bottom:12px;
 }
 .incl-label.ok{color:#0a7a3e;}
 .incl-label.ng{color:var(--text-3);}
-.incl-ul{list-style:none;margin-bottom:22px;}
+.incl-ul{list-style:none;margin-bottom:24px;}
 .incl-ul li{
   font-family:'Noto Sans JP',sans-serif;
   font-size:13px;color:var(--text-2);
-  padding:8px 0 8px 22px;position:relative;
+  padding:9px 0 9px 22px;position:relative;
   border-bottom:1px solid var(--border);line-height:1.6;
 }
 .incl-ul li:last-child{border-bottom:none;}
 .incl-ul.ok li::before{content:"✓";position:absolute;left:0;color:#0a7a3e;font-weight:900;}
 .incl-ul.ng li::before{content:"—";position:absolute;left:0;color:#bbb;}
 .incl-ul.ng li{color:var(--text-3);}
-
-.price-div{border:none;border-top:1px solid var(--border);margin:0 0 22px;}
+.price-div{border:none;border-top:1px solid var(--border);margin:0 0 24px;}
 .set-row{
-  background:linear-gradient(135deg,#f0f4ff,#f5f7fc);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  padding:14px 18px;
+  background:linear-gradient(135deg,#eef2ff,#f3f5fc);
+  border:1px solid var(--border);border-radius:var(--r);
+  padding:15px 18px;
   display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:10px;margin-bottom:26px;
+  flex-wrap:wrap;gap:10px;margin-bottom:28px;
 }
 .set-l{font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:700;color:var(--navy);}
 .set-sl{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--text-3);margin-top:2px;}
 .set-p{
   font-family:'Cormorant Garamond',serif;
-  font-size:24px;font-weight:600;color:var(--navy);
-  white-space:nowrap;
+  font-size:26px;font-weight:600;color:var(--navy);white-space:nowrap;
 }
-.set-p s{
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:13px;font-weight:400;color:#c0c0c0;margin-right:6px;
-}
+.set-p s{font-family:'Noto Sans JP',sans-serif;font-size:13px;font-weight:400;color:#c0c0c0;margin-right:8px;}
 
 .main-cta-btn{
   display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:18px;border-radius:999px;
-  background:linear-gradient(135deg,var(--gold-ll) 0%,var(--gold) 60%,var(--gold-d) 100%);
+  width:100%;padding:19px;border-radius:999px;
+  background:linear-gradient(135deg,var(--gold-ll) 0%,var(--gold) 55%,var(--gold-d) 100%);
   color:var(--navy);
   font-family:'Noto Sans JP',sans-serif;
   font-size:16px;font-weight:800;
   text-decoration:none;border:none;cursor:pointer;
-  box-shadow:0 8px 32px rgba(184,151,62,.48);
+  box-shadow:0 8px 34px rgba(184,151,62,.46);
   transition:all .22s;letter-spacing:.04em;
+  position:relative;overflow:hidden;
 }
-.main-cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 42px rgba(184,151,62,.58);}
+.main-cta-btn::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.14),transparent);
+  opacity:0;transition:opacity .22s;
+}
+.main-cta-btn:hover{transform:translateY(-2px);box-shadow:0 12px 44px rgba(184,151,62,.56);}
+.main-cta-btn:hover::after{opacity:1;}
 .cta-sub-note{
   font-family:'Noto Sans JP',sans-serif;
-  text-align:center;font-size:11px;color:var(--text-3);
-  margin-top:10px;
+  text-align:center;font-size:11px;color:var(--text-3);margin-top:12px;
 }
 
 /* ============================================================
-   STEPS — ゴールドサークル番号
+   STEPS
 ============================================================ */
 .steps{
   display:grid;grid-template-columns:repeat(4,1fr);
-  position:relative;margin:0 0 44px;gap:0;
+  position:relative;margin:0 0 48px;
 }
-/* 繋ぐライン */
 .steps::before{
   content:"";
   position:absolute;top:23px;
   left:calc(12.5% + 16px);right:calc(12.5% + 16px);
   height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold-br),var(--gold),var(--gold-br),transparent);
-  z-index:0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  z-index:0;opacity:.4;
 }
-.step-cell{text-align:center;padding:0 8px;position:relative;z-index:1;}
+.step-cell{text-align:center;padding:0 6px;position:relative;z-index:1;}
 .step-n{
   width:46px;height:46px;border-radius:50%;
   background:linear-gradient(135deg,var(--gold-ll),var(--gold));
   color:var(--navy);
   font-family:'Cormorant Garamond',serif;
-  font-size:18px;font-weight:700;
+  font-size:18px;font-weight:600;
   display:flex;align-items:center;justify-content:center;
   margin:0 auto 12px;
-  box-shadow:0 4px 16px rgba(184,151,62,.40);
+  box-shadow:0 4px 16px rgba(184,151,62,.38);
 }
 .step-t{
   font-family:'Noto Sans JP',sans-serif;
-  font-size:11.5px;font-weight:700;color:var(--navy);
-  line-height:1.55;
+  font-size:11.5px;font-weight:700;color:var(--navy);line-height:1.55;
 }
 
 /* ============================================================
    FAQ
 ============================================================ */
-.faq{margin:0 0 44px;}
+.faq{margin:0 0 48px;}
 .faq-item{
-  background:var(--white);
-  border:1px solid var(--border);
-  border-radius:var(--r);
-  margin-bottom:8px;overflow:hidden;
-  box-shadow:var(--sh-sm);
-  transition:box-shadow .2s;
+  background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);margin-bottom:8px;overflow:hidden;
+  box-shadow:var(--sh-sm);transition:box-shadow .2s;
 }
 .faq-item:hover{box-shadow:var(--sh);}
 .faq-q{
   padding:17px 20px;
   font-family:'Noto Sans JP',sans-serif;
   font-size:14px;font-weight:700;color:var(--navy);
-  cursor:pointer;
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  user-select:none;
+  cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;user-select:none;
   transition:background .18s,color .18s;
 }
 .faq-q::after{
-  content:"+";
-  width:28px;height:28px;min-width:28px;border-radius:50%;
+  content:"+";width:28px;height:28px;min-width:28px;border-radius:50%;
   background:var(--gold-bg);border:1px solid var(--gold-br);
   display:flex;align-items:center;justify-content:center;
   font-size:18px;font-weight:300;color:var(--gold);
@@ -700,21 +783,19 @@ h1,h2,h3,.disp{
 }
 .faq-item.open .faq-q{background:var(--navy);color:#fff;}
 .faq-item.open .faq-q::after{
-  content:"−";background:rgba(255,255,255,.12);
-  border-color:rgba(255,255,255,.18);color:#fff;
+  content:"−";background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.16);color:#fff;
 }
 .faq-a{
-  display:none;
-  padding:15px 20px 20px;
+  display:none;padding:15px 20px 20px;
   font-family:'Noto Sans JP',sans-serif;
   font-size:13.5px;color:var(--text-2);
-  line-height:1.82;
-  border-top:1px solid var(--border);
+  line-height:1.85;border-top:1px solid var(--border);font-weight:300;
 }
 .faq-item.open .faq-a{display:block;}
 
 /* ============================================================
-   COUNTRY SECTION
+   COUNTRY
 ============================================================ */
 .country-photos{
   display:grid;grid-template-columns:repeat(3,1fr);
@@ -727,67 +808,33 @@ h1,h2,h3,.disp{
   transition:transform .3s,box-shadow .3s;
 }
 .country-photos img:hover{transform:scale(1.04);box-shadow:var(--sh-lg);}
-
-.facts{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:10px;margin-bottom:44px;
-}
-.fact{
-  background:var(--white);border:1px solid var(--border);
-  border-radius:var(--r);padding:16px;
-  display:flex;gap:12px;box-shadow:var(--sh-sm);
-}
+.facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:48px;}
+.fact{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;display:flex;gap:12px;box-shadow:var(--sh-sm);}
 .fact-ico{font-size:22px;line-height:1;flex-shrink:0;margin-top:2px;}
-.fact-tt{
-  font-family:'Shippori Mincho B1',serif;
-  font-size:13px;font-weight:800;color:var(--navy);margin-bottom:3px;
-}
-.fact-tx{
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:11.5px;color:var(--text-3);line-height:1.6;
-}
+.fact-tt{font-family:'Shippori Mincho B1',serif;font-size:13px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.fact-tx{font-family:'Noto Sans JP',sans-serif;font-size:11.5px;color:var(--text-3);line-height:1.6;font-weight:300;}
 
 /* ============================================================
    SERVICE CARDS
 ============================================================ */
-.svc-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:14px;margin-bottom:44px;
-}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:48px;}
 .svc-card{
   background:var(--white);border-radius:var(--r-lg);
-  box-shadow:var(--sh-sm);
-  padding:22px 18px 18px;
-  display:flex;flex-direction:column;
-  border:1px solid var(--border);
+  box-shadow:var(--sh-sm);padding:22px 18px 18px;
+  display:flex;flex-direction:column;border:1px solid var(--border);
   transition:transform .22s,box-shadow .22s,border-color .22s;
   position:relative;overflow:hidden;
 }
 .svc-card::after{
-  content:"";position:absolute;
-  top:0;left:0;right:0;height:3px;
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--gold-d),var(--gold-ll));
   opacity:0;transition:opacity .22s;
 }
 .svc-card:hover{transform:translateY(-5px);box-shadow:var(--sh-lg);border-color:var(--gold-br);}
 .svc-card:hover::after{opacity:1;}
-.svc-ico{
-  width:44px;height:44px;border-radius:12px;
-  background:linear-gradient(135deg,#e6eeff,#d2dffa);
-  display:flex;align-items:center;justify-content:center;
-  font-size:21px;margin-bottom:14px;
-  box-shadow:0 2px 8px rgba(10,28,53,.08);
-}
-.svc-tt{
-  font-family:'Shippori Mincho B1',serif;
-  font-size:13.5px;font-weight:800;color:var(--navy);
-  margin-bottom:8px;line-height:1.4;
-}
-.svc-tx{
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:12px;color:var(--text-3);
-  line-height:1.65;margin-bottom:16px;flex:1;
-}
+.svc-ico{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#e6eeff,#d2dffa);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:14px;box-shadow:0 2px 8px rgba(10,28,53,.08);}
+.svc-tt{font-family:'Shippori Mincho B1',serif;font-size:13.5px;font-weight:800;color:var(--navy);margin-bottom:8px;line-height:1.4;}
+.svc-tx{font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--text-3);line-height:1.65;margin-bottom:16px;flex:1;font-weight:300;}
 .svc-card .svc-b{width:100%;}
 
 /* ============================================================
@@ -796,27 +843,32 @@ h1,h2,h3,.disp{
 .big-cta{
   background:linear-gradient(148deg,var(--navy) 0%,var(--navy-2) 55%,#1e3d70 100%);
   border-radius:var(--r-xl);
-  padding:56px 32px;
-  text-align:center;margin:0 0 0;
-  border:1px solid rgba(184,151,62,.18);
+  padding:60px 36px;text-align:center;margin:0 0 0;
+  border:1px solid rgba(184,151,62,.16);
   box-shadow:var(--sh-xl);
   position:relative;overflow:hidden;
 }
 .big-cta::before{
   content:"";position:absolute;
-  top:-180px;left:50%;transform:translateX(-50%);
-  width:700px;height:700px;border-radius:50%;
+  top:-200px;left:50%;transform:translateX(-50%);
+  width:800px;height:800px;border-radius:50%;
   background:radial-gradient(circle,rgba(184,151,62,.06),transparent 65%);
 }
-/* 斜めストライプ装飾 */
 .big-cta::after{
   content:"";position:absolute;inset:0;
   background:repeating-linear-gradient(
-    -55deg,transparent,transparent 50px,
-    rgba(255,255,255,.010) 50px,rgba(255,255,255,.010) 51px
+    -55deg,transparent,transparent 55px,
+    rgba(255,255,255,.012) 55px,rgba(255,255,255,.012) 56px
   );
 }
 .big-cta-inner{position:relative;z-index:1;}
+/* ゴールドの装飾ライン（上） */
+.big-cta-inner::before{
+  content:"";display:block;
+  width:48px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:0 auto 28px;
+}
 .big-cta h2{
   font-family:'Shippori Mincho B1',serif;
   font-size:clamp(20px,3.5vw,30px);font-weight:800;
@@ -824,12 +876,12 @@ h1,h2,h3,.disp{
 }
 .big-cta p{
   font-family:'Noto Sans JP',sans-serif;
-  font-size:14px;color:rgba(255,255,255,.58);
-  margin-bottom:34px;line-height:1.88;
+  font-size:14px;color:rgba(255,255,255,.55);
+  margin-bottom:36px;line-height:1.9;font-weight:300;
 }
 .big-cta-note{
   font-family:'Noto Sans JP',sans-serif;
-  font-size:11px;color:rgba(255,255,255,.28);
+  font-size:11px;color:rgba(255,255,255,.26);
   margin-top:16px;display:block;
 }
 
@@ -838,36 +890,15 @@ h1,h2,h3,.disp{
 ============================================================ */
 .band{
   background:linear-gradient(135deg,var(--navy),var(--navy-2));
-  border-radius:var(--r-lg);
-  padding:26px 26px 22px;
-  margin:0 0 36px;
-  border:1px solid rgba(184,151,62,.14);
-  position:relative;overflow:hidden;
+  border-radius:var(--r-lg);padding:28px 28px 24px;margin:0 0 40px;
+  border:1px solid rgba(184,151,62,.12);position:relative;overflow:hidden;
 }
-.band::before{
-  content:"";position:absolute;top:-40px;right:-40px;
-  width:130px;height:130px;border-radius:50%;
-  background:radial-gradient(circle,rgba(184,151,62,.10),transparent 70%);
-}
-.band-title{
-  font-family:'Shippori Mincho B1',serif;
-  font-size:15px;font-weight:800;color:var(--gold-ll);
-  margin-bottom:12px;position:relative;
-}
-.band-list{list-style:none;display:flex;flex-direction:column;gap:7px;position:relative;}
-.band-list li{
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:13px;color:rgba(255,255,255,.80);
-  padding-left:18px;position:relative;line-height:1.65;
-}
+.band::before{content:"";position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(184,151,62,.10),transparent 70%);}
+.band-title{font-family:'Shippori Mincho B1',serif;font-size:15px;font-weight:800;color:var(--gold-ll);margin-bottom:12px;position:relative;}
+.band-list{list-style:none;display:flex;flex-direction:column;gap:8px;position:relative;}
+.band-list li{font-family:'Noto Sans JP',sans-serif;font-size:13px;color:rgba(255,255,255,.78);padding-left:18px;position:relative;line-height:1.65;font-weight:300;}
 .band-list li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:900;}
-.band-note{
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:10px;color:rgba(255,255,255,.32);
-  margin-top:12px;padding-top:10px;
-  border-top:1px solid rgba(255,255,255,.08);
-  line-height:1.65;position:relative;
-}
+.band-note{font-family:'Noto Sans JP',sans-serif;font-size:10px;color:rgba(255,255,255,.30);margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.08);line-height:1.65;position:relative;}
 
 /* ============================================================
    ACCORDION
@@ -882,42 +913,27 @@ details summary{
   box-shadow:var(--sh-sm);
 }
 details summary::-webkit-details-marker{display:none;}
-details summary::after{
-  content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);
-  font-size:22px;font-weight:300;color:var(--gold);line-height:1;
-}
+details summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:300;color:var(--gold);line-height:1;}
 details[open] summary::after{content:"−";}
 details summary:hover{background:var(--gold-bg);border-color:var(--gold-br);}
 details[open] summary{background:var(--navy);color:#fff;border-color:var(--navy);border-bottom-left-radius:0;border-bottom-right-radius:0;}
 details[open] summary::after{color:var(--gold-ll);}
-details .content{
-  border:1px solid var(--border);border-top:none;
-  border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);
-  padding:16px 20px;background:var(--white);
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:13.5px;line-height:1.8;color:var(--text-2);
-}
+details .content{border:1px solid var(--border);border-top:none;border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);padding:16px 20px;background:var(--white);font-family:'Noto Sans JP',sans-serif;font-size:13.5px;line-height:1.8;color:var(--text-2);}
 details .content ul{padding-left:1.4rem;}
 details .content li{margin:.4rem 0;}
 details .content strong{color:var(--navy);}
 .accordion>details{margin:.5rem 0!important;}
 
 /* ============================================================
-   DISC BOX / LEGACY STYLES
+   LEGACY UTILITY CLASSES
 ============================================================ */
-.disc-box{
-  background:linear-gradient(135deg,#fffcf0,#fff9e4);
-  border:1px solid rgba(184,151,62,.32);border-left:5px solid var(--gold);
-  border-radius:var(--r);padding:13px 18px;
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:12.5px;color:#5a4800;line-height:1.75;margin-bottom:22px;
-}
+.disc-box{background:linear-gradient(135deg,#fffcf0,#fff9e4);border:1px solid rgba(184,151,62,.28);border-left:5px solid var(--gold);border-radius:var(--r);padding:13px 18px;font-family:'Noto Sans JP',sans-serif;font-size:12.5px;color:#5a4800;line-height:1.75;margin-bottom:22px;}
 .disc-box strong{color:#8a6500;}
 .price-promo{border:1px solid var(--border);background:var(--off);border-radius:12px;padding:16px;margin:14px 0;border-left:5px solid var(--gold);}
 .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:6px;}
 .price-promo .label{color:var(--text-3);font-weight:700;font-family:'Noto Sans JP',sans-serif;}
 .price-promo .old{color:#bbb;text-decoration:line-through;font-size:13px;}
-.price-promo .now{font-weight:900;font-size:clamp(20px,2.5vw,26px);color:var(--navy);font-family:'Cormorant Garamond',serif;}
+.price-promo .now{font-weight:600;font-size:clamp(20px,2.5vw,26px);color:var(--navy);font-family:'Cormorant Garamond',serif;}
 .price-promo .badge{display:inline-block;background:linear-gradient(135deg,var(--gold-ll),var(--gold));color:var(--navy);border-radius:999px;padding:.2rem .7rem;font-size:.78em;font-weight:900;}
 .price-promo .meta{font-size:.83em;color:var(--text-3);margin-top:10px;border-top:1px solid var(--border);padding-top:10px;line-height:1.7;font-family:'Noto Sans JP',sans-serif;}
 .price-promo .proof{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
@@ -941,7 +957,7 @@ details .content strong{color:var(--navy);}
 .plan-table-wrap td:first-child{text-align:left;color:var(--text);font-weight:600;}
 .plan-table-wrap tr:nth-child(even) td{background:#f8faff;}
 .progress-steps{display:flex;margin:1rem 0;counter-reset:step;}
-.progress-steps .step{flex:1;padding:.6rem .5rem;text-align:center;font-size:11.5px;font-weight:700;color:var(--navy);background:var(--white);border:1px solid var(--border);counter-increment:step;}
+.progress-steps .step{flex:1;padding:.6rem .5rem;text-align:center;font-size:11.5px;font-weight:700;color:var(--navy);background:var(--white);border:1px solid var(--border);counter-increment:step;font-family:'Noto Sans JP',sans-serif;}
 .progress-steps .step:first-child{border-radius:10px 0 0 10px;}
 .progress-steps .step:last-child{border-radius:0 10px 10px 0;}
 .progress-steps .step+.step{border-left:none;}
@@ -953,28 +969,38 @@ details .content strong{color:var(--navy);}
 .qs-list li{padding:6px 0 6px 22px;position:relative;font-size:13px;line-height:1.65;color:var(--text-2);border-bottom:1px dashed var(--border);font-family:'Noto Sans JP',sans-serif;}
 .qs-list li:last-child{border-bottom:none;}
 
+/* ── CF TOOL ── */
+.cf-card{border:1px solid var(--border);background:var(--white);border-radius:var(--r-lg);padding:20px;box-shadow:var(--sh);}
+.cf-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 14px;margin-top:8px;}
+.cf-grid label{align-self:center;color:var(--navy);font-weight:700;font-size:13px;font-family:'Noto Sans JP',sans-serif;}
+.cf-grid input,.cf-grid select{height:40px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:14px;background:var(--off);color:var(--text);transition:border-color .15s;font-family:'Noto Sans JP',sans-serif;}
+.cf-grid input:focus,.cf-grid select:focus{border-color:var(--gold);outline:none;background:var(--white);}
+.cf-subrow{grid-column:2/3;color:var(--text-3);font-size:.88em;margin-top:-4px;font-family:'Noto Sans JP',sans-serif;}
+.cf-preset{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 8px;}
+.cf-hint{font-size:12px;color:var(--text-3);font-weight:700;font-family:'Noto Sans JP',sans-serif;}
+.cf-chip{border:1px solid var(--gold-br);background:var(--gold-bg);border-radius:999px;padding:.25rem .8rem;font-weight:800;font-size:12px;cursor:pointer;color:var(--navy);transition:all .14s;font-family:'Noto Sans JP',sans-serif;}
+.cf-chip:hover{background:var(--gold);color:var(--navy);}
+.cf-ack{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);background:var(--off);border-radius:10px;padding:12px;margin:12px 0;font-size:12.5px;color:var(--text-3);line-height:1.65;font-family:'Noto Sans JP',sans-serif;}
+.cf-actions{display:flex;gap:8px;margin:8px 0;}
+.cf-out{margin-top:10px;border:1px solid var(--border);border-radius:10px;padding:14px;background:var(--off);}
+.cf-out .cf-kv{display:grid;grid-template-columns:180px 1fr;gap:7px 14px;font-size:13px;font-family:'Noto Sans JP',sans-serif;}
+.cf-out h5{margin:.3rem 0 .7rem;font-weight:800;color:var(--navy);font-family:'Shippori Mincho B1',serif;}
+
 /* ============================================================
-   HAMBURGER / MENU / FIXED CTA  (patch.css の上書きを最小限に)
+   HAMBURGER / MENU / FIXED CTA
 ============================================================ */
 .menu-button{
   position:fixed;
   top:calc(12px + var(--safe-top));
   right:calc(12px + var(--safe-right));
-  z-index:10000;
-  width:48px;height:48px;border-radius:var(--r);
+  z-index:10000;width:48px;height:48px;border-radius:var(--r);
   background:var(--navy);color:#fff;
   display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:var(--sh);
-  border:1px solid var(--gold-br);
-  transition:background .15s;
+  box-shadow:var(--sh);border:1px solid var(--gold-br);transition:background .15s;
 }
 .menu-button:hover{background:var(--navy-2);}
 .menu-button .bars{display:block;width:22px;height:16px;position:relative;}
-.menu-button .bars::before,
-.menu-button .bars::after,
-.menu-button .bars span{
-  content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px;transition:all .2s;
-}
+.menu-button .bars::before,.menu-button .bars::after,.menu-button .bars span{content:"";position:absolute;left:0;right:0;height:2px;background:#fff;border-radius:2px;transition:all .2s;}
 .menu-button .bars::before{top:0;}
 .menu-button .bars span{top:7px;}
 .menu-button .bars::after{bottom:0;}
@@ -984,11 +1010,11 @@ html.menu-open .menu-button .bars span{opacity:0;}
 
 .fixed-cta{
   position:fixed;left:0;right:0;bottom:0;z-index:9998;
-  background:rgba(255,255,255,.97);
+  background:rgba(250,249,245,.97);
   backdrop-filter:saturate(200%) blur(14px);
   border-top:1px solid var(--border);
   padding-bottom:var(--safe-bottom);
-  box-shadow:0 -6px 28px rgba(10,28,53,.10);
+  box-shadow:0 -6px 30px rgba(10,28,53,.10);
 }
 .fixed-cta .row{
   max-width:64rem;margin:0 auto;
@@ -1005,87 +1031,71 @@ html.menu-open .menu-button .bars span{opacity:0;}
 }
 .btn:hover{opacity:.9;transform:translateY(-1px);}
 .btn.neutral{background:var(--off);color:var(--navy);border:1px solid var(--border);}
-.btn.secondary{background:var(--navy);color:#fff;box-shadow:0 4px 14px rgba(10,28,53,.28);}
-.btn.success{background:linear-gradient(135deg,var(--gold-ll),var(--gold));color:var(--navy);font-weight:900;box-shadow:0 4px 16px rgba(184,151,62,.38);}
+.btn.secondary{background:var(--navy);color:#fff;box-shadow:0 4px 14px rgba(10,28,53,.26);}
+.btn.success{background:linear-gradient(135deg,var(--gold-ll),var(--gold));color:var(--navy);font-weight:900;box-shadow:0 4px 16px rgba(184,151,62,.36);}
 
 /* ============================================================
    FOOTER
 ============================================================ */
 .site-foot{
   background:var(--navy)!important;
-  color:rgba(255,255,255,.55)!important;
+  color:rgba(255,255,255,.52)!important;
   border-top:2px solid var(--gold-d)!important;
   text-align:center;padding:24px 16px;
   padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
-  font-family:'Noto Sans JP',sans-serif;
-  font-size:12px;line-height:1.85;
+  font-family:'Noto Sans JP',sans-serif;font-size:12px;line-height:1.85;
 }
 .site-foot small{display:block;margin:0 auto;max-width:min(1100px,92%);}
 .site-foot a{color:var(--gold-ll);text-decoration:underline;}
 .site-foot .foot-pc{display:none;}
 .site-foot .foot-sp{display:block;}
-@media(min-width:640px){
-  .site-foot .foot-pc{display:inline;}
-  .site-foot .foot-sp{display:none;}
-}
+@media(min-width:640px){.site-foot .foot-pc{display:inline;}.site-foot .foot-sp{display:none;}}
 
-/* ============================================================
-   LANG SWITCH / GOOGLE TRANSLATE
-============================================================ */
+/* ── LANG SWITCH ── */
 .lang-button,.lang-wrap{display:none!important;}
 #goog-gt-tt,iframe#goog-te-banner-frame,.goog-te-banner-frame{display:none!important;visibility:hidden!important;height:0!important;}
 body>.skiptranslate{display:none!important;}
 #google_translate_element{position:fixed;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none;}
-
 #lpLangSwitch{
   position:fixed;
   top:calc(var(--safe-top) + 12px);
   right:calc(var(--safe-right) + 12px + 48px + 10px);
-  z-index:9999;
-  display:flex;gap:5px;padding:5px;
-  border-radius:var(--r);
-  background:rgba(255,255,255,.96);
-  box-shadow:var(--sh);
-  border:1px solid var(--border);
-  backdrop-filter:blur(8px);
+  z-index:9999;display:flex;gap:5px;padding:5px;
+  border-radius:var(--r);background:rgba(250,249,245,.96);
+  box-shadow:var(--sh);border:1px solid var(--border);backdrop-filter:blur(8px);
 }
-#lpLangSwitch button{
-  appearance:none;border:1px solid var(--border);background:#fff;
-  border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;
-  cursor:pointer;color:var(--navy);transition:all .15s;
-  font-family:'Noto Sans JP',sans-serif;
-}
+#lpLangSwitch button{appearance:none;border:1px solid var(--border);background:#fff;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;color:var(--navy);transition:all .15s;font-family:'Noto Sans JP',sans-serif;}
 #lpLangSwitch button:hover{background:var(--off);}
 #lpLangSwitch button[aria-pressed="true"]{background:var(--navy);color:var(--gold-ll);border-color:var(--navy);}
 
-/* ============================================================
-   SCROLL MARGIN / MISC
-============================================================ */
+/* ── MISC ── */
 section[id],details[id]{scroll-margin-top:72px;}
 :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important;}}
 
-/* ============================================================
-   RESPONSIVE
-============================================================ */
+/* ── RESPONSIVE ── */
 @media(max-width:560px){
   .hero-body{padding:0 20px 48px;}
   .page-wrap{padding:0 16px 60px;}
   .trust-bar{gap:14px;}
-  .t-sep{display:none;}
+  .ti-sep{display:none;}
   .emp-grid,.why-grid,.facts{grid-template-columns:1fr;}
   .svc-grid{grid-template-columns:1fr 1fr;}
   .dodont-cols{grid-template-columns:1fr;}
+  .dodont{padding:28px 20px;}
   .steps{grid-template-columns:repeat(2,1fr);}
   .steps::before{display:none;}
   .country-photos img{height:100px;}
-  .big-cta{padding:36px 20px;}
+  .big-cta{padding:40px 20px;}
   .price-body,.price-top{padding:22px 20px;}
+  .cf-grid{grid-template-columns:1fr;gap:8px;}
+  .cf-subrow{grid-column:auto;}
+  .cf-out .cf-kv{grid-template-columns:1fr;}
 }
 @media(min-width:768px){
   .facts{grid-template-columns:repeat(4,1fr);}
   .country-photos img{height:155px;}
-  .hero-body{padding:0 56px 72px;}
+  .hero-body{padding:0 56px 76px;}
 }
 </style>
 
@@ -1097,9 +1107,8 @@ section[id],details[id]{scroll-margin-top:72px;}
     if(!m)return;
     var v=decodeURIComponent(m[1]||'');
     if(v==='/ja/ja'||v==='/ja/en')return;
-    var exp='Thu, 01 Jan 1970 00:00:00 GMT';
     ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans=; expires='+exp+'; path=/; '+d;
+      document.cookie='googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; '+d;
     });
   }catch(_){}
 })();
@@ -1109,7 +1118,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
 <div id="page-top" aria-hidden="true"></div>
 
-<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
+<button class="lang-button" id="langBtn" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
 </button>
 <div class="lang-wrap" id="langDrawer" aria-hidden="true">
@@ -1120,20 +1129,19 @@ section[id],details[id]{scroll-margin-top:72px;}
       <button class="lang-close" id="langClose" aria-label="Close">×</button>
     </div>
     <div class="lang-body">
-      <div class="ls-search"><input id="langSearch" type="search" placeholder="Search language" inputmode="search" autocomplete="off"></div>
-      <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
+      <div class="ls-search"><input id="langSearch" type="search" placeholder="Search language"></div>
+      <div id="langList" class="ls-list" role="listbox"></div>
       <div id="google_translate_element"></div>
-      <p class="text-sm muted" style="margin:.6rem 0 0;">Powered by Google Translate</p>
     </div>
   </aside>
 </div>
 
-<button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
+<button class="menu-button" id="menuBtn" aria-expanded="false" aria-label="メニューを開閉">
   <span class="bars"><span></span></span>
 </button>
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
-  <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次">
+  <aside class="menu-panel" role="dialog" aria-modal="true">
     <div class="menu-head">
       <strong class="menu-title">目次</strong>
       <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
@@ -1145,24 +1153,18 @@ section[id],details[id]{scroll-margin-top:72px;}
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-bg" aria-hidden="true">
-    <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み"
-         class="hero-img" decoding="async" fetchpriority="high"
+    <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="hero-img"
+         decoding="async" fetchpriority="high"
          onerror="this.parentElement.style.background='linear-gradient(150deg,#0a1c35,#1a3d6b)'">
     <div class="hero-grad"></div>
-    <div class="hero-noise" aria-hidden="true"></div>
+    <div class="hero-flare" aria-hidden="true"></div>
   </div>
   <div class="hero-body">
     <div class="hero-pill">🌍 EU加盟候補国ジョージア × 現地提携法律事務所</div>
-    <!--
-      【タイポグラフィ修正】
-      旧：「海外の仕事が増えているのに、<br>受け取り口座がWiseだけですか。」
-          → 「に、」だけ行落ちする日本語組版NG例
-      新：2段構成で自然な改行・強弱を明確に
-    -->
-    <h1 class="hero-h1">
-      <span class="h1-top">海外の仕事が増えているのに——</span>
-      <span class="h1-main">受け取り口座が<span class="wise">Wiseだけ</span>ですか。</span>
-    </h1>
+    <div class="hero-h1">
+      <span class="hero-h1-top">海外の仕事が増えているのに——</span>
+      <span class="hero-h1-main">受け取り口座が<span class="wise">Wiseだけ</span>ですか。</span>
+    </div>
     <p class="hero-lead">
       SWIFTコードを聞かれて困ったことはありませんか。<br>
       ジョージアの銀行口座なら、渡航ゼロ・日本語だけで<br>
@@ -1176,26 +1178,28 @@ section[id],details[id]{scroll-margin-top:72px;}
       <a href="#why-georgia" class="btn-ghost">なぜジョージア？ →</a>
     </div>
   </div>
+  <div class="hero-scroll" aria-hidden="true">
+    <div class="hero-scroll-line"></div>
+    <span class="hero-scroll-txt">Scroll</span>
+  </div>
 </section>
 
 <!-- ===== TRUST BAR ===== -->
 <div class="trust-bar">
-  <div class="t-item"><div class="t-icon">🏛️</div><span>現地法律事務所 MoU連携</span></div>
-  <div class="t-sep"></div>
-  <div class="t-item"><div class="t-icon">✅</div><span>ジョージア法人 正式登録</span></div>
-  <div class="t-sep"></div>
-  <div class="t-item"><div class="t-icon">🌐</div><span>渡航不要 日本語完結</span></div>
-  <div class="t-sep"></div>
-  <div class="t-item"><div class="t-icon">🔒</div><span>紹介料・コミッション一切なし</span></div>
+  <div class="ti"><div class="ti-ic">🏛️</div><span>現地法律事務所 MoU連携</span></div>
+  <div class="ti-sep"></div>
+  <div class="ti"><div class="ti-ic">✅</div><span>ジョージア法人 正式登録</span></div>
+  <div class="ti-sep"></div>
+  <div class="ti"><div class="ti-ic">🌐</div><span>渡航不要 日本語完結</span></div>
+  <div class="ti-sep"></div>
+  <div class="ti"><div class="ti-ic">🔒</div><span>紹介料・コミッション一切なし</span></div>
 </div>
 
 <div id="glp-landing">
 <div class="page-wrap">
 
-  <!-- 統計 -->
   <div class="stats">
     <div class="stat">
-      <!-- Cormorant Garamondで格上げされた数字 -->
       <span class="stat-n">7<em>–</em>10</span>
       <span class="stat-l">営業日<br>書類整備の目安</span>
     </div>
@@ -1209,32 +1213,35 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </div>
 
-  <!-- 免責 -->
   <div class="notice">
     <strong>【ご案内】</strong> 本サイトは公開資料に基づく<strong>一般情報の提供と書類整備の事務サポート</strong>のみを目的としています。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。開設可否は各銀行の審査判断です。必ず専門家にご確認ください。
   </div>
 
   <!-- 共感 -->
-  <section id="empathy" style="margin:0 0 48px;">
+  <section id="empathy" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Common Situation</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">こんな状況、ありませんか？</h2>
       <p class="sh-sub">海外取引が増えるほど、決済インフラの壁にぶつかります。</p>
     </div>
     <div class="emp-grid">
-      <div class="emp-card"><div class="emp-ico">💬</div><p class="emp-text">「SWIFTコードを教えて」と言われ、答えられなかった</p></div>
-      <div class="emp-card"><div class="emp-ico">📦</div><p class="emp-text">Wiseで受け取っているが、金額が大きくなって不安を感じている</p></div>
-      <div class="emp-card"><div class="emp-ico">🌏</div><p class="emp-text">海外展開を本格化したいが、法人口座がなくて頼みにくい</p></div>
-      <div class="emp-card"><div class="emp-ico">✈️</div><p class="emp-text">海外口座を作りたいが、現地に行く時間も費用もない</p></div>
-      <div class="emp-card"><div class="emp-ico">📄</div><p class="emp-text">公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からない</p></div>
-      <div class="emp-card"><div class="emp-ico">🔄</div><p class="emp-text">ドバイ・シンガポールの口座は審査が通らなかった経験がある</p></div>
+      <div class="emp-card"><div class="emp-ico">💬</div><p class="emp-tx">「SWIFTコードを教えて」と言われ、答えられなかった</p></div>
+      <div class="emp-card"><div class="emp-ico">📦</div><p class="emp-tx">Wiseで受け取っているが、金額が大きくなって不安を感じている</p></div>
+      <div class="emp-card"><div class="emp-ico">🌏</div><p class="emp-tx">海外展開を本格化したいが、法人口座がなくて頼みにくい</p></div>
+      <div class="emp-card"><div class="emp-ico">✈️</div><p class="emp-tx">海外口座を作りたいが、現地に行く時間も費用もない</p></div>
+      <div class="emp-card"><div class="emp-ico">📄</div><p class="emp-tx">公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からない</p></div>
+      <div class="emp-card"><div class="emp-ico">🔄</div><p class="emp-tx">ドバイ・シンガポールの口座は審査が通らなかった経験がある</p></div>
     </div>
   </section>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- なぜジョージア？ -->
-  <section id="why-georgia" style="margin:0 0 48px;">
+  <section id="why-georgia" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Why Georgia</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">🔥 なぜ今、ジョージアなのか？</h2>
       <p class="sh-sub">非居住者が口座開設できる銀行は世界的に減っています。現時点でジョージアは現実的な選択肢のひとつです。</p>
     </div>
@@ -1243,48 +1250,18 @@ section[id],details[id]{scroll-margin-top:72px;}
         <thead>
           <tr>
             <th>比較項目</th>
-            <th class="hl">🇬🇪 ジョージア</th>
+            <th class="th-hl">🇬🇪 ジョージア</th>
             <th>🇦🇪 ドバイ</th>
             <th>🇸🇬 シンガポール</th>
             <th>🇹🇭 タイ</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>非居住者の口座開設</td>
-            <td class="hl">対応行あり<br><small style="color:#8a9aaa;font-size:11px;">（銀行審査による）</small></td>
-            <td><span class="ng">✕</span> 厳格化</td>
-            <td><span class="ng">✕</span> 審査厳格</td>
-            <td><span class="so">△</span> 制限あり</td>
-          </tr>
-          <tr>
-            <td>渡航の必要性</td>
-            <td class="hl"><span class="ok">◎</span> 原則不要</td>
-            <td><span class="ng">✕</span> 渡航必要</td>
-            <td><span class="so">△</span> 一部必要</td>
-            <td><span class="ng">✕</span> 渡航必要</td>
-          </tr>
-          <tr>
-            <td>設立コスト感</td>
-            <td class="hl"><span class="ok">◎</span> 比較的低い</td>
-            <td><span class="ng">✕</span> 高額</td>
-            <td><span class="ng">✕</span> 高額</td>
-            <td><span class="so">△</span> 中程度</td>
-          </tr>
-          <tr>
-            <td>EU加盟候補国</td>
-            <td class="hl"><span class="ok">◎</span> 2023年認定</td>
-            <td><span class="ng">✕</span> 対象外</td>
-            <td><span class="ng">✕</span> 対象外</td>
-            <td><span class="ng">✕</span> 対象外</td>
-          </tr>
-          <tr>
-            <td>日本語サポート</td>
-            <td class="hl"><span class="ok">◎</span> 当社対応</td>
-            <td><span class="ng">✕</span> 限定的</td>
-            <td><span class="so">△</span> 一部対応</td>
-            <td><span class="ng">✕</span> 限定的</td>
-          </tr>
+          <tr><td>非居住者の口座開設</td><td class="td-hl">対応行あり<br><small style="color:#8a9ab8;font-size:11px;">（銀行審査による）</small></td><td><span class="ic-ng">✕</span> 厳格化</td><td><span class="ic-ng">✕</span> 審査厳格</td><td><span class="ic-so">△</span> 制限あり</td></tr>
+          <tr><td>渡航の必要性</td><td class="td-hl"><span class="ic-ok">◎</span> 原則不要</td><td><span class="ic-ng">✕</span> 渡航必要</td><td><span class="ic-so">△</span> 一部必要</td><td><span class="ic-ng">✕</span> 渡航必要</td></tr>
+          <tr><td>設立コスト感</td><td class="td-hl"><span class="ic-ok">◎</span> 比較的低い</td><td><span class="ic-ng">✕</span> 高額</td><td><span class="ic-ng">✕</span> 高額</td><td><span class="ic-so">△</span> 中程度</td></tr>
+          <tr><td>EU加盟候補国</td><td class="td-hl"><span class="ic-ok">◎</span> 2023年認定</td><td><span class="ic-ng">✕</span> 対象外</td><td><span class="ic-ng">✕</span> 対象外</td><td><span class="ic-ng">✕</span> 対象外</td></tr>
+          <tr><td>日本語サポート</td><td class="td-hl"><span class="ic-ok">◎</span> 当社対応</td><td><span class="ic-ng">✕</span> 限定的</td><td><span class="ic-so">△</span> 一部対応</td><td><span class="ic-ng">✕</span> 限定的</td></tr>
         </tbody>
       </table>
     </div>
@@ -1297,10 +1274,13 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- ジョージアってどんな国？ -->
-  <section id="about-georgia" style="margin:0 0 48px;">
+  <section id="about-georgia" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">About Georgia</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">🇬🇪 ジョージアってどんな国？</h2>
     </div>
     <div class="country-photos">
@@ -1316,10 +1296,13 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- やること・やらないこと -->
-  <section id="service" style="margin:0 0 48px;">
+  <section id="service" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Our Scope</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">やること・やらないことを正直に書きます</h2>
     </div>
     <div class="dodont">
@@ -1349,10 +1332,13 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- 料金 -->
-  <section id="pricing" style="margin:0 0 48px;">
+  <section id="pricing" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Pricing</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">料金とサービス内容</h2>
       <p class="sh-sub">書類整備・事務補助の対価です。銀行手数料・実費は別途です。</p>
     </div>
@@ -1387,14 +1373,12 @@ section[id],details[id]{scroll-margin-top:72px;}
           </div>
           <div class="set-p"><s>¥546,000</s>¥498,000</div>
         </div>
-        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn">
-          📩 無料相談・申し込みはこちら
-        </a>
+        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn">📩 無料相談・申し込みはこちら</a>
         <p class="cta-sub-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</p>
       </div>
     </div>
 
-    <h3 style="font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:800;color:var(--navy);margin:30px 0 18px;">申し込みの流れ</h3>
+    <h3 style="font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:800;color:var(--navy);margin:32px 0 18px;">申し込みの流れ</h3>
     <div class="steps">
       <div class="step-cell"><div class="step-n">1</div><div class="step-t">LINEで<br>相談</div></div>
       <div class="step-cell"><div class="step-n">2</div><div class="step-t">ヒアリング<br>→ご提案</div></div>
@@ -1403,10 +1387,13 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- FAQ -->
-  <section id="faq" style="margin:0 0 48px;">
+  <section id="faq" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">FAQ</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">よくある質問</h2>
     </div>
     <div class="faq">
@@ -1419,8 +1406,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <!-- バンド -->
-  <div class="band" style="margin:0 0 48px;">
+  <div class="band" style="margin:0 0 0;">
     <p class="band-title">ジョージアの制度に沿った書類整備サポート</p>
     <ul class="band-list">
       <li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li>
@@ -1430,10 +1416,13 @@ section[id],details[id]{scroll-margin-top:72px;}
     <p class="band-note">※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。</p>
   </div>
 
+  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
   <!-- その他サービス -->
-  <section id="other-services" style="margin:0 0 48px;">
+  <section id="other-services" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Other Services</div>
+      <div class="sh-line"></div>
       <h2 class="sh-title">その他のサービス</h2>
     </div>
     <div class="svc-grid">
@@ -1450,10 +1439,7 @@ section[id],details[id]{scroll-margin-top:72px;}
   <div class="big-cta">
     <div class="big-cta-inner">
       <h2>海外取引の決済インフラを、<br>今年中に整えませんか。</h2>
-      <p>
-        「まだ検討段階」で構いません。<br>
-        現状をお聞きして、何が必要かを一緒に整理します。
-      </p>
+      <p>「まだ検討段階」で構いません。<br>現状をお聞きして、何が必要かを一緒に整理します。</p>
       <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" style="font-size:16px;padding:18px 52px;">
         📩 LINEで無料相談する
       </a>
@@ -1465,9 +1451,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 </div>
 
 <main id="main">
-  <h1 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
-    ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC
-  </h1>
+  <h1 style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC</h1>
 
   <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">ジョージア法人設立｜書類整備・情報提供サポート</h2>
@@ -1475,29 +1459,14 @@ section[id],details[id]{scroll-margin-top:72px;}
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">サクッと要点</span></div>
       <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li>
-        <li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li>
-      </ul>
+      <ul class="qs-list"><li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li><li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li></ul>
     </div>
-    <div class="progress-steps">
-      <div class="step">1. LINEで相談</div>
-      <div class="step">2. ヒアリング → ご提案</div>
-      <div class="step">3. 申込 → 現地手続き → 完了</div>
-    </div>
+    <div class="progress-steps"><div class="step">1. LINEで相談</div><div class="step">2. ヒアリング → ご提案</div><div class="step">3. 申込 → 現地手続き → 完了</div></div>
     <div class="space-y-3 accordion">
       <details><summary>ジョージア法人制度の概要（公開資料に基づく一般情報）</summary><div class="content"><p>OECDやPwC等が公表している一般資料を参照した情報です。居住国の税法（CFC規制等）の適用可能性があります。<strong>税務・法務の判断は当社では行いません。</strong></p></div></details>
       <details><summary>法律事務所との提携（MoU）</summary><div class="content"><ul><li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li><li>法人ID：406365525</li></ul><span class="note">※ MoUは業務連携の覚書であり、登記完了・審査結果の保証ではありません。</span></div></details>
       <details><summary>書類整備サポートの範囲</summary><div class="content"><ul><li>法人登記に必要な書類の案内・整備補助（目安：7〜10営業日）</li><li>バーチャルオフィス（12ヶ月）の手配案内</li><li>法人口座開設手続きに向けた書類案内（開設可否は銀行審査判断）</li><li>eSIM設定の案内</li></ul></div></details>
-      <details><summary>料金プラン</summary><div class="content">
-        <div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody>
-          <tr><td>基本プラン</td><td>¥330,000〜</td></tr>
-          <tr><td>設立＋LPパック</td><td>¥498,000</td></tr>
-          <tr><td>フルサポートパック</td><td>¥598,000</td></tr>
-          <tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr>
-        </tbody></table></div>
-        <p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p>
-      </div></details>
+      <details><summary>料金プラン</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody><tr><td>基本プラン</td><td>¥330,000〜</td></tr><tr><td>設立＋LPパック</td><td>¥498,000</td></tr><tr><td>フルサポートパック</td><td>¥598,000</td></tr><tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr></tbody></table></div><p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p></div></details>
       <details><summary>Nominee構成（UBO開示を含む一般説明）</summary><div class="content"><ul><li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）の開示が必要</strong></li><li>年額：€2,500（2025年8月時点）</li><li>CRS等の情報交換制度の対象となり得ます</li></ul></div></details>
       <details><summary>KYC・FMSに関する注意</summary><div class="content"><p>パスポート・住所証明等のKYC書類が必要です。高額送受金・暗号資産取引の状況により追加確認が求められる場合があります。反社・AML/CFT上の疑いがある場合は支援不可です。</p></div></details>
     </div>
@@ -1509,14 +1478,11 @@ section[id],details[id]{scroll-margin-top:72px;}
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">サクッと要点</span></div>
       <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li>
-        <li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li>
-      </ul>
+      <ul class="qs-list"><li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li><li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li></ul>
     </div>
     <div class="space-y-3 accordion">
       <details><summary>IE＋Small Business Statusの制度概要（一般情報）</summary><div class="content">
-        <table style="width:100%;border-collapse:collapse;font-family:'Noto Sans JP',sans-serif;"><thead><tr><th style="background:var(--navy);color:#fff;padding:10px;text-align:left;font-size:12px;">年収（ラリ）</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;">日本円目安</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;">現地税率区分</th></tr></thead><tbody>
+        <table style="width:100%;border-collapse:collapse;font-family:'Noto Sans JP',sans-serif;"><thead><tr><th style="background:var(--navy);color:#fff;padding:10px;text-align:left;font-size:12px;">年収（ラリ）</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">日本円目安</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">現地税率区分</th></tr></thead><tbody>
           <tr><td style="padding:10px;border:1px solid var(--border);">〜30,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">〜150万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">0%</td></tr>
           <tr><td style="padding:10px;border:1px solid var(--border);background:#f8faff;">30,001〜500,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">150〜2,500万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">1%</td></tr>
           <tr><td style="padding:10px;border:1px solid var(--border);">500,000超</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">2,500万円〜</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">3〜5%</td></tr>
@@ -1548,17 +1514,15 @@ section[id],details[id]{scroll-margin-top:72px;}
         </div>
       </div></details>
       <details id="cf-tool-sec"><summary>複利の概算ツール（参考・商品非特定）</summary><div class="content">
-        <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
-          <h4 id="cf-title" class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
+        <div id="cf-tool" class="cf-card" role="form">
+          <h4 class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
           <div class="cf-grid">
-            <label for="cf-currency">通貨</label>
-            <select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
+            <label for="cf-currency">通貨</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
             <label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
             <label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
             <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
             <label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
-            <label for="cf-nper">回数/年</label>
-            <select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
+            <label for="cf-nper">回数/年</label><select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
             <label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked>
           </div>
           <div class="cf-preset">
@@ -1580,11 +1544,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4" style="font-family:'Shippori Mincho B1',serif;">こんな方にはおすすめしません</h2>
-    <ul class="qs-list">
-      <li>居住国での申告義務や法律を守る意思がない方</li>
-      <li>口座開設の確実な成功を保証として求める方</li>
-      <li>税務・法務の個別アドバイスを求めている方</li>
-    </ul>
+    <ul class="qs-list"><li>居住国での申告義務や法律を守る意思がない方</li><li>口座開設の確実な成功を保証として求める方</li><li>税務・法務の個別アドバイスを求めている方</li></ul>
   </section>
 
   <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
@@ -1626,8 +1586,8 @@ section[id],details[id]{scroll-margin-top:72px;}
 
 <script>
 // FAQ
-document.querySelectorAll('.faq-item').forEach(function(item){
-  item.querySelector('.faq-q').addEventListener('click',function(){item.classList.toggle('open');});
+document.querySelectorAll('.faq-item').forEach(function(i){
+  i.querySelector('.faq-q').addEventListener('click',function(){i.classList.toggle('open');});
 });
 // スムーズスクロール
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
@@ -1640,44 +1600,35 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
     try{window.scrollTo({top:y,behavior:'smooth'});}catch(err){window.scrollTo(0,y);}
   });
 });
+// ヒーロー視差（軽量JS）
+(function(){
+  var img=document.querySelector('.hero-img');
+  if(!img||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        var s=window.pageYOffset;
+        if(s<window.innerHeight){
+          img.style.transform='scale(1.06) translateY('+s*.08+'px)';
+        }
+        ticking=false;
+      });
+      ticking=true;
+    }
+  },{passive:true});
+})();
 </script>
 
 <script src="./script.js?v=20251110a" defer></script>
 
-<script>
-function lpGoogleTranslateInit(){
-  try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}
-  new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");
-}
-</script>
+<script>function lpGoogleTranslateInit(){try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");}</script>
 <script>
 (function(){
   "use strict";
-  function setGoogTrans(v){
-    var host=location.hostname.replace(/^www\./,'');
-    var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
-    ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;
-    });
-  }
-  function mountSwitch(){
-    if(document.getElementById("lpLangSwitch"))return;
-    var box=document.createElement("div");
-    box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");
-    var jp=document.createElement("button");jp.type="button";jp.className="notranslate";jp.setAttribute("translate","no");jp.innerHTML='<span class="notranslate">JP</span>';
-    var en=document.createElement("button");en.type="button";en.className="notranslate";en.setAttribute("translate","no");en.innerHTML='<span class="notranslate">EN</span>';
-    jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});
-    en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});
-    box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);
-    var saved=localStorage.getItem("lp_lang")||"ja";
-    jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");
-    en.setAttribute("aria-pressed",saved==="en"?"true":"false");
-  }
-  function boot(){
-    mountSwitch();
-    var saved=localStorage.getItem("lp_lang")||"ja";
-    setGoogTrans(saved==="en"?"/ja/en":"/ja/ja");
-  }
+  function setGoogTrans(v){var host=location.hostname.replace(/^www\./,'');var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();['','domain=.'+host,'domain='+host].forEach(function(d){document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;});}
+  function mountSwitch(){if(document.getElementById("lpLangSwitch"))return;var box=document.createElement("div");box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");var jp=document.createElement("button");jp.type="button";jp.className="notranslate";jp.innerHTML='<span class="notranslate">JP</span>';var en=document.createElement("button");en.type="button";en.className="notranslate";en.innerHTML='<span class="notranslate">EN</span>';jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);var saved=localStorage.getItem("lp_lang")||"ja";jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");en.setAttribute("aria-pressed",saved==="en"?"true":"false");}
+  function boot(){mountSwitch();var saved=localStorage.getItem("lp_lang")||"ja";setGoogTrans(saved==="en"?"/ja/en":"/ja/ja");}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
 </script>
