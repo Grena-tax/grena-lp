@@ -5,589 +5,322 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC</title>
 <link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20260318a">
-<meta name="theme-color" content="#0b1f3a">
+<link rel="stylesheet" href="./patch.css?v=20260318b">
+<meta name="theme-color" content="#08172e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Noto+Serif+JP:wght@600;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ===== GRENA LP 2026 — 80/80 VERSION ===== */
-*,*::before,*::after{box-sizing:border-box;}
-
-/* ── 変数 ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --navy:#0b1f3a;
-  --navy2:#132f58;
-  --gold:#c9a84c;
-  --gold-l:#e8cb7a;
-  --gold-d:#a07830;
-  --white:#fff;
-  --off:#f7f8fc;
-  --text:#0d1b2e;
-  --text2:#3d4f6e;
-  --text3:#8090a8;
-  --border:rgba(11,31,58,.09);
-  --r:14px;
-  --r-lg:20px;
-  --shadow:0 4px 20px rgba(11,31,58,.10);
-  --shadow-lg:0 12px 40px rgba(11,31,58,.16);
+  --ink:#06111f;--navy:#0b1f3a;--navy2:#102848;--navy3:#1a3a60;
+  --gold:#c9a84c;--gold-l:#e8cb7a;--gold-xl:#f5e0a0;--gold-d:#9a7830;
+  --cream:#faf8f3;--cream2:#f2ede3;--white:#ffffff;
+  --text:#0d1b2e;--text2:#2e4060;--text3:#6a7e96;
+  --border:rgba(11,31,58,.08);--gold-border:rgba(201,168,76,.25);
+  --r-sm:8px;--r:14px;--r-lg:22px;--r-xl:32px;
+  --shadow-sm:0 2px 12px rgba(11,31,58,.07);
+  --shadow:0 6px 28px rgba(11,31,58,.11);
+  --shadow-lg:0 16px 52px rgba(11,31,58,.16);
+  --shadow-xl:0 28px 80px rgba(11,31,58,.22);
+  --serif:'Cormorant Garamond','Noto Serif JP',Georgia,serif;
+  --sans:'Noto Sans JP',-apple-system,sans-serif;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --cta-h:70px;
 }
+html,body{font-family:var(--sans);background:var(--cream);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden;scroll-behavior:smooth;}
+body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom));}
 
-/* ── ヒーロー ── */
-.glp-hero{
-  position:relative;
-  min-height:min(700px,96vh);
-  display:flex;align-items:flex-end;
-  overflow:hidden;color:#fff;
-}
-.glp-hero-bg{position:absolute;inset:0;z-index:0;}
-.glp-hero-img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:50% 35%;
-  display:block;
-}
-.glp-hero-grad{
-  position:absolute;inset:0;
-  background:linear-gradient(
-    to bottom,
-    rgba(5,15,35,.05) 0%,
-    rgba(5,15,35,.15) 30%,
-    rgba(5,15,35,.60) 60%,
-    rgba(5,15,35,.88) 100%
-  );
-}
-.glp-hero-body{
-  position:relative;z-index:2;
-  width:100%;max-width:760px;
-  padding:0 24px 56px;
-  animation:fadeUp .8s ease both;
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(18px);}
-  to{opacity:1;transform:translateY(0);}
-}
-.glp-hero-tag{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:5px 14px;border-radius:999px;
-  border:1px solid rgba(201,168,76,.50);
-  background:rgba(201,168,76,.12);
-  font-size:11px;font-weight:700;letter-spacing:.08em;
-  color:#e8cb7a;margin-bottom:16px;backdrop-filter:blur(6px);
-}
-.glp-hero-h1{
-  font-family:'Noto Serif JP',serif!important;
-  font-size:clamp(28px,6vw,52px)!important;
-  font-weight:900!important;line-height:1.25!important;
-  margin:0 0 14px!important;color:#fff!important;
-  text-shadow:0 2px 20px rgba(0,0,0,.28);
-  letter-spacing:-.01em;
-}
-.glp-hero-h1 em{font-style:normal;color:#e8cb7a;}
-.glp-hero-lead{
-  font-size:clamp(14px,2vw,17px);
-  line-height:1.85;color:rgba(255,255,255,.88);
-  margin:0 0 20px;
-}
-.glp-hero-note{
-  font-size:11px;line-height:1.65;
-  color:rgba(255,255,255,.48);
-  margin:0 0 26px;padding:10px 14px;
-  border-radius:8px;background:rgba(0,0,0,.28);
-  border:1px solid rgba(255,255,255,.08);max-width:520px;
-}
-.glp-hero-btns{display:flex;flex-wrap:wrap;gap:12px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes shimmer{0%{background-position:-200% center;}100%{background-position:200% center;}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.45);}50%{box-shadow:0 0 0 14px rgba(201,168,76,0);}}
+@keyframes lineGrow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
 
-/* ── ボタン ── */
-.glp-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:15px 30px;border-radius:999px;
-  font-size:14px;font-weight:800;
-  text-decoration:none;border:none;cursor:pointer;
-  transition:all .2s;letter-spacing:.04em;white-space:nowrap;
-}
-.glp-btn-main{
-  background:linear-gradient(135deg,#e8cb7a,#c9a84c);
-  color:#0b1f3a;
-  box-shadow:0 6px 28px rgba(201,168,76,.50);
-}
-.glp-btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(201,168,76,.60);}
-.glp-btn-out{
-  background:rgba(255,255,255,.12);color:#fff;
-  border:1.5px solid rgba(255,255,255,.42);backdrop-filter:blur(4px);
-}
-.glp-btn-out:hover{background:rgba(255,255,255,.22);}
-.glp-btn-navy{background:#0b1f3a;color:#fff;box-shadow:0 4px 16px rgba(11,31,58,.30);}
-.glp-btn-navy:hover{background:#132f58;transform:translateY(-1px);}
-.glp-btn-green{background:#0f9a52;color:#fff;}
-.glp-btn-gray{background:#dde0e8;color:#666;}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s cubic-bezier(.22,.68,0,1.1),transform .65s cubic-bezier(.22,.68,0,1.1);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-delay-1{transition-delay:.10s;}.reveal-delay-2{transition-delay:.20s;}
+.reveal-delay-3{transition-delay:.30s;}.reveal-delay-4{transition-delay:.40s;}
 
-/* ── 信頼バッジ ── */
-.glp-trust{
-  background:#0b1f3a;
-  padding:14px 20px;
-  display:flex;align-items:center;justify-content:center;
-  gap:24px;flex-wrap:wrap;
-}
-.glp-trust-item{
-  display:flex;align-items:center;gap:7px;
-  font-size:12px;font-weight:600;color:rgba(255,255,255,.78);
-}
-.glp-trust-div{width:1px;height:18px;background:rgba(255,255,255,.15);}
+/* HERO */
+.g-hero{position:relative;min-height:min(740px,97vh);display:flex;align-items:flex-end;overflow:hidden;color:#fff;background:#06111f;}
+.g-hero-bg{position:absolute;inset:0;z-index:0;}
+.g-hero-img{width:100%;height:100%;object-fit:cover;object-position:50% 32%;display:block;transform:scale(1.04);transition:transform 10s ease;}
+.g-hero:hover .g-hero-img{transform:scale(1.0);}
+.g-hero-grad{position:absolute;inset:0;background:linear-gradient(105deg,rgba(6,17,31,.70) 0%,rgba(6,17,31,.20) 55%,transparent 100%),linear-gradient(to bottom,transparent 30%,rgba(6,17,31,.55) 65%,rgba(6,17,31,.92) 100%);}
+.g-hero-line{position:absolute;left:0;bottom:0;width:100%;height:2px;z-index:3;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);opacity:.7;}
+.g-hero-body{position:relative;z-index:2;width:100%;max-width:820px;padding:0 28px 64px;animation:fadeUp .9s cubic-bezier(.22,.68,0,1.1) both;}
+.g-hero-tag{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:999px;border:1px solid rgba(201,168,76,.45);background:rgba(201,168,76,.10);font-size:11px;font-weight:600;letter-spacing:.10em;color:var(--gold-l);margin-bottom:20px;backdrop-filter:blur(8px);animation:fadeIn .8s .3s both;}
+.g-hero-h1{font-family:var(--serif)!important;font-size:clamp(28px,5vw,52px)!important;font-weight:700!important;line-height:1.22!important;margin:0 0 18px!important;color:#fff!important;letter-spacing:-.02em;text-shadow:0 3px 28px rgba(0,0,0,.30);}
+.g-hero-h1 em{font-style:italic;background:linear-gradient(135deg,var(--gold-xl),var(--gold-l),var(--gold));background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s linear infinite;}
+.g-hero-lead{font-size:clamp(14px,2vw,17px);line-height:1.9;color:rgba(255,255,255,.85);margin:0 0 20px;font-weight:300;letter-spacing:.02em;}
+.g-hero-note{font-size:11px;line-height:1.7;color:rgba(255,255,255,.44);margin:0 0 28px;padding:10px 16px;border-radius:var(--r-sm);background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.07);max-width:500px;backdrop-filter:blur(6px);}
+.g-hero-btns{display:flex;flex-wrap:wrap;gap:14px;}
 
-/* ── インナー ── */
-.glp-inner{max-width:900px;margin:0 auto;padding:0 20px 72px;}
+/* BUTTONS */
+.g-btn{display:inline-flex;align-items:center;gap:7px;border-radius:999px;font-size:14px;font-weight:700;text-decoration:none;border:none;cursor:pointer;transition:all .22s;letter-spacing:.05em;white-space:nowrap;}
+.g-btn-main{padding:16px 34px;background:linear-gradient(135deg,var(--gold-l) 0%,var(--gold) 50%,var(--gold-d) 100%);color:var(--navy);box-shadow:0 6px 30px rgba(201,168,76,.50);animation:pulse 2.8s ease infinite;}
+.g-btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(201,168,76,.60);animation:none;}
+.g-btn-ghost{padding:15px 28px;background:rgba(255,255,255,.10);color:#fff;border:1.5px solid rgba(255,255,255,.38);backdrop-filter:blur(6px);}
+.g-btn-ghost:hover{background:rgba(255,255,255,.20);}
+.g-btn-dark{padding:15px 28px;background:var(--navy);color:#fff;box-shadow:var(--shadow);}
+.g-btn-dark:hover{background:var(--navy2);transform:translateY(-1px);}
+.g-btn-green{padding:15px 24px;background:#0f9a52;color:#fff;}
+.g-btn-muted{padding:14px 22px;background:#e0e4ed;color:#5a6a80;font-size:13px;}
 
-/* ── 統計 ── */
-.glp-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:rgba(201,168,76,.18);
-  border-radius:16px;overflow:hidden;
-  margin:32px 0;border:1px solid rgba(201,168,76,.22);
-}
-.glp-stat{background:#fff;padding:22px 12px 18px;text-align:center;}
-.glp-stat-n{
-  display:block;font-family:'Noto Serif JP',serif;
-  font-size:clamp(26px,4vw,36px);font-weight:900;
-  color:#0b1f3a;line-height:1;margin-bottom:7px;
-}
-.glp-stat-n em{color:#c9a84c;font-style:normal;}
-.glp-stat-l{font-size:11px;color:#8090a8;font-weight:600;letter-spacing:.04em;line-height:1.55;}
+/* TRUST BAR */
+.g-trust{background:var(--navy);padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;border-bottom:1px solid rgba(201,168,76,.18);}
+.g-trust-item{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.75);letter-spacing:.03em;}
+.g-trust-div{width:1px;height:16px;background:rgba(255,255,255,.14);}
 
-/* ── セクションタイトル ── */
-.glp-sec-title{
-  font-family:'Noto Serif JP',serif!important;
-  font-size:clamp(20px,3.5vw,28px)!important;
-  font-weight:900!important;color:#0b1f3a!important;
-  margin:0 0 8px!important;line-height:1.3;
-}
-.glp-sec-sub{
-  font-size:14px;color:#7a90aa;
-  margin:0 0 24px;line-height:1.7;
-}
+.g-inner{max-width:960px;margin:0 auto;padding:0 24px 80px;}
 
-/* ── 共感ボックス ── */
-.glp-empathy{
-  background:#fff;border-radius:var(--r-lg);
-  padding:28px 24px;margin:0 0 32px;
-  box-shadow:var(--shadow);
-  border:1px solid var(--border);
-  border-top:4px solid var(--gold);
-}
-.glp-empathy-list{
-  list-style:none;padding:0;margin:0;
-  display:flex;flex-direction:column;gap:14px;
-}
-.glp-empathy-list li{
-  display:flex;align-items:flex-start;gap:12px;
-  font-size:14px;color:var(--text2);line-height:1.7;
-  padding-bottom:14px;
-  border-bottom:1px dashed rgba(11,31,58,.08);
-}
-.glp-empathy-list li:last-child{border-bottom:none;padding-bottom:0;}
-.glp-empathy-list .ico{
-  font-size:18px;flex-shrink:0;margin-top:1px;
-}
+/* STATS */
+.g-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gold-border);border-radius:18px;overflow:hidden;margin:36px 0 40px;border:1px solid var(--gold-border);box-shadow:var(--shadow-sm);}
+.g-stat{background:var(--white);padding:24px 12px 20px;text-align:center;position:relative;}
+.g-stat::after{content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:32px;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:999px;opacity:0;transition:opacity .25s;}
+.g-stat:hover::after{opacity:1;}
+.g-stat-n{display:block;font-family:var(--serif);font-size:clamp(28px,5vw,42px);font-weight:700;color:var(--navy);line-height:1;margin-bottom:8px;letter-spacing:-.02em;}
+.g-stat-n em{color:var(--gold);font-style:normal;}
+.g-stat-l{font-size:11px;color:var(--text3);font-weight:500;letter-spacing:.05em;line-height:1.55;}
 
-/* ── 解決策ボックス ── */
-.glp-sol{
-  background:linear-gradient(135deg,#0b1f3a,#132f58);
-  border-radius:var(--r-lg);padding:32px 24px;
-  margin:0 0 32px;border:1px solid rgba(201,168,76,.22);
-  color:#fff;position:relative;overflow:hidden;
-}
-.glp-sol::before{
-  content:"";position:absolute;top:-60px;right:-60px;
-  width:200px;height:200px;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,168,76,.10) 0%,transparent 70%);
-}
-.glp-sol-title{
-  font-family:'Noto Serif JP',serif;
-  font-size:18px;font-weight:900;color:#e8cb7a;
-  margin:0 0 18px;position:relative;
-}
-.glp-sol-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;
-  position:relative;
-}
-.glp-sol-col h4{
-  font-size:12px;font-weight:800;letter-spacing:.08em;
-  color:rgba(255,255,255,.50);margin:0 0 10px;
-  text-transform:uppercase;
-}
-.glp-sol-col ul{
-  list-style:none;padding:0;margin:0;
-  display:flex;flex-direction:column;gap:8px;
-}
-.glp-sol-col ul li{
-  font-size:13px;line-height:1.6;
-  padding-left:18px;position:relative;
-}
-.glp-sol-col.ok li{color:rgba(255,255,255,.88);}
-.glp-sol-col.ok li::before{content:"✓";position:absolute;left:0;color:#e8cb7a;font-weight:900;}
-.glp-sol-col.ng li{color:rgba(255,255,255,.55);}
-.glp-sol-col.ng li::before{content:"✕";position:absolute;left:0;color:#e05050;}
+/* SECTION HEADER */
+.g-sh{margin:0 0 32px;position:relative;}
+.g-sh-label{display:block;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
+.g-sh-title{font-family:var(--serif)!important;font-size:clamp(22px,4vw,36px)!important;font-weight:700!important;color:var(--navy)!important;line-height:1.25!important;margin:0 0 8px!important;letter-spacing:-.01em;}
+.g-sh-sub{font-size:14px;color:var(--text3);line-height:1.75;font-weight:300;}
+.g-sh-line{display:block;width:48px;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:999px;margin-top:12px;transform-origin:left;animation:lineGrow .6s .3s both;}
 
-/* ── 比較テーブル ── */
-.glp-compare-wrap{
-  overflow-x:auto;border-radius:16px;
-  box-shadow:var(--shadow);margin-bottom:16px;
-}
-.glp-compare{
-  width:100%;min-width:460px;border-collapse:collapse;
-}
-.glp-compare thead th{
-  background:#0b1f3a;color:#fff;
-  font-size:12px;font-weight:800;
-  padding:12px 14px;text-align:center;
-  letter-spacing:.04em;
-}
-.glp-compare thead th:first-child{text-align:left;}
-.glp-compare thead th.hl{
-  background:linear-gradient(135deg,#c9a84c,#e8cb7a);color:#0b1f3a;
-}
-.glp-compare tbody tr:nth-child(even) td{background:#f8faff;}
-.glp-compare tbody td{
-  padding:11px 14px;font-size:12px;
-  text-align:center;color:#3d4f6e;
-  border-bottom:1px solid rgba(11,31,58,.06);
-}
-.glp-compare tbody td:first-child{text-align:left;font-weight:700;color:#0b1f3a;white-space:nowrap;}
-.ok-c{color:#0f9a52;font-weight:900;font-size:14px;}
-.ng-c{color:#dc3545;font-weight:900;font-size:14px;}
-.so-c{color:#c9a84c;font-weight:700;}
-.hl-c{background:rgba(201,168,76,.08)!important;font-weight:700;color:#0b1f3a;}
+/* DISC */
+.g-disc{background:#fffdf0;border:1px solid rgba(201,168,76,.30);border-left:3px solid var(--gold);border-radius:var(--r-sm);padding:12px 18px;font-size:11.5px;color:#5a4a00;line-height:1.72;margin:0 0 48px;}
+.g-disc strong{color:#7a5500;font-weight:700;}
 
-/* ── 料金ボックス ── */
-.glp-price-box{
-  background:#fff;border-radius:var(--r-lg);
-  padding:28px 24px;margin:0 0 32px;
-  box-shadow:var(--shadow-lg);
-  border:1px solid rgba(201,168,76,.25);
-  border-top:5px solid var(--gold);
-}
-.glp-price-box h3{
-  font-family:'Noto Serif JP',serif;
-  font-size:18px;font-weight:900;color:#0b1f3a;
-  margin:0 0 6px;
-}
-.glp-price-badge{
-  display:inline-block;
-  background:rgba(201,168,76,.12);
-  border:1px solid rgba(201,168,76,.35);
-  border-radius:6px;padding:3px 10px;
-  font-size:11px;font-weight:800;
-  color:#a07830;letter-spacing:.06em;margin-bottom:16px;
-}
-.glp-price-num{
-  font-family:'Noto Serif JP',serif;
-  font-size:clamp(28px,5vw,38px);
-  font-weight:900;color:#0b1f3a;
-  line-height:1;margin:0 0 4px;
-}
-.glp-price-num span{font-size:16px;font-weight:500;color:#6b7a99;margin-left:4px;}
-.glp-price-note{font-size:11px;color:#8090a8;margin:0 0 20px;line-height:1.6;}
-.glp-price-includes{margin:0 0 16px;}
-.glp-price-includes h4{
-  font-size:11px;font-weight:800;letter-spacing:.08em;
-  color:#a07830;margin:0 0 8px;text-transform:uppercase;
-}
-.glp-price-includes ul{
-  list-style:none;padding:0;margin:0;
-  display:flex;flex-direction:column;gap:7px;
-}
-.glp-price-includes ul li{
-  font-size:13px;color:#3d4f6e;
-  padding-left:20px;position:relative;line-height:1.6;
-}
-.glp-price-includes ul li::before{
-  content:"✓";position:absolute;left:0;
-  color:#0f9a52;font-weight:900;
-}
-.glp-price-not h4{color:#8090a8;}
-.glp-price-not ul li::before{content:"—";color:#aaa;}
-.glp-price-div{
-  border-top:1px solid rgba(11,31,58,.08);
-  margin:16px 0;padding-top:16px;
-}
-.glp-set-row{
-  display:flex;align-items:center;justify-content:space-between;
-  flex-wrap:wrap;gap:8px;
-  background:#f7f8fc;border-radius:10px;padding:12px 16px;
-  border:1px solid rgba(11,31,58,.07);
-}
-.glp-set-label{font-size:13px;font-weight:700;color:#0b1f3a;}
-.glp-set-price{font-size:18px;font-weight:900;color:#0b1f3a;font-family:'Noto Serif JP',serif;}
-.glp-set-price s{font-size:13px;font-weight:400;color:#aaa;margin-right:6px;}
+/* EMPATHY */
+.g-empathy{background:var(--white);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow);margin:0 0 56px;border:1px solid var(--border);}
+.g-empathy-inner{padding:36px 32px;}
+.g-empathy-list{list-style:none;display:flex;flex-direction:column;gap:0;}
+.g-empathy-item{display:flex;align-items:flex-start;gap:16px;padding:18px 0;border-bottom:1px solid rgba(11,31,58,.06);}
+.g-empathy-item:last-child{border-bottom:none;padding-bottom:0;}
+.g-empathy-item:first-child{padding-top:0;}
+.g-empathy-icon{width:40px;height:40px;flex-shrink:0;border-radius:10px;background:linear-gradient(135deg,#e8f0ff,#d5e3f5);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.g-empathy-text{font-size:14px;color:var(--text2);line-height:1.72;padding-top:8px;font-weight:400;}
 
-/* ── ステップ ── */
-.glp-steps{
-  display:flex;gap:0;margin:0 0 32px;
-  counter-reset:step;
-}
-.glp-step{
-  flex:1;padding:14px 8px;text-align:center;
-  background:#fff;border:1px solid var(--border);
-  font-size:12px;font-weight:700;color:#0b1f3a;
-  counter-increment:step;position:relative;
-}
-.glp-step:first-child{border-radius:10px 0 0 10px;}
-.glp-step:last-child{border-radius:0 10px 10px 0;}
-.glp-step+.glp-step{border-left:none;}
-.glp-step::before{
-  content:counter(step);
-  display:block;
-  width:24px;height:24px;border-radius:50%;
-  background:#0b1f3a;color:#e8cb7a;
-  font-size:12px;font-weight:900;line-height:24px;
-  margin:0 auto 6px;
-}
+/* SOLUTION */
+.g-solution{background:linear-gradient(145deg,var(--navy) 0%,var(--navy2) 60%,var(--navy3) 100%);border-radius:var(--r-xl);padding:40px 32px;margin:0 0 56px;position:relative;overflow:hidden;border:1px solid rgba(201,168,76,.15);box-shadow:var(--shadow-xl);}
+.g-solution::before{content:"";position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.12) 0%,transparent 70%);}
+.g-solution-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--gold-l);margin:0 0 28px;position:relative;z-index:1;letter-spacing:.02em;}
+.g-solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;position:relative;z-index:1;}
+.g-sol-col h4{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.12);}
+.g-sol-col.ok h4{color:rgba(201,168,76,.80);}
+.g-sol-col.ng h4{color:rgba(255,255,255,.40);}
+.g-sol-col ul{list-style:none;display:flex;flex-direction:column;gap:10px;}
+.g-sol-col ul li{font-size:13px;line-height:1.65;padding-left:20px;position:relative;}
+.g-sol-col.ok li{color:rgba(255,255,255,.88);}
+.g-sol-col.ok li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:900;}
+.g-sol-col.ng li{color:rgba(255,255,255,.45);}
+.g-sol-col.ng li::before{content:"✕";position:absolute;left:0;color:#e05050;}
 
-/* ── FAQ ── */
-.glp-faq{margin:0 0 32px;}
-.glp-faq-item{
-  background:#fff;border-radius:var(--r);
-  border:1px solid var(--border);
-  margin-bottom:8px;overflow:hidden;
-  transition:box-shadow .2s;
-}
-.glp-faq-item:hover{box-shadow:var(--shadow);}
-.glp-faq-q{
-  padding:16px 20px;font-size:14px;font-weight:700;
-  color:#0b1f3a;cursor:pointer;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-}
-.glp-faq-q::after{
-  content:"+";font-size:22px;font-weight:300;
-  color:#c9a84c;flex-shrink:0;transition:transform .2s;
-}
-.glp-faq-item.open .glp-faq-q::after{content:"−";}
-.glp-faq-a{
-  display:none;padding:0 20px 16px;
-  font-size:13px;color:#5a6a80;line-height:1.75;
-}
-.glp-faq-item.open .glp-faq-a{display:block;}
+/* COMPARE */
+.g-compare-wrap{overflow-x:auto;border-radius:var(--r-lg);box-shadow:var(--shadow);margin:0 0 12px;}
+.g-compare{width:100%;min-width:440px;border-collapse:collapse;}
+.g-compare thead th{background:var(--navy);color:#fff;font-size:12px;font-weight:600;padding:14px 16px;text-align:center;letter-spacing:.05em;}
+.g-compare thead th:first-child{text-align:left;}
+.g-compare thead th.hl{background:linear-gradient(135deg,var(--gold-d),var(--gold-l));color:var(--navy);font-weight:800;}
+.g-compare tbody tr:nth-child(even) td{background:#f4f7ff;}
+.g-compare tbody td{padding:12px 16px;font-size:13px;text-align:center;color:var(--text2);border-bottom:1px solid rgba(11,31,58,.05);}
+.g-compare tbody td:first-child{text-align:left;font-weight:600;color:var(--navy);white-space:nowrap;}
+.g-compare .ok-c{color:#0a8a44;font-weight:800;font-size:15px;}
+.g-compare .ng-c{color:#c0392b;font-weight:800;font-size:15px;}
+.g-compare .so-c{color:#b8860b;font-weight:600;font-size:12px;}
+.g-compare .hl-c{background:rgba(201,168,76,.07)!important;font-weight:700;color:var(--navy);}
+.g-compare-note{font-size:11px;color:var(--text3);line-height:1.65;}
 
-/* ── CTA大バナー ── */
-.glp-cta-banner{
-  background:linear-gradient(135deg,#0b1f3a,#132f58);
-  border-radius:22px;padding:44px 24px;
-  text-align:center;margin:32px 0 0;
-  border:1px solid rgba(201,168,76,.22);
-  position:relative;overflow:hidden;
-}
-.glp-cta-banner::before{
-  content:"";position:absolute;
-  top:-120px;left:50%;transform:translateX(-50%);
-  width:500px;height:500px;border-radius:50%;
-  background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 70%);
-}
-.glp-cta-banner h2{
-  font-family:'Noto Serif JP',serif;
-  color:#fff;font-size:clamp(20px,3.5vw,28px);
-  font-weight:900;margin:0 0 10px;position:relative;
-}
-.glp-cta-banner p{
-  color:rgba(255,255,255,.65);font-size:14px;
-  margin:0 0 28px;line-height:1.8;position:relative;
-}
-.glp-cta-banner .glp-btn{
-  position:relative;font-size:16px;
-  padding:18px 48px;min-width:240px;
-}
-.glp-cta-note{
-  color:rgba(255,255,255,.35);font-size:11px;
-  margin-top:14px;display:block;position:relative;
-}
+/* WHY CARDS */
+.g-why-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px;}
+.g-why-card{background:var(--white);border-radius:var(--r-lg);padding:24px 20px;box-shadow:var(--shadow-sm);border:1px solid var(--border);border-top:3px solid var(--gold);transition:transform .22s,box-shadow .22s;}
+.g-why-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.g-why-card-icon{font-size:26px;margin-bottom:10px;}
+.g-why-card-title{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 7px;}
+.g-why-card-text{font-size:12px;color:var(--text3);line-height:1.7;font-weight:300;margin:0;}
 
-/* ── 帯 ── */
-.glp-band{
-  background:linear-gradient(135deg,#0b1f3a,#132f58);
-  color:#e8f0ff;border-radius:18px;
-  padding:24px 24px 20px;margin:0 0 32px;
-  border:1px solid rgba(201,168,76,.18);
-}
-.glp-band-title{
-  font-family:'Noto Serif JP',serif!important;
-  font-size:15px!important;font-weight:800!important;
-  color:#e8cb7a!important;margin:0 0 10px!important;
-}
-.glp-band-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;}
-.glp-band-list li{
-  font-size:13px;color:rgba(255,255,255,.85);
-  padding-left:18px;position:relative;line-height:1.6;
-}
-.glp-band-list li::before{content:"✓";position:absolute;left:0;color:#c9a84c;font-weight:900;}
-.glp-band-note{font-size:10px;color:rgba(255,255,255,.38);margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.10);line-height:1.6;}
+/* PRICE BOX */
+.g-price-hero{background:var(--white);border-radius:var(--r-xl);overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--gold-border);margin:0 0 20px;}
+.g-price-header{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:28px 32px;position:relative;overflow:hidden;}
+.g-price-header::before{content:"";position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.15) 0%,transparent 70%);}
+.g-price-header-tag{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;display:block;}
+.g-price-header-name{font-family:var(--serif);font-size:clamp(18px,3vw,24px);font-weight:700;color:#fff;margin:0 0 16px;position:relative;}
+.g-price-amount{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;}
+.g-price-num{font-family:var(--serif);font-size:clamp(34px,6vw,52px);font-weight:700;color:var(--gold-l);line-height:1;letter-spacing:-.02em;position:relative;}
+.g-price-unit{font-size:14px;color:rgba(255,255,255,.55);margin-bottom:8px;}
+.g-price-body{padding:28px 32px;}
+.g-price-includes{margin:0 0 20px;}
+.g-price-includes h4{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid rgba(11,31,58,.07);}
+.g-price-includes.ok h4{color:var(--gold-d);}
+.g-price-includes.ng h4{color:var(--text3);}
+.g-price-includes ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.g-price-includes ul li{font-size:13px;color:var(--text2);padding-left:22px;position:relative;line-height:1.65;}
+.g-price-includes.ok li::before{content:"✓";position:absolute;left:0;color:#0a8a44;font-weight:800;}
+.g-price-includes.ng li::before{content:"—";position:absolute;left:0;color:#bbb;}
+.g-price-div{border-top:1px solid var(--border);margin:20px 0;}
+.g-set-box{background:var(--cream);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;border:1px solid var(--gold-border);}
+.g-set-label{font-size:13px;font-weight:600;color:var(--navy);}
+.g-set-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.g-set-price{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--navy);}
+.g-set-price s{font-size:13px;font-weight:400;color:#bbb;margin-right:6px;text-decoration:line-through;}
+.g-price-cta{margin-top:24px;}
+.g-price-cta .g-btn{width:100%;justify-content:center;font-size:16px;padding:19px;border-radius:var(--r);}
+.g-price-cta-note{text-align:center;font-size:11px;color:var(--text3);margin-top:9px;}
 
-/* ── ジョージアってどんな国？ ── */
-.glp-country-section{margin:0 0 32px;}
-.glp-country-photos{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:10px;margin-bottom:14px;
-}
-.glp-country-photos img{
-  width:100%;height:120px;object-fit:cover;
-  border-radius:14px;display:block;
-  box-shadow:0 4px 14px rgba(11,31,58,.12);
-  transition:transform .3s;background:#c8d0e0;
-}
-.glp-country-photos img:hover{transform:scale(1.03);}
-.glp-country-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
-.glp-cf{
-  background:#fff;border:1px solid var(--border);
-  border-radius:12px;padding:14px;
-  display:flex;gap:10px;
-  box-shadow:0 2px 8px rgba(11,31,58,.05);
-}
-.glp-cf-icon{font-size:20px;line-height:1;flex-shrink:0;}
-.glp-cf-title{font-size:12px;font-weight:800;color:#0b1f3a;margin:0 0 3px;}
-.glp-cf-text{font-size:11px;color:#7a90aa;line-height:1.55;margin:0;}
+/* STEPS */
+.g-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:0 0 48px;background:var(--gold-border);border-radius:var(--r);overflow:hidden;border:1px solid var(--gold-border);}
+.g-step{background:var(--white);padding:16px 10px;text-align:center;font-size:12px;font-weight:600;color:var(--navy);position:relative;}
+.g-step+.g-step{border-left:1px solid var(--gold-border);}
+.g-step-num{display:block;width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--gold-l);font-size:12px;font-weight:800;line-height:26px;margin:0 auto 8px;}
 
-/* ── カードグリッド ── */
-.glp-cardgrid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:14px;margin-bottom:8px;
-}
-.glp-card{
-  background:#fff;border-radius:18px;
-  box-shadow:0 2px 14px rgba(11,31,58,.07);
-  padding:22px 18px 18px;
-  display:flex;flex-direction:column;
-  border:1px solid var(--border);
-  transition:transform .22s,box-shadow .22s,border-color .22s;
-  position:relative;overflow:hidden;
-}
-.glp-card::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,#a07830,#e8cb7a);
-  opacity:0;transition:opacity .22s;
-}
-.glp-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(201,168,76,.35);}
-.glp-card:hover::before{opacity:1;}
-.glp-card-icon{
-  width:44px;height:44px;border-radius:12px;
-  background:linear-gradient(135deg,#e8f0ff,#d0ddf5);
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;margin-bottom:12px;
-}
-.glp-card-title{
-  font-size:13px!important;font-weight:800!important;
-  color:#0b1f3a!important;margin:0 0 7px!important;line-height:1.4;
-}
-.glp-card-text{font-size:12px;color:#6b7a99;line-height:1.65;margin:0 0 14px;flex:1;}
-.glp-card .glp-btn{font-size:12px;padding:11px 14px;border-radius:10px;width:100%;justify-content:center;}
+/* FAQ */
+.g-faq{margin:0 0 56px;}
+.g-faq-item{background:var(--white);border-radius:var(--r);border:1px solid var(--border);margin-bottom:8px;overflow:hidden;transition:box-shadow .2s,border-color .2s;}
+.g-faq-item.open{box-shadow:var(--shadow-sm);border-color:var(--gold-border);}
+.g-faq-q{padding:18px 22px;font-size:14px;font-weight:600;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none;}
+.g-faq-q-icon{width:28px;height:28px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--gold-border);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:300;color:var(--gold);transition:background .2s,color .2s;}
+.g-faq-item.open .g-faq-q-icon{background:var(--navy);color:var(--gold-l);border-color:var(--navy);}
+.g-faq-a{display:none;padding:4px 22px 18px;font-size:13.5px;color:var(--text2);line-height:1.78;font-weight:300;}
+.g-faq-item.open .g-faq-a{display:block;}
 
-/* ── 免責 ── */
-.glp-disc{
-  background:#fffcf0;border:1px solid #e8d870;
-  border-left:4px solid #c9a84c;border-radius:10px;
-  padding:12px 16px;font-size:11.5px;color:#5a4a00;
-  line-height:1.7;margin:0 0 24px;
-}
-.glp-disc strong{color:#7a5a00;}
+/* COUNTRY */
+.g-country{margin:0 0 56px;}
+.g-country-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+.g-country-photos img{width:100%;height:130px;object-fit:cover;border-radius:var(--r);box-shadow:var(--shadow-sm);display:block;background:var(--cream2);transition:transform .3s,box-shadow .3s;}
+.g-country-photos img:hover{transform:scale(1.03);box-shadow:var(--shadow);}
+.g-country-facts{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.g-cf{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;display:flex;gap:12px;box-shadow:var(--shadow-sm);transition:border-color .2s;}
+.g-cf:hover{border-color:var(--gold-border);}
+.g-cf-icon{font-size:20px;line-height:1;flex-shrink:0;margin-top:1px;}
+.g-cf-title{font-size:12px;font-weight:700;color:var(--navy);margin:0 0 3px;}
+.g-cf-text{font-size:11px;color:var(--text3);line-height:1.55;margin:0;font-weight:300;}
 
-/* ── アコーディオン ── */
-details summary{
-  padding:14px 18px;cursor:pointer;list-style:none;
-  border:1px solid var(--border);border-radius:var(--r);
-  background:#fff;font-weight:700;font-size:14px;color:#0b1f3a;
-  transition:all .18s;position:relative;user-select:none;
-}
+/* CARDS */
+.g-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:0 0 56px;}
+.g-card{background:var(--white);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:24px 20px 20px;display:flex;flex-direction:column;border:1px solid var(--border);transition:transform .22s,box-shadow .22s,border-color .22s;position:relative;overflow:hidden;}
+.g-card::after{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));opacity:0;transition:opacity .22s;}
+.g-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--gold-border);}
+.g-card:hover::after{opacity:1;}
+.g-card-icon{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#eaf0ff,#d8e4f5);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;}
+.g-card-title{font-size:13px!important;font-weight:700!important;color:var(--navy)!important;margin:0 0 8px!important;line-height:1.4;}
+.g-card-text{font-size:12px;color:var(--text3);line-height:1.7;margin:0 0 16px;flex:1;font-weight:300;}
+.g-card .g-btn{font-size:12px;padding:11px 16px;border-radius:var(--r-sm);width:100%;justify-content:center;}
+
+/* CTA BANNER */
+.g-cta-banner{background:linear-gradient(145deg,var(--navy) 0%,var(--navy2) 50%,var(--navy3) 100%);border-radius:var(--r-xl);padding:52px 32px;text-align:center;margin:0;border:1px solid rgba(201,168,76,.18);position:relative;overflow:hidden;box-shadow:var(--shadow-xl);}
+.g-cta-banner::before{content:"";position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 65%);}
+.g-cta-banner::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold-l),var(--gold),transparent);opacity:.5;}
+.g-cta-banner h2{font-family:var(--serif)!important;color:#fff;font-size:clamp(22px,4vw,36px)!important;font-weight:700!important;margin:0 0 12px!important;position:relative;letter-spacing:-.01em;line-height:1.3!important;}
+.g-cta-banner p{color:rgba(255,255,255,.60);font-size:14px;margin:0 0 32px;line-height:1.85;position:relative;font-weight:300;}
+.g-cta-banner .g-btn{position:relative;font-size:16px;padding:20px 52px;min-width:260px;}
+.g-cta-note{color:rgba(255,255,255,.32);font-size:11px;margin-top:16px;display:block;position:relative;letter-spacing:.04em;}
+
+/* BAND */
+.g-band{background:linear-gradient(135deg,var(--navy),var(--navy2));color:rgba(255,255,255,.88);border-radius:var(--r-xl);padding:28px 28px 24px;margin:0 0 32px;border:1px solid rgba(201,168,76,.15);box-shadow:var(--shadow);}
+.g-band-title{font-family:var(--serif)!important;font-size:17px!important;font-weight:700!important;color:var(--gold-l)!important;margin:0 0 14px!important;}
+.g-band-list{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.g-band-list li{font-size:13px;padding-left:20px;position:relative;line-height:1.65;color:rgba(255,255,255,.80);font-weight:300;}
+.g-band-list li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:900;}
+.g-band-note{font-size:10px;color:rgba(255,255,255,.35);margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.09);line-height:1.65;}
+
+/* ACCORDION */
+details summary{padding:15px 20px;cursor:pointer;list-style:none;border:1px solid var(--border);border-radius:var(--r);background:var(--white);font-weight:600;font-size:14px;color:var(--navy);transition:all .18s;position:relative;user-select:none;}
 details summary::-webkit-details-marker{display:none;}
-details summary::after{
-  content:"+";position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  font-size:20px;font-weight:300;color:#c9a84c;transition:transform .2s;line-height:1;
-}
+details summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;font-weight:300;color:var(--gold);line-height:1;}
 details[open] summary::after{content:"−";}
-details summary:hover{background:rgba(201,168,76,.06);border-color:rgba(201,168,76,.30);}
-details[open] summary{background:#0b1f3a;color:#fff;border-color:#0b1f3a;border-bottom-left-radius:0;border-bottom-right-radius:0;}
-details[open] summary::after{color:#e8cb7a;}
-details .content{
-  border:1px solid var(--border);border-top:none;
-  border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);
-  padding:16px 18px;background:#fff;font-size:13.5px;line-height:1.8;color:#4a5a70;
-}
+details summary:hover{background:rgba(201,168,76,.05);border-color:var(--gold-border);}
+details[open] summary{background:var(--navy);color:#fff;border-color:var(--navy);border-bottom-left-radius:0;border-bottom-right-radius:0;}
+details[open] summary::after{color:var(--gold-l);}
+details .content{border:1px solid var(--border);border-top:none;border-bottom-left-radius:var(--r);border-bottom-right-radius:var(--r);padding:18px 20px;background:var(--white);font-size:13.5px;line-height:1.82;color:var(--text2);}
 details .content ul{padding-left:1.4rem;}
 details .content li{margin:.4rem 0;}
-details .content strong{color:#0b1f3a;}
+details .content strong{color:var(--navy);}
 .accordion>details{margin:.5rem 0!important;}
 
-/* ── 価格プロモ（アコーディオン内） ── */
-.price-promo{
-  border:1px solid var(--border);background:#f9fafb;
-  border-radius:12px;padding:16px;margin:14px 0;
-  border-left:5px solid var(--gold);
-}
+/* LEGACY COMPAT */
+.price-promo{border:1px solid var(--border);background:#f9fafb;border-radius:var(--r);padding:16px;margin:14px 0;border-left:4px solid var(--gold);}
 .price-promo .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px;margin-bottom:6px;}
 .price-promo .label{color:#475569;font-weight:700;}
 .price-promo .old{color:#aaa;text-decoration:line-through;font-size:13px;}
-.price-promo .now{font-weight:900;font-size:clamp(20px,2.5vw,26px);color:#0b1f3a;font-family:'Noto Serif JP',serif!important;}
-.price-promo .badge{display:inline-block;background:linear-gradient(135deg,#e8cb7a,#c9a84c);color:#0b1f3a;border-radius:999px;padding:.2rem .7rem;font-size:.78em;font-weight:900;}
+.price-promo .now{font-weight:900;font-size:clamp(20px,2.5vw,26px);color:var(--navy);font-family:var(--serif)!important;}
+.price-promo .badge{display:inline-block;background:linear-gradient(135deg,var(--gold-l),var(--gold));color:var(--navy);border-radius:999px;padding:.2rem .7rem;font-size:.78em;font-weight:900;}
 .price-promo .meta{font-size:.83em;color:#475569;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;line-height:1.7;}
 .price-promo .proof{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
-.price-promo .proof span{background:#0b1f3a;color:#fff;border-radius:999px;padding:.25rem .8rem;font-weight:700;font-size:11px;}
-
-/* ── Quick summary ── */
-.quick-summary{border-left:5px solid #0b1f3a;}
-.quick-summary .qs-tag{font-size:10px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;color:#a07830;margin:14px 0 5px;}
+.price-promo .proof span{background:var(--navy);color:#fff;border-radius:999px;padding:.25rem .8rem;font-weight:700;font-size:11px;}
+.quick-summary{border-left:4px solid var(--navy);}
+.quick-summary .qs-tag{font-size:10px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:var(--gold-d);margin:14px 0 5px;}
 .quick-summary .qs-list{list-style:none;padding-left:0;margin:0 0 8px;}
-.quick-summary .qs-list li{padding:6px 0 6px 22px;position:relative;font-size:13px;line-height:1.65;color:#3d4f6e;border-bottom:1px dashed var(--border);}
+.quick-summary .qs-list li{padding:6px 0 6px 22px;position:relative;font-size:13px;line-height:1.65;color:var(--text2);border-bottom:1px dashed var(--border);}
 .quick-summary .qs-list li:last-child{border-bottom:none;}
-.quick-summary .qs-list li::before{content:"✓";position:absolute;left:0;color:#c9a84c;font-weight:900;}
-
-/* ── 複利ツール ── */
-.cf-card{border:1px solid var(--border);background:#fff;border-radius:14px;padding:18px;box-shadow:var(--shadow);}
+.quick-summary .qs-list li::before{content:"✓";position:absolute;left:0;color:var(--gold);font-weight:900;}
+.text-sm{font-size:.86em;}.muted{color:var(--text3);}
+.note{display:block;font-size:.80em;color:var(--text3);margin-top:.35rem;line-height:1.65;}
+.smallish{font-size:clamp(18px,3vw,22px);font-weight:800;color:var(--navy);margin-bottom:.75rem;font-family:var(--serif)!important;}
+.value-box{background:linear-gradient(135deg,#eef4ff,#f5f7fc);border:1px solid rgba(11,31,58,.10);border-radius:var(--r);padding:16px 18px;margin:16px 0;}
+.value-title{font-size:14px;font-weight:700;color:var(--navy);margin:0 0 8px;}
+.value-list{list-style:none;padding-left:0;}
+.value-list li{padding-left:20px;position:relative;font-size:13px;color:var(--text2);margin:.35rem 0;}
+.value-list li::before{content:"✓";position:absolute;left:0;color:var(--gold-d);font-weight:900;}
+.glp-disclaimer-box{background:#fffdf0;border:1px solid #e8d870;border-left:4px solid var(--gold);border-radius:var(--r);padding:12px 16px;font-size:12.5px;color:#5a4a00;line-height:1.75;margin-bottom:20px;}
+.glp-disclaimer-box strong{color:#7a5500;}
+.progress-steps{display:flex;margin:.8rem 0;}
+.progress-steps .step{flex:1;padding:.7rem .5rem;text-align:center;font-size:11.5px;font-weight:600;color:var(--navy);background:var(--white);border:1px solid var(--border);}
+.progress-steps .step:first-child{border-radius:var(--r) 0 0 var(--r);}
+.progress-steps .step:last-child{border-radius:0 var(--r) var(--r) 0;}
+.progress-steps .step+.step{border-left:none;}
+.cf-card{border:1px solid var(--border);background:var(--white);border-radius:var(--r-lg);padding:18px;box-shadow:var(--shadow-sm);}
 .cf-grid{display:grid;grid-template-columns:140px 1fr;gap:10px 14px;margin-top:8px;}
-.cf-grid label{align-self:center;color:#0b1f3a;font-weight:700;font-size:13px;}
-.cf-grid input,.cf-grid select{height:40px;border:1px solid var(--border);border-radius:8px;padding:0 10px;font-size:14px;background:#f7f8fc;transition:border-color .15s;}
-.cf-grid input:focus,.cf-grid select:focus{border-color:#c9a84c;outline:none;background:#fff;}
-.cf-subrow{grid-column:2/3;color:#6b7a99;font-size:.88em;margin-top:-4px;}
+.cf-grid label{align-self:center;color:var(--navy);font-weight:600;font-size:13px;}
+.cf-grid input,.cf-grid select{height:40px;border:1px solid var(--border);border-radius:var(--r-sm);padding:0 10px;font-size:14px;background:var(--cream);transition:border-color .15s;}
+.cf-grid input:focus,.cf-grid select:focus{border-color:var(--gold);outline:none;background:var(--white);}
+.cf-subrow{grid-column:2/3;color:var(--text3);font-size:.88em;margin-top:-4px;}
 .cf-preset{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0 8px;}
 .cf-hint{font-size:12px;color:#aaa;font-weight:700;}
-.cf-chip{border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.08);border-radius:999px;padding:.25rem .8rem;font-weight:800;font-size:12px;cursor:pointer;color:#0b1f3a;transition:all .14s;}
-.cf-chip:hover{background:#c9a84c;color:#0b1f3a;}
-.cf-ack{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);background:#f7f8fc;border-radius:10px;padding:12px;margin:12px 0;font-size:12.5px;color:#5a6a80;line-height:1.65;}
+.cf-chip{border:1px solid var(--gold-border);background:rgba(201,168,76,.08);border-radius:999px;padding:.25rem .8rem;font-weight:800;font-size:12px;cursor:pointer;color:var(--navy);transition:all .14s;}
+.cf-chip:hover{background:var(--gold);color:var(--navy);}
+.cf-ack{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);background:var(--cream);border-radius:var(--r-sm);padding:12px;margin:12px 0;font-size:12.5px;color:var(--text3);line-height:1.65;}
 .cf-actions{display:flex;gap:8px;margin:8px 0;}
-.cf-out{margin-top:10px;border:1px solid var(--border);border-radius:10px;padding:14px;background:#f7f8fc;}
+.cf-out{margin-top:10px;border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;background:var(--cream);}
 .cf-out .cf-kv{display:grid;grid-template-columns:180px 1fr;gap:7px 14px;font-size:13px;}
-.cf-out h5{margin:.3rem 0 .7rem;font-weight:800;color:#0b1f3a;}
+.cf-out h5{margin:.3rem 0 .7rem;font-weight:800;color:var(--navy);}
 
-/* ── ユーティリティ ── */
-.text-sm{font-size:.86em;}
-.muted{color:#7a90aa;}
-.note{display:block;font-size:.80em;color:#7a90aa;margin-top:.35rem;line-height:1.65;}
-.smallish{font-size:clamp(18px,3vw,22px);font-weight:800;color:#0b1f3a;margin-bottom:.75rem;font-family:'Noto Serif JP',serif!important;}
-.value-box{background:linear-gradient(135deg,#eef4ff,#f5f7fc);border:1px solid rgba(11,31,58,.10);border-radius:12px;padding:16px 18px;margin:16px 0;}
-.value-title{font-size:14px;font-weight:800;color:#0b1f3a;margin:0 0 8px;}
-.value-list{list-style:none;padding-left:0;}
-.value-list li{padding-left:20px;position:relative;font-size:13px;color:#3d4f6e;margin:.35rem 0;}
-.value-list li::before{content:"✓";position:absolute;left:0;color:#a07830;font-weight:900;}
-.glp-disclaimer-box{background:#fffcf0;border:1px solid #e8d870;border-left:5px solid #c9a84c;border-radius:12px;padding:12px 16px;font-size:12.5px;color:#5a4a00;line-height:1.75;margin-bottom:20px;}
-.glp-disclaimer-box strong{color:#7a5500;}
-
-/* ── レスポンシブ ── */
+/* RESPONSIVE */
 @media(max-width:480px){
-  .glp-trust{gap:14px;}
-  .glp-trust-div{display:none;}
-  .glp-sol-row{grid-template-columns:1fr;}
-  .glp-country-facts{grid-template-columns:1fr;}
-  .glp-cardgrid{grid-template-columns:1fr;}
-  .glp-hero-body{padding:0 16px 44px;}
-  .glp-inner{padding:0 14px 56px;}
-  .cf-grid{grid-template-columns:1fr;gap:8px;}
-  .cf-subrow{grid-column:auto;}
+  .g-trust{gap:14px;}.g-trust-div{display:none;}
+  .g-solution-grid{grid-template-columns:1fr;}
+  .g-country-facts{grid-template-columns:1fr;}
+  .g-cards{grid-template-columns:1fr;}
+  .g-why-cards{grid-template-columns:1fr;}
+  .g-steps{grid-template-columns:repeat(2,1fr);}
+  .g-hero-body{padding:0 18px 48px;}
+  .g-inner{padding:0 16px 64px;}
+  .cf-grid{grid-template-columns:1fr;gap:8px;}.cf-subrow{grid-column:auto;}
   .cf-out .cf-kv{grid-template-columns:1fr;}
+  .g-price-body{padding:22px 20px;}.g-price-header{padding:22px 20px;}
+  .g-empathy-inner{padding:24px 20px;}
+  .g-solution{padding:28px 22px;}
+  .g-cta-banner{padding:36px 20px;}
+  .g-cta-banner .g-btn{min-width:auto;width:100%;}
 }
 @media(min-width:768px){
-  .glp-cardgrid{grid-template-columns:repeat(3,1fr);}
-  .glp-country-facts{grid-template-columns:repeat(4,1fr);}
-  .glp-country-photos img{height:150px;}
-  .glp-hero-body{padding:0 52px 64px;}
+  .g-cards{grid-template-columns:repeat(3,1fr);}
+  .g-country-facts{grid-template-columns:repeat(4,1fr);}
+  .g-country-photos img{height:160px;}
+  .g-hero-body{padding:0 56px 72px;}
+  .g-why-cards{grid-template-columns:repeat(4,1fr);}
+}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important;}
+  .reveal{opacity:1;transform:none;}
 }
 </style>
-
 <script>
 (function(){
   try{
@@ -605,19 +338,12 @@ details .content strong{color:#0b1f3a;}
 </script>
 </head>
 <body>
-
 <div id="page-top" aria-hidden="true"></div>
-
-<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language">
-  <span class="globe" aria-hidden="true">🌐</span>
-</button>
+<button class="lang-button" id="langBtn" aria-controls="langDrawer" aria-expanded="false" aria-label="Select language"><span class="globe" aria-hidden="true">🌐</span></button>
 <div class="lang-wrap" id="langDrawer" aria-hidden="true">
   <div class="lang-backdrop" id="langBackdrop"></div>
   <aside class="lang-panel" role="dialog" aria-modal="true" aria-label="Select language">
-    <div class="lang-head">
-      <strong class="lang-title">Select language</strong>
-      <button class="lang-close" id="langClose" aria-label="Close">×</button>
-    </div>
+    <div class="lang-head"><strong class="lang-title">Select language</strong><button class="lang-close" id="langClose" aria-label="Close">×</button></div>
     <div class="lang-body">
       <div class="ls-search"><input id="langSearch" type="search" placeholder="Search language" inputmode="search" autocomplete="off"></div>
       <div id="langList" class="ls-list" role="listbox" aria-label="Languages"></div>
@@ -626,538 +352,234 @@ details .content strong{color:#0b1f3a;}
     </div>
   </aside>
 </div>
-
-<button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉">
-  <span class="bars"><span></span></span>
-</button>
+<button class="menu-button" id="menuBtn" aria-controls="menuDrawer" aria-expanded="false" aria-label="メニューを開閉"><span class="bars"><span></span></span></button>
 <nav class="menu-wrap" id="menuDrawer" aria-hidden="true">
   <div class="menu-backdrop" id="menuBackdrop"></div>
   <aside class="menu-panel" role="dialog" aria-modal="true" aria-label="目次">
-    <div class="menu-head">
-      <strong class="menu-title">目次</strong>
-      <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
-    </div>
+    <div class="menu-head"><strong class="menu-title">目次</strong><button class="menu-close" id="menuClose" aria-label="閉じる">×</button></div>
     <div class="menu-groups" id="menuGroups"></div>
   </aside>
 </nav>
 
-<!-- ======== LP ======== -->
 <div id="glp-landing" class="glp-wrapper">
-
-  <!-- ヒーロー -->
-  <section class="glp-hero">
-    <div class="glp-hero-bg" aria-hidden="true">
-      <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="glp-hero-img"
-           decoding="async" fetchpriority="high"
-           onerror="this.parentElement.style.background='linear-gradient(135deg,#0b1f3a,#1a4578)'">
-      <div class="glp-hero-grad" aria-hidden="true"></div>
+  <section class="g-hero">
+    <div class="g-hero-bg" aria-hidden="true">
+      <img src="tbilisi-hero.jpg.jpg" alt="ジョージア・トビリシの街並み" class="g-hero-img" decoding="async" fetchpriority="high" onerror="this.parentElement.style.background='linear-gradient(135deg,#06111f,#1a3a60)'">
+      <div class="g-hero-grad" aria-hidden="true"></div>
     </div>
-    <div class="glp-hero-body">
-      <div class="glp-hero-tag">🌍 EU加盟候補国ジョージア × 現地提携法律事務所</div>
-      <h1 class="glp-hero-h1">
-        海外の仕事が増えているのに、<br>
-        受け取り口座が<em>Wiseだけ</em>ですか。
-      </h1>
-      <p class="glp-hero-lead">
-        SWIFTコードを聞かれて困ったことはありませんか。<br>
-        ジョージアの銀行口座なら、渡航ゼロ・日本語だけで<br>
-        書類整備を進めることができます。
-      </p>
-      <p class="glp-hero-note">
-        ※ 当社は書類整備の事務サポートと一般情報の提供のみ行います。口座開設の成功保証・税務法務の個別アドバイスは行いません。
-      </p>
-      <div class="glp-hero-btns">
-        <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main">📩 無料相談はこちら</a>
-        <a href="#why-georgia" class="glp-btn glp-btn-out">なぜジョージア？ →</a>
+    <div class="g-hero-line" aria-hidden="true"></div>
+    <div class="g-hero-body">
+      <div class="g-hero-tag">🌍 EU加盟候補国ジョージア × 現地提携法律事務所</div>
+      <h1 class="g-hero-h1">海外の仕事が増えているのに、<br>受け取り口座が<em>Wiseだけ</em>ですか。</h1>
+      <p class="g-hero-lead">SWIFTコードを聞かれて困ったことはありませんか。<br>ジョージアの銀行口座なら、渡航ゼロ・日本語だけで<br>書類整備を進めることができます。</p>
+      <p class="g-hero-note">※ 当社は書類整備の事務サポートと一般情報の提供のみ行います。口座開設の成功保証・税務法務の個別アドバイスは行いません。</p>
+      <div class="g-hero-btns">
+        <a href="https://line.me/R/ti/p/@georgia-tax" class="g-btn g-btn-main">📩 無料相談はこちら</a>
+        <a href="#why-georgia" class="g-btn g-btn-ghost">なぜジョージア？ →</a>
       </div>
     </div>
   </section>
 
-  <!-- 信頼バッジ -->
-  <div class="glp-trust">
-    <div class="glp-trust-item"><span>🏛️</span><span>現地法律事務所 MoU連携</span></div>
-    <div class="glp-trust-div"></div>
-    <div class="glp-trust-item"><span>✅</span><span>ジョージア法人 正式登録</span></div>
-    <div class="glp-trust-div"></div>
-    <div class="glp-trust-item"><span>🌐</span><span>渡航不要 日本語完結</span></div>
-    <div class="glp-trust-div"></div>
-    <div class="glp-trust-item"><span>🔒</span><span>紹介料・コミッション 一切なし</span></div>
+  <div class="g-trust">
+    <div class="g-trust-item"><span>🏛️</span><span>現地法律事務所 MoU連携</span></div>
+    <div class="g-trust-div"></div>
+    <div class="g-trust-item"><span>✅</span><span>ジョージア法人 正式登録</span></div>
+    <div class="g-trust-div"></div>
+    <div class="g-trust-item"><span>🌐</span><span>渡航不要 日本語完結</span></div>
+    <div class="g-trust-div"></div>
+    <div class="g-trust-item"><span>🔒</span><span>紹介料・コミッション 一切なし</span></div>
   </div>
 
-  <div class="glp-inner">
-
-    <!-- 統計 -->
-    <div class="glp-stats">
-      <div class="glp-stat">
-        <span class="glp-stat-n">7<em>〜</em>10</span>
-        <span class="glp-stat-l">営業日<br>書類整備の目安</span>
-      </div>
-      <div class="glp-stat">
-        <span class="glp-stat-n">3<em>つ</em></span>
-        <span class="glp-stat-l">主要サービス<br>日本語対応</span>
-      </div>
-      <div class="glp-stat">
-        <span class="glp-stat-n">EU</span>
-        <span class="glp-stat-l">加盟候補国<br>2023年認定</span>
-      </div>
+  <div class="g-inner">
+    <div class="g-stats reveal">
+      <div class="g-stat"><span class="g-stat-n">7<em>〜</em>10</span><span class="g-stat-l">営業日<br>書類整備の目安</span></div>
+      <div class="g-stat"><span class="g-stat-n">3<em>つ</em></span><span class="g-stat-l">主要サービス<br>日本語対応</span></div>
+      <div class="g-stat"><span class="g-stat-n">EU</span><span class="g-stat-l">加盟候補国<br>2023年認定</span></div>
     </div>
+    <div class="g-disc reveal"><strong>【ご案内】</strong> 本サイトは公開資料に基づく<strong>一般情報の提供と書類整備の事務サポート</strong>のみを目的としています。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。開設可否は各銀行の審査判断です。必ず専門家にご確認ください。</div>
 
-    <!-- 免責（コンパクト） -->
-    <div class="glp-disc">
-      <strong>【ご案内】</strong> 本サイトは公開資料に基づく<strong>一般情報の提供と書類整備の事務サポート</strong>のみを目的としています。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。開設可否は各銀行の審査判断です。必ず専門家にご確認ください。
-    </div>
-
-    <!-- 共感パート -->
-    <section id="empathy" style="margin:0 0 36px;">
-      <h2 class="glp-sec-title">こんな状況、ありませんか？</h2>
-      <p class="glp-sec-sub">海外取引が増えるほど、決済インフラの壁にぶつかります。</p>
-      <div class="glp-empathy">
-        <ul class="glp-empathy-list">
-          <li>
-            <span class="ico">💬</span>
-            <span>海外クライアントから「SWIFTコードを教えて」と言われ、答えられなかった</span>
-          </li>
-          <li>
-            <span class="ico">📦</span>
-            <span>Wiseで受け取っているが、金額が大きくなってきて不安を感じている</span>
-          </li>
-          <li>
-            <span class="ico">🌏</span>
-            <span>海外展開を本格化したいが、法人口座がなくて取引先に頼みにくい</span>
-          </li>
-          <li>
-            <span class="ico">✈️</span>
-            <span>海外口座を作りたいが、現地に行く時間も費用もない</span>
-          </li>
-          <li>
-            <span class="ico">📄</span>
-            <span>公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からない</span>
-          </li>
-        </ul>
+    <section id="empathy" style="margin:0 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">Empathy</span><h2 class="g-sh-title">こんな状況、ありませんか？</h2><p class="g-sh-sub">海外取引が増えるほど、決済インフラの壁にぶつかります。</p><span class="g-sh-line"></span></div>
+      <div class="g-empathy reveal">
+        <div class="g-empathy-inner">
+          <ul class="g-empathy-list">
+            <li class="g-empathy-item"><div class="g-empathy-icon">💬</div><p class="g-empathy-text">海外クライアントから「SWIFTコードを教えて」と言われ、答えられなかった</p></li>
+            <li class="g-empathy-item"><div class="g-empathy-icon">📦</div><p class="g-empathy-text">Wiseで受け取っているが、金額が大きくなってきて取引先に対して不安を感じている</p></li>
+            <li class="g-empathy-item"><div class="g-empathy-icon">🌏</div><p class="g-empathy-text">海外展開を本格化したいが、法人口座がなくて取引先に頼みにくい</p></li>
+            <li class="g-empathy-item"><div class="g-empathy-icon">✈️</div><p class="g-empathy-text">海外口座を作りたいが、現地に行く時間も費用もない</p></li>
+            <li class="g-empathy-item"><div class="g-empathy-icon">📄</div><p class="g-empathy-text">公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からず止まっている</p></li>
+          </ul>
+        </div>
       </div>
     </section>
 
-    <!-- なぜジョージア？ -->
-    <section id="why-georgia" style="margin:0 0 36px;">
-      <h2 class="glp-sec-title">🔥 なぜ今、ジョージアなのか？</h2>
-      <p class="glp-sec-sub">非居住者が口座開設できる銀行は、世界的に減っています。現時点でジョージアは現実的な選択肢のひとつです。</p>
-
-      <div class="glp-compare-wrap">
-        <table class="glp-compare">
-          <thead>
-            <tr>
-              <th>比較項目</th>
-              <th class="hl">🇬🇪 ジョージア</th>
-              <th>🇦🇪 ドバイ</th>
-              <th>🇸🇬 シンガポール</th>
-              <th>🇹🇭 タイ</th>
-            </tr>
-          </thead>
+    <section id="why-georgia" style="margin:0 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">Why Georgia</span><h2 class="g-sh-title">なぜ今、ジョージアなのか？</h2><p class="g-sh-sub">非居住者が口座開設できる銀行は、世界的に減っています。</p><span class="g-sh-line"></span></div>
+      <div class="g-compare-wrap reveal">
+        <table class="g-compare">
+          <thead><tr><th>比較項目</th><th class="hl">🇬🇪 ジョージア</th><th>🇦🇪 ドバイ</th><th>🇸🇬 シンガポール</th><th>🇹🇭 タイ</th></tr></thead>
           <tbody>
-            <tr>
-              <td>非居住者の口座開設</td>
-              <td class="hl-c">対応行あり<br><small>（銀行審査による）</small></td>
-              <td><span class="ng-c">✕</span> 厳格化</td>
-              <td><span class="ng-c">✕</span> 審査厳格</td>
-              <td><span class="so-c">△</span> 制限あり</td>
-            </tr>
-            <tr>
-              <td>渡航の必要性</td>
-              <td class="hl-c"><span class="ok-c">◎</span> 原則不要</td>
-              <td><span class="ng-c">✕</span> 渡航必要</td>
-              <td><span class="so-c">△</span> 一部必要</td>
-              <td><span class="ng-c">✕</span> 渡航必要</td>
-            </tr>
-            <tr>
-              <td>設立コスト感</td>
-              <td class="hl-c"><span class="ok-c">◎</span> 比較的低い</td>
-              <td><span class="ng-c">✕</span> 高額</td>
-              <td><span class="ng-c">✕</span> 高額</td>
-              <td><span class="so-c">△</span> 中程度</td>
-            </tr>
-            <tr>
-              <td>EU加盟候補国</td>
-              <td class="hl-c"><span class="ok-c">◎</span> 2023年認定</td>
-              <td><span class="ng-c">✕</span> 対象外</td>
-              <td><span class="ng-c">✕</span> 対象外</td>
-              <td><span class="ng-c">✕</span> 対象外</td>
-            </tr>
-            <tr>
-              <td>日本語サポート</td>
-              <td class="hl-c"><span class="ok-c">◎</span> 当社対応</td>
-              <td><span class="ng-c">✕</span> 限定的</td>
-              <td><span class="so-c">△</span> 一部対応</td>
-              <td><span class="ng-c">✕</span> 限定的</td>
-            </tr>
+            <tr><td>非居住者の口座開設</td><td class="hl-c">対応行あり<br><small style="font-size:10px;color:#888;">（銀行審査による）</small></td><td><span class="ng-c">✕</span> 厳格化</td><td><span class="ng-c">✕</span> 審査厳格</td><td><span class="so-c">△</span> 制限あり</td></tr>
+            <tr><td>渡航の必要性</td><td class="hl-c"><span class="ok-c">◎</span> 原則不要</td><td><span class="ng-c">✕</span> 渡航必要</td><td><span class="so-c">△</span> 一部必要</td><td><span class="ng-c">✕</span> 渡航必要</td></tr>
+            <tr><td>設立コスト感</td><td class="hl-c"><span class="ok-c">◎</span> 比較的低い</td><td><span class="ng-c">✕</span> 高額</td><td><span class="ng-c">✕</span> 高額</td><td><span class="so-c">△</span> 中程度</td></tr>
+            <tr><td>EU加盟候補国</td><td class="hl-c"><span class="ok-c">◎</span> 2023年認定</td><td><span class="ng-c">✕</span> 対象外</td><td><span class="ng-c">✕</span> 対象外</td><td><span class="ng-c">✕</span> 対象外</td></tr>
+            <tr><td>日本語サポート</td><td class="hl-c"><span class="ok-c">◎</span> 当社対応</td><td><span class="ng-c">✕</span> 限定的</td><td><span class="so-c">△</span> 一部対応</td><td><span class="ng-c">✕</span> 限定的</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note">※ 各国当局・金融機関の公開情報をもとにした一般的傾向です（当社調査・2025年時点）。個別の状況や開設可否を保証するものではありません。制度は随時変更されます。</p>
-    </section>
-
-    <!-- ジョージアってどんな国？ -->
-    <section class="glp-country-section" id="about-georgia">
-      <h2 class="glp-sec-title">🇬🇪 ジョージアってどんな国？</h2>
-      <div class="glp-country-photos">
-        <img src="georgia-church.jpg" alt="ジョージアの教会と城塞" loading="lazy"
-             onerror="this.src='tbilisi-hero.jpg.jpg'">
-        <img src="Untitled%20design%203.jpg" alt="ジョージアのハチャプリ" loading="lazy"
-             onerror="this.src='tbilisi-hero.jpg.jpg'">
-        <img src="Untitled%20design%202.jpg" alt="ジョージア・トビリシの広場" loading="lazy"
-             onerror="this.src='tbilisi-hero.jpg.jpg'">
-      </div>
-      <div class="glp-country-facts">
-        <div class="glp-cf"><span class="glp-cf-icon">🏙️</span><div><p class="glp-cf-title">首都トビリシ</p><p class="glp-cf-text">歴史と近代が共存するコーカサスの文化的拠点。</p></div></div>
-        <div class="glp-cf"><span class="glp-cf-icon">🇪🇺</span><div><p class="glp-cf-title">EU加盟候補国</p><p class="glp-cf-text">2023年認定。国際的な信頼性が高まっています。</p></div></div>
-        <div class="glp-cf"><span class="glp-cf-icon">📋</span><div><p class="glp-cf-title">シンプルな法制度</p><p class="glp-cf-text">外国人にも開かれたビジネス環境。</p></div></div>
-        <div class="glp-cf"><span class="glp-cf-icon">🍷</span><div><p class="glp-cf-title">世界最古のワイン産地</p><p class="glp-cf-text">8,000年以上のワイン文化。観光地としても人気急上昇。</p></div></div>
+      <p class="g-compare-note reveal">※ 各国当局・金融機関の公開情報をもとにした一般的傾向です（当社調査・2025年時点）。個別の状況や開設可否を保証するものではありません。</p>
+      <div class="g-why-cards" style="margin-top:24px;">
+        <div class="g-why-card reveal reveal-delay-1"><div class="g-why-card-icon">📈</div><p class="g-why-card-title">注目度が急上昇中</p><p class="g-why-card-text">他国が厳格化する中、ジョージアは外国人ビジネスに開放的な制度を維持しています。</p></div>
+        <div class="g-why-card reveal reveal-delay-2"><div class="g-why-card-icon">💻</div><p class="g-why-card-title">渡航不要で完結</p><p class="g-why-card-text">文面ベース・日本語だけで、口座開設の書類整備が進められます。</p></div>
+        <div class="g-why-card reveal reveal-delay-3"><div class="g-why-card-icon">🇪🇺</div><p class="g-why-card-title">EU加盟候補の信頼</p><p class="g-why-card-text">2023年EU加盟候補国認定。国際的な信頼性が高まっています。</p></div>
+        <div class="g-why-card reveal reveal-delay-4"><div class="g-why-card-icon">⚡</div><p class="g-why-card-title">スピーディーな手続き</p><p class="g-why-card-text">書類整備の目安は7〜10営業日程度。他国と比べてスムーズです。</p></div>
       </div>
     </section>
 
-    <!-- 解決策 -->
-    <section id="service" style="margin:0 0 36px;">
-      <h2 class="glp-sec-title">当社がやること・やらないこと</h2>
-      <p class="glp-sec-sub">正直に書きます。</p>
-      <div class="glp-sol">
-        <p class="glp-sol-title">GRENA GROUPのサポート範囲</p>
-        <div class="glp-sol-row">
-          <div class="glp-sol-col ok">
-            <h4>✅ やること</h4>
-            <ul>
-              <li>必要書類の種類・取得方法を日本語で案内</li>
-              <li>公証・アポスティーユの取得手順ガイド</li>
-              <li>現地法律事務所への書類取次補助</li>
-              <li>申請書類の最終チェック</li>
-              <li>進捗連絡（チャットベース）</li>
-              <li>Wise等の実務活用に関する初期情報提供</li>
-            </ul>
-          </div>
-          <div class="glp-sol-col ng">
-            <h4>❌ やらないこと</h4>
-            <ul>
-              <li>口座開設の成功保証</li>
-              <li>税務・法務の個別アドバイス</li>
-              <li>銀行の代理・媒介行為</li>
-              <li>銀行への直接交渉</li>
-            </ul>
-          </div>
+    <section id="service" style="margin:0 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">Our Service</span><h2 class="g-sh-title">当社がやること・やらないこと</h2><p class="g-sh-sub">正直に書きます。</p><span class="g-sh-line"></span></div>
+      <div class="g-solution reveal">
+        <p class="g-solution-title">GRENA GROUP のサポート範囲</p>
+        <div class="g-solution-grid">
+          <div class="g-sol-col ok"><h4>やること</h4><ul><li>必要書類の種類・取得方法を日本語で案内</li><li>公証・アポスティーユの取得手順ガイド</li><li>現地法律事務所への書類取次補助</li><li>申請書類の最終チェック</li><li>進捗連絡（チャットベース）</li><li>Wise等の実務活用に関する初期情報提供</li></ul></div>
+          <div class="g-sol-col ng"><h4>やらないこと</h4><ul><li>口座開設の成功保証</li><li>税務・法務の個別アドバイス</li><li>銀行の代理・媒介行為</li><li>銀行への直接交渉</li></ul></div>
         </div>
       </div>
     </section>
 
-    <!-- 料金 -->
-    <section id="pricing" style="margin:0 0 36px;">
-      <h2 class="glp-sec-title">料金とサービス内容</h2>
-      <p class="glp-sec-sub">書類整備・事務補助の対価です。銀行手数料・実費は別途です。</p>
-
-      <!-- メインサービス -->
-      <div class="glp-price-box">
-        <div class="glp-price-badge">メインサービス</div>
-        <h3>銀行口座開設 書類整備サポート</h3>
-        <div class="glp-price-num">¥258,000<span>（税込）</span></div>
-        <p class="glp-price-note">別途実費：公証・アポスティーユ費用／国際郵送（DHL）¥5,000〜</p>
-
-        <div class="glp-price-includes">
-          <h4>含まれるもの</h4>
-          <ul>
-            <li>必要書類の案内・チェックリスト</li>
-            <li>公証・アポスティーユ取得方法の日本語ガイド</li>
-            <li>現地法律事務所（TREX LEGAL）への書類取次補助</li>
-            <li>申請書類の最終チェック</li>
-            <li>進捗連絡・チャットサポート</li>
-            <li>Wise登録の初期情報提供</li>
-          </ul>
-        </div>
-
-        <div class="glp-price-includes glp-price-not">
-          <h4>含まれないもの</h4>
-          <ul>
-            <li>口座開設の成功保証（銀行審査による）</li>
-            <li>税務・法務の個別アドバイス</li>
-            <li>銀行手数料・郵送費などの実費</li>
-          </ul>
-        </div>
-
-        <div class="glp-price-div"></div>
-        <div class="glp-set-row">
-          <div>
-            <div class="glp-set-label">🎯 IE登録（個人事業主）＋口座開設セット</div>
-            <div style="font-size:11px;color:#8090a8;margin-top:2px;">通常合計 ¥546,000 → セット割引</div>
-          </div>
-          <div class="glp-set-price"><s>¥546,000</s>¥498,000</div>
-        </div>
-
-        <div style="margin-top:20px;">
-          <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main" style="width:100%;justify-content:center;font-size:15px;padding:17px;">
-            📩 無料相談・申し込みはこちら
-          </a>
-          <p class="note" style="text-align:center;margin-top:8px;">返信は営業日3日以内を目安にしています</p>
-        </div>
+    <section class="g-country" id="about-georgia">
+      <div class="g-sh reveal"><span class="g-sh-label">About Georgia</span><h2 class="g-sh-title">ジョージアってどんな国？</h2><span class="g-sh-line"></span></div>
+      <div class="g-country-photos reveal">
+        <img src="georgia-church.jpg" alt="ジョージアの教会と城塞" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
+        <img src="Untitled%20design%203.jpg" alt="ジョージアのハチャプリ" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
+        <img src="Untitled%20design%202.jpg" alt="ジョージア・トビリシの広場" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
       </div>
-
-      <!-- ステップ -->
-      <h3 style="font-size:15px;font-weight:800;color:#0b1f3a;margin:0 0 12px;">申し込みの流れ</h3>
-      <div class="glp-steps">
-        <div class="glp-step">LINEで<br>相談</div>
-        <div class="glp-step">ヒアリング<br>→ご提案</div>
-        <div class="glp-step">申込み<br>→書類整備</div>
-        <div class="glp-step">申請<br>→完了</div>
+      <div class="g-country-facts">
+        <div class="g-cf reveal reveal-delay-1"><span class="g-cf-icon">🏙️</span><div><p class="g-cf-title">首都トビリシ</p><p class="g-cf-text">歴史と近代が共存するコーカサスの文化的拠点。</p></div></div>
+        <div class="g-cf reveal reveal-delay-2"><span class="g-cf-icon">🇪🇺</span><div><p class="g-cf-title">EU加盟候補国</p><p class="g-cf-text">2023年認定。国際的な信頼性が高まっています。</p></div></div>
+        <div class="g-cf reveal reveal-delay-3"><span class="g-cf-icon">📋</span><div><p class="g-cf-title">シンプルな法制度</p><p class="g-cf-text">外国人にも開かれたビジネス環境。</p></div></div>
+        <div class="g-cf reveal reveal-delay-4"><span class="g-cf-icon">🍷</span><div><p class="g-cf-title">世界最古のワイン産地</p><p class="g-cf-text">8,000年以上のワイン文化。観光地としても人気急上昇。</p></div></div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section id="faq" style="margin:0 0 36px;">
-      <h2 class="glp-sec-title">よくある質問</h2>
-      <div class="glp-faq">
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">本当に渡航不要ですか？</div>
-          <div class="glp-faq-a">書類整備・申請手続きは原則として渡航不要で進められます。ただし銀行によっては現地での手続きを求める場合もあります。事前にご案内します。</div>
+    <section class="g-band reveal">
+      <p class="g-band-title">ジョージアの制度に沿った書類整備サポート</p>
+      <ul class="g-band-list"><li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li><li>書類整備・現地法律事務所との連絡調整を文面ベースでサポート</li><li>税務・法務の個別助言は行いません。専門家へのご相談を推奨</li></ul>
+      <p class="g-band-note">※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。</p>
+    </section>
+
+    <section id="pricing" style="margin:48px 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">Pricing</span><h2 class="g-sh-title">料金とサービス内容</h2><p class="g-sh-sub">書類整備・事務補助の対価です。銀行手数料・実費は別途です。</p><span class="g-sh-line"></span></div>
+      <div class="g-price-hero reveal">
+        <div class="g-price-header">
+          <span class="g-price-header-tag">Main Service</span>
+          <h3 class="g-price-header-name">銀行口座開設 書類整備サポート</h3>
+          <div class="g-price-amount"><div class="g-price-num">¥258,000</div><div class="g-price-unit">（税込）</div></div>
         </div>
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">口座開設は必ずできますか？</div>
-          <div class="glp-faq-a">開設可否は各銀行の審査判断によるため、成功の保証はできません。書類の不備を減らし、スムーズに審査に進むことを目的としています。</div>
+        <div class="g-price-body">
+          <div class="g-price-includes ok"><h4>含まれるもの</h4><ul><li>必要書類の案内・チェックリスト</li><li>公証・アポスティーユ取得方法の日本語ガイド</li><li>現地法律事務所（TREX LEGAL）への書類取次補助</li><li>申請書類の最終チェック</li><li>進捗連絡・チャットサポート</li><li>Wise登録の初期情報提供</li></ul></div>
+          <div class="g-price-includes ng" style="margin-top:16px;"><h4>含まれないもの</h4><ul><li>口座開設の成功保証（銀行審査による）</li><li>税務・法務の個別アドバイス</li><li>銀行手数料・郵送費などの実費</li></ul></div>
+          <div class="g-price-div"></div>
+          <div class="g-set-box"><div><div class="g-set-label">🎯 IE登録（個人事業主）＋口座開設セット</div><div class="g-set-sub">通常合計 ¥546,000 → セット割引</div></div><div class="g-set-price"><s>¥546,000</s>¥498,000</div></div>
+          <div class="g-price-cta"><a href="https://line.me/R/ti/p/@georgia-tax" class="g-btn g-btn-main" style="width:100%;justify-content:center;font-size:16px;padding:19px;border-radius:14px;">📩 無料相談・申し込みはこちら</a><p class="g-price-cta-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</p></div>
         </div>
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">相談だけでも大丈夫ですか？</div>
-          <div class="glp-faq-a">はい。「まだ検討段階」でも構いません。現状のヒアリングから始め、無理な勧誘はしません。</div>
-        </div>
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">キャンセルはできますか？</div>
-          <div class="glp-faq-a">現地パートナーへの依頼開始前であれば、手数料（¥10,000）を差し引いた金額を返金します。依頼開始後の返金はできません。</div>
-        </div>
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">日本の税申告はどうなりますか？</div>
-          <div class="glp-faq-a">当社は税務アドバイスを行いません。日本居住者の方は日本の税理士に必ずご相談ください。</div>
-        </div>
-        <div class="glp-faq-item">
-          <div class="glp-faq-q">法人設立との違いは？</div>
-          <div class="glp-faq-a">口座開設サポートは個人名義の銀行口座取得に向けた書類整備です。法人設立サポート（¥330,000〜）は別メニューになります。セットでのご利用も可能です。</div>
-        </div>
+      </div>
+      <h3 style="font-size:14px;font-weight:700;color:var(--navy);margin:28px 0 12px;letter-spacing:.04em;">申し込みの流れ</h3>
+      <div class="g-steps reveal"><div class="g-step"><span class="g-step-num">1</span>LINEで<br>無料相談</div><div class="g-step"><span class="g-step-num">2</span>ヒアリング<br>→ご提案</div><div class="g-step"><span class="g-step-num">3</span>申込み<br>→書類整備</div><div class="g-step"><span class="g-step-num">4</span>申請<br>→完了</div></div>
+    </section>
+
+    <section id="faq" style="margin:0 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">FAQ</span><h2 class="g-sh-title">よくある質問</h2><span class="g-sh-line"></span></div>
+      <div class="g-faq reveal">
+        <div class="g-faq-item"><div class="g-faq-q">本当に渡航不要ですか？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">書類整備・申請手続きは原則として渡航不要で進められます。ただし銀行によっては現地での手続きを求める場合もあります。事前にご案内します。</div></div>
+        <div class="g-faq-item"><div class="g-faq-q">口座開設は必ずできますか？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">開設可否は各銀行の審査判断によるため、成功の保証はできません。書類の不備を減らし、スムーズに審査に進むことを目的としています。</div></div>
+        <div class="g-faq-item"><div class="g-faq-q">相談だけでも大丈夫ですか？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">はい。「まだ検討段階」でも構いません。現状のヒアリングから始め、無理な勧誘はしません。</div></div>
+        <div class="g-faq-item"><div class="g-faq-q">キャンセルはできますか？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">現地パートナーへの依頼開始前であれば、手数料（¥10,000）を差し引いた金額を返金します。依頼開始後の返金はできません。</div></div>
+        <div class="g-faq-item"><div class="g-faq-q">日本の税申告はどうなりますか？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">当社は税務アドバイスを行いません。日本居住者の方は日本の税理士に必ずご相談ください。</div></div>
+        <div class="g-faq-item"><div class="g-faq-q">法人設立との違いは？<span class="g-faq-q-icon">+</span></div><div class="g-faq-a">口座開設サポートは個人名義の銀行口座取得に向けた書類整備です。法人設立サポート（¥330,000〜）は別メニューになります。セットでのご利用も可能です。</div></div>
       </div>
     </section>
 
-    <!-- 帯 -->
-    <section class="glp-band">
-      <p class="glp-band-title">ジョージアの制度に沿った書類整備サポート</p>
-      <ul class="glp-band-list">
-        <li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li>
-        <li>書類整備・現地法律事務所との連絡調整を文面ベースでサポート</li>
-        <li>税務・法務の個別助言は行いません。専門家へのご相談を推奨</li>
-      </ul>
-      <p class="glp-band-note">※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。</p>
+    <section id="other-services" style="margin:0 0 56px;">
+      <div class="g-sh reveal"><span class="g-sh-label">Other Services</span><h2 class="g-sh-title">その他のサービス</h2><span class="g-sh-line"></span></div>
+      <div class="g-cards">
+        <article class="g-card reveal reveal-delay-1"><div class="g-card-icon">⚖️</div><h3 class="g-card-title">法人設立<br>書類整備サポート</h3><p class="g-card-text">現地法律事務所と連携し、法人登記に必要な書類整備・情報提供を行います。</p><a href="#corp-setup" class="g-btn g-btn-dark">詳しくはこちら</a></article>
+        <article class="g-card reveal reveal-delay-2"><div class="g-card-icon">🧾</div><h3 class="g-card-title">個人事業主（IE）<br>登録サポート</h3><p class="g-card-text">IE登録の一般情報提供と登録書類の整備補助（条件あり）。</p><a href="#sole-setup" class="g-btn g-btn-dark">詳しくはこちら</a></article>
+        <article class="g-card reveal reveal-delay-3"><div class="g-card-icon">🍱</div><h3 class="g-card-title">和食店を<br>あなたの国に</h3><p class="g-card-text">店舗立ち上げ・職人紹介・契約面の情報確認をサポート。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="g-btn g-btn-green">無料相談する</a></article>
+        <article class="g-card reveal reveal-delay-1"><div class="g-card-icon">🏠</div><h3 class="g-card-title">海外不動産<br>購入・賃貸</h3><p class="g-card-text">ジョージアを含む海外不動産の物件選び・契約プロセスの情報提供。</p><a href="#" class="g-btn g-btn-muted">準備中</a></article>
+        <article class="g-card reveal reveal-delay-2"><div class="g-card-icon">🏦</div><h3 class="g-card-title">銀行口座開設<br>（法人）</h3><p class="g-card-text">法人口座開設に向けた書類整備サポート。法人設立とセットでのご利用も可。</p><a href="#personal-account" class="g-btn g-btn-dark">詳しくはこちら</a></article>
+        <article class="g-card reveal reveal-delay-3"><div class="g-card-icon">💼</div><h3 class="g-card-title">その他<br>企画サポート</h3><p class="g-card-text">ジョージアを起点にしたビジネスアイデアの検討をお手伝い。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="g-btn g-btn-dark">相談する</a></article>
+      </div>
     </section>
 
-    <!-- その他サービス -->
-    <section id="other-services" style="margin:28px 0;">
-      <h2 class="glp-sec-title" style="margin-bottom:16px;">その他のサービス</h2>
-      <section class="glp-cardgrid">
-        <article class="glp-card">
-          <div class="glp-card-icon">⚖️</div>
-          <h3 class="glp-card-title">法人設立<br>書類整備サポート</h3>
-          <p class="glp-card-text">現地法律事務所と連携し、法人登記に必要な書類整備・情報提供を行います。</p>
-          <a href="#corp-setup" class="glp-btn glp-btn-navy">詳しくはこちら</a>
-        </article>
-        <article class="glp-card">
-          <div class="glp-card-icon">🧾</div>
-          <h3 class="glp-card-title">個人事業主（IE）<br>登録サポート</h3>
-          <p class="glp-card-text">IE登録の一般情報提供と登録書類の整備補助（条件あり）。</p>
-          <a href="#sole-setup" class="glp-btn glp-btn-navy">詳しくはこちら</a>
-        </article>
-        <article class="glp-card">
-          <div class="glp-card-icon">🍱</div>
-          <h3 class="glp-card-title">和食店を<br>あなたの国に</h3>
-          <p class="glp-card-text">店舗立ち上げ・職人紹介・契約面の情報確認をサポート。</p>
-          <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-green">無料相談する</a>
-        </article>
-        <article class="glp-card">
-          <div class="glp-card-icon">🏠</div>
-          <h3 class="glp-card-title">海外不動産<br>購入・賃貸</h3>
-          <p class="glp-card-text">ジョージアを含む海外不動産の物件選び・契約プロセスの情報提供。</p>
-          <a href="#" class="glp-btn glp-btn-gray">準備中</a>
-        </article>
-        <article class="glp-card">
-          <div class="glp-card-icon">🏦</div>
-          <h3 class="glp-card-title">銀行口座開設<br>（法人）</h3>
-          <p class="glp-card-text">法人口座開設に向けた書類整備サポート。法人設立とセットでのご利用も可。</p>
-          <a href="#personal-account" class="glp-btn glp-btn-navy">詳しくはこちら</a>
-        </article>
-        <article class="glp-card">
-          <div class="glp-card-icon">💼</div>
-          <h3 class="glp-card-title">その他<br>企画サポート</h3>
-          <p class="glp-card-text">ジョージアを起点にしたビジネスアイデアの検討をお手伝い。</p>
-          <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-navy">相談する</a>
-        </article>
-      </section>
-    </section>
-
-    <!-- 大CTA -->
-    <div class="glp-cta-banner">
+    <div class="g-cta-banner reveal">
       <h2>海外取引の決済インフラを、<br>今年中に整えませんか。</h2>
-      <p>
-        「まだ検討段階」で構いません。<br>
-        現状をお聞きして、何が必要かを一緒に整理します。
-      </p>
-      <a href="https://line.me/R/ti/p/@georgia-tax" class="glp-btn glp-btn-main">
-        📩 LINEで無料相談する
-      </a>
-      <span class="glp-cta-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</span>
+      <p>「まだ検討段階」で構いません。<br>現状をお聞きして、何が必要かを一緒に整理します。</p>
+      <a href="https://line.me/R/ti/p/@georgia-tax" class="g-btn g-btn-main">📩 LINEで無料相談する</a>
+      <span class="g-cta-note">返信は営業日3日以内｜無理な勧誘はしません</span>
     </div>
-
   </div>
 </div>
 
 <main id="main">
-  <h1 class="sr-only" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">
-    ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC
-  </h1>
+  <h1 class="sr-only" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;">ジョージア銀行口座開設・法人設立サポート｜GRENA GROUP LLC</h1>
 
-  <!-- 法人設立詳細 -->
   <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア法人設立｜書類整備・情報提供サポート</h2>
     <div class="glp-disclaimer-box"><strong>【重要】</strong> 当社が提供するのは一般情報の提供と書類整備の補助のみです。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。最終判断は有資格専門家にご相談ください。</div>
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">サクッと要点</span></div>
       <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li>
-        <li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li>
-      </ul>
+      <ul class="qs-list"><li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li><li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li></ul>
     </div>
-    <div class="progress-steps">
-      <div class="step">1. LINEで相談</div>
-      <div class="step">2. ヒアリング → ご提案</div>
-      <div class="step">3. 申込 → 現地手続き → 完了</div>
-    </div>
+    <div class="progress-steps"><div class="step">1. LINEで相談</div><div class="step">2. ヒアリング → ご提案</div><div class="step">3. 申込 → 現地手続き → 完了</div></div>
     <div class="space-y-3 accordion">
       <details><summary>ジョージア法人制度の概要（公開資料に基づく一般情報）</summary><div class="content"><p>OECDやPwC等が公表している一般資料を参照した情報です。居住国の税法（CFC規制等）の適用可能性があります。<strong>税務・法務の判断は当社では行いません。</strong></p></div></details>
       <details><summary>法律事務所との提携（MoU）</summary><div class="content"><ul><li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li><li>法人ID：406365525</li></ul><span class="note">※ MoUは業務連携の覚書であり、登記完了・審査結果の保証ではありません。</span></div></details>
       <details><summary>書類整備サポートの範囲</summary><div class="content"><ul><li>法人登記に必要な書類の案内・整備補助（目安：7〜10営業日）</li><li>バーチャルオフィス（12ヶ月）の手配案内</li><li>法人口座開設手続きに向けた書類案内（開設可否は銀行審査判断）</li><li>eSIM設定の案内</li></ul></div></details>
-      <details><summary>料金プラン</summary><div class="content">
-        <div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody>
-          <tr><td>基本プラン</td><td>¥330,000〜</td></tr>
-          <tr><td>設立＋LPパック</td><td>¥498,000</td></tr>
-          <tr><td>フルサポートパック</td><td>¥598,000</td></tr>
-          <tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr>
-        </tbody></table></div>
-        <p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p>
-      </div></details>
+      <details><summary>料金プラン</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody><tr><td>基本プラン</td><td>¥330,000〜</td></tr><tr><td>設立＋LPパック</td><td>¥498,000</td></tr><tr><td>フルサポートパック</td><td>¥598,000</td></tr><tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr></tbody></table></div><p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p></div></details>
       <details><summary>Nominee構成（UBO開示を含む一般説明）</summary><div class="content"><ul><li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）の開示が必要</strong></li><li>年額：€2,500（2025年8月時点）</li><li>CRS等の情報交換制度の対象となり得ます</li></ul></div></details>
       <details><summary>KYC・FMSに関する注意</summary><div class="content"><p>パスポート・住所証明等のKYC書類が必要です。高額送受金・暗号資産取引の状況により追加確認が求められる場合があります。反社・AML/CFT上の疑いがある場合は支援不可です。</p></div></details>
     </div>
   </section>
 
-  <!-- 個人事業主 -->
   <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6">ジョージア個人事業主（IE）登録｜書類整備サポート</h2>
     <div class="glp-disclaimer-box"><strong>【重要】</strong> ジョージア現地制度の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります</strong>。必ず日本の税理士にご確認ください。</div>
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">サクッと要点</span></div>
       <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list">
-        <li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li>
-        <li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li>
-      </ul>
+      <ul class="qs-list"><li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li><li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li></ul>
     </div>
     <div class="space-y-3 accordion">
-      <details><summary>IE＋Small Business Statusの制度概要（一般情報）</summary><div class="content">
-        <table><thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>現地税率区分</th></tr></thead><tbody>
-          <tr><td>〜30,000</td><td>〜150万円</td><td>0%</td></tr>
-          <tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td></tr>
-          <tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td></tr>
-        </tbody></table>
-        <p class="text-sm muted"><strong>※ 居住国での税負担とは異なります。必ず税理士にご相談ください。</strong></p>
-      </div></details>
-      <details open><summary>サポート範囲と料金</summary><div class="content">
-        <div class="price-promo">
-          <div class="row"><span class="label">料金：</span><span class="now">¥288,000</span><span class="text-sm">（税込）</span></div>
-          <div class="meta"><small>※ IE＋口座開設セット：<strong>¥498,000（税込）</strong></small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span><span>オンライン完結</span></div>
-        </div>
-      </div></details>
+      <details><summary>IE＋Small Business Statusの制度概要（一般情報）</summary><div class="content"><table><thead><tr><th>年収（ラリ）</th><th>日本円目安</th><th>現地税率区分</th></tr></thead><tbody><tr><td>〜30,000</td><td>〜150万円</td><td>0%</td></tr><tr><td>30,001〜500,000</td><td>150〜2,500万円</td><td>1%</td></tr><tr><td>500,000超</td><td>2,500万円〜</td><td>3〜5%</td></tr></tbody></table><p class="text-sm muted"><strong>※ 居住国での税負担とは異なります。必ず税理士にご相談ください。</strong></p></div></details>
+      <details open><summary>サポート範囲と料金</summary><div class="content"><div class="price-promo"><div class="row"><span class="label">料金：</span><span class="now">¥288,000</span><span class="text-sm">（税込）</span></div><div class="meta"><small>※ IE＋口座開設セット：<strong>¥498,000（税込）</strong></small></div><div class="proof"><span>MoU：TREX LEGAL</span><span>オンライン完結</span></div></div></div></details>
     </div>
   </section>
 
-  <!-- 個人口座詳細 -->
   <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6">銀行口座開設手続き｜書類整備サポート詳細</h2>
     <div class="glp-disclaimer-box"><strong>【重要】</strong> 当社は銀行の代理人・媒介者ではありません。いかなる銀行からも紹介料を受け取っておらず、口座開設の成功を保証するものではありません。</div>
     <div class="space-y-3 accordion">
       <details><summary>必要書類（非居住者の一般的な例）</summary><div class="content"><ul><li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li><li>英語の住所証明（3ヶ月以内）</li><li>署名・原本郵送（PDF不可）</li></ul></div></details>
-      <details open><summary>書類整備サポートの範囲と費用</summary><div class="content">
-        <div class="value-box"><h5 class="value-title">原則として渡航不要</h5><ul class="value-list"><li>MoU連携の正規ルートでの書類取次補助</li><li>連絡はチャット中心（履歴が残って安心）</li></ul></div>
-        <div class="price-promo">
-          <div class="row"><span class="label">サービス費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">IE＋口座開設セット：</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span></div>
-          <div class="meta"><small><strong>当社は銀行から紹介料・コミッションを一切受け取っておりません。</strong></small><br><small>開設可否は各銀行の審査判断です。</small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span></div>
-        </div>
-      </div></details>
-      <details id="cf-tool-sec"><summary>複利の概算ツール（参考・商品非特定）</summary><div class="content">
-        <div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title">
-          <h4 id="cf-title" class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
-          <div class="cf-grid">
-            <label for="cf-currency">通貨</label>
-            <select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
-            <label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
-            <label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
-            <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
-            <label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
-            <label for="cf-nper">回数/年</label>
-            <select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
-            <label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked>
-          </div>
-          <div class="cf-preset">
-            <span class="cf-hint">年率の例：</span>
-            <button type="button" class="cf-chip" data-rate="3">3%</button>
-            <button type="button" class="cf-chip" data-rate="5">5%</button>
-            <button type="button" class="cf-chip" data-rate="8">8%</button>
-            <button type="button" class="cf-chip" data-rate="10">10%</button>
-            <small class="note">※ 特定の商品・銀行・利回りを示すものではありません。</small>
-          </div>
-          <div class="cf-ack"><input id="cf-ack" type="checkbox"><label for="cf-ack">一般的な数学計算の参考ツールです。税・手数料・為替は加味していません。将来の成果を保証しません。</label></div>
-          <div class="cf-actions"><button id="cf-run" class="btn secondary" disabled>結果を表示</button><button id="cf-clear" class="btn neutral" type="button">クリア</button></div>
-          <div id="cf-out" class="cf-out" aria-live="polite"></div>
-          <p class="text-sm muted" style="margin-top:.5rem;">※ 教育・参考目的です。投資・預金の勧誘ではありません。</p>
-        </div>
-      </div></details>
+      <details open><summary>書類整備サポートの範囲と費用</summary><div class="content"><div class="value-box"><h5 class="value-title">原則として渡航不要</h5><ul class="value-list"><li>MoU連携の正規ルートでの書類取次補助</li><li>連絡はチャット中心（履歴が残って安心）</li></ul></div><div class="price-promo"><div class="row"><span class="label">サービス費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div><div class="row"><span class="label">IE＋口座開設セット：</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span></div><div class="meta"><small><strong>当社は銀行から紹介料・コミッションを一切受け取っておりません。</strong></small><br><small>開設可否は各銀行の審査判断です。</small></div><div class="proof"><span>MoU：TREX LEGAL</span></div></div></div></details>
+      <details id="cf-tool-sec"><summary>複利の概算ツール（参考・商品非特定）</summary><div class="content"><div id="cf-tool" class="cf-card" role="form" aria-labelledby="cf-title"><h4 id="cf-title" class="smallish">複利の概算ツール</h4><div class="cf-grid"><label for="cf-currency">通貨</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select><label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000"><label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00"><div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div><label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7"><label for="cf-nper">回数/年</label><select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select><label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked></div><div class="cf-preset"><span class="cf-hint">年率の例：</span><button type="button" class="cf-chip" data-rate="3">3%</button><button type="button" class="cf-chip" data-rate="5">5%</button><button type="button" class="cf-chip" data-rate="8">8%</button><button type="button" class="cf-chip" data-rate="10">10%</button><small class="note">※ 特定の商品・銀行・利回りを示すものではありません。</small></div><div class="cf-ack"><input id="cf-ack" type="checkbox"><label for="cf-ack">一般的な数学計算の参考ツールです。税・手数料・為替は加味していません。将来の成果を保証しません。</label></div><div class="cf-actions"><button id="cf-run" class="btn secondary" disabled>結果を表示</button><button id="cf-clear" class="btn neutral" type="button">クリア</button></div><div id="cf-out" class="cf-out" aria-live="polite"></div><p class="text-sm muted" style="margin-top:.5rem;">※ 教育・参考目的です。投資・預金の勧誘ではありません。</p></div></div></details>
     </div>
   </section>
 
-  <!-- おすすめしません -->
   <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4">こんな方にはおすすめしません</h2>
-    <ul class="qs-list">
-      <li>居住国での申告義務や法律を守る意思がない方</li>
-      <li>口座開設の確実な成功を保証として求める方</li>
-      <li>税務・法務の個別アドバイスを求めている方</li>
-    </ul>
+    <ul class="qs-list"><li>居住国での申告義務や法律を守る意思がない方</li><li>口座開設の確実な成功を保証として求める方</li><li>税務・法務の個別アドバイスを求めている方</li></ul>
   </section>
 
-  <!-- 免責 -->
   <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
     <h2 class="smallish">免責事項・キャンセルポリシー</h2>
     <div class="accordion">
-      <details><summary>免責事項（必ずお読みください）</summary><div class="content"><ul>
-        <li>当サービスは<strong>一般情報の提供・書類整備の補助・取次</strong>であり、銀行口座の代理開設・金融商品の勧誘・媒介・代理は一切行いません。</li>
-        <li>当社は金融商品取引法・銀行法上の登録・許可を必要とする業務は行いません。</li>
-        <li>当社の受領する料金は<strong>書類整備・情報提供・事務補助の対価</strong>であり、銀行手数料・預入金等とは無関係です。</li>
-        <li>当社はいかなる銀行・金融機関からも紹介料・コミッション等を受け取っておりません。</li>
-        <li><strong>税務・法務の助言は行いません。</strong>必ず税理士・弁護士へご相談ください。</li>
-        <li>ジョージア現地の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります。</strong></li>
-        <li>口座開設の可否・条件は各銀行の審査・方針により変動し、保証できません。</li>
-        <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、準拠法はジョージア法です。</li>
-        <li>日本居住者の方は、国外財産調書・CFC税制等の対象となり得ます。必ず日本の税理士にご確認ください。</li>
-      </ul></div></details>
-      <details><summary>キャンセルポリシー</summary><div class="content"><ul>
-        <li>現地パートナーへの依頼開始前：手数料（¥10,000）を差し引いた金額を返金</li>
-        <li>現地パートナーへの依頼開始後：<strong>返金不可</strong></li>
-        <li>当社の明確な不履行がある場合は、返金・再対応等の措置を講じます。</li>
-        <li>日本の特定商取引法のクーリングオフは適用対象外です（ジョージア法人による提供）。</li>
-      </ul></div></details>
+      <details><summary>免責事項（必ずお読みください）</summary><div class="content"><ul><li>当サービスは<strong>一般情報の提供・書類整備の補助・取次</strong>であり、銀行口座の代理開設・金融商品の勧誘・媒介・代理は一切行いません。</li><li>当社は金融商品取引法・銀行法上の登録・許可を必要とする業務は行いません。</li><li>当社の受領する料金は<strong>書類整備・情報提供・事務補助の対価</strong>であり、銀行手数料・預入金等とは無関係です。</li><li>当社はいかなる銀行・金融機関からも紹介料・コミッション等を受け取っておりません。</li><li><strong>税務・法務の助言は行いません。</strong>必ず税理士・弁護士へご相談ください。</li><li>ジョージア現地の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります。</strong></li><li>口座開設の可否・条件は各銀行の審査・方針により変動し、保証できません。</li><li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、準拠法はジョージア法です。</li><li>日本居住者の方は、国外財産調書・CFC税制等の対象となり得ます。必ず日本の税理士にご確認ください。</li></ul></div></details>
+      <details><summary>キャンセルポリシー</summary><div class="content"><ul><li>現地パートナーへの依頼開始前：手数料（¥10,000）を差し引いた金額を返金</li><li>現地パートナーへの依頼開始後：<strong>返金不可</strong></li><li>当社の明確な不履行がある場合は、返金・再対応等の措置を講じます。</li><li>日本の特定商取引法のクーリングオフは適用対象外です（ジョージア法人による提供）。</li></ul></div></details>
     </div>
   </section>
 
-  <!-- 固定CTA -->
   <div class="fixed-cta" id="ctaBar" role="region" aria-label="お申込みと相談の操作バー">
     <div class="row">
       <a class="btn neutral" id="toTop" href="#page-top" aria-label="ページ上部へ">↑ トップ</a>
@@ -1172,90 +594,47 @@ details .content strong{color:#0b1f3a;}
   <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜書類整備・一般情報提供のみ</small>
 </footer>
 
-<!-- FAQ JS -->
 <script>
-document.querySelectorAll('.glp-faq-item').forEach(function(item){
-  item.querySelector('.glp-faq-q').addEventListener('click',function(){
-    item.classList.toggle('open');
+document.querySelectorAll('.g-faq-item').forEach(function(item){
+  item.querySelector('.g-faq-q').addEventListener('click',function(){
+    var isOpen=item.classList.contains('open');
+    document.querySelectorAll('.g-faq-item.open').forEach(function(i){i.classList.remove('open');});
+    document.querySelectorAll('.g-faq-q-icon').forEach(function(ic){ic.textContent='+';});
+    if(!isOpen){item.classList.add('open');var icon=item.querySelector('.g-faq-q-icon');if(icon)icon.textContent='−';}
+  });
+});
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!els.length)return;
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:0.08});
+  els.forEach(function(el){io.observe(el);});
+})();
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(el){e.preventDefault();var y=el.getBoundingClientRect().top+window.pageYOffset-80;try{window.scrollTo({top:y,behavior:'smooth'});}catch(err){window.scrollTo(0,y);}}
   });
 });
 </script>
-
-<script>
-(function(){
-  var landing=document.getElementById('glp-landing');
-  if(!landing)return;
-  function scrollTo(id){
-    var el=document.getElementById(id);
-    if(!el)return;
-    var y=el.getBoundingClientRect().top+window.pageYOffset-80;
-    try{window.scrollTo({top:y,behavior:'smooth'});}catch(e){window.scrollTo(0,y);}
-  }
-  landing.querySelectorAll('[href^="#"]').forEach(function(a){
-    a.addEventListener('click',function(e){
-      var id=this.getAttribute('href').slice(1);
-      if(document.getElementById(id)){e.preventDefault();scrollTo(id);}
-    });
-  });
-})();
-</script>
-
 <script src="./script.js?v=20251110a" defer></script>
-
 <style>
-.goog-te-banner-frame{display:none!important}
-body{top:0!important}
+.goog-te-banner-frame{display:none!important}body{top:0!important}
 #goog-gt-tt,.goog-te-balloon-frame{display:none!important}
-#lpLangSwitch{
-  position:fixed;
-  top:calc(env(safe-area-inset-top,0px)+12px);
-  right:calc(env(safe-area-inset-right,0px)+12px+48px+10px);
-  z-index:9999;
-  display:flex;gap:6px;padding:6px;
-  border-radius:12px;background:rgba(255,255,255,0.95);
-  box-shadow:0 4px 14px rgba(0,0,0,.12);backdrop-filter:blur(6px);
-}
-#lpLangSwitch button{
-  appearance:none;border:1px solid #e5e7eb;background:#fff;
-  border-radius:8px;padding:7px 11px;font-size:12px;
-  font-weight:800;cursor:pointer;color:#0b1f3a;
-}
-#lpLangSwitch button[aria-pressed="true"]{background:#0b1f3a;color:#fff;border-color:#0b1f3a;}
+#lpLangSwitch{position:fixed;top:calc(env(safe-area-inset-top,0px)+12px);right:calc(env(safe-area-inset-right,0px)+12px+48px+10px);z-index:9999;display:flex;gap:6px;padding:6px;border-radius:12px;background:rgba(255,255,255,0.95);box-shadow:0 4px 16px rgba(0,0,0,.14);backdrop-filter:blur(8px);}
+#lpLangSwitch button{appearance:none;border:1px solid #e5e7eb;background:#fff;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:800;cursor:pointer;color:#0b1f3a;transition:all .15s;}
+#lpLangSwitch button:hover{background:#f0f4ff;}
+#lpLangSwitch button[aria-pressed="true"]{background:#0b1f3a;color:#e8cb7a;border-color:#0b1f3a;}
 </style>
 <script>
-function lpGoogleTranslateInit(){
-  try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}
-  new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");
-}
+function lpGoogleTranslateInit(){try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");}
 </script>
 <script>
 (function(){
   "use strict";
-  function setGoogTrans(v){
-    var host=location.hostname.replace(/^www\./,'');
-    var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
-    ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;
-    });
-  }
-  function mountSwitch(){
-    if(document.getElementById("lpLangSwitch"))return;
-    var box=document.createElement("div");
-    box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");
-    var jp=document.createElement("button");jp.type="button";jp.innerHTML='<span class="notranslate">JP</span>';
-    var en=document.createElement("button");en.type="button";en.innerHTML='<span class="notranslate">EN</span>';
-    jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});
-    en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});
-    box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);
-    var saved=localStorage.getItem("lp_lang")||"ja";
-    jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");
-    en.setAttribute("aria-pressed",saved==="en"?"true":"false");
-  }
-  function boot(){
-    mountSwitch();
-    var saved=localStorage.getItem("lp_lang")||"ja";
-    setGoogTrans(saved==="en"?"/ja/en":"/ja/ja");
-  }
+  function setGoogTrans(v){var host=location.hostname.replace(/^www\./,'');var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();['','domain=.'+host,'domain='+host].forEach(function(d){document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;});}
+  function mountSwitch(){if(document.getElementById("lpLangSwitch"))return;var box=document.createElement("div");box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");var jp=document.createElement("button");jp.type="button";jp.innerHTML='<span class="notranslate">JP</span>';var en=document.createElement("button");en.type="button";en.innerHTML='<span class="notranslate">EN</span>';jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);var saved=localStorage.getItem("lp_lang")||"ja";jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");en.setAttribute("aria-pressed",saved==="en"?"true":"false");}
+  function boot(){mountSwitch();var saved=localStorage.getItem("lp_lang")||"ja";setGoogTrans(saved==="en"?"/ja/en":"/ja/ja");}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);else boot();
 })();
 </script>
