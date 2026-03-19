@@ -1202,6 +1202,18 @@ section[id],details[id]{scroll-margin-top:72px;}
   .country-photos img{height:155px;}
   .hero-body{padding:0 56px 76px;}
 }
+
+/* REVIEWS */
+.review-grid{display:grid;grid-template-columns:1fr;gap:16px;margin:0 0 0;}
+.review-card{background:#fff;border-radius:var(--r-lg);padding:28px 28px 24px;border:1px solid var(--border);box-shadow:var(--sh);position:relative;border-top:4px solid var(--gold);}
+.review-stars{font-size:18px;color:var(--gold);letter-spacing:2px;margin-bottom:14px;}
+.review-text{font-family:'Noto Sans JP',sans-serif;font-size:14.5px;color:var(--text-2);line-height:1.95;margin-bottom:20px;font-weight:300;position:relative;padding-left:20px;}
+.review-text::before{content:'"';font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--gold-br);position:absolute;left:-4px;top:-10px;line-height:1;}
+.review-author{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:1px solid var(--border);}
+.review-author-info{display:flex;flex-direction:column;gap:3px;}
+.review-name{font-family:'Shippori Mincho B1',serif;font-size:14px;font-weight:800;color:var(--navy);}
+.review-tag{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--text-3);font-weight:300;}
+
 </style>
 
 <script>
@@ -1615,6 +1627,31 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
   <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
+
+  <!-- お客様の声 -->
+  <div class="orn"><div class="orn-d"></div></div>
+  <section id="reviews" style="margin:0 0 0;">
+    <div class="sh">
+      <div class="sh-eye">Customer Voice</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title">お客様の声</h2>
+      <p class="sh-sub">実際にサービスをご利用いただいた方からのご感想です。</p>
+    </div>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">「海外ビジネスを考えていて、会社と口座を作りたくお願いしました。会社は毎月WEBで税務報告をするだけ、口座はアプリで操作できるので便利です。自国にいながらできるのは旅費を考えてもめちゃくちゃお得です。また、スタッフさんが自分で経験しているので相談もしやすかったです。」</p>
+        <div class="review-author">
+          <div class="review-author-info">
+            <span class="review-name">40代・男性</span>
+            <span class="review-tag">海外ビジネス展開を検討中の方</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="orn"><div class="orn-d"></div></div>
 
   <!-- 大CTA -->
   <div class="big-cta">
