@@ -1232,6 +1232,16 @@ section[id],details[id]{scroll-margin-top:72px;}
   }catch(_){}
 })();
 </script>
+<script>
+(function(){
+  var saved=localStorage.getItem('lp_lang')||'ja';
+  var v=saved==='en'?'/ja/en':'/ja/ja';
+  var host=location.hostname.replace(/^www\./,'');
+  var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
+  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/';
+  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; domain=.'+host;
+})();
+</script>
 </head>
 <body>
 
