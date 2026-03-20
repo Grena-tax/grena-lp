@@ -1864,3 +1864,29 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   "use strict";
   function setGoogTrans(v){var host=location.hostname.replace(/^www\./,'');var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();['','domain=.'+host,'domain='+host].forEach(function(d){document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;});}
   function mountSwitch(){if(document.getElementById("lpLangSwitch"))return;var box=document.createElement("div");box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");var jp=document.createElement("button");jp.type="button";jp.className="notranslate";jp.innerHTML='<span class="notranslate">JP</span>';var en=document.createElement("button");en.type="button";en.className="notranslate";en.innerHTML='<span class="notranslate">EN</span>';jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);var saved=localStorage.getItem("lp_lang")||"ja";jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");en.setAttribute("aria-pressed",saved==="en"?"true":"f
+<script>
+function applyI18n(lang){
+  var t={
+    ja:{"hero-top":"海外の仕事が増えているのに——","hero-main":"受け取り口座が<span class='wise'>Wiseだけ</span>ですか。","empathy-title":"こんな状況、ありませんか？","why-title":"🔥 なぜ今、ジョージアなのか？","service-title":"やること・やらないことを正直に書きます","pricing-title":"料金とサービス内容","faq-title":"よくある質問","about-title":"🇬🇪 ジョージアってどんな国？","other-title":"その他のサービス","founder-title":"なぜ、このサービスを始めたのか。","review-title":"お客様の声","big-cta-h2":"海外取引の決済インフラを、<br>今年中に整えませんか。"},
+    en:{"hero-top":"As overseas work increases——","hero-main":"Is <span class='wise'>Wise your only</span> receiving account?","empathy-title":"Do any of these sound familiar?","why-title":"🔥 Why Georgia — and why now?","service-title":"What we do — and what we don't","pricing-title":"Pricing & Service Details","faq-title":"Frequently Asked Questions","about-title":"🇬🇪 About Georgia","other-title":"Other Services","founder-title":"Why we started this service.","review-title":"Customer Reviews","big-cta-h2":"Ready to set up your international<br>payment infrastructure this year?"}
+  }[lang];
+  if(!t)return;
+  Object.keys(t).forEach(function(k){
+    var el=document.querySelector('[data-i18n="'+k+'"]');
+    if(el)el.innerHTML=t[k];
+  });
+  var jp=document.getElementById('lpJpBtn');
+  var en=document.getElementById('lpEnBtn');
+  if(jp)jp.setAttribute('aria-pressed',lang==='ja'?'true':'false');
+  if(en)en.setAttribute('aria-pressed',lang==='en'?'true':'false');
+}
+document.addEventListener('DOMContentLoaded',function(){
+  applyI18n(localStorage.getItem('lp_lang')||'ja');
+  var jp=document.getElementById('lpJpBtn');
+  var en=document.getElementById('lpEnBtn');
+  if(jp)jp.onclick=function(){localStorage.setItem('lp_lang','ja');applyI18n('ja');};
+  if(en)en.onclick=function(){localStorage.setItem('lp_lang','en');applyI18n('en');};
+});
+</script>
+</body>
+</html>
