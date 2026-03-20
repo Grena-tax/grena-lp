@@ -2042,5 +2042,44 @@ document.addEventListener('DOMContentLoaded', function() {
   grenaSetLang(localStorage.getItem('lp_lang') || 'ja');
 });
 </script>
+
+<script>
+function grenaLang(lang){
+  var jp=document.getElementById('lpJpBtn');
+  var en=document.getElementById('lpEnBtn');
+  if(jp)jp.setAttribute('aria-pressed',lang==='ja'?'true':'false');
+  if(en)en.setAttribute('aria-pressed',lang==='en'?'true':'false');
+  localStorage.setItem('lp_lang',lang);
+
+  var combo=document.querySelector('select.goog-te-combo');
+  if(combo){
+    combo.value=lang==='en'?'en':'ja';
+    combo.dispatchEvent(new Event('change'));
+    return;
+  }
+  // comboがまだない場合は少し待つ
+  var tries=0;
+  var t=setInterval(function(){
+    var c=document.querySelector('select.goog-te-combo');
+    if(c){
+      c.value=lang==='en'?'en':'ja';
+      c.dispatchEvent(new Event('change'));
+      clearInterval(t);
+    }
+    if(++tries>30)clearInterval(t);
+  },200);
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var saved=localStorage.getItem('lp_lang')||'ja';
+  var jp=document.getElementById('lpJpBtn');
+  var en=document.getElementById('lpEnBtn');
+  if(jp)jp.setAttribute('aria-pressed',saved==='ja'?'true':'false');
+  if(en)en.setAttribute('aria-pressed',saved==='en'?'true':'false');
+  if(saved==='en'){
+    setTimeout(function(){grenaLang('en');},1500);
+  }
+});
+</script>
 </body>
 </html>
