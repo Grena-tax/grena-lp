@@ -1862,6 +1862,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
   "use strict";
   function setGoogTrans(v){var host=location.hostname.replace(/^www\./,'');var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();['','domain=.'+host,'domain='+host].forEach(function(d){document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;});}
   function mountSwitch(){if(document.getElementById("lpLangSwitch"))return;var box=document.createElement("div");box.id="lpLangSwitch";box.className="notranslate";box.setAttribute("translate","no");var jp=document.createElement("button");jp.type="button";jp.className="notranslate";jp.innerHTML='<span class="notranslate">JP</span>';var en=document.createElement("button");en.type="button";en.className="notranslate";en.innerHTML='<span class="notranslate">EN</span>';jp.addEventListener("click",function(){localStorage.setItem("lp_lang","ja");setGoogTrans("/ja/ja");location.reload();});en.addEventListener("click",function(){localStorage.setItem("lp_lang","en");setGoogTrans("/ja/en");location.reload();});box.appendChild(jp);box.appendChild(en);document.body.appendChild(box);var saved=localStorage.getItem("lp_lang")||"ja";jp.setAttribute("aria-pressed",saved==="ja"?"true":"false");en.setAttribute("aria-pressed",saved==="en"?"true":"f
+</script>
 <script>
 function applyI18n(lang){
   var t={
