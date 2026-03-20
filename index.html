@@ -1848,18 +1848,7 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 <script src="./script.js?v=20251110a" defer></script>
 
-<script>function applyLang(){
-  var saved=localStorage.getItem("lp_lang")||"ja";
-  if(saved==="en"){
-    var tries=0;
-    var t=setInterval(function(){
-      var el=document.querySelector(".goog-te-combo");
-      if(el){el.value="en";el.dispatchEvent(new Event("change"));clearInterval(t);}
-      if(++tries>30)clearInterval(t);
-    },300);
-  }
-}
-function lpGoogleTranslateInit(){try{var saved=localStorage.getItem("lp_lang")||"ja";if(saved==="en"){var el=document.querySelector(".goog-te-combo");if(el){el.value="en";el.dispatchEvent(new Event("change"));}}}catch(_){}try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");}</script>
+<script>function lpGoogleTranslateInit(){try{if(window.google&&google.translate&&document.querySelector(".goog-te-combo"))return;}catch(_){}new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");setTimeout(function(){var saved=localStorage.getItem("lp_lang")||"ja";if(saved==="en"){var tries=0;var t=setInterval(function(){var el=document.querySelector(".goog-te-combo");if(el){el.value="en";el.dispatchEvent(new Event("change"));clearInterval(t);}if(++tries>30)clearInterval(t);},200);}},500);}</script>
 <script>
 (function(){
   "use strict";
