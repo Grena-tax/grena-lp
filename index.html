@@ -1218,30 +1218,8 @@ section[id],details[id]{scroll-margin-top:72px;}
 
 </style>
 
-<script>
-(function(){
-  try{
-    var host=location.hostname.replace(/^www\./,'');
-    var m=document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/i);
-    if(!m)return;
-    var v=decodeURIComponent(m[1]||'');
-    if(v==='/ja/ja'||v==='/ja/en')return;
-    ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; '+d;
-    });
-  }catch(_){}
-})();
-</script>
-<script>
-(function(){
-  var saved=localStorage.getItem('lp_lang')||'ja';
-  var v=saved==='en'?'/ja/en':'/ja/ja';
-  var host=location.hostname.replace(/^www\./,'');
-  var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
-  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/';
-  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; domain=.'+host;
-})();
-</script>
+
+
 </head>
 <body>
 
@@ -1281,7 +1259,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     <div class="lang-body">
       <div class="ls-search"><input id="langSearch" type="search" placeholder="Search language"></div>
       <div id="langList" class="ls-list" role="listbox"></div>
-      <div id="google_translate_element"></div>
+      
     </div>
   </aside>
 </div>
@@ -1856,13 +1834,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 
 <script src="./script.js?v=20251110a" defer></script>
 
-<script>function lpGoogleTranslateInit(){new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");var saved=localStorage.getItem("lp_lang")||"ja";if(saved==="en"){var n=0;var t=setInterval(function(){var s=document.querySelector("select.goog-te-combo");if(s){s.value="en";s.dispatchEvent(new Event("change"));clearInterval(t);}if(++n>50)clearInterval(t);},300);}}</script>
-<script>
-(function(){
-  "use strict";
-  function setGoogTrans(v){var host=location.hostname.replace(/^www\./,'');var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();['','domain=.'+host,'domain='+host].forEach(function(d){document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; '+d;});}
-})();
-</script>
+
+
 
 <script>
 var I18N = {
@@ -2028,20 +2001,6 @@ var I18N = {
 
 function grenaSetLang(lang) {
   localStorage.setItem('lp_lang', lang);
-  // Google翻訳をリセット
-  var host=location.hostname.replace(/^www\./,'');
-  var dead='Thu, 01 Jan 1970 00:00:00 GMT';
-  var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
-  if(lang==='ja'){
-    ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans=; expires='+dead+'; path=/; '+d;
-    });
-  } else {
-    ['','domain=.'+host,'domain='+host].forEach(function(d){
-      document.cookie='googtrans='+encodeURIComponent('/ja/en')+'; expires='+exp+'; path=/; '+d;
-    });
-  }
-  // data-i18n要素を切り替え
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
     if (I18N[lang] && I18N[lang][key]) el.innerHTML = I18N[lang][key];
