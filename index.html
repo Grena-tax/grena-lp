@@ -1227,7 +1227,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
 <!-- JP/EN直接表示 -->
 <div id="lpLangSwitch" class="notranslate" translate="no">
-  <button type="button" class="notranslate" id="lpJpBtn" aria-pressed="true" onclick="grenaSetLang('ja')">
+  <button type="button" class="notranslate" id="lpJpBtn" aria-pressed="true" onclick="localStorage.setItem('lp_lang','ja');location.reload();">
     <span class="notranslate">JP</span>
   </button>
   <button type="button" class="notranslate" id="lpEnBtn" aria-pressed="false" onclick="grenaSetLang('en')">
