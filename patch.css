@@ -1185,3 +1185,1040 @@ h1, h2, h3, .glp-hero-title {
   padding: .8rem 1rem;
   margin-top: .6rem;
 }
+
+
+/* ============================================================
+   デザイン100点化パッチ — 2026-04-14
+   ============================================================ */
+
+/* [1] ヒーロー本文 日本語改行修正
+   max-width:460px が狭すぎて「ありま/せんか」のような
+   不自然な折り返しが起きていたため修正
+   ============================================================ */
+.hero-lead {
+  max-width: min(640px, 92vw) !important;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+  line-break: strict;
+  text-wrap: balance;
+}
+
+/* [2] こんな方にはおすすめしません — 警告ボックス
+   Tailwindクラスは機能していないため専用スタイルを付与
+   ============================================================ */
+#not-for {
+  background: linear-gradient(135deg, #fff6f5 0%, #ffffff 100%);
+  border: 1px solid #fca5a5;
+  border-left: 6px solid #dc2626;
+  border-radius: 16px;
+  padding: 24px 24px 20px !important;
+  margin: 0 0 32px;
+}
+#not-for h2 {
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  color: #991b1b !important;
+  margin: 0 0 16px !important;
+}
+#not-for .qs-list li {
+  color: #7f1d1d;
+  border-bottom-color: rgba(220,38,38,0.15);
+}
+#not-for .qs-list li::before {
+  content: "✕";
+  color: #dc2626;
+  font-weight: 900;
+}
+
+/* [3] 免責事項・キャンセルポリシー — コンテナスタイル
+   ============================================================ */
+#disclaimer {
+  background: #f8faff;
+  border: 1px solid rgba(11,31,58,0.10);
+  border-top: 4px solid #0b1f3a;
+  border-radius: 0 0 16px 16px;
+  padding: 24px 24px 20px !important;
+  margin: 0 0 32px;
+}
+#disclaimer h2.smallish {
+  color: #0b1f3a !important;
+  font-size: 17px !important;
+  font-weight: 800 !important;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(201,168,76,0.30);
+  margin-bottom: 16px !important;
+}
+
+/* [4] notice ボックス — 視認性向上
+   ============================================================ */
+.notice {
+  border: 1px solid rgba(201,168,76,0.35) !important;
+  border-left: 5px solid #c9a84c !important;
+  border-radius: 12px;
+  padding: 18px 20px !important;
+  background: #fffdf0 !important;
+  font-size: 12.5px;
+  line-height: 1.82;
+  color: #3a2e00;
+  margin: 16px 0 28px;
+}
+.notice strong {
+  color: #7a5500;
+  font-weight: 800;
+}
+
+/* [5] stats — カード間仕切り & 高さ均等化
+   ============================================================ */
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.stat-num {
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 900;
+  line-height: 1.1;
+  color: #0b1f3a;
+  font-family: 'Noto Serif JP', 'Shippori Mincho B1', serif;
+}
+.stat-unit {
+  font-size: 13px;
+  color: #6b7a99;
+  margin-top: 2px;
+}
+.stat-label {
+  font-size: 12px;
+  color: #6b7a99;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* [6] セクション見出し余白の統一 & スムーススクロール
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+.sh-title, h2.sh-title {
+  margin-top: 0 !important;
+}
+
+/* [7] emp-card（悩みカード）ホバー強化
+   ============================================================ */
+.emp-card {
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.emp-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(11,31,58,0.12);
+}
+
+/* ============================================================
+   Hero 視認性・コピー強化パッチ — 2026-04-14b
+   ============================================================ */
+
+/* hero-pill（バッジ）の視認性強化 */
+.hero-pill {
+  text-shadow: 0 2px 16px rgba(0,0,0,0.85) !important;
+  background: rgba(6,18,46,0.72) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1.5px solid rgba(201,168,76,0.65) !important;
+  padding: 6px 16px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  color: rgba(232,203,122,1) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
+
+/* hero-h1-top（H1上のサブライン）の視認性強化 */
+.hero-h1-top {
+  text-shadow: 0 2px 20px rgba(0,0,0,0.95), 0 0 40px rgba(0,0,0,0.70) !important;
+  display: block !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* H1 メインタイトルのシャドウ強化 */
+.hero-h1-main, h1.hero-h1-main {
+  text-shadow: 0 4px 30px rgba(0,0,0,0.70), 0 1px 10px rgba(0,0,0,0.90) !important;
+}
+
+/* hero-lead（ボディコピー）の視認性強化 */
+.hero-lead {
+  text-shadow: 0 2px 18px rgba(0,0,0,0.80) !important;
+  background: rgba(4,12,32,0.42) !important;
+  backdrop-filter: blur(4px) !important;
+  border-radius: 10px !important;
+  padding: 14px 18px !important;
+}
+
+/* hero-disc（免責小文字）の視認性 */
+.hero-disc, .hero-sub-note {
+  text-shadow: 0 1px 10px rgba(0,0,0,0.80) !important;
+}
+
+/* hero-body: 全体のコンテンツエリア */
+.hero-body {
+  position: relative !important;
+  z-index: 3 !important;
+}
+
+/* デスクトップでhero-lead最大幅を拡大 */
+@media (min-width: 768px) {
+  .hero-lead {
+    max-width: min(680px, 90vw) !important;
+  }
+  .hero-pill {
+    font-size: 13px !important;
+  }
+}
+
+
+/* ============================================================
+   Wise型クリーンデザイン全面改修 — 2026-04-14c
+   ============================================================ */
+
+/* ── 1. .dodont スコープカード全修正 ─────────────────── */
+.dodont {
+  color: #ffffff !important;
+  padding: 36px 32px !important;
+  border-radius: 20px !important;
+}
+.dodont-title {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: rgb(226,196,114) !important;
+  margin-bottom: 20px !important;
+  letter-spacing: .03em !important;
+}
+.dodont-cols {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 24px !important;
+}
+.dodont-col h4 {
+  color: rgba(255,255,255,0.85) !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 14px !important;
+  padding-bottom: 8px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+}
+.dodont-col.do h4 {
+  color: rgba(110,231,183,0.95) !important;
+}
+.dodont-col.dont h4 {
+  color: rgba(252,165,165,0.90) !important;
+}
+.dodont-col li {
+  color: rgba(255,255,255,0.92) !important;
+  font-size: 14px !important;
+  line-height: 1.75 !important;
+  padding: 4px 0 4px 24px !important;
+  position: relative !important;
+  list-style: none !important;
+}
+.dodont-col.do li::before {
+  content: "✓" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #4ade80 !important;
+  font-weight: 900 !important;
+}
+.dodont-col.dont li::before {
+  content: "✗" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #f87171 !important;
+  font-weight: 900 !important;
+}
+@media (max-width: 600px) {
+  .dodont-cols {
+    grid-template-columns: 1fr !important;
+  }
+  .dodont {
+    padding: 24px 20px !important;
+  }
+}
+
+/* ── 2. セクションヘッダー統一（sh, sh-title） ────────── */
+.sh {
+  margin-bottom: 28px !important;
+}
+.sh-title {
+  font-size: clamp(22px, 3.5vw, 32px) !important;
+  font-weight: 800 !important;
+  color: #0a1c35 !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.01em !important;
+}
+.sh-eye {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  color: #b8973e !important;
+  margin-bottom: 8px !important;
+  display: block !important;
+}
+
+/* ── 3. stats カード強化 ──────────────────────────────── */
+.stats {
+  border: 1px solid rgba(184,151,62,0.35) !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  box-shadow: 0 2px 16px rgba(10,28,53,0.06) !important;
+}
+.stat {
+  padding: 24px 20px !important;
+  border-right: 1px solid rgba(184,151,62,0.18) !important;
+  text-align: center !important;
+  background: #fff !important;
+}
+.stat:last-child { border-right: none !important; }
+.stat-num {
+  font-size: clamp(36px, 6vw, 52px) !important;
+  font-weight: 900 !important;
+  color: #0a1c35 !important;
+  line-height: 1.0 !important;
+  display: block !important;
+}
+.stat-unit {
+  font-size: 14px !important;
+  color: #b8973e !important;
+  font-weight: 700 !important;
+  margin-left: 2px !important;
+}
+.stat-label {
+  font-size: 12px !important;
+  color: #6b7a99 !important;
+  margin-top: 6px !important;
+  display: block !important;
+  line-height: 1.4 !important;
+}
+
+/* ── 4. emp-card (悩みカード) スタイル ───────────────── */
+.emp-card {
+  border-radius: 14px !important;
+  border: 1px solid rgba(10,28,53,0.08) !important;
+  background: #fff !important;
+  padding: 20px 18px !important;
+  box-shadow: 0 2px 12px rgba(10,28,53,0.06) !important;
+}
+.emp-ico {
+  font-size: 24px !important;
+  margin-bottom: 10px !important;
+}
+.emp-txt {
+  font-size: 14px !important;
+  color: #0a1c35 !important;
+  font-weight: 600 !important;
+  line-height: 1.55 !important;
+}
+
+/* ── 5. trust-bar アイテム強化 ────────────────────────── */
+.trust-bar, .glp-trust-bar {
+  background: #0a1c35 !important;
+  padding: 14px 24px !important;
+}
+.ti, .glp-trust-item {
+  color: rgba(255,255,255,0.88) !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: .02em !important;
+}
+.ti-ic {
+  background: rgba(184,151,62,0.20) !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+}
+
+/* ── 6. page-wrapの最大幅・余白統一 ─────────────────── */
+.page-wrap {
+  max-width: 860px !important;
+  margin: 0 auto !important;
+  padding: 0 20px !important;
+}
+
+/* ── 7. section間の余白を統一 ────────────────────────── */
+section.container, #why-georgia, #service, #pricing, #faq, #other-services, #founder-story, #about-georgia {
+  padding-top: 56px !important;
+  padding-bottom: 56px !important;
+}
+
+/* ── 8. CTAボタン強化 ─────────────────────────────────── */
+.btn-gold {
+  background: linear-gradient(135deg, #e8cb7a 0%, #c9a84c 60%, #a07830 100%) !important;
+  color: #0a1c35 !important;
+  font-weight: 900 !important;
+  border-radius: 999px !important;
+  padding: 14px 28px !important;
+  box-shadow: 0 6px 20px rgba(201,168,76,0.40) !important;
+  transition: all 0.2s !important;
+  letter-spacing: .02em !important;
+  font-size: 15px !important;
+}
+.btn-gold:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 28px rgba(201,168,76,0.55) !important;
+}
+.btn-ghost {
+  border: 2px solid rgba(255,255,255,0.55) !important;
+  background: rgba(255,255,255,0.08) !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  padding: 14px 28px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  backdrop-filter: blur(4px) !important;
+}
+
+
+/* ============================================================
+   プレミアムデザイン全面改修 — 2026-04-15a
+   ============================================================ */
+
+/* ── 1. 重要事項アコーディオン（notice-details） ──────────── */
+.notice-details {
+  margin: 16px 0 24px !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  border: 1.5px solid rgba(201,168,76,0.35) !important;
+}
+.notice-summary {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 14px 18px !important;
+  background: #fffdf0 !important;
+  cursor: pointer !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #7a5500 !important;
+  list-style: none !important;
+  user-select: none !important;
+  border-left: 5px solid #c9a84c !important;
+  transition: background 0.15s !important;
+}
+.notice-summary::-webkit-details-marker { display: none !important; }
+.notice-summary::after {
+  content: "▼" !important;
+  margin-left: auto !important;
+  font-size: 10px !important;
+  opacity: 0.6 !important;
+  transition: transform 0.2s !important;
+}
+.notice-details[open] .notice-summary::after {
+  transform: rotate(180deg) !important;
+}
+.notice-summary:hover { background: #fff9e6 !important; }
+.notice-details[open] .notice-summary {
+  border-bottom: 1px solid rgba(201,168,76,0.25) !important;
+}
+.notice-inner {
+  background: #fffdf0 !important;
+  padding: 16px 18px 18px 23px !important;
+  font-size: 12px !important;
+  line-height: 1.80 !important;
+  color: #5a4800 !important;
+  border-left: 5px solid #c9a84c !important;
+}
+
+/* ── 2. ダイヤモンド区切り装飾を極小化（プレミアム感） ──── */
+.sec-ornament {
+  height: 1px !important;
+  background: rgba(10,28,53,0.08) !important;
+  margin: 40px auto !important;
+  max-width: 120px !important;
+  border-radius: 999px !important;
+}
+.sec-ornament::before, .sec-ornament::after {
+  display: none !important;
+}
+/* ダイヤモンド自体を非表示に */
+.sec-ornament > * {
+  display: none !important;
+}
+
+/* ── 3. 料金ダークカード内のフェードテキスト修正 ──────────── */
+/* 料金カードの説明文・別途費用テキストを白にする */
+.sh-band p, .sh-band .note, .sh-band .meta,
+[class*="price-note"], .price-meta, .price-sub,
+.plan-note, .plan-sub {
+  color: rgba(255,255,255,0.85) !important;
+}
+/* 料金カード内すべての薄いテキストを修正 */
+section#pricing [style*="color:#6"], 
+section#pricing [style*="color: #6"],
+section#pricing [style*="color: rgba"],
+section#pricing small,
+section#pricing .note {
+  color: rgba(255,255,255,0.82) !important;
+}
+
+/* ── 4. ヒーロー免責文（hero-disc）を極小化 ─────────────── */
+.hero-disc {
+  font-size: 10.5px !important;
+  opacity: 0.60 !important;
+  line-height: 1.6 !important;
+  max-height: 3.2em !important;
+  overflow: hidden !important;
+  margin: 0 0 16px !important;
+  padding: 8px 12px !important;
+  background: rgba(0,0,0,0.20) !important;
+  border-radius: 6px !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6) !important;
+}
+
+/* ── 5. 全体の最大幅・センタリング統一（Wise型） ────────── */
+.glp-inner, .page-wrap {
+  max-width: 880px !important;
+}
+
+/* ── 6. section間の余白をコンパクトに ─────────────────────── */
+section.container {
+  padding-top: 48px !important;
+  padding-bottom: 48px !important;
+}
+
+/* ── 7. 比較表のスタイリング強化 ────────────────────────────── */
+.why-table th {
+  background: #0a1c35 !important;
+  color: #fff !important;
+  font-size: 13px !important;
+  padding: 12px 16px !important;
+}
+.why-table td {
+  font-size: 13px !important;
+  padding: 11px 16px !important;
+  color: #0a1c35 !important;
+}
+.why-table tr:hover td { background: rgba(10,28,53,0.03) !important; }
+
+/* ── 8. ベネフィットカード（emp-card）洗練 ─────────────────── */
+.emp-grid {
+  gap: 16px !important;
+}
+.emp-card {
+  border-radius: 16px !important;
+  padding: 22px 20px !important;
+  box-shadow: 0 1px 8px rgba(10,28,53,0.07), 0 4px 16px rgba(10,28,53,0.04) !important;
+}
+
+/* ── 9. フッターリンクを明るく ──────────────────────────────── */
+.site-foot a {
+  color: rgba(232,203,122,0.90) !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+.site-foot {
+  font-size: 11.5px !important;
+  line-height: 1.90 !important;
+}
+
+/* ── 10. 固定CTAバーを洗練 ─────────────────────────────────── */
+.fixed-cta {
+  background: rgba(255,255,255,0.98) !important;
+  border-top: 1px solid rgba(10,28,53,0.10) !important;
+  box-shadow: 0 -4px 20px rgba(10,28,53,0.08) !important;
+}
+
+
+/* ============================================================
+   100点仕上げ — 2026-04-15b
+   ============================================================ */
+
+/* 1. ヒーロー サブCTAを白輪郭に（黒→白） */
+.btn-ghost, a.btn-ghost {
+  background: transparent !important;
+  border: 2px solid rgba(255,255,255,0.75) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(4px) !important;
+  border-radius: 999px !important;
+  padding: 14px 28px !important;
+  font-weight: 700 !important;
+  font-size: 15px !important;
+  transition: all 0.2s !important;
+}
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.15) !important;
+  border-color: rgba(255,255,255,0.95) !important;
+}
+
+/* 2. hero-disc を完全に隠す */
+.hero-disc {
+  display: none !important;
+}
+
+/* 3. results-row（社会的証明） */
+.results-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: rgba(10,28,53,0.10);
+  border-radius: 16px;
+  overflow: hidden;
+  margin: 20px 0 32px;
+  box-shadow: 0 2px 16px rgba(10,28,53,0.07);
+}
+.result-item {
+  background: #ffffff;
+  padding: 20px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.result-num {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .10em;
+  color: #b8973e;
+  text-transform: uppercase;
+}
+.result-val {
+  font-size: clamp(18px, 2.5vw, 26px);
+  font-weight: 900;
+  color: #0a1c35;
+  line-height: 1.1;
+  font-family: 'Noto Serif JP', serif;
+}
+.result-label {
+  font-size: 11px;
+  color: #6b7a99;
+  line-height: 1.5;
+  margin-top: 2px;
+}
+@media (max-width: 600px) {
+  .results-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 380px) {
+  .results-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 4. 料金カード内のぼやけたテキストを完全修正 */
+.sh-band, .sh-band * {
+  color: rgba(255,255,255,0.95) !important;
+}
+.sh-band .note, .sh-band small, .sh-band .muted {
+  color: rgba(255,255,255,0.70) !important;
+}
+
+/* 5. ヒーロー本文に視覚的強調を追加 */
+.hero-lead {
+  background: none !important;
+  backdrop-filter: none !important;
+  padding: 0 !important;
+  max-width: min(620px, 92vw) !important;
+}
+.hero-lead br + text,
+.hero-lead {
+  line-height: 2.0 !important;
+}
+
+/* 6. セクション見出しをより印象的に */
+.sh-title {
+  font-size: clamp(24px, 3.8vw, 34px) !important;
+  letter-spacing: -.02em !important;
+}
+
+/* 7. 料金表の視認性強化 */
+.price-promo {
+  border-left: 5px solid #c9a84c !important;
+  border-radius: 0 16px 16px 0 !important;
+}
+
+/* 8. フッターのemailリンク（難読化表示を改善） */
+.site-foot small {
+  max-width: min(900px, 95%) !important;
+}
+
+/* 9. 全体のスムーズスクロール */
+html { scroll-behavior: smooth !important; }
+
+/* 10. フォーカス輪郭をゴールドに */
+:focus-visible { outline-color: #c9a84c !important; }
+
+/* ============================================================
+   100点化 一括CSS修正 v20260417a
+   全セクション統一・プレミアム仕上げ
+============================================================ */
+
+/* === 1. セクション区切り線をスタイリッシュに === */
+.sec-ornament {
+  height: auto !important;
+  background: transparent !important;
+  border: none !important;
+  margin: 56px auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0 !important;
+  max-width: 920px !important;
+  padding: 0 24px !important;
+}
+.sec-ornament::before,
+.sec-ornament::after {
+  content: "" !important;
+  display: block !important;
+  flex: 1 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,0.25), transparent) !important;
+}
+.sec-ornament-diamond {
+  display: none !important;
+}
+
+/* === 2. stats（指標バー）プレミアム化 === */
+.stats {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  margin: 48px 0 40px !important;
+  box-shadow: 0 4px 24px rgba(10,28,53,0.10) !important;
+}
+.stat {
+  padding: 22px 16px !important;
+  background: #fff !important;
+}
+.stat-n {
+  font-family: 'Cormorant Garamond', serif !important;
+  font-size: clamp(28px, 4vw, 40px) !important;
+  font-weight: 700 !important;
+  color: #0a1c35 !important;
+  letter-spacing: -.02em !important;
+  line-height: 1 !important;
+  display: block !important;
+  margin-bottom: 6px !important;
+}
+.stat-l {
+  font-size: 11px !important;
+  color: #6b7a99 !important;
+  line-height: 1.5 !important;
+  font-weight: 400 !important;
+}
+
+/* === 3. セクション見出し（.sh）一貫性強化 === */
+.sh {
+  margin: 0 0 40px !important;
+  padding-bottom: 0 !important;
+}
+.sh-eye {
+  font-size: 11px !important;
+  letter-spacing: .2em !important;
+  color: #c9a84c !important;
+  text-transform: uppercase !important;
+  display: block !important;
+  margin-bottom: 10px !important;
+}
+.sh-line {
+  display: none !important;
+}
+.sh-title {
+  font-size: clamp(22px, 3.2vw, 30px) !important;
+  margin-bottom: 12px !important;
+  line-height: 1.35 !important;
+}
+.sh-sub {
+  font-size: 14px !important;
+  color: #6b7a99 !important;
+  line-height: 1.75 !important;
+  max-width: 600px !important;
+}
+
+/* === 4. why-card ホバー効果 === */
+.why-card:hover {
+  box-shadow: 0 8px 32px rgba(10,28,53,0.13) !important;
+  transform: translateY(-2px) !important;
+}
+.why-card {
+  transition: box-shadow .2s, transform .2s !important;
+}
+.why-icon {
+  font-size: 28px !important;
+  margin-bottom: 12px !important;
+  display: block !important;
+}
+.why-title {
+  font-weight: 700 !important;
+  color: #0a1c35 !important;
+  margin-bottom: 8px !important;
+  font-size: 15px !important;
+}
+.why-text {
+  font-size: 13.5px !important;
+  color: #4a5a78 !important;
+  line-height: 1.75 !important;
+}
+
+/* === 5. レビューグリッドを3列に（PC） === */
+.review-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+  gap: 20px !important;
+  margin: 0 0 8px !important;
+}
+.review-card {
+  border-top: 3px solid #c9a84c !important;
+  padding: 24px 22px 20px !important;
+}
+.review-stars {
+  letter-spacing: 3px !important;
+  font-size: 14px !important;
+  margin-bottom: 12px !important;
+}
+.review-text {
+  font-size: 13.5px !important;
+  line-height: 1.85 !important;
+  margin-bottom: 16px !important;
+}
+.review-name {
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: #0a1c35 !important;
+  display: block !important;
+}
+.review-tag {
+  font-size: 11px !important;
+  color: #8a9ab8 !important;
+  display: block !important;
+  margin-top: 2px !important;
+}
+
+/* === 6. big-cta セクション強化 === */
+.big-cta {
+  border-radius: 24px !important;
+  padding: 72px 40px !important;
+  margin: 0 0 80px !important;
+}
+.big-cta h2 {
+  font-size: clamp(22px, 3.5vw, 32px) !important;
+  margin-bottom: 16px !important;
+  letter-spacing: -.01em !important;
+}
+.big-cta p {
+  font-size: 15px !important;
+  color: rgba(255,255,255,0.65) !important;
+  margin-bottom: 40px !important;
+}
+
+/* === 7. band（機能帯）スタイル強化 === */
+.band {
+  padding: 32px 32px 28px !important;
+  margin: 0 0 0 !important;
+}
+.band-title {
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 16px !important;
+  font-family: 'Shippori Mincho B1', serif !important;
+}
+.band-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 0 12px !important;
+}
+.band-list li {
+  color: rgba(255,255,255,0.80) !important;
+  font-size: 13.5px !important;
+  padding: 6px 0 6px 20px !important;
+  position: relative !important;
+  line-height: 1.6 !important;
+}
+.band-list li::before {
+  content: "✓" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #c9a84c !important;
+  font-weight: 700 !important;
+}
+.band-note {
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.40) !important;
+  margin: 0 !important;
+}
+
+/* === 8. FAQアコーディオン強化 === */
+.faq-item {
+  margin-bottom: 10px !important;
+  transition: box-shadow .2s !important;
+}
+.faq-item:hover {
+  box-shadow: 0 4px 20px rgba(10,28,53,0.10) !important;
+}
+.faq-q {
+  font-size: 14.5px !important;
+  font-weight: 700 !important;
+  padding: 18px 20px !important;
+}
+.faq-a {
+  font-size: 13.5px !important;
+  line-height: 1.85 !important;
+  color: #4a5a78 !important;
+}
+
+/* === 9. emp-card（共感カード）微調整 === */
+.emp-card {
+  padding: 20px 18px !important;
+}
+.emp-ico {
+  font-size: 22px !important;
+  flex-shrink: 0 !important;
+}
+.emp-tx {
+  font-size: 13.5px !important;
+  color: #3a4a68 !important;
+  line-height: 1.7 !important;
+}
+
+/* === 10. 比較表のレスポンシブ対応 === */
+.cmp-wrap {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+.cmp {
+  min-width: 600px !important;
+}
+
+/* === 11. steps（フロー）プレミアム化 === */
+.steps {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0 !important;
+  margin: 0 0 0 !important;
+  position: relative !important;
+}
+.steps::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 24px !important;
+  left: 12.5% !important;
+  right: 12.5% !important;
+  height: 2px !important;
+  background: linear-gradient(90deg, #c9a84c 0%, rgba(201,168,76,0.3) 100%) !important;
+  z-index: 0 !important;
+}
+.step-n {
+  width: 44px !important;
+  height: 44px !important;
+  background: #0a1c35 !important;
+  color: #c9a84c !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 900 !important;
+  font-size: 16px !important;
+  margin: 0 auto 12px !important;
+  position: relative !important;
+  z-index: 1 !important;
+  border: 2px solid #c9a84c !important;
+  font-family: 'Cormorant Garamond', serif !important;
+}
+.step-t {
+  font-size: 12px !important;
+  color: #0a1c35 !important;
+  font-weight: 700 !important;
+  line-height: 1.5 !important;
+  text-align: center !important;
+}
+
+/* === 12. #not-for セクション強化（すでにある可能性あり） === */
+#not-for ul li {
+  font-size: 14px !important;
+  line-height: 1.75 !important;
+}
+
+/* === 13. ページ全体のタイポグラフィ微調整 === */
+body {
+  -webkit-text-size-adjust: 100% !important;
+  text-rendering: optimizeLegibility !important;
+}
+
+/* === 14. モバイル・タブレット完全対応 === */
+
+/* タブレット（〜768px） */
+@media (max-width: 768px) {
+  .sec-ornament { margin: 40px auto !important; }
+  .stats {
+    margin: 32px 0 28px !important;
+    grid-template-columns: repeat(3, 1fr) !important; /* 固定pxをfrに変換 */
+  }
+  .big-cta { padding: 52px 24px !important; margin: 0 0 56px !important; }
+  .review-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .results-row { grid-template-columns: repeat(2, 1fr) !important; } /* 4列→2列 */
+  .steps { grid-template-columns: repeat(2, 1fr) !important; }
+  .steps::before { display: none !important; }
+  .why-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .dodont-cols { grid-template-columns: 1fr !important; gap: 16px !important; } /* 固定幅grid→1列 */
+  .sh-title { font-size: clamp(20px, 5vw, 26px) !important; }
+  .page-wrap { padding: 0 16px 60px !important; }
+  /* セクション見出しの余白調整 */
+  .sh { margin-bottom: 24px !important; }
+}
+
+/* スマートフォン（〜480px） */
+@media (max-width: 480px) {
+  .steps { grid-template-columns: repeat(2, 1fr) !important; }
+  .stat-n { font-size: clamp(22px, 6.5vw, 32px) !important; }
+  .stats { grid-template-columns: repeat(3, 1fr) !important; } /* 3列維持・縮小 */
+  .results-row { grid-template-columns: repeat(2, 1fr) !important; }
+  /* CTAボタンを縦並びに */
+  .hero-cta-wrap, [class*="cta-row"], [class*="btn-row"] {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  /* ページ左右余白を詰める */
+  .page-wrap { padding: 0 12px 72px !important; }
+  /* trust-barのアイテム間隔 */
+  .trust-bar { gap: 8px 12px !important; }
+}
+
+/* 極小スマートフォン（〜375px） */
+@media (max-width: 375px) {
+  .stat-n { font-size: clamp(18px, 5.5vw, 26px) !important; }
+  .stats { grid-template-columns: 1fr 1fr 1fr !important; }
+  h1 { font-size: clamp(26px, 8vw, 36px) !important; }
+  .page-wrap { padding: 0 10px 72px !important; }
+}
+
+/* ============================================================
+   写真セクション改善 — 2026-04-17f
+   高さ130px→200pxに拡大、church写真クロップ位置修正
+============================================================ */
+
+/* 写真の高さを拡大（130px→200px） */
+.country-photos img {
+  height: 200px !important;
+}
+
+/* georgia-church.jpg：水面でなく教会が見えるようにクロップ位置を上へ */
+.country-photos img:first-child {
+  object-position: 50% 25% !important;
+}
+
+/* onerrorフォールバックを修正（tbilisi-hero.jpg.jpg → 存在する画像に変更済み） */
+/* ← HTML側で対応 */
+
+/* モバイル対応（480px以下）：少し低く */
+@media (max-width: 480px) {
+  .country-photos img {
+    height: 160px !important;
+  }
+}
