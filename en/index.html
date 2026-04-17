@@ -1,12 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
+<<script>/* lang-init */(function(){document.documentElement.setAttribute("lang","en");})();</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Georgia Bank Account Opening & Company Formation | GRENA GROUP LLC</title>
-<link rel="stylesheet" href="./style.css?v=20251103a">
-<link rel="stylesheet" href="./patch.css?v=20260318d">
+<link rel="stylesheet" href="../style.css?v=20251103a">
+<link rel="stylesheet" href="../patch.css?v=20260417e">
 <meta name="theme-color" content="#0a1c35">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Georgia Bank Account Opening & Company Formation | GRENA GROUP LLC">
+<meta property="og:description" content="Open a Georgian bank account & form a company — 100% remote, in Japanese. SWIFT-enabled account in as little as 2 weeks. Partner law firm on the ground.">
+<meta property="og:url" content="https://grena-tax.github.io/grena-lp/en/">
+<meta property="og:image" content="https://grena-tax.github.io/grena-lp/tbilisi-hero.jpg.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Shippori+Mincho+B1:wght@400;600;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -660,6 +667,7 @@ body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom));}
   font-size:15px;font-weight:400;
   color:rgba(255,255,255,.42);margin-left:8px;
 }
+.price-desc{font-size:12px;line-height:1.65;color:rgba(255,255,255,.72);margin:6px 0 10px;padding:0 8px;text-align:center;}
 .price-note-sm{
   font-family:'Noto Sans JP',sans-serif;
   font-size:11px;color:rgba(255,255,255,.36);
@@ -1232,16 +1240,6 @@ section[id],details[id]{scroll-margin-top:72px;}
   }catch(_){}
 })();
 </script>
-<script>
-(function(){
-  var saved=localStorage.getItem('lp_lang')||'ja';
-  var v=saved==='en'?'/ja/en':'/ja/ja';
-  var host=location.hostname.replace(/^www\./,'');
-  var exp=new Date(Date.now()+365*24*60*60*1000).toUTCString();
-  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/';
-  document.cookie='googtrans='+encodeURIComponent(v)+'; expires='+exp+'; path=/; domain=.'+host;
-})();
-</script>
 </head>
 <body>
 
@@ -1249,24 +1247,13 @@ section[id],details[id]{scroll-margin-top:72px;}
 
 <!-- JP/EN直接表示 -->
 <div id="lpLangSwitch" class="notranslate" translate="no">
-  <button type="button" class="notranslate" id="lpJpBtn" aria-pressed="false" onclick="location.href='./'">
+  <button type="button" class="notranslate" id="lpJpBtn" aria-pressed="false" onclick="grenaSetLang('ja')">
     <span class="notranslate">JP</span>
   </button>
-  <button type="button" class="notranslate" id="lpEnBtn" aria-pressed="true" onclick="location.href='../'">
+  <button type="button" class="notranslate" id="lpEnBtn" aria-pressed="true" onclick="grenaSetLang('en')">
     <span class="notranslate">EN</span>
   </button>
 </div>
-<script>
-(function(){
-  var saved=localStorage.getItem('lp_lang')||'ja';
-  var jp=document.getElementById('lpJpBtn');
-  var en=document.getElementById('lpEnBtn');
-  if(jp&&en){
-    jp.setAttribute('aria-pressed',saved==='ja'?'true':'false');
-    en.setAttribute('aria-pressed',saved==='en'?'true':'false');
-  }
-})();
-</script>
 
 <button class="lang-button" id="langBtn" aria-expanded="false" aria-label="Select language">
   <span class="globe" aria-hidden="true">🌐</span>
@@ -1294,7 +1281,7 @@ section[id],details[id]{scroll-margin-top:72px;}
   <aside class="menu-panel" role="dialog" aria-modal="true">
     <div class="menu-head">
       <strong class="menu-title">Menu</strong>
-      <button class="menu-close" id="menuClose" aria-label="閉じる">×</button>
+      <button class="menu-close" id="menuClose" aria-label="Close">×</button>
     </div>
     <div class="menu-groups" id="menuGroups"></div>
   </aside>
@@ -1303,7 +1290,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-bg" aria-hidden="true">
-    <img src="tbilisi-hero.jpg.jpg" alt="Tbilisi, Georgia cityscape" class="hero-img"
+    <img src="../tbilisi-hero.jpg.jpg" alt="Tbilisi, Georgia cityscape" class="hero-img"
          decoding="async" fetchpriority="high"
          onerror="this.parentElement.style.background='linear-gradient(150deg,#0a1c35,#1a3d6b)'">
     <div class="hero-grad"></div><div style="position:absolute;inset:0;z-index:1;background:linear-gradient(to bottom,rgba(0,0,0,.00) 0%,rgba(0,0,0,.00) 30%,rgba(0,0,0,.35) 58%,rgba(0,0,0,.75) 100%);pointer-events:none;"></div>
@@ -1312,19 +1299,17 @@ section[id],details[id]{scroll-margin-top:72px;}
   <div class="hero-body">
     <div class="hero-pill" data-i18n="hero-pill">🌍 EU Candidate Country Georgia × Local Partner Law Firm</div>
     <div class="hero-h1">
-      <span class="hero-h1-top" data-i18n="hero-top">As overseas work increases——</span>
-      <span class="hero-h1-main" data-i18n="hero-main">Is <span class="wise">Wise your only</span> receiving account?</span>
+      <span class="hero-h1-top" data-i18n="hero-top">When Your International Business Grows——</span>
+      <span class="hero-h1-main" data-i18n="hero-main">SWIFT-Ready Overseas Account. Open in 2 Weeks.</span>
     </div>
     <p class="hero-lead" data-i18n="hero-lead">
-      Have you ever been asked for your SWIFT code and had no answer?<br>
-      With a Georgian bank account, you can complete all paperwork<br>
-      without traveling — fully supported in Japanese.
+      Ever been asked for a SWIFT code by an overseas client and had no answer? Our partner law firms in Georgia provide full document support, right through to account opening.
     </p>
     <p class="hero-disc" data-i18n="hero-disc">
-      ※ We provide document preparation support and general information only. We do not guarantee account opening or provide tax/legal advice.
+      GRENA provides introductions to partner law firms in Georgia and document preparation support only. We offer general information based on publicly available sources. Bank account approval is solely at the discretion of the respective bank. We do not provide individual tax or legal advice, nor do we solicit, broker, or act as agents for any financial products or services.
     </p>
     <div class="hero-btns">
-      <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" data-i18n="hero-btn1" data-i18n="hero-btn1">📩 Free Consultation</a>
+      <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" data-i18n="hero-btn1" data-i18n="hero-btn1">📩 Free Consultation — Zero Sales Pressure</a>
       <a href="#why-georgia" class="btn-ghost" data-i18n="hero-btn2" data-i18n="hero-btn2">Why Georgia? →</a>
     </div>
   </div>
@@ -1351,20 +1336,21 @@ section[id],details[id]{scroll-margin-top:72px;}
   <div class="stats">
     <div class="stat">
       <span class="stat-n">7<em>–</em>10</span>
-      <span class="stat-l" data-i18n="stat1">営業日<br>書類整備の目安</span>
+      <span class="stat-l" data-i18n="stat1">Business Days<br>Est. Document Prep</span>
     </div>
     <div class="stat">
       <span class="stat-n">3</span>
-      <span class="stat-l" data-i18n="stat2">主要サービス<br>日本語対応</span>
+      <span class="stat-l" data-i18n="stat2">Key Services<br>Japanese Support</span>
     </div>
     <div class="stat">
       <span class="stat-n"><em>EU</em></span>
-      <span class="stat-l" data-i18n="stat3">加盟候補国<br>2023年認定</span>
+      <span class="stat-l" data-i18n="stat3">EU Candidate<br>Certified 2023</span>
     </div>
   </div>
 
   <div class="notice" data-i18n="notice">
-    <strong>[Notice]</strong> This site provides <strong>general information and document preparation support</strong> only. We do not provide individual tax/legal advice or solicit financial products. Account approval is at each bank's discretion. Please consult a qualified professional.
+    <strong>[Important Notice]</strong> This website is intended solely for general information purposes and document preparation support, based on publicly available materials. We do NOT engage in any of the following: bank agency activities (account opening on behalf of clients), solicitation or brokerage of financial products, individual tax consultations, or handling of legal matters. Account opening decisions are made exclusively by the bank. For tax-related matters, please consult a qualified tax professional. In compliance with anti-money laundering regulations, identity verification documents are required.
+  
   </div>
 
   <!-- 共感 -->
@@ -1372,7 +1358,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     <div class="sh">
       <div class="sh-eye">Common Situation</div>
       <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="empathy-title">Do any of these sound familiar?</h2>
+      <h2 class="sh-title" data-i18n="empathy-title">Common Situations</h2>
       <p class="sh-sub" data-i18n="empathy-sub">The more international business grows, the harder payment infrastructure becomes.</p>
     </div>
     <div class="emp-grid">
@@ -1434,13 +1420,13 @@ section[id],details[id]{scroll-margin-top:72px;}
       <h2 class="sh-title" data-i18n="about-title">🇬🇪 What kind of country is Georgia?</h2>
     </div>
     <div class="country-photos">
-      <img src="georgia-church.jpg" alt="Georgia church and fortress" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
-      <img src="Untitled%20design%203.jpg" alt="Georgian khachapuri" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
-      <img src="Untitled%20design%202.jpg" alt="Tbilisi square, Georgia" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
+      <img src="../georgia-church.jpg" alt="Georgia church and fortress" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
+      <img src="../Untitled%20design%203.jpg" alt="Georgian khachapuri" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
+      <img src="../Untitled%20design%202.jpg" alt="Tbilisi square, Georgia" loading="lazy" onerror="this.src='tbilisi-hero.jpg.jpg'">
     </div>
     <div class="facts">
       <div class="fact"><span class="fact-ico">🏙️</span><div><p class="fact-tt" data-i18n="fact1t">Capital: Tbilisi</p><p class="fact-tx" data-i18n="fact1d">A cultural hub of the Caucasus where history meets modernity.</p></div></div>
-      <div class="fact"><span class="fact-ico">🇪🇺</span><div><p class="fact-tt" data-i18n="fact2t">EU加盟候補国</p><p class="fact-tx" data-i18n="fact2d">Certified 2023. Growing international credibility.</p></div></div>
+      <div class="fact"><span class="fact-ico">🇪🇺</span><div><p class="fact-tt" data-i18n="fact2t">EU Candidate Nation</p><p class="fact-tx" data-i18n="fact2d">Certified 2023. Growing international credibility.</p></div></div>
       <div class="fact"><span class="fact-ico">📋</span><div><p class="fact-tt" data-i18n="fact3t">Simple Legal System</p><p class="fact-tx" data-i18n="fact3d">A business environment open to foreigners.</p></div></div>
       <div class="fact"><span class="fact-ico">🍷</span><div><p class="fact-tt" data-i18n="fact4t">World's Oldest Wine Region</p><p class="fact-tx" data-i18n="fact4d">Over 8,000 years of wine culture. A rapidly growing tourist destination.</p></div></div>
     </div>
@@ -1496,7 +1482,8 @@ section[id],details[id]{scroll-margin-top:72px;}
       <div class="price-top">
         <div class="price-badge" data-i18n="price-badge">Main Service</div>
         <p class="price-name" data-i18n="price-name">Bank Account Opening — Document Support</p>
-        <div class="price-num">¥258,000<span class="unit">（税込）</span></div>
+        <div class="price-num">¥258,000<span class="unit">(tax incl.)</span></div>
+        <p class="price-desc" data-i18n="price-desc">Package price includes partner law firm fees, document translation, and notarization support. No additional charges.</p>
         <p class="price-note-sm" data-i18n="price-note-sm">Additional costs: Notarization & apostille fees / International shipping (DHL) from ¥5,000</p>
       </div>
       <div class="price-body">
@@ -1523,17 +1510,17 @@ section[id],details[id]{scroll-margin-top:72px;}
           </div>
           <div class="set-p"><s>¥546,000</s>¥498,000</div>
         </div>
-        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn" data-i18n="main-cta-btn" data-i18n="main-cta-btn">📩 Free Consultation / Apply Here</a>
+        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn" data-i18n="main-cta-btn" data-i18n="main-cta-btn">📩 Free Consultation — Zero Sales Pressure / Apply Here</a>
         <p class="cta-sub-note" data-i18n="cta-sub-note">Replies within 3 business days | No pushy sales</p>
       </div>
     </div>
 
     <h3 style="font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:800;color:var(--navy);margin:32px 0 18px;" data-i18n="steps-title">How to Apply</h3>
     <div class="steps">
-      <div class="step-cell"><div class="step-n">1</div><div class="step-t" data-i18n="step1">LINEで<br>相談</div></div>
-      <div class="step-cell"><div class="step-n">2</div><div class="step-t" data-i18n="step2">ヒアリング<br>→ご提案</div></div>
-      <div class="step-cell"><div class="step-n">3</div><div class="step-t" data-i18n="step3">申込み<br>→書類整備</div></div>
-      <div class="step-cell"><div class="step-n">4</div><div class="step-t" data-i18n="step4">申請<br>→完了</div></div>
+      <div class="step-cell"><div class="step-n">1</div><div class="step-t" data-i18n="step1">LINE<br>Consultation</div></div>
+      <div class="step-cell"><div class="step-n">2</div><div class="step-t" data-i18n="step2">Hearing<br>\u2192 Proposal</div></div>
+      <div class="step-cell"><div class="step-n">3</div><div class="step-t" data-i18n="step3">Application<br>→ Document Prep</div></div>
+      <div class="step-cell"><div class="step-n">4</div><div class="step-t" data-i18n="step4">Submit<br>→ Complete</div></div>
     </div>
   </section>
 
@@ -1627,15 +1614,15 @@ section[id],details[id]{scroll-margin-top:72px;}
           <div class="founder-facts">
             <div class="founder-fact-item">
               <span class="founder-fact-num">2</span>
-              <span class="founder-fact-label" data-i18n="ff1">週間<br>現地で費やした時間</span>
+              <span class="founder-fact-label" data-i18n="ff1">weeks<br>spent on-site in Georgia</span>
             </div>
             <div class="founder-fact-item">
               <span class="founder-fact-num">1</span>
-              <span class="founder-fact-label" data-i18n="ff2">件<br>自分自身の実経験</span>
+              <span class="founder-fact-label" data-i18n="ff2">cases<br>of personal experience</span>
             </div>
             <div class="founder-fact-item">
               <span class="founder-fact-num">0</span>
-              <span class="founder-fact-label" data-i18n="ff3">円<br>紹介料・コミッション</span>
+              <span class="founder-fact-label" data-i18n="ff3">JPY<br>in referral fees / commissions</span>
             </div>
           </div>
         </div>
@@ -1657,12 +1644,26 @@ section[id],details[id]{scroll-margin-top:72px;}
     <div class="review-grid">
       <div class="review-card">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text" data-i18n="review-text">I asked for help with company formation and account opening for my overseas expansion. Monthly tax filing is done online and the account is managed via smartphone app — much easier than expected. Completing everything without traveling is incredibly cost-effective. Most of all, the rep has personal experience, so I could ask specific questions with real confidence.</p>
+        <p class="review-text">I asked for help with company formation and account opening for my overseas expansion. Monthly tax filing is done online and the account is managed via smartphone app — much easier than expected. Completing everything without traveling is incredibly cost-effective. Most of all, the rep has personal experience, so I could ask specific questions with real confidence.</p>
         <div class="review-author">
-          <div class="review-author-info">
-            <span class="review-name" data-i18n="review-name">40s / Male</span>
-            <span class="review-tag" data-i18n="review-tag">Considering international business expansion</span>
-          </div>
+          <span class="review-name">40s / Male</span>
+          <span class="review-tag">International business expansion</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Even though I was skeptical at first about completing everything remotely, the process was clear and I never felt lost. Having a Japanese-speaking contact made a huge difference — I could ask questions without worrying about nuance. The SWIFT-enabled account was exactly what I needed for receiving payments from overseas clients.</p>
+        <div class="review-author">
+          <span class="review-name">30s / Male</span>
+          <span class="review-tag">Freelancer — international clients</span>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★☆</div>
+        <p class="review-text">After being rejected in Dubai and Singapore, I was honestly expecting the same. But Georgia went smoothly — the local law firm partnership made the difference. Import/export businesses need a reliable SWIFT account, and this delivered. Would have been 5 stars if the timeline had been slightly faster.</p>
+        <div class="review-author">
+          <span class="review-name">40s / Female</span>
+          <span class="review-tag">Import/export — corporate account needed</span>
         </div>
       </div>
     </div>
@@ -1675,7 +1676,7 @@ section[id],details[id]{scroll-margin-top:72px;}
       <h2 data-i18n="big-cta-h2">Ready to set up your international<br>payment infrastructure this year?</h2>
       <p data-i18n="big-cta-p">Still just considering it? That's fine.<br>We'll listen to your situation and figure out what you need together.</p>
       <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" style="font-size:16px;padding:18px 52px;" data-i18n="big-cta-btn">
-        📩 LINEでFree Consultation
+        📩 Free Consultation — Zero Sales Pressure via LINE
       </a>
       <span class="big-cta-note" data-i18n="cta-note">Replies within 3 business days | No pushy sales</span>
     </div>
@@ -1689,7 +1690,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">Georgia Company Formation | Document Preparation Support</h2>
-    <div class="disc-box"><strong>【重要】</strong> 当社が提供するのは一般情報の提供と書類整備の補助のみです。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。最終判断は有資格専門家にご相談ください。</div>
+    <div class="disc-box"><strong>[IMPORTANT]</strong> GRENA provides introductions to partner law firms in Georgia and document preparation support only. We offer general information based on publicly available sources. Bank account approval is solely at the discretion of the respective bank. We do not provide individual tax or legal advice, nor do we solicit, broker, or act as agents for any financial products or services.</div>
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">Quick Summary</span></div>
       <p class="qs-tag">Estimated Fees</p>
@@ -1700,7 +1701,7 @@ section[id],details[id]{scroll-margin-top:72px;}
       <details><summary>Overview of Georgia Company System (General Information)</summary><div class="content"><p>Information based on publicly available materials from OECD, PwC, etc. Your home country's tax law (CFC regulations, etc.) may apply. <strong>We do not provide tax or legal judgments.</strong></p></div></details>
       <details><summary>Partnership with Law Firm (MoU)</summary><div class="content"><ul><li>Partner: TREX LEGAL (Georgian local law firm)</li><li>Company ID: 406365525</li></ul><span class="note">※ The MoU is a business cooperation agreement and does not guarantee registration completion or review results.</span></div></details>
       <details><summary>Document Support Scope</summary><div class="content"><ul><li>Guidance and assistance for company registration documents (est. 7–10 business days)</li><li>Guidance for virtual office arrangement (12 months)</li><li>Document guidance for corporate account opening (approval subject to bank review)</li><li>eSIM setup guidance</li></ul></div></details>
-      <details><summary>Pricing Plans</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody><tr><td>Basic Plan</td><td>¥330,000〜</td></tr><tr><td>Formation + LP Pack</td><td>¥498,000</td></tr><tr><td>Full Support Pack</td><td>¥598,000</td></tr><tr><td>Year 2+ / Company Maintenance</td><td>¥198,000/年</td></tr></tbody></table></div><p class="note">※ We do not guarantee registration completion or account opening success.</p></div></details>
+      <details><summary>Pricing Plans</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>Plan</th><th>Fee (tax incl.)</th></tr></thead><tbody><tr><td>Basic Plan</td><td>¥330,000+</td></tr><tr><td>Formation + LP Pack</td><td>¥498,000</td></tr><tr><td>Full Support Pack</td><td>¥598,000</td></tr><tr><td>Year 2+ / Company Maintenance</td><td>¥198,000/yr</td></tr></tbody></table></div><p class="note">※ We do not guarantee registration completion or account opening success.</p></div></details>
       <details><summary>Nominee Structure (General Explanation incl. UBO Disclosure)</summary><div class="content"><ul><li>All operations are conducted by the client, and <strong>UBO (Ultimate Beneficial Owner) disclosure is required</strong></li><li>Annual fee: €2,500 (as of August 2025)</li><li>May be subject to information exchange systems such as CRS</li></ul></div></details>
       <details><summary>Notes on KYC and FMS</summary><div class="content"><p>KYC documents such as passport and proof of address are required. Additional verification may be required depending on high-value transactions or crypto activity. Support is not available for antisocial forces or AML/CFT concerns.</p></div></details>
     </div>
@@ -1708,7 +1709,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">Georgia Sole Proprietor (IE) Registration | Document Support</h2>
-    <div class="disc-box"><strong>【重要】</strong> Georgia's local tax rate categories <strong>differ from the final tax burden in your home country, including Japan.</strong> Please consult a licensed tax accountant in Japan.</div>
+    <div class="disc-box"><strong>[IMPORTANT]</strong> Georgia's local tax rate categories <strong>differ from the final tax burden in your home country, including Japan.</strong> Please consult a licensed tax accountant in Japan.</div>
     <div class="price-promo quick-summary">
       <div class="row"><span class="label">Quick Summary</span></div>
       <p class="qs-tag">Estimated Fees</p>
@@ -1719,15 +1720,15 @@ section[id],details[id]{scroll-margin-top:72px;}
         <table style="width:100%;border-collapse:collapse;font-family:'Noto Sans JP',sans-serif;"><thead><tr><th style="background:var(--navy);color:#fff;padding:10px;text-align:left;font-size:12px;">Annual Income (GEL)</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">Approx. JPY</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">Local Tax Rate</th></tr></thead><tbody>
           <tr><td style="padding:10px;border:1px solid var(--border);">~ 30,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">~ ¥1.5M</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">0%</td></tr>
           <tr><td style="padding:10px;border:1px solid var(--border);background:#f8faff;">30,001 – 500,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">¥1.5M – ¥25M</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">1%</td></tr>
-          <tr><td style="padding:10px;border:1px solid var(--border);">500,000+</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">¥25M+</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">3〜5%</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border);">500,000+</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">¥25M+</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">3–5%</td></tr>
         </tbody></table>
         <p class="note" style="margin-top:8px;"><strong>※ Differs from tax burden in your home country. Please consult a tax accountant.</strong></p>
       </div></details>
       <details open><summary>Support Scope and Fees</summary><div class="content">
         <div class="price-promo">
-          <div class="row"><span class="label">Fee:</span><span class="now">¥288,000</span><span class="text-sm">（税込）</span></div>
+          <div class="row"><span class="label">Fee:</span><span class="now">¥288,000</span><span class="text-sm">(tax incl.)</span></div>
           <div class="meta"><small>※ IE + account opening bundle: <strong>¥498,000 (tax incl.)</strong></small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span><span>Online only</span></div>
+          <div class="proof"><span>MoU: TREX LEGAL</span><span>Online only</span></div>
         </div>
       </div></details>
     </div>
@@ -1735,29 +1736,29 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
     <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">Bank Account Opening | Document Support Details</h2>
-    <div class="disc-box"><strong>【重要】</strong> 当社は銀行の代理人・媒介者ではありません。いかなる銀行からも紹介料を受け取っておらず、口座開設の成功を保証するものではありません。</div>
+    <div class="disc-box"><strong>[IMPORTANT]</strong> We do not act as agents or intermediaries for any bank. We receive no referral fees from any bank and do not guarantee account opening success.</div>
     <div class="space-y-3 accordion">
       <details><summary>Required Documents (Typical Examples for Non-Residents)</summary><div class="content"><ul><li>Valid passport <strong>+ notarization & apostille</strong></li><li>English proof of address (within 3 months)</li><li>Signature / original mail (no PDFs)</li></ul></div></details>
-      <details open><summary>Document Support Scopeと費用</summary><div class="content">
+      <details open><summary>Document Support Scope & Fees</summary><div class="content">
         <div class="value-box"><h5 class="value-title">No Travel Required in Principle</h5><ul class="value-list"><li>Document forwarding through our official MoU-linked route</li><li>Communication primarily via chat (with full history for peace of mind)</li></ul></div>
         <div class="price-promo">
-          <div class="row"><span class="label">Service fee:</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">IE + Account Opening Bundle:</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span></div>
+          <div class="row"><span class="label">Service fee:</span><span class="now">¥258,000</span><span class="text-sm">(tax incl.)</span></div>
+          <div class="row"><span class="label">IE + Account Opening Bundle:</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">(tax incl.)</span></div>
           <div class="meta"><small><strong>We receive absolutely no referral fees or commissions from any bank.</strong></small><br><small>Account approval is at each bank's discretion.</small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span></div>
+          <div class="proof"><span>MoU: TREX LEGAL</span></div>
         </div>
       </div></details>
       <details id="cf-tool-sec"><summary>Compound Interest Calculator (Reference Only)</summary><div class="content">
         <div id="cf-tool" class="cf-card" role="form">
           <h4 class="smallish">Compound Interest Calculator (General Formula)</h4>
           <div class="cf-grid">
-            <label for="cf-currency">通貨</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
-            <label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
-            <label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
-            <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
-            <label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
-            <label for="cf-nper">回数/年</label><select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
-            <label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked>
+            <label for="cf-currency">Currency</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY (Yen)</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
+            <label for="cf-principal">Principal</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
+            <label for="cf-rate">Annual Rate (%)</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
+            <div class="cf-subrow" aria-live="polite">Current rate: <strong id="cf-rate-display">10.00%</strong></div>
+            <label for="cf-years">Years</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
+            <label for="cf-nper">Times/Year</label><select id="cf-nper"><option value="1">Annual (1x)</option><option value="4">Quarterly (4x)</option><option value="12" selected>Monthly (12x)</option><option value="365">Daily (365x)</option></select>
+            <label for="cf-is-comp">Compound Interest</label><input id="cf-is-comp" type="checkbox" checked>
           </div>
           <div class="cf-preset">
             <span class="cf-hint">Example rates:</span>
@@ -1778,7 +1779,7 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4" style="font-family:'Shippori Mincho B1',serif;">Not Recommended For</h2>
-    <ul class="qs-list"><li>Those who do not intend to comply with tax obligations or laws in their home country</li><li>Those who require a guaranteed guarantee of account opening</li><li>Individual tax or legal adviceを求めている方</li></ul>
+    <ul class="qs-list"><li>Those who do not intend to comply with tax obligations or laws in their home country</li><li>Those who require a guaranteed guarantee of account opening</li><li>Those seeking individual tax or legal advice</li></ul>
   </section>
 
   <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
@@ -1804,7 +1805,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="fixed-cta" id="ctaBar" role="region" aria-label="操作バー">
+  <div class="fixed-cta" id="ctaBar" role="region" aria-label="Action Bar">
     <div class="row">
       <a class="btn neutral" id="toTop" href="#page-top">↑ Top</a>
       <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-consult">💬 Consultation</a>
@@ -1814,11 +1815,11 @@ section[id],details[id]{scroll-margin-top:72px;}
 </main>
 
 <footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 GRENA GROUP LLC｜Georgia Company ID: 406365525｜<a href="/cdn-cgi/l/email-protection#0c65626a634c6b7e69626d21786d74226b69"><span class="__cf_email__" data-cfemail="f891969e97b89f8a9d9699d58c9980d69f9d">[email&#160;protected]</span></a>｜This service provides document preparation and general information only. We do not provide tax/legal advice or solicit financial products.｜<a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a>｜<a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></small>
-  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：406365525｜<a href="/cdn-cgi/l/email-protection#533a3d353c133421363d327e27322b7d3436"><span class="__cf_email__" data-cfemail="bfd6d1d9d0ffd8cddad1de92cbdec791d8da">[email&#160;protected]</span></a>｜Document prep & general info only</small>
+  <small class="foot-pc">© 2025 GRENA GROUP LLC | Georgia Company ID: 406365525 | <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> | This service provides document preparation and general information only. We do not provide tax/legal advice or solicit financial products. | <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a> | <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a></small>
+  <small class="foot-sp">©2025 GRENA GROUP LLC | ID:406365525 | <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> | Document prep & general info only</small>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // FAQ
 document.querySelectorAll('.faq-item').forEach(function(i){
   i.querySelector('.faq-q').addEventListener('click',function(){i.classList.toggle('open');});
@@ -1854,9 +1855,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 })();
 </script>
 
-<script src="./script.js?v=20251110a" defer></script>
+<script src="../script.js?v=20260404a" defer></script>
 
-<script>function lpGoogleTranslateInit(){new google.translate.TranslateElement({pageLanguage:"ja",includedLanguages:"ja,en",autoDisplay:false},"google_translate_element");var saved=localStorage.getItem("lp_lang")||"ja";if(saved==="en"){var n=0;var t=setInterval(function(){var s=document.querySelector("select.goog-te-combo");if(s){s.value="en";s.dispatchEvent(new Event("change"));clearInterval(t);}if(++n>50)clearInterval(t);},300);}}</script>
 <script>
 (function(){
   "use strict";
@@ -1864,183 +1864,5 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 })();
 </script>
 
-<script>
-var I18N = {
-  ja: {
-    "hero-pill":"🌍 EU Candidate Country Georgia × Local Partner Law Firm",
-    "hero-top":"As overseas work increases——",
-    "hero-main":"受け取り口座が<span class='wise'>Wiseだけ</span>ですか。",
-    "hero-lead":"Have you ever been asked for your SWIFT code and had no answer?<br>With a Georgian bank account, you can complete all paperwork<br>without traveling — fully supported in Japanese.",
-    "hero-disc":"※ We provide document preparation support and general information only. We do not guarantee account opening or provide tax/legal advice.",
-    "hero-btn1":"📩 Free Consultation","hero-btn2":"Why Georgia? →",
-    "ti1":"Partner Law Firm (MoU)","ti2":"Georgia Company Registered","ti3":"No Travel Required","ti4":"Zero Referral Fees",
-    "stat1":"営業日<br>書類整備の目安","stat2":"主要サービス<br>日本語対応","stat3":"加盟候補国<br>2023年認定",
-    "notice":"<strong>[Notice]</strong> This site provides <strong>general information and document preparation support</strong> only. We do not provide individual tax/legal advice or solicit financial products. Account approval is at each bank's discretion. Please consult a qualified professional.",
-    "empathy-title":"Do any of these sound familiar?","empathy-sub":"The more international business grows, the harder payment infrastructure becomes.",
-    "emp1":"Asked for your SWIFT code — and had no answer",
-    "emp2":"Using Wise, but feeling uneasy as transaction amounts grow",
-    "emp3":"Want to expand globally, but no corporate account makes it difficult",
-    "emp4":"Want a foreign bank account, but can't afford the time or cost to travel",
-    "emp5":"Notarization, apostille, English documents — don't know where to start",
-    "emp6":"Already been rejected by banks in Dubai or Singapore",
-    "why-title":"🔥 Why Georgia — and why now?",
-    "why-sub":"Banks accepting non-resident accounts are decreasing worldwide. Georgia is currently one of the most realistic options.",
-    "cmp-note":"※ Based on publicly available information from authorities and financial institutions (GRENA research, as of 2025). Does not guarantee individual eligibility or account approval. Regulations subject to change.",
-    "why1t":"Growing Rapidly in Popularity","why1d":"While other countries tighten restrictions, Georgia maintains open policies for foreign business. Word is spreading fast among professionals.",
-    "why2t":"No Travel Required","why2d":"All document preparation is handled remotely in Japanese. Available for overseas residents too.",
-    "why3t":"EU Candidate Country","why3d":"Certified as an EU candidate in 2023. Growing credibility as an international business base.",
-    "why4t":"Fast Process","why4d":"Document preparation typically takes 7–10 business days. Smoother than most countries.",
-    "about-title":"🇬🇪 What kind of country is Georgia?",
-    "fact1t":"Capital: Tbilisi","fact1d":"A cultural hub of the Caucasus where history meets modernity.",
-    "fact2t":"EU加盟候補国","fact2d":"Certified 2023. Growing international credibility.",
-    "fact3t":"Simple Legal System","fact3d":"A business environment open to foreigners.",
-    "fact4t":"World's Oldest Wine Region","fact4d":"Over 8,000 years of wine culture. A rapidly growing tourist destination.",
-    "service-title":"What we do — and what we don't",
-    "dodont-title":"GRENA GROUP LLC Service Scope",
-    "do-title":"✅ What we do","dont-title":"❌ What we don't",
-    "do1":"Guide you on required documents in Japanese","do2":"Step-by-step guide for notarization and apostille",
-    "do3":"Document forwarding via our partner law firm","do5":"Progress updates (chat-based)","do6":"Initial guidance on using Wise for business",
-    "dont1":"Guarantee of account opening","dont2":"Individual tax or legal advice","dont3":"Acting as agent or broker for banks","dont4":"Direct negotiation with banks",
-    "pricing-title":"Pricing & Service Details","pricing-sub":"Fees cover document preparation and administrative support only. Bank fees and other costs are separate.",
-    "price-badge":"Main Service",
-    "price-name":"Bank Account Opening — Document Support",
-    "price-note-sm":"Additional costs: Notarization & apostille fees / International shipping (DHL) from ¥5,000",
-    "incl-ok":"WHAT'S INCLUDED","incl-ng":"WHAT'S NOT INCLUDED",
-    "inc1":"Document checklist and guidance","inc2":"Japanese guide for notarization and apostille",
-    "inc3":"Document forwarding via TREX LEGAL","inc4":"Final review of application documents",
-    "inc5":"Progress updates and chat support","inc6":"Initial guidance for Wise registration",
-    "excl1":"Guarantee of account opening(bank review required)","excl2":"Individual tax or legal advice","excl3":"Bank fees, postage, and other out-of-pocket costs",
-    "set-l":"🎯 IE Registration (Sole Proprietor) + Account Opening Bundle","set-sl":"Regular total ¥546,000 → Bundle discount",
-    "main-cta-btn":"📩 Free Consultation / Apply Here",
-    "cta-sub-note":"Replies within 3 business days | No pushy sales",
-    "steps-title":"How to Apply",
-    "step1":"LINEで<br>相談","step2":"ヒアリング<br>→ご提案","step3":"申込み<br>→書類整備","step4":"申請<br>→完了",
-    "faq-title":"Frequently Asked Questions",
-    "faq1q":"Is travel really not required?","faq1a":"Document preparation and applications can generally be completed without traveling. However, some banks may require in-person procedures. We will advise in advance.",
-    "faq2q":"Is account opening guaranteed?","faq2a":"Account approval depends on each bank's review, so we cannot guarantee success. Our goal is to minimize document issues and help the process proceed smoothly.",
-    "faq3q":"Can I just consult without applying?","faq3a":"Yes. "Still considering" is perfectly fine. We start with a listening session and never push hard sales.",
-    "faq4q":"Can I cancel?","faq4a":"If cancelled before we submit to our local partner, we refund minus a ¥10,000 handling fee. No refund after submission begins.",
-    "faq5q":"What about Japanese tax filing?","faq5a":"We do not provide tax advice. Japanese residents must consult a licensed tax accountant in Japan.",
-    "faq6q":"How is this different from company formation?","faq6a":"Account opening support is for personal bank accounts. Company formation (¥330,000+) is a separate service. Combination packages are available.",
-    "band-title":"Document Support in Line with Georgia's Regulations",
-    "other-title":"Other Services",
-    "svc1t":"Company Formation — Document Support","svc1d":"We work with our local law firm to assist with company registration documents and information. From ¥330,000",
-    "svc2t":"Sole Proprietor (IE) Registration Support","svc2d":"General information and document support for IE registration (conditions apply). ¥288,000",
-    "svc3t":"Japanese Restaurant — Your Country","svc3d":"Support for store launch, chef introduction, and contract information verification.",
-    "svc4t":"Overseas Real Estate — Buy or Rent","svc4d":"Information on property selection and contract processes for Georgia and other overseas markets.",
-    "svc5t":"Corporate Bank Account Opening","svc5d":"Document support for corporate account opening. Can be bundled with company formation.",
-    "svc6t":"Other Business Support","svc6d":"Help thinking through business ideas centered on Georgia.",
-    "founder-title":"Why we started this service.","founder-role":"Representative / Personally experienced Georgia company & account setup",
-    "fq1":"I traveled to Georgia alone and visited the registry office every single day.<br>But <strong>for an entire week, they never once processed my request.</strong>",
-    "fq2":"Weekends were closed. Outside the registry office were people saying"leave it to me" — none of them trustworthy.I couldn't communicate and had no one I could trust.<strong>I was completely stuck.</strong>",
-    "fq3":"Then, the head of a law firm I'd been in contact withsent me a message: "I happen to be at the registry office right now."After explaining my situation, I was finally able to get<strong>both my company and bank account set up — on the very last day of my 2-week stay.</strong>",
-    "fq4":"That lawyer then said to me:<br>"Please introduce me to people around the world who want to set up companies and accounts."<br>You don't have to go there. But <strong>the language barrier, the legal complexity — it's genuinely difficult.</strong><br>"Your drive is remarkable. I want to work with you" — and that's how this service began.",
-    "ff1":"週間<br>現地で費やした時間","ff2":"件<br>自分自身の実経験","ff3":"円<br>紹介料・コミッション",
-    "review-title":"Customer Reviews","review-sub":"Feedback from those who have used our service.",
-    "review-text":"I asked for help with company formation and account opening for my overseas expansion. Monthly tax filing is done online and the account is managed via smartphone app — much easier than expected. Completing everything without traveling is incredibly cost-effective. Most of all, the rep has personal experience, so I could ask specific questions with real confidence.",
-    "review-name":"40s / Male","review-tag":"Considering international business expansion",
-    "big-cta-h2":"Ready to set up your international<br>payment infrastructure this year?",
-    "big-cta-p":"Still just considering it? That's fine.<br>We'll listen to your situation and figure out what you need together.",
-    "big-cta-btn":"📩 LINEでFree Consultation",
-    "cta-note":"Replies within 3 business days | No pushy sales",
-    "cta-consult":"💬 Consultation","cta-apply":"📩 Contact via LINE"
-  },
-  en: {
-    "hero-pill":"🌍 EU Candidate Country Georgia × Partner Law Firm",
-    "hero-top":"As overseas work increases——",
-    "hero-main":"Is <span class='wise'>Wise your only</span> receiving account?",
-    "hero-lead":"Have you ever been asked for your SWIFT code and had no answer?<br>With a Georgian bank account, you can complete all paperwork<br>without traveling — fully supported in Japanese.",
-    "hero-disc":"* We provide document preparation support and general information only. We do not guarantee account opening or provide individual tax/legal advice.",
-    "hero-btn1":"📩 Free Consultation","hero-btn2":"Why Georgia? →",
-    "ti1":"Partner Law Firm MoU","ti2":"Georgia Company Registered","ti3":"No Travel Required","ti4":"Zero Referral Fees",
-    "stat1":"Business Days<br>Document Timeline","stat2":"Core Services<br>Japanese Support","stat3":"EU Candidate<br>Certified 2023",
-    "notice":"<strong>[Notice]</strong> This site provides <strong>general information and document preparation support</strong> based on publicly available materials only. We do not provide individual tax/legal advice or act as agent for financial products. Account approval is subject to each bank's screening.",
-    "empathy-title":"Do any of these sound familiar?","empathy-sub":"The more your international business grows, the harder payment infrastructure becomes.",
-    "emp1":"Asked for a SWIFT code — and had no answer",
-    "emp2":"Using Wise, but feeling uneasy as transaction amounts grow",
-    "emp3":"Want to expand globally, but no corporate account makes it awkward",
-    "emp4":"Want a foreign bank account, but can't afford the time or cost to travel",
-    "emp5":"Apostille, notarization, English documents — don't know where to start",
-    "emp6":"Already rejected by banks in Dubai or Singapore",
-    "why-title":"🔥 Why Georgia — and why now?",
-    "why-sub":"Banks accepting non-resident accounts are decreasing worldwide. Georgia is currently one of the most realistic options available.",
-    "cmp-note":"* Based on general trends from publicly available information from each country's authorities and financial institutions (GRENA research, as of 2025). Does not guarantee individual outcomes or account approval. Regulations are subject to change.",
-    "why1t":"Growing Rapidly in Popularity","why1d":"While other countries tighten restrictions, Georgia maintains open policies for foreign business. Word is spreading fast among professionals.",
-    "why2t":"No Travel Required","why2d":"All document preparation can be handled remotely in Japanese. Available for overseas residents too.",
-    "why3t":"EU Candidate Country","why3d":"Certified as an EU candidate in 2023. Growing credibility as an international business base.",
-    "why4t":"Fast Process","why4d":"Document preparation typically takes 7–10 business days — smoother than most other countries.",
-    "about-title":"🇬🇪 What kind of country is Georgia?",
-    "fact1t":"Capital: Tbilisi","fact1d":"A cultural hub of the Caucasus where history and modernity coexist.",
-    "fact2t":"EU Candidate Country","fact2d":"Certified in 2023. Growing international credibility.",
-    "fact3t":"Simple Legal Framework","fact3d":"A business-friendly environment open to foreign nationals.",
-    "fact4t":"World's Oldest Wine Region","fact4d":"Over 8,000 years of wine culture. A rapidly rising tourist destination.",
-    "service-title":"What we do — and what we don't",
-    "dodont-title":"GRENA GROUP LLC Service Scope",
-    "do-title":"✅ What We Do","dont-title":"❌ What We Don't Do",
-    "do1":"Guide you on required documents and how to obtain them, in Japanese","do2":"Step-by-step guide for notarization and apostille",
-    "do3":"Forward documents to local law firm","do5":"Progress updates (chat-based)","do6":"Initial guidance on Wise and other practical tools",
-    "dont1":"Guarantee account opening","dont2":"Individual tax or legal advice","dont3":"Acting as bank agent or intermediary","dont4":"Direct negotiation with banks",
-    "pricing-title":"Pricing & Service Details","pricing-sub":"Fees cover document preparation and administrative support only. Bank fees and other costs are separate.",
-    "price-badge":"Main Service",
-    "price-name":"Bank Account Opening — Document Support",
-    "price-note-sm":"Additional costs: Notarization & apostille fees / International shipping (DHL) from ¥5,000",
-    "incl-ok":"What's Included","incl-ng":"What's Not Included",
-    "inc1":"Document checklist and guidance","inc2":"Japanese guide for notarization and apostille",
-    "inc3":"Document forwarding via TREX LEGAL","inc4":"Final document review",
-    "inc5":"Progress updates and chat support","inc6":"Initial guidance for Wise registration",
-    "excl1":"Account opening guarantee (subject to bank screening)","excl2":"Individual tax or legal advice","excl3":"Bank fees, postage, and other out-of-pocket costs",
-    "set-l":"🎯 IE Registration (Sole Proprietor) + Account Opening Bundle","set-sl":"Regular total ¥546,000 → Bundle discount",
-    "main-cta-btn":"📩 Free Consultation / Apply Here",
-    "cta-sub-note":"Replies within 3 business days | No pushy sales",
-    "steps-title":"How It Works",
-    "step1":"LINE<br>Consultation","step2":"Hearing<br>→ Proposal","step3":"Apply<br>→ Documents","step4":"Submit<br>→ Complete",
-    "faq-title":"Frequently Asked Questions",
-    "faq1q":"Is travel really not required?","faq1a":"Document preparation and application can generally be completed without traveling. However, some banks may require an in-person visit. We will advise you in advance.",
-    "faq2q":"Is account opening guaranteed?","faq2a":"Account approval is subject to each bank's screening criteria, so we cannot guarantee success. Our goal is to minimize document errors and help the process go smoothly.",
-    "faq3q":"Can I just consult without applying?","faq3a":"Absolutely. Even if you're still just considering it, we're happy to listen and help you think it through — no pushy sales.",
-    "faq4q":"Can I cancel?","faq4a":"If you cancel before we submit to our local partner, we will refund minus a ¥10,000 handling fee. No refund is available after submission.",
-    "faq5q":"What about Japanese tax filing?","faq5a":"We do not provide tax advice. Japanese residents should consult a certified tax accountant in Japan.",
-    "faq6q":"How is this different from company formation?","faq6a":"The account opening service supports document preparation for a personal bank account. Company formation (from ¥330,000) is a separate service. Bundled packages are available.",
-    "band-title":"Document Preparation Support for Georgia's Official System",
-    "other-title":"Other Services",
-    "svc1t":"Company Formation — Document Support","svc1d":"In partnership with a local law firm, we handle document preparation and information for company registration. From ¥330,000",
-    "svc2t":"Sole Proprietor (IE) Registration Support","svc2d":"General information and document preparation assistance for IE registration (conditions apply). ¥288,000",
-    "svc3t":"Japanese Restaurant — Your Country","svc3d":"Support for store launch, chef introduction, and contract information verification.",
-    "svc4t":"Overseas Real Estate — Buy or Rent","svc4d":"Information on property selection and contract processes for Georgia and other overseas markets.",
-    "svc5t":"Corporate Bank Account Opening","svc5d":"Document support for corporate account opening. Can be bundled with company formation.",
-    "svc6t":"Other Business Support","svc6d":"Help thinking through business ideas centered on Georgia.",
-    "founder-title":"Why we started this service.","founder-role":"Representative / Personally experienced Georgia company & account setup",
-    "fq1":"I traveled to Georgia alone and visited the registry office every day.<br>But for <strong>a full week, they never processed my application.</strong>",
-    "fq2":"The office was closed on weekends. Outside, there were plenty of people saying 'leave it to me' — but none I could trust. No shared language, no reliable contacts. <strong>I was completely stuck.</strong>",
-    "fq3":"Then the president of a law firm I'd been in contact with reached out — he happened to be at the registry office that day. We talked, and on the <strong>last day of my two-week stay, I finally completed both company registration and bank account opening.</strong>",
-    "fq4":"He said to me:<br>'Please introduce people around the world who want to set up companies and accounts.'<br>You don't have to go there in person — but <strong>the language barrier, the legal complexity — it's genuinely difficult.</strong><br>'Your determination was remarkable. I'd love to work together.' That's why I started this service.",
-    "ff1":"Weeks<br>Spent on the Ground","ff2":"Case<br>Personal Experience","ff3":"¥ in<br>Referral Fees",
-    "review-title":"Customer Reviews","review-sub":"Feedback from those who have used our service.",
-    "review-text":"I was planning to expand my business overseas and asked for help with company formation and account opening. Monthly tax filing is done online, and the account is managed via a smartphone app — much easier than I expected. Being able to complete everything without traveling is incredibly cost-effective. Most of all, the rep has personal experience, so I could ask specific questions with confidence.",
-    "review-name":"Male, 40s","review-tag":"Exploring overseas business expansion",
-    "big-cta-h2":"Ready to set up your international<br>payment infrastructure this year?",
-    "big-cta-p":"Still just considering it? That's fine.<br>We'll listen to your situation and figure out what you need together.",
-    "big-cta-btn":"📩 Free Consultation on LINE",
-    "cta-note":"Replies within 3 business days | No pushy sales",
-    "cta-consult":"💬 Consultation","cta-apply":"📩 Contact via LINE"
-  }
-};
-
-function grenaSetLang(lang) {
-  localStorage.setItem('lp_lang', lang);
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var key = el.getAttribute('data-i18n');
-    if (I18N[lang] && I18N[lang][key]) el.innerHTML = I18N[lang][key];
-  });
-  var jp = document.getElementById('lpJpBtn');
-  var en = document.getElementById('lpEnBtn');
-  if (jp) jp.setAttribute('aria-pressed', lang === 'ja' ? 'true' : 'false');
-  if (en) en.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  grenaSetLang(localStorage.getItem('lp_lang') || 'ja');
-});
-</script>
 </body>
 </html>
