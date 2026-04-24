@@ -1397,7 +1397,110 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+  
+  
+  
+  
+  
+  <div class="band" style="margin:0 0 0;">
+    <p class="band-title" data-i18n="band-title">ジョージアの制度に沿った書類整備サポート</p>
+    <ul class="band-list">
+      <li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li>
+      <li>書類整備・現地法律事務所との連絡調整を文面ベースでサポート</li>
+      <li>税務・法務の個別助言は行いません。専門家へのご相談を推奨</li>
+    </ul>
+    <p class="band-note">※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。</p>
+  </div>
+
+  
+
+  <!-- SOLOバンクセクション -->
+  
+  <!-- 代表ストーリー -->
+      <div class="orn"><div class="orn-d"></div></div>
+
+  <!-- 大CTA -->
+  <div class="big-cta">
+    <div class="big-cta-inner">
+      <h2 data-i18n="big-cta-h2">海外取引の決済インフラを、<br>今年中に整えませんか。</h2>
+      <p data-i18n="big-cta-p">「まだ検討段階」で構いません。<br>現状をお聞きして、何が必要かを一緒に整理します。</p>
+      <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" style="font-size:16px;padding:18px 52px;" data-i18n="big-cta-btn">
+        📩 LINEで無料相談する
+      </a>
+      <span class="big-cta-note" data-i18n="cta-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<main id="main">
+  
+
+  
+  
+  
+  
+  
+  <div class="fixed-cta" id="ctaBar" role="region" aria-label="操作バー">
+    <div class="row">
+      <a class="btn neutral" id="toTop" href="#page-top">↑ トップ</a>
+      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-consult">💬 無料相談</a>
+      <a class="btn success" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-apply">📩 今すぐLINEで相談</a>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot" role="contentinfo">
+  <small class="foot-pc">© 2025 GRENA GROUP LLC｜ジョージア法人ID：400433768｜所在地：Nadzaladevi district, Erosi Manjgaladze St. N75a, Tbilisi, Georgia｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜本サービスは書類整備・一般情報提供のみです。税務・法務の助言・金融商品の勧誘は行いません。｜<a href="./terms" target="_blank" rel="noopener noreferrer">利用規約</a>｜<a href="./privacy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>｜<a href="./tokusho" target="_blank" rel="noopener noreferrer">特定商取引法</a></small>
+  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：400433768｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜書類整備・一般情報提供のみ</small>
+</footer>
+
+<script>
+// FAQ
+document.querySelectorAll('.faq-item').forEach(function(i){
+  i.querySelector('.faq-q').addEventListener('click',function(){i.classList.toggle('open');});
+});
+// スムーズスクロール
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    var id=this.getAttribute('href').slice(1);
+    var el=document.getElementById(id);
+    if(!el)return;
+    e.preventDefault();
+    var y=el.getBoundingClientRect().top+window.pageYOffset-80;
+    try{window.scrollTo({top:y,behavior:'smooth'});}catch(err){window.scrollTo(0,y);}
+  });
+});
+// ヒーロー視差（軽量JS）
+(function(){
+  var img=document.querySelector('.hero-img');
+  if(!img||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var ticking=false;
+  window.addEventListener('scroll',function(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        var s=window.pageYOffset;
+        if(s<window.innerHeight){
+          img.style.transform='scale(1.06) translateY('+s*.08+'px)';
+        }
+        ticking=false;
+      });
+      ticking=true;
+    }
+  },{passive:true});
+})();
+</script>
+
+<script src="./script.js?v=20260404a" defer></script>
+
+
+
+
+
+</body>
+</html>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
   <!-- なぜジョージア？ -->
   <section id="why-georgia" style="margin:0 0 0;">
@@ -1436,7 +1539,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
   <!-- ジョージアってどんな国？ -->
   <section id="about-georgia" style="margin:0 0 0;">
@@ -1458,7 +1561,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
   <!-- やること・やらないこと -->
   <section id="service" style="margin:0 0 0;">
@@ -1494,113 +1597,7 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
-
-  <!-- 料金 -->
-  <section id="pricing" style="margin:0 0 0;">
-    <div class="sh">
-      <div class="sh-eye">Pricing</div>
-      <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="pricing-title">料金とサービス内容</h2>
-      <p class="sh-sub" data-i18n="pricing-sub">書類整備・事務補助の対価です。銀行手数料・実費は別途です。</p>
-    </div>
-    <div class="price-box">
-      <div class="price-top">
-        <div class="price-badge" data-i18n="price-badge">Main Service</div>
-        <p class="price-name" data-i18n="price-name">銀行口座開設 書類整備サポート</p>
-        <div class="price-num">¥258,000<span class="unit">（税込）</span></div>
-        <p class="price-desc" data-i18n="price-desc">現地法律事務所の手数料・書類翻訳・公証手続きサポートを含むパッケージ料金です。追加料金は発生しません。</p>
-        <p class="price-note-sm" data-i18n="price-note-sm">別途実費：公証・アポスティーユ費用 ／ 国際郵送（DHL）¥5,000〜</p>
-      </div>
-      <div class="price-body">
-        <p class="incl-label ok" data-i18n="incl-ok">含まれるもの</p>
-        <ul class="incl-ul ok">
-          <li data-i18n="inc1">必要書類の案内・チェックリスト</li>
-          <li data-i18n="inc2">公証・アポスティーユ取得方法の日本語ガイド</li>
-          <li data-i18n="inc3">現地法律事務所（TREX LEGAL）への書類取次補助</li>
-          <li>申請書類の最終チェック</li>
-          <li data-i18n="inc5">進捗連絡・チャットサポート</li>
-          <li data-i18n="inc6">Wise登録の初期情報提供</li>
-        </ul>
-        <p class="incl-label ng" style="margin-top:18px;" data-i18n="incl-ng">含まれないもの</p>
-        <ul class="incl-ul ng">
-          <li data-i18n="excl1">口座開設の成功保証（銀行審査による）</li>
-          <li data-i18n="excl2">税務・法務の個別アドバイス</li>
-          <li data-i18n="excl3">銀行手数料・郵送費などの実費</li>
-        </ul>
-        <hr class="price-div">
-        <div class="set-row">
-          <div>
-            <div class="set-l" data-i18n="set-l">🎯 IE登録（個人事業主）＋口座開設セット</div>
-            <div class="set-sl" data-i18n="set-sl">通常合計 ¥546,000 → セット割引</div>
-          </div>
-          <div class="set-p"><s>¥546,000</s>¥498,000</div>
-        </div>
-        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn" data-i18n="main-cta-btn" data-i18n="main-cta-btn">📩 無料相談・申し込みはこちら</a>
-        <p class="cta-sub-note" data-i18n="cta-sub-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</p>
-      </div>
-    </div>
-
-    <h3 style="font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:800;color:var(--navy);margin:32px 0 18px;" data-i18n="steps-title">申し込みの流れ</h3>
-    <div class="steps">
-      <div class="step-cell"><div class="step-n">1</div><div class="step-t" data-i18n="step1">LINEで<br>相談</div></div>
-      <div class="step-cell"><div class="step-n">2</div><div class="step-t" data-i18n="step2">ヒアリング<br>→ご提案</div></div>
-      <div class="step-cell"><div class="step-n">3</div><div class="step-t" data-i18n="step3">申込み<br>→書類整備</div></div>
-      <div class="step-cell"><div class="step-n">4</div><div class="step-t" data-i18n="step4">申請<br>→完了</div></div>
-    </div>
-  </section>
-
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
-
-  <!-- FAQ -->
-  <section id="faq" style="margin:0 0 0;">
-    <div class="sh">
-      <div class="sh-eye">FAQ</div>
-      <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="faq-title">よくある質問</h2>
-    </div>
-    <div class="faq">
-      <div class="faq-item"><div class="faq-q"data-i18n="faq1q">本当に渡航不要ですか？</div><div class="faq-a" data-i18n="faq1a">書類整備・申請手続きは原則として渡航不要で進められます。ただし銀行によっては現地での手続きを求める場合もあります。事前にご案内します。</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq2q">口座開設は必ずできますか？</div><div class="faq-a" data-i18n="faq2a">開設可否は各銀行の審査判断によるため、成功の保証はできません。書類の不備を減らし、スムーズに審査に進むことを目的としています。</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq3q">相談だけでも大丈夫ですか？</div><div class="faq-a" data-i18n="faq3a">はい。「まだ検討段階」でも構いません。現状のヒアリングから始め、無理な勧誘はしません。</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq4q">キャンセルはできますか？</div><div class="faq-a" data-i18n="faq4a">現地パートナーへの依頼開始前であれば、手数料（¥10,000）を差し引いた金額を返金します。依頼開始後の返金はできません。</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq5q">日本の税申告はどうなりますか？</div><div class="faq-a" data-i18n="faq5a">当社は税務アドバイスを行いません。日本居住者の方は日本の税理士に必ずご相談ください。</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq6q">法人設立との違いは？</div><div class="faq-a" data-i18n="faq6a">口座開設サポートは個人名義の銀行口座取得に向けた書類整備です。法人設立サポート（¥330,000〜）は別メニューになります。セットでのご利用も可能です。</div></div>
-    </div>
-  </section>
-
-  <div class="band" style="margin:0 0 0;">
-    <p class="band-title" data-i18n="band-title">ジョージアの制度に沿った書類整備サポート</p>
-    <ul class="band-list">
-      <li>EU加盟候補国・ジョージアの公開制度資料をもとに一般情報をご案内</li>
-      <li>書類整備・現地法律事務所との連絡調整を文面ベースでサポート</li>
-      <li>税務・法務の個別助言は行いません。専門家へのご相談を推奨</li>
-    </ul>
-    <p class="band-note">※ 当社のサービスは書類整備・情報提供の事務サポートです。税務効果・法務効果を保証するものではありません。</p>
-  </div>
-
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
-
-  <!-- その他サービス -->
-  <section id="other-services" style="margin:0 0 0;">
-    <div class="sh">
-      <div class="sh-eye">Other Services</div>
-      <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="other-title">その他のサービス</h2>
-    </div>
-    <div class="svc-grid">
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M12 3v18M5 7l7-4 7 4M5 17l7 4 7-4M3 10l4 2-4 2M21 10l-4 2 4 2"/></svg></div><h3 class="svc-tt" data-i18n="svc1t">法人設立 書類整備サポート</h3><p class="svc-tx" data-i18n="svc1d">現地法律事務所と連携し、法人登記に必要な書類整備・情報提供を行います。¥330,000〜</p><a href="#corp-setup" class="btn-navy svc-b">詳しくはこちら</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg></div><h3 class="svc-tt" data-i18n="svc2t">個人事業主（IE）登録サポート</h3><p class="svc-tx" data-i18n="svc2d">IE登録の一般情報提供と登録書類の整備補助（条件あり）。¥288,000</p><a href="#sole-setup" class="btn-navy svc-b">詳しくはこちら</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><ellipse cx="12" cy="14" rx="8" ry="4"/><path d="M4 14c0-2 3.6-6 8-6s8 4 8 6"/><path d="M8 10c1-2 2-3 4-3s3 1 4 3"/></svg></div><h3 class="svc-tt" data-i18n="svc3t">和食店をあなたの国に</h3><p class="svc-tx" data-i18n="svc3d">店舗立ち上げ・職人紹介・契約面の情報確認をサポート。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="btn-green svc-b">無料相談する</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 9.5L12 3l9 6.5V21H3V9.5z"/><rect x="9" y="14" width="6" height="7"/></svg></div><h3 class="svc-tt" data-i18n="svc4t">海外不動産 購入・賃貸</h3><p class="svc-tx" data-i18n="svc4d">ジョージアを含む海外不動産の物件選び・契約プロセスの情報提供。</p><a href="#" class="btn-dim svc-b">準備中</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 21h18M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M12 3L3 10h18L12 3z"/></svg></div><h3 class="svc-tt" data-i18n="svc5t">銀行口座開設（法人）</h3><p class="svc-tx" data-i18n="svc5d">法人口座開設に向けた書類整備サポート。法人設立とセットも可。</p><a href="#personal-account" class="btn-navy svc-b">詳しくはこちら</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 018 0v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></div><h3 class="svc-tt" data-i18n="svc6t">その他 企画サポート</h3><p class="svc-tx" data-i18n="svc6d">ジョージアを起点にしたビジネスアイデアの検討をお手伝い。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="btn-navy svc-b">相談する</a></div>
-    </div>
-  </section>
-
-
-  <!-- SOLOバンクセクション -->
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
   <section id="solo-bank" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Premium Banking</div>
@@ -1735,8 +1732,152 @@ section[id],details[id]{scroll-margin-top:72px;}
 
   </section>
 
-  <!-- 代表ストーリー -->
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+<section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">銀行口座開設手続き｜書類整備サポート詳細</h2>
+    <div class="disc-box"><strong>【重要】</strong> 当社は銀行の代理人・媒介者ではありません。いかなる銀行からも紹介料を受け取っておらず、口座開設の成功を保証するものではありません。</div>
+    <div class="space-y-3 accordion">
+      <details><summary>必要書類（非居住者の一般的な例）</summary><div class="content"><ul><li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li><li>英語の住所証明（3ヶ月以内）</li><li>署名・原本郵送（PDF不可）</li></ul></div></details>
+      <details open><summary>書類整備サポートの範囲と費用</summary><div class="content">
+        <div class="value-box"><h5 class="value-title">原則として渡航不要</h5><ul class="value-list"><li>MoU連携の正規ルートでの書類取次補助</li><li>連絡はチャット中心（履歴が残って安心）</li></ul></div>
+        <div class="price-promo">
+          <div class="row"><span class="label">サービス費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
+          <div class="row"><span class="label">IE＋口座開設セット：</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span></div>
+          <div class="meta"><small><strong>当社は銀行から紹介料・コミッションを一切受け取っておりません。</strong></small><br><small>開設可否は各銀行の審査判断です。</small></div>
+          <div class="proof"><span>MoU：TREX LEGAL</span></div>
+        </div>
+      </div></details>
+      <details id="cf-tool-sec"><summary>複利の概算ツール（参考・商品非特定）</summary><div class="content">
+        <div id="cf-tool" class="cf-card" role="form">
+          <h4 class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
+          <div class="cf-grid">
+            <label for="cf-currency">通貨</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
+            <label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
+            <label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
+            <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
+            <label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
+            <label for="cf-nper">回数/年</label><select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
+            <label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked>
+          </div>
+          <div class="cf-preset">
+            <span class="cf-hint">年率の例：</span>
+            <button type="button" class="cf-chip" data-rate="3">3%</button>
+            <button type="button" class="cf-chip" data-rate="5">5%</button>
+            <button type="button" class="cf-chip" data-rate="8">8%</button>
+            <button type="button" class="cf-chip" data-rate="10">10%</button>
+            <small class="note">※ 特定の商品・銀行・利回りを示すものではありません。</small>
+          </div>
+          <div class="cf-ack"><input id="cf-ack" type="checkbox"><label for="cf-ack">一般的な数学計算の参考ツールです。税・手数料・為替は加味していません。将来の成果を保証しません。</label></div>
+          <div class="cf-actions"><button id="cf-run" class="btn secondary" disabled>結果を表示</button><button id="cf-clear" class="btn neutral" type="button">クリア</button></div>
+          <div id="cf-out" class="cf-out" aria-live="polite"></div>
+          <p class="text-sm muted" style="margin-top:.5rem;">※ 教育・参考目的です。投資・預金の勧誘ではありません。</p>
+        </div>
+      </div></details>
+    </div>
+  </section>
+
+<section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">ジョージア法人設立｜書類整備・情報提供サポート</h2>
+    <div class="disc-box"><strong>【重要】</strong> 当社が提供するのは一般情報の提供と書類整備の補助のみです。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。最終判断は有資格専門家にご相談ください。</div>
+    <div class="price-promo quick-summary">
+      <div class="row"><span class="label">サクッと要点</span></div>
+      <p class="qs-tag">料金の目安</p>
+      <ul class="qs-list"><li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li><li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li></ul>
+    </div>
+    <div class="progress-steps"><div class="step">1. LINEで相談</div><div class="step">2. ヒアリング → ご提案</div><div class="step">3. 申込 → 現地手続き → 完了</div></div>
+    <div class="space-y-3 accordion">
+      <details><summary>ジョージア法人制度の概要（公開資料に基づく一般情報）</summary><div class="content"><p>OECDやPwC等が公表している一般資料を参照した情報です。居住国の税法（CFC規制等）の適用可能性があります。<strong>税務・法務の判断は当社では行いません。</strong></p></div></details>
+      <details><summary>法律事務所との提携（MoU）</summary><div class="content"><ul><li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li><li>法人ID：400433768</li></ul><span class="note">※ MoUは業務連携の覚書であり、登記完了・審査結果の保証ではありません。</span></div></details>
+      <details><summary>書類整備サポートの範囲</summary><div class="content"><ul><li>法人登記に必要な書類の案内・整備補助（目安：7〜10営業日）</li><li>バーチャルオフィス（12ヶ月）の手配案内</li><li>法人口座開設手続きに向けた書類案内（開設可否は銀行審査判断）</li><li>eSIM設定の案内</li></ul></div></details>
+      <details><summary>料金プラン</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody><tr><td>基本プラン</td><td>¥330,000〜</td></tr><tr><td>設立＋LPパック</td><td>¥498,000</td></tr><tr><td>フルサポートパック</td><td>¥598,000</td></tr><tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr></tbody></table></div><p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p></div></details>
+      <details><summary>Nominee構成（UBO開示を含む一般説明）</summary><div class="content"><ul><li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）の開示が必要</strong></li><li>年額：€2,500（2025年8月時点）</li><li>CRS等の情報交換制度の対象となり得ます</li></ul></div></details>
+      <details><summary>KYC・FMSに関する注意</summary><div class="content"><p>パスポート・住所証明等のKYC書類が必要です。高額送受金・暗号資産取引の状況により追加確認が求められる場合があります。反社・AML/CFT上の疑いがある場合は支援不可です。</p></div></details>
+    </div>
+  </section>
+
+<section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
+    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">ジョージア個人事業主（IE）登録｜書類整備サポート</h2>
+    <div class="disc-box"><strong>【重要】</strong> ジョージア現地制度の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります</strong>。必ず日本の税理士にご確認ください。</div>
+    <div class="price-promo quick-summary">
+      <div class="row"><span class="label">サクッと要点</span></div>
+      <p class="qs-tag">料金の目安</p>
+      <ul class="qs-list"><li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li><li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li></ul>
+    </div>
+    <div class="space-y-3 accordion">
+      <details><summary>IE＋Small Business Statusの制度概要（一般情報）</summary><div class="content">
+        <table style="width:100%;border-collapse:collapse;font-family:'Noto Sans JP',sans-serif;"><thead><tr><th style="background:var(--navy);color:#fff;padding:10px;text-align:left;font-size:12px;">年収（ラリ）</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">日本円目安</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">現地税率区分</th></tr></thead><tbody>
+          <tr><td style="padding:10px;border:1px solid var(--border);">〜30,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">〜150万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">0%</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border);background:#f8faff;">30,001〜500,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">150〜2,500万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">1%</td></tr>
+          <tr><td style="padding:10px;border:1px solid var(--border);">500,000超</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">2,500万円〜</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">3〜5%</td></tr>
+        </tbody></table>
+        <p class="note" style="margin-top:8px;"><strong>※ 居住国での税負担とは異なります。必ず税理士にご相談ください。</strong></p>
+      </div></details>
+      <details open><summary>サポート範囲と料金</summary><div class="content">
+        <div class="price-promo">
+          <div class="row"><span class="label">料金：</span><span class="now">¥288,000</span><span class="text-sm">（税込）</span></div>
+          <div class="meta"><small>※ IE＋口座開設セット：<strong>¥498,000（税込）</strong></small></div>
+          <div class="proof"><span>MoU：TREX LEGAL</span><span>オンライン完結</span></div>
+        </div>
+      </div></details>
+    </div>
+  </section>
+
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
+  <!-- 料金 -->
+  <section id="pricing" style="margin:0 0 0;">
+    <div class="sh">
+      <div class="sh-eye">Pricing</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title" data-i18n="pricing-title">料金とサービス内容</h2>
+      <p class="sh-sub" data-i18n="pricing-sub">書類整備・事務補助の対価です。銀行手数料・実費は別途です。</p>
+    </div>
+    <div class="price-box">
+      <div class="price-top">
+        <div class="price-badge" data-i18n="price-badge">Main Service</div>
+        <p class="price-name" data-i18n="price-name">銀行口座開設 書類整備サポート</p>
+        <div class="price-num">¥258,000<span class="unit">（税込）</span></div>
+        <p class="price-desc" data-i18n="price-desc">現地法律事務所の手数料・書類翻訳・公証手続きサポートを含むパッケージ料金です。追加料金は発生しません。</p>
+        <p class="price-note-sm" data-i18n="price-note-sm">別途実費：公証・アポスティーユ費用 ／ 国際郵送（DHL）¥5,000〜</p>
+      </div>
+      <div class="price-body">
+        <p class="incl-label ok" data-i18n="incl-ok">含まれるもの</p>
+        <ul class="incl-ul ok">
+          <li data-i18n="inc1">必要書類の案内・チェックリスト</li>
+          <li data-i18n="inc2">公証・アポスティーユ取得方法の日本語ガイド</li>
+          <li data-i18n="inc3">現地法律事務所（TREX LEGAL）への書類取次補助</li>
+          <li>申請書類の最終チェック</li>
+          <li data-i18n="inc5">進捗連絡・チャットサポート</li>
+          <li data-i18n="inc6">Wise登録の初期情報提供</li>
+        </ul>
+        <p class="incl-label ng" style="margin-top:18px;" data-i18n="incl-ng">含まれないもの</p>
+        <ul class="incl-ul ng">
+          <li data-i18n="excl1">口座開設の成功保証（銀行審査による）</li>
+          <li data-i18n="excl2">税務・法務の個別アドバイス</li>
+          <li data-i18n="excl3">銀行手数料・郵送費などの実費</li>
+        </ul>
+        <hr class="price-div">
+        <div class="set-row">
+          <div>
+            <div class="set-l" data-i18n="set-l">🎯 IE登録（個人事業主）＋口座開設セット</div>
+            <div class="set-sl" data-i18n="set-sl">通常合計 ¥546,000 → セット割引</div>
+          </div>
+          <div class="set-p"><s>¥546,000</s>¥498,000</div>
+        </div>
+        <a href="https://line.me/R/ti/p/@georgia-tax" class="main-cta-btn" data-i18n="main-cta-btn" data-i18n="main-cta-btn">📩 無料相談・申し込みはこちら</a>
+        <p class="cta-sub-note" data-i18n="cta-sub-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</p>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:800;color:var(--navy);margin:32px 0 18px;" data-i18n="steps-title">申し込みの流れ</h3>
+    <div class="steps">
+      <div class="step-cell"><div class="step-n">1</div><div class="step-t" data-i18n="step1">LINEで<br>相談</div></div>
+      <div class="step-cell"><div class="step-n">2</div><div class="step-t" data-i18n="step2">ヒアリング<br>→ご提案</div></div>
+      <div class="step-cell"><div class="step-n">3</div><div class="step-t" data-i18n="step3">申込み<br>→書類整備</div></div>
+      <div class="step-cell"><div class="step-n">4</div><div class="step-t" data-i18n="step4">申請<br>→完了</div></div>
+    </div>
+  </section>
+
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
   <section id="founder-story" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Why We Started</div>
@@ -1789,7 +1930,8 @@ section[id],details[id]{scroll-margin-top:72px;}
       </div>
     </div>
   </section>
-  <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
 
   <!-- お客様の声 -->
@@ -1836,121 +1978,51 @@ section[id],details[id]{scroll-margin-top:72px;}
       </div>
     </div>
   </section>
-  <div class="orn"><div class="orn-d"></div></div>
 
-  <!-- 大CTA -->
-  <div class="big-cta">
-    <div class="big-cta-inner">
-      <h2 data-i18n="big-cta-h2">海外取引の決済インフラを、<br>今年中に整えませんか。</h2>
-      <p data-i18n="big-cta-p">「まだ検討段階」で構いません。<br>現状をお聞きして、何が必要かを一緒に整理します。</p>
-      <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold" style="font-size:16px;padding:18px 52px;" data-i18n="big-cta-btn">
-        📩 LINEで無料相談する
-      </a>
-      <span class="big-cta-note" data-i18n="cta-note">返信は営業日3日以内を目安にしています｜無理な勧誘はしません</span>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
+  <!-- FAQ -->
+  <section id="faq" style="margin:0 0 0;">
+    <div class="sh">
+      <div class="sh-eye">FAQ</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title" data-i18n="faq-title">よくある質問</h2>
     </div>
-  </div>
-
-</div>
-</div>
-
-<main id="main">
-  
-
-  <section id="corp-setup" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">ジョージア法人設立｜書類整備・情報提供サポート</h2>
-    <div class="disc-box"><strong>【重要】</strong> 当社が提供するのは一般情報の提供と書類整備の補助のみです。税務・法務の個別助言、金融商品の勧誘・媒介・代理は行いません。最終判断は有資格専門家にご相談ください。</div>
-    <div class="price-promo quick-summary">
-      <div class="row"><span class="label">サクッと要点</span></div>
-      <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list"><li>法人設立の基本プラン：<strong>¥330,000（税込）〜</strong></li><li>登記完了目安：現地営業日ベースで<strong>7〜10営業日程度</strong></li></ul>
-    </div>
-    <div class="progress-steps"><div class="step">1. LINEで相談</div><div class="step">2. ヒアリング → ご提案</div><div class="step">3. 申込 → 現地手続き → 完了</div></div>
-    <div class="space-y-3 accordion">
-      <details><summary>ジョージア法人制度の概要（公開資料に基づく一般情報）</summary><div class="content"><p>OECDやPwC等が公表している一般資料を参照した情報です。居住国の税法（CFC規制等）の適用可能性があります。<strong>税務・法務の判断は当社では行いません。</strong></p></div></details>
-      <details><summary>法律事務所との提携（MoU）</summary><div class="content"><ul><li>パートナー：TREX LEGAL（ジョージア現地法律事務所）</li><li>法人ID：400433768</li></ul><span class="note">※ MoUは業務連携の覚書であり、登記完了・審査結果の保証ではありません。</span></div></details>
-      <details><summary>書類整備サポートの範囲</summary><div class="content"><ul><li>法人登記に必要な書類の案内・整備補助（目安：7〜10営業日）</li><li>バーチャルオフィス（12ヶ月）の手配案内</li><li>法人口座開設手続きに向けた書類案内（開設可否は銀行審査判断）</li><li>eSIM設定の案内</li></ul></div></details>
-      <details><summary>料金プラン</summary><div class="content"><div class="plan-table-wrap"><table><thead><tr><th>プラン</th><th>料金（税込）</th></tr></thead><tbody><tr><td>基本プラン</td><td>¥330,000〜</td></tr><tr><td>設立＋LPパック</td><td>¥498,000</td></tr><tr><td>フルサポートパック</td><td>¥598,000</td></tr><tr><td>2年目以降・法人維持</td><td>¥198,000/年</td></tr></tbody></table></div><p class="note">※ 登記完了・口座開設の成功を保証するものではありません。</p></div></details>
-      <details><summary>Nominee構成（UBO開示を含む一般説明）</summary><div class="content"><ul><li>実務は依頼者本人が行い、<strong>UBO（実質的支配者）の開示が必要</strong></li><li>年額：€2,500（2025年8月時点）</li><li>CRS等の情報交換制度の対象となり得ます</li></ul></div></details>
-      <details><summary>KYC・FMSに関する注意</summary><div class="content"><p>パスポート・住所証明等のKYC書類が必要です。高額送受金・暗号資産取引の状況により追加確認が求められる場合があります。反社・AML/CFT上の疑いがある場合は支援不可です。</p></div></details>
+    <div class="faq">
+      <div class="faq-item"><div class="faq-q"data-i18n="faq1q">本当に渡航不要ですか？</div><div class="faq-a" data-i18n="faq1a">書類整備・申請手続きは原則として渡航不要で進められます。ただし銀行によっては現地での手続きを求める場合もあります。事前にご案内します。</div></div>
+      <div class="faq-item"><div class="faq-q"data-i18n="faq2q">口座開設は必ずできますか？</div><div class="faq-a" data-i18n="faq2a">開設可否は各銀行の審査判断によるため、成功の保証はできません。書類の不備を減らし、スムーズに審査に進むことを目的としています。</div></div>
+      <div class="faq-item"><div class="faq-q"data-i18n="faq3q">相談だけでも大丈夫ですか？</div><div class="faq-a" data-i18n="faq3a">はい。「まだ検討段階」でも構いません。現状のヒアリングから始め、無理な勧誘はしません。</div></div>
+      <div class="faq-item"><div class="faq-q"data-i18n="faq4q">キャンセルはできますか？</div><div class="faq-a" data-i18n="faq4a">現地パートナーへの依頼開始前であれば、手数料（¥10,000）を差し引いた金額を返金します。依頼開始後の返金はできません。</div></div>
+      <div class="faq-item"><div class="faq-q"data-i18n="faq5q">日本の税申告はどうなりますか？</div><div class="faq-a" data-i18n="faq5a">当社は税務アドバイスを行いません。日本居住者の方は日本の税理士に必ずご相談ください。</div></div>
+      <div class="faq-item"><div class="faq-q"data-i18n="faq6q">法人設立との違いは？</div><div class="faq-a" data-i18n="faq6a">口座開設サポートは個人名義の銀行口座取得に向けた書類整備です。法人設立サポート（¥330,000〜）は別メニューになります。セットでのご利用も可能です。</div></div>
     </div>
   </section>
 
-  <section id="sole-setup" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">ジョージア個人事業主（IE）登録｜書類整備サポート</h2>
-    <div class="disc-box"><strong>【重要】</strong> ジョージア現地制度の税率区分は、<strong>日本を含む居住国での最終的な税負担とは異なります</strong>。必ず日本の税理士にご確認ください。</div>
-    <div class="price-promo quick-summary">
-      <div class="row"><span class="label">サクッと要点</span></div>
-      <p class="qs-tag">料金の目安</p>
-      <ul class="qs-list"><li>IE＋SBS 書類整備サポート一式：<strong>¥288,000（税込）</strong></li><li>IE＋口座開設セット：<strong>¥498,000（税込）</strong></li></ul>
+<div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
+
+  <!-- その他サービス -->
+  <section id="other-services" style="margin:0 0 0;">
+    <div class="sh">
+      <div class="sh-eye">Other Services</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title" data-i18n="other-title">その他のサービス</h2>
     </div>
-    <div class="space-y-3 accordion">
-      <details><summary>IE＋Small Business Statusの制度概要（一般情報）</summary><div class="content">
-        <table style="width:100%;border-collapse:collapse;font-family:'Noto Sans JP',sans-serif;"><thead><tr><th style="background:var(--navy);color:#fff;padding:10px;text-align:left;font-size:12px;">年収（ラリ）</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">日本円目安</th><th style="background:var(--navy);color:#fff;padding:10px;font-size:12px;text-align:center;">現地税率区分</th></tr></thead><tbody>
-          <tr><td style="padding:10px;border:1px solid var(--border);">〜30,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">〜150万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">0%</td></tr>
-          <tr><td style="padding:10px;border:1px solid var(--border);background:#f8faff;">30,001〜500,000</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">150〜2,500万円</td><td style="padding:10px;border:1px solid var(--border);text-align:center;background:#f8faff;">1%</td></tr>
-          <tr><td style="padding:10px;border:1px solid var(--border);">500,000超</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">2,500万円〜</td><td style="padding:10px;border:1px solid var(--border);text-align:center;">3〜5%</td></tr>
-        </tbody></table>
-        <p class="note" style="margin-top:8px;"><strong>※ 居住国での税負担とは異なります。必ず税理士にご相談ください。</strong></p>
-      </div></details>
-      <details open><summary>サポート範囲と料金</summary><div class="content">
-        <div class="price-promo">
-          <div class="row"><span class="label">料金：</span><span class="now">¥288,000</span><span class="text-sm">（税込）</span></div>
-          <div class="meta"><small>※ IE＋口座開設セット：<strong>¥498,000（税込）</strong></small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span><span>オンライン完結</span></div>
-        </div>
-      </div></details>
+    <div class="svc-grid">
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M12 3v18M5 7l7-4 7 4M5 17l7 4 7-4M3 10l4 2-4 2M21 10l-4 2 4 2"/></svg></div><h3 class="svc-tt" data-i18n="svc1t">法人設立 書類整備サポート</h3><p class="svc-tx" data-i18n="svc1d">現地法律事務所と連携し、法人登記に必要な書類整備・情報提供を行います。¥330,000〜</p><a href="#corp-setup" class="btn-navy svc-b">詳しくはこちら</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg></div><h3 class="svc-tt" data-i18n="svc2t">個人事業主（IE）登録サポート</h3><p class="svc-tx" data-i18n="svc2d">IE登録の一般情報提供と登録書類の整備補助（条件あり）。¥288,000</p><a href="#sole-setup" class="btn-navy svc-b">詳しくはこちら</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><ellipse cx="12" cy="14" rx="8" ry="4"/><path d="M4 14c0-2 3.6-6 8-6s8 4 8 6"/><path d="M8 10c1-2 2-3 4-3s3 1 4 3"/></svg></div><h3 class="svc-tt" data-i18n="svc3t">和食店をあなたの国に</h3><p class="svc-tx" data-i18n="svc3d">店舗立ち上げ・職人紹介・契約面の情報確認をサポート。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="btn-green svc-b">無料相談する</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 9.5L12 3l9 6.5V21H3V9.5z"/><rect x="9" y="14" width="6" height="7"/></svg></div><h3 class="svc-tt" data-i18n="svc4t">海外不動産 購入・賃貸</h3><p class="svc-tx" data-i18n="svc4d">ジョージアを含む海外不動産の物件選び・契約プロセスの情報提供。</p><a href="#" class="btn-dim svc-b">準備中</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 21h18M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M12 3L3 10h18L12 3z"/></svg></div><h3 class="svc-tt" data-i18n="svc5t">銀行口座開設（法人）</h3><p class="svc-tx" data-i18n="svc5d">法人口座開設に向けた書類整備サポート。法人設立とセットも可。</p><a href="#personal-account" class="btn-navy svc-b">詳しくはこちら</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 018 0v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></div><h3 class="svc-tt" data-i18n="svc6t">その他 企画サポート</h3><p class="svc-tx" data-i18n="svc6d">ジョージアを起点にしたビジネスアイデアの検討をお手伝い。</p><a href="https://line.me/R/ti/p/@georgia-tax" class="btn-navy svc-b">相談する</a></div>
     </div>
   </section>
 
-  <section id="personal-account" class="container mx-auto max-w-4xl px-4 py-16">
-    <h2 class="text-2xl md:text-3xl font-bold mb-6" style="font-family:'Shippori Mincho B1',serif;">銀行口座開設手続き｜書類整備サポート詳細</h2>
-    <div class="disc-box"><strong>【重要】</strong> 当社は銀行の代理人・媒介者ではありません。いかなる銀行からも紹介料を受け取っておらず、口座開設の成功を保証するものではありません。</div>
-    <div class="space-y-3 accordion">
-      <details><summary>必要書類（非居住者の一般的な例）</summary><div class="content"><ul><li>パスポート（有効期限内）<strong>＋公証＆アポスティーユ</strong></li><li>英語の住所証明（3ヶ月以内）</li><li>署名・原本郵送（PDF不可）</li></ul></div></details>
-      <details open><summary>書類整備サポートの範囲と費用</summary><div class="content">
-        <div class="value-box"><h5 class="value-title">原則として渡航不要</h5><ul class="value-list"><li>MoU連携の正規ルートでの書類取次補助</li><li>連絡はチャット中心（履歴が残って安心）</li></ul></div>
-        <div class="price-promo">
-          <div class="row"><span class="label">サービス費用：</span><span class="now">¥258,000</span><span class="text-sm">（税込）</span></div>
-          <div class="row"><span class="label">IE＋口座開設セット：</span><span class="old">¥546,000</span><span class="now">¥498,000</span><span class="text-sm">（税込）</span></div>
-          <div class="meta"><small><strong>当社は銀行から紹介料・コミッションを一切受け取っておりません。</strong></small><br><small>開設可否は各銀行の審査判断です。</small></div>
-          <div class="proof"><span>MoU：TREX LEGAL</span></div>
-        </div>
-      </div></details>
-      <details id="cf-tool-sec"><summary>複利の概算ツール（参考・商品非特定）</summary><div class="content">
-        <div id="cf-tool" class="cf-card" role="form">
-          <h4 class="smallish">複利の概算ツール（一般的な数式ベース）</h4>
-          <div class="cf-grid">
-            <label for="cf-currency">通貨</label><select id="cf-currency"><option value="JPY" data-locale="ja-JP" data-symbol="¥" selected>JPY（円）</option><option value="USD" data-locale="en-US" data-symbol="$">USD</option><option value="EUR" data-locale="de-DE" data-symbol="€">EUR</option><option value="GEL" data-locale="ka-GE" data-symbol="₾">GEL</option></select>
-            <label for="cf-principal">元本</label><input id="cf-principal" type="number" inputmode="decimal" min="0" step="1" value="1000000">
-            <label for="cf-rate">年率（%）</label><input id="cf-rate" type="number" inputmode="decimal" step="0.01" value="10.00">
-            <div class="cf-subrow" aria-live="polite">入力中の年率：<strong id="cf-rate-display">10.00%</strong></div>
-            <label for="cf-years">年数</label><input id="cf-years" type="number" inputmode="numeric" min="0" step="1" value="7">
-            <label for="cf-nper">回数/年</label><select id="cf-nper"><option value="1">年1回</option><option value="4">四半期</option><option value="12" selected>月次</option><option value="365">日次</option></select>
-            <label for="cf-is-comp">複利で計算</label><input id="cf-is-comp" type="checkbox" checked>
-          </div>
-          <div class="cf-preset">
-            <span class="cf-hint">年率の例：</span>
-            <button type="button" class="cf-chip" data-rate="3">3%</button>
-            <button type="button" class="cf-chip" data-rate="5">5%</button>
-            <button type="button" class="cf-chip" data-rate="8">8%</button>
-            <button type="button" class="cf-chip" data-rate="10">10%</button>
-            <small class="note">※ 特定の商品・銀行・利回りを示すものではありません。</small>
-          </div>
-          <div class="cf-ack"><input id="cf-ack" type="checkbox"><label for="cf-ack">一般的な数学計算の参考ツールです。税・手数料・為替は加味していません。将来の成果を保証しません。</label></div>
-          <div class="cf-actions"><button id="cf-run" class="btn secondary" disabled>結果を表示</button><button id="cf-clear" class="btn neutral" type="button">クリア</button></div>
-          <div id="cf-out" class="cf-out" aria-live="polite"></div>
-          <p class="text-sm muted" style="margin-top:.5rem;">※ 教育・参考目的です。投資・預金の勧誘ではありません。</p>
-        </div>
-      </div></details>
-    </div>
-  </section>
-
-  <section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
+<section id="not-for" class="container mx-auto max-w-4xl px-4 py-8">
     <h2 class="text-xl md:text-2xl font-bold mb-4" style="font-family:'Shippori Mincho B1',serif;">こんな方にはおすすめしません</h2>
     <ul class="qs-list"><li>居住国での申告義務や法律を守る意思がない方</li><li>口座開設の確実な成功を保証として求める方</li><li>税務・法務の個別アドバイスを求めている方</li></ul>
   </section>
 
-  <section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
+<section id="disclaimer" class="container mx-auto max-w-4xl px-4 py-8 text-sm">
     <h2 class="smallish">免責事項・キャンセルポリシー</h2>
     <div class="accordion">
       <details><summary>免責事項（必ずお読みください）</summary><div class="content"><ul>
@@ -1973,61 +2045,3 @@ section[id],details[id]{scroll-margin-top:72px;}
     </div>
   </section>
 
-  <div class="fixed-cta" id="ctaBar" role="region" aria-label="操作バー">
-    <div class="row">
-      <a class="btn neutral" id="toTop" href="#page-top">↑ トップ</a>
-      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-consult">💬 無料相談</a>
-      <a class="btn success" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-apply">📩 今すぐLINEで相談</a>
-    </div>
-  </div>
-</main>
-
-<footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025 GRENA GROUP LLC｜ジョージア法人ID：400433768｜所在地：Nadzaladevi district, Erosi Manjgaladze St. N75a, Tbilisi, Georgia｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜本サービスは書類整備・一般情報提供のみです。税務・法務の助言・金融商品の勧誘は行いません。｜<a href="./terms" target="_blank" rel="noopener noreferrer">利用規約</a>｜<a href="./privacy" target="_blank" rel="noopener noreferrer">プライバシーポリシー</a>｜<a href="./tokusho" target="_blank" rel="noopener noreferrer">特定商取引法</a></small>
-  <small class="foot-sp">©2025 GRENA GROUP LLC｜ID：400433768｜<a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a>｜書類整備・一般情報提供のみ</small>
-</footer>
-
-<script>
-// FAQ
-document.querySelectorAll('.faq-item').forEach(function(i){
-  i.querySelector('.faq-q').addEventListener('click',function(){i.classList.toggle('open');});
-});
-// スムーズスクロール
-document.querySelectorAll('a[href^="#"]').forEach(function(a){
-  a.addEventListener('click',function(e){
-    var id=this.getAttribute('href').slice(1);
-    var el=document.getElementById(id);
-    if(!el)return;
-    e.preventDefault();
-    var y=el.getBoundingClientRect().top+window.pageYOffset-80;
-    try{window.scrollTo({top:y,behavior:'smooth'});}catch(err){window.scrollTo(0,y);}
-  });
-});
-// ヒーロー視差（軽量JS）
-(function(){
-  var img=document.querySelector('.hero-img');
-  if(!img||window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  var ticking=false;
-  window.addEventListener('scroll',function(){
-    if(!ticking){
-      requestAnimationFrame(function(){
-        var s=window.pageYOffset;
-        if(s<window.innerHeight){
-          img.style.transform='scale(1.06) translateY('+s*.08+'px)';
-        }
-        ticking=false;
-      });
-      ticking=true;
-    }
-  },{passive:true});
-})();
-</script>
-
-<script src="./script.js?v=20260404a" defer></script>
-
-
-
-
-
-</body>
-</html>
