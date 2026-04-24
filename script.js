@@ -141,28 +141,39 @@
     if (!menuGroupsEl) return;
     menuGroupsEl.innerHTML = "";
     const lang = getCurrentLang();
-    const main = $("#main");
-    if (!main) return;
 
-    const sections = $$("section[id]", main).filter((s) => {
+    // ドキュメント全体からsection[id]を取得（#mainに限定しない）
+    const sections = $$("section[id]").filter((s) => {
       const id = (s.id || "").trim();
       if (!id) return false;
       if (id === "page-top") return false;
       return true;
     });
 
-    const glpLanding = $("#glp-landing");
-    const extra = [];
-    if (glpLanding && glpLanding.id) extra.push(glpLanding);
-    const allSections = [...extra, ...sections];
-
     const groupDefs = [
-      { title: lang === "en" ? "Getting started" : "はじめに", ids: ["glp-landing"] },
-      { title: lang === "en" ? "Company / Registration" : "法人・登録", ids: ["corp-setup", "plans", "sole-setup", "personal-account"] },
-      { title: lang === "en" ? "Check / Terms" : "確認・規約", ids: ["not-for", "precheck", "disclaimer"] }
+      {
+        title: lang === "en" ? "Premium Banking" : "🏦 SOLOバンク",
+        ids: ["solo-bank"]
+      },
+      {
+        title: lang === "en" ? "About Georgia" : "📌 GRENAについて",
+        ids: ["why-georgia", "about-georgia", "service", "founder-story"]
+      },
+      {
+        title: lang === "en" ? "Services" : "📋 サービス詳細",
+        ids: ["personal-account", "corp-setup", "sole-setup", "pricing"]
+      },
+      {
+        title: lang === "en" ? "Reviews & FAQ" : "⭐ 口コミ・FAQ",
+        ids: ["reviews", "faq", "other-services"]
+      },
+      {
+        title: lang === "en" ? "Terms" : "📄 規約・確認",
+        ids: ["not-for", "disclaimer"]
+      }
     ];
 
-    const byId = new Map(allSections.map((s) => [s.id, s]));
+    const byId = new Map(sections.map((s) => [s.id, s]));
     const used = new Set();
 
     groupDefs.forEach((g) => {
