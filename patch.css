@@ -2330,3 +2330,29 @@ body {
 .solo-legal-banner-text {
   font-size: 12px; color: var(--text-3); line-height: 1.8; margin: 0;
 }
+
+/* SOLOバンク 提携事務所バナー */
+.solo-partner-box {
+  max-width: 860px; margin: 0 auto 40px; padding: 24px 32px;
+  background: var(--white); border: 1px solid var(--gold-border);
+  border-left: 4px solid var(--gold); border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+.solo-partner-label {
+  font-size: 11px; font-weight: 700; color: var(--gold-d);
+  letter-spacing: .1em; margin-bottom: 8px;
+}
+.solo-partner-name {
+  font-family: 'Cormorant Garamond', serif; font-size: 20px;
+  font-weight: 700; color: var(--navy); margin-bottom: 6px;
+}
+.solo-partner-info {
+  font-size: 12px; color: var(--text-3); line-height: 1.7; margin-bottom: 10px;
+}
+.solo-partner-link {
+  font-size: 12px; color: var(--gold-d); text-decoration: none; font-weight: 700;
+}
+.solo-partner-link:hover { text-decoration: underline; }
+@media(max-width: 768px) {
+  .solo-partner-box { padding: 18px 16px; }
+}
