@@ -2369,7 +2369,6 @@ body {
 ============================================================ */
 
 /* ── Google Fonts: Inter（モダン英数字） ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 /* ── CSS変数 追加・上書き ── */
 :root {
@@ -2842,4 +2841,242 @@ section#reviews .page-wrap {
 .big-cta-note {
   color: rgba(255,255,255,.45) !important;
   font-size: 11px !important;
+}
+
+/* ============================================================
+   FORCE OVERRIDE 2026-04-26
+   視覚的変化を確実に反映させる強制上書き
+============================================================ */
+
+/* ── 全体背景：クリーム→クリーンなオフホワイト ── */
+html { background: #f0f4f8 !important; }
+body {
+  background: #f0f4f8 !important;
+  font-family: 'Inter','Noto Sans JP',-apple-system,sans-serif !important;
+}
+
+/* ── page-wrap に背景白カードを追加 ── */
+.page-wrap {
+  background: transparent !important;
+  max-width: 860px !important;
+}
+
+/* ── Whyカードを完全刷新 ── */
+.why-card {
+  background: #fff !important;
+  border: none !important;
+  border-radius: 22px !important;
+  box-shadow: 0 4px 20px rgba(10,28,53,.08), 0 1px 4px rgba(10,28,53,.04) !important;
+  padding: 26px 22px !important;
+  transition: transform .2s ease, box-shadow .2s ease !important;
+}
+.why-card:hover {
+  transform: translateY(-7px) !important;
+  box-shadow: 0 20px 56px rgba(10,28,53,.14) !important;
+}
+.why-title {
+  font-family: 'Inter','Noto Sans JP',sans-serif !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  color: #0c1a30 !important;
+}
+.why-text {
+  font-size: 13px !important;
+  color: #5e7088 !important;
+  line-height: 1.8 !important;
+}
+
+/* ── STATSを完全刷新 ── */
+.stats {
+  display: grid !important;
+  grid-template-columns: repeat(3,1fr) !important;
+  gap: 16px !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin: 40px 0 36px !important;
+}
+.stat {
+  background: #fff !important;
+  border: none !important;
+  border-radius: 22px !important;
+  box-shadow: 0 4px 20px rgba(10,28,53,.08) !important;
+  padding: 30px 16px 24px !important;
+}
+.stat::before {
+  left: 16px !important; right: 16px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg,#9a7c2e,#e8cb7a) !important;
+  opacity: 1 !important;
+}
+.stat-n {
+  font-family: 'Inter',sans-serif !important;
+  font-size: clamp(34px,5.5vw,50px) !important;
+  font-weight: 900 !important;
+  color: transparent !important;
+  background: linear-gradient(135deg,#0a1c35,#1a3d6b) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+.stat-n em {
+  color: transparent !important;
+  background: linear-gradient(135deg,#9a7c2e,#e8cb7a) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-style: normal !important;
+}
+
+/* ── emp-card（共感カード）刷新 ── */
+.emp-card {
+  background: #fff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 18px rgba(10,28,53,.07) !important;
+  padding: 20px 16px !important;
+}
+.emp-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 14px 40px rgba(10,28,53,.12) !important;
+}
+
+/* ── セクション区切りを完全刷新 ── */
+.sec-ornament {
+  display: flex !important;
+  height: 1px !important;
+  margin: 0 0 0 !important;
+  padding: 0 !important;
+  background: linear-gradient(90deg,transparent,rgba(184,151,62,.2) 40%,rgba(184,151,62,.2) 60%,transparent) !important;
+}
+.sec-ornament::before,
+.sec-ornament::after { display: none !important; }
+.sec-ornament-diamond { display: none !important; }
+
+/* ── section 交互背景 ── */
+section { padding: 52px 0 !important; }
+section#why-georgia    { background: #f8fafc !important; }
+section#about-georgia  { background: #ffffff !important; }
+section#service        { background: #f8fafc !important; }
+section#founder-story  { background: #ffffff !important; }
+section#personal-account { background: #f8fafc !important; }
+section#solo-bank      { background: linear-gradient(180deg,#0a1c35,#0d2040) !important; color: #fff !important; }
+section#corp-setup     { background: #f8fafc !important; }
+section#sole-setup     { background: #ffffff !important; }
+section#pricing        { background: #f8fafc !important; }
+section#reviews        { background: linear-gradient(180deg,#f0f4f8,#fff) !important; }
+section#faq            { background: #ffffff !important; }
+section#not-for        { background: #fff5f5 !important; border-top: 2px solid rgba(220,60,60,.09) !important; }
+section#other-services { background: #f8fafc !important; }
+section#disclaimer     { background: #faf8f3 !important; border-top: 1px solid rgba(184,151,62,.15) !important; }
+
+/* ── sh-title にグラデーション文字（キーワードのみ） ── */
+.sh-eye {
+  font-family: 'Inter',sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em !important;
+  color: #c9a84c !important;
+  font-style: normal !important;
+  text-transform: uppercase !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 12px !important;
+}
+.sh-eye::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 20px !important; height: 2px !important;
+  background: #c9a84c !important;
+  border-radius: 1px !important;
+  flex-shrink: 0 !important;
+}
+.sh-line { display: none !important; }
+.sh-title {
+  font-family: 'Noto Sans JP',sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(21px,4vw,32px) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.02em !important;
+  color: #0c1a30 !important;
+}
+
+/* ── CTAボタン：シャインエフェクト ── */
+.btn-gold {
+  border-radius: 14px !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg,#e8cb7a,#c9a84c,#9a7c2e) !important;
+  box-shadow: 0 8px 28px rgba(201,168,76,.45) !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+.btn-gold:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 16px 44px rgba(201,168,76,.55) !important;
+}
+
+/* ── 固定CTAバー強化 ── */
+.fixed-cta {
+  background: rgba(8,23,46,.96) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-top: 1px solid rgba(201,168,76,.22) !important;
+}
+.fixed-cta .btn.success {
+  background: linear-gradient(135deg,#e8cb7a,#c9a84c) !important;
+  color: #0a1c35 !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+}
+
+/* ── 信頼バー強化 ── */
+.trust-bar {
+  background: linear-gradient(135deg,#08172e,#0d2040) !important;
+  padding: 18px 24px !important;
+}
+
+/* ── 価格ボックス ── */
+.price-box {
+  border-radius: 28px !important;
+  box-shadow: 0 24px 64px rgba(10,28,53,.15) !important;
+  border: 1px solid rgba(201,168,76,.18) !important;
+}
+.price-top {
+  background: linear-gradient(150deg,#08172e,#0d2040,#122040) !important;
+}
+.price-num {
+  font-family: 'Inter',sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: -.03em !important;
+}
+
+/* ── 比較テーブル ── */
+.cmp-wrap {
+  border-radius: 22px !important;
+  border: none !important;
+  box-shadow: 0 6px 28px rgba(10,28,53,.09) !important;
+}
+.cmp thead tr {
+  background: linear-gradient(135deg,#08172e,#0d2040) !important;
+}
+
+/* ── フッター ── */
+.site-foot {
+  background: linear-gradient(135deg,#08172e,#0d2040) !important;
+  border-top: 1px solid rgba(201,168,76,.15) !important;
+}
+
+/* ── big-cta ── */
+.big-cta {
+  background: linear-gradient(150deg,#08172e 0%,#0d2040 60%,#0f2548 100%) !important;
+}
+
+/* ── モバイル ── */
+@media(max-width:600px){
+  .stats { grid-template-columns:1fr !important; }
+  .why-grid,.emp-grid { grid-template-columns:1fr !important; }
+  .dodont-cols { grid-template-columns:1fr !important; }
+  section { padding:40px 0 !important; }
 }
