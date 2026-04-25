@@ -152,16 +152,12 @@
 
     const groupDefs = [
       {
-        title: lang === "en" ? "Premium Banking" : "🏦 SOLOバンク",
-        ids: ["solo-bank"]
+        title: lang === "en" ? "Services" : "📋 サービス",
+        ids: ["personal-account", "solo-bank", "corp-setup", "sole-setup", "pricing"]
       },
       {
         title: lang === "en" ? "About Georgia" : "📌 GRENAについて",
         ids: ["why-georgia", "about-georgia", "service", "founder-story"]
-      },
-      {
-        title: lang === "en" ? "Services" : "📋 サービス詳細",
-        ids: ["personal-account", "corp-setup", "sole-setup", "pricing"]
       },
       {
         title: lang === "en" ? "Reviews & FAQ" : "⭐ 口コミ・FAQ",
