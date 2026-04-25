@@ -1689,3 +1689,93 @@ section#pricing .note { color: rgba(255,255,255,0.82) !important; }
 @media (max-width: 380px) {
   .results-row { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   MOBILE TAP TARGETS & READABILITY — 2026-04-26
+   タップターゲット最小48px + フォント可読性
+============================================================ */
+
+/* ── タップターゲット最小48px ── */
+.btn, .btn-gold, .btn-ghost, .btn-navy, .btn-green, .btn-dim,
+.main-cta-btn, .glp-btn, .cf-chip,
+.faq-q, details summary,
+.menu-list li a, .menu-button, .menu-close,
+#lpLangSwitch button {
+  min-height: 48px !important;
+}
+.faq-q {
+  padding: 16px 20px !important;
+  min-height: 48px !important;
+}
+details summary {
+  min-height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+.cf-chip {
+  min-height: 40px !important;
+  padding: 8px 16px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+.menu-list li a {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* ── フォント可読性（モバイル） ── */
+@media (max-width: 600px) {
+  body { font-size: 15px !important; line-height: 1.75 !important; }
+  .emp-tx, .why-text, .svc-tx, .fact-tx,
+  .faq-a, details .content,
+  .review-text, .founder-quote-text,
+  .band-list li, .dodont-col ul li {
+    font-size: 14px !important;
+    line-height: 1.8 !important;
+  }
+  .sh-sub, .hero-lead, .glp-hero-lead {
+    font-size: 14px !important;
+    line-height: 1.85 !important;
+  }
+  .faq-q {
+    font-size: 14px !important;
+    padding: 16px 16px !important;
+  }
+  details summary {
+    font-size: 14px !important;
+    padding: 14px 16px !important;
+  }
+  .btn-gold, .main-cta-btn {
+    font-size: 15px !important;
+    padding: 16px 24px !important;
+  }
+}
+
+/* ── トラストバー strong 強調 ── */
+.trust-bar .ti strong,
+.ti strong {
+  color: var(--gold-light, #e8cb7a) !important;
+  font-weight: 900 !important;
+  letter-spacing: .02em;
+}
+
+/* ── results-row TREX LEGAL 強調 ── */
+.result-val {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 900 !important;
+  letter-spacing: -.02em !important;
+}
+
+/* ── CTA ボタン「30秒で完了」訴求強化 ── */
+.main-cta-btn {
+  position: relative !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: .03em !important;
+}
+.cta-sub-note {
+  font-size: 12px !important;
+  color: #6b7a99 !important;
+  font-weight: 500 !important;
+}
