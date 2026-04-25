@@ -2356,3 +2356,490 @@ body {
 @media(max-width: 768px) {
   .solo-partner-box { padding: 18px 16px; }
 }
+
+/* ============================================================
+   GRENA LP 2026 — MODERN REDESIGN PATCH
+   
+   5プロ会議による完全刷新：
+   🎨 デザイナー   → フィンテック美学・カード・アニメ
+   📣 マーケ       → CTA強化・ソーシャルプルーフ
+   ⚖️  法務         → 免責・信頼バッジの視認性
+   📱 UX           → モバイル最適化・タッチ
+   🏦 フィンテック  → Wise/Revolut系プレミアム感
+============================================================ */
+
+/* ── Google Fonts: Inter（モダン英数字） ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ── CSS変数 追加・上書き ── */
+:root {
+  --page-bg-modern: #f0f4f8;
+  --card-bg: #ffffff;
+  --gold-vivid: #c9a84c;
+  --gold-shine: #e8cb7a;
+  --sh-modern: 0 4px 24px rgba(10,28,53,.07), 0 1px 4px rgba(10,28,53,.04);
+  --sh-modern-hover: 0 16px 48px rgba(10,28,53,.13), 0 4px 12px rgba(10,28,53,.06);
+  --r-modern: 20px;
+  --navy-deep: #08172e;
+}
+
+/* ──────────────────────────────────────────
+   ① デザイナー：ページ全体の基盤
+────────────────────────────────────────── */
+html, body {
+  background: var(--page-bg-modern) !important;
+}
+
+/* セクション交互背景 */
+section {
+  background: #ffffff;
+}
+section:nth-child(odd) {
+  background: #f8fafc;
+}
+/* hero・特殊セクションは除外 */
+section#why-georgia,
+section#pricing,
+section#reviews {
+  background: linear-gradient(180deg, #f0f4f8 0%, #ffffff 100%);
+}
+section#disclaimer {
+  background: #faf8f3 !important;
+  border-top: 1px solid rgba(201,168,76,.15);
+}
+section#not-for {
+  background: linear-gradient(135deg, #fff8f8 0%, #fffcfc 100%) !important;
+  border-top: 2px solid rgba(220,60,60,.08);
+}
+
+/* ── セクション間の上下余白を統一 ── */
+section {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+/* ──────────────────────────────────────────
+   ② デザイナー：タイポグラフィ刷新
+────────────────────────────────────────── */
+
+/* 英数字・見出しにInterを優先適用 */
+.stat-n,
+.price-num,
+.hero-h1-main,
+.price-badge,
+.glp-section-label,
+.sh-eye,
+.hero-pill,
+.solo-plan-price {
+  font-family: 'Inter', -apple-system, sans-serif !important;
+}
+
+/* セクションヘッダー：.sh 刷新 */
+.sh {
+  margin-bottom: 36px !important;
+  padding-top: 0 !important;
+}
+.sh-eye {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .18em !important;
+  color: var(--gold-vivid) !important;
+  font-style: normal !important;
+  text-transform: uppercase !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-bottom: 14px !important;
+}
+.sh-eye::before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold-vivid), transparent);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+.sh-line {
+  display: none !important; /* 旧ラインを非表示 */
+}
+.sh-title {
+  font-family: 'Noto Sans JP', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: clamp(22px, 4.5vw, 34px) !important;
+  line-height: 1.22 !important;
+  letter-spacing: -.025em !important;
+  color: #0c1a30 !important;
+  margin-bottom: 14px !important;
+}
+.sh-sub {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #5e7088 !important;
+  line-height: 1.85 !important;
+}
+
+/* セクション区切り装飾を刷新 */
+.sec-ornament {
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  display: block !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(201,168,76,.2) 30%, rgba(201,168,76,.2) 70%, transparent) !important;
+  border: none !important;
+}
+.sec-ornament::before,
+.sec-ornament::after {
+  display: none !important;
+}
+.sec-ornament-diamond {
+  display: none !important;
+}
+
+/* ──────────────────────────────────────────
+   ③ デザイナー：カード刷新
+   ボーダーなし / シャドウのみ / 大きな角丸
+────────────────────────────────────────── */
+
+/* Why カード */
+.why-card {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: var(--r-modern) !important;
+  box-shadow: var(--sh-modern) !important;
+  padding: 28px 22px !important;
+}
+.why-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: var(--sh-modern-hover) !important;
+}
+.why-card::before {
+  height: 3px !important;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold-shine)) !important;
+}
+
+/* Empathy カード */
+.emp-card {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: var(--sh-modern) !important;
+  transition: transform .2s, box-shadow .2s !important;
+}
+.emp-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--sh-modern-hover) !important;
+}
+.emp-ico {
+  background: linear-gradient(135deg, #eef2ff, #e0e8ff) !important;
+  border-radius: 14px !important;
+  width: 44px !important;
+  height: 44px !important;
+  font-size: 20px !important;
+}
+
+/* ──────────────────────────────────────────
+   ④ デザイナー：STATSボックス刷新
+────────────────────────────────────────── */
+.stats {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  gap: 14px !important;
+  margin: 40px 0 36px !important;
+  border-radius: 0 !important;
+}
+.stat {
+  background: #ffffff !important;
+  border: none !important;
+  border-radius: var(--r-modern) !important;
+  box-shadow: var(--sh-modern) !important;
+  padding: 32px 20px 26px !important;
+  transition: transform .2s, box-shadow .2s;
+}
+.stat:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sh-modern-hover) !important;
+}
+.stat::before {
+  left: 20px !important;
+  right: 20px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, var(--gold-d), var(--gold-shine)) !important;
+  opacity: .8 !important;
+}
+.stat-n {
+  font-family: 'Inter', sans-serif !important;
+  font-size: clamp(38px, 6vw, 54px) !important;
+  font-weight: 800 !important;
+  background: linear-gradient(135deg, #0a1c35 0%, #1a3d6b 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  line-height: 1 !important;
+}
+.stat-n em {
+  background: linear-gradient(135deg, var(--gold-d) 0%, var(--gold-shine) 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-style: normal !important;
+}
+.stat-l {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #7a8fa8 !important;
+  margin-top: 8px !important;
+  letter-spacing: .03em !important;
+}
+
+/* ──────────────────────────────────────────
+   ⑤ マーケ：CTAボタン刷新
+────────────────────────────────────────── */
+.btn-gold,
+.glp-btn-main {
+  border-radius: 14px !important;
+  font-weight: 800 !important;
+  font-size: 15px !important;
+  padding: 16px 36px !important;
+  letter-spacing: .03em !important;
+  background: linear-gradient(135deg, #e8cb7a 0%, #c9a84c 50%, #9a7c2e 100%) !important;
+  box-shadow: 0 8px 32px rgba(201,168,76,.45), 0 2px 8px rgba(0,0,0,.10) !important;
+  transition: all .22s !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.btn-gold:hover,
+.glp-btn-main:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 16px 44px rgba(201,168,76,.55), 0 4px 12px rgba(0,0,0,.12) !important;
+}
+
+/* シマーエフェクト（光が流れる） */
+.btn-gold::before,
+.glp-btn-main::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 80% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent) !important;
+  transition: left .6s ease !important;
+}
+.btn-gold:hover::before,
+.glp-btn-main:hover::before {
+  left: 130% !important;
+}
+
+/* 固定CTAバー強化（マーケ観点） */
+.fixed-cta {
+  backdrop-filter: blur(12px) !important;
+  background: rgba(8,23,46,.95) !important;
+  border-top: 1px solid rgba(201,168,76,.2) !important;
+}
+.fixed-cta .btn.success {
+  background: linear-gradient(135deg, var(--gold-shine), var(--gold-vivid)) !important;
+  color: #0a1c35 !important;
+  font-weight: 800 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 16px rgba(201,168,76,.4) !important;
+  font-size: 14px !important;
+}
+.fixed-cta .btn.neutral {
+  border-radius: 12px !important;
+  font-size: 13px !important;
+}
+.fixed-cta .btn.secondary {
+  border-radius: 12px !important;
+  font-size: 13px !important;
+  background: rgba(255,255,255,.12) !important;
+  border: 1px solid rgba(255,255,255,.22) !important;
+  color: #fff !important;
+}
+
+/* ──────────────────────────────────────────
+   ⑥ フィンテック：信頼バー刷新
+────────────────────────────────────────── */
+.trust-bar,
+.glp-trust-bar {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, #0d2040 100%) !important;
+  padding: 18px 28px !important;
+  border-bottom: 1px solid rgba(201,168,76,.14) !important;
+}
+.ti, .glp-trust-item {
+  font-family: 'Noto Sans JP', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: rgba(255,255,255,.85) !important;
+  gap: 10px !important;
+}
+.ti-ic {
+  background: rgba(201,168,76,.12) !important;
+  border: 1px solid rgba(201,168,76,.28) !important;
+  border-radius: 10px !important;
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 15px !important;
+}
+
+/* ──────────────────────────────────────────
+   ⑦ 法務：免責・DODONTセクション視認性強化
+────────────────────────────────────────── */
+.notice {
+  background: linear-gradient(135deg, #fffdf0, #fff9e4) !important;
+  border: 1px solid rgba(201,168,76,.25) !important;
+  border-left: 3px solid var(--gold-vivid) !important;
+  border-radius: 16px !important;
+  padding: 18px 22px !important;
+}
+.notice strong { color: #7a5500 !important; }
+
+/* 比較テーブル */
+.cmp-wrap {
+  border-radius: var(--r-modern) !important;
+  border: none !important;
+  box-shadow: var(--sh-modern) !important;
+  overflow: hidden !important;
+}
+.cmp thead tr {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, #0d2040 100%) !important;
+}
+.cmp thead th.th-hl {
+  background: linear-gradient(135deg, var(--gold-d), var(--gold-shine)) !important;
+}
+
+/* 価格ボックス */
+.price-box {
+  border-radius: 28px !important;
+  border: 1px solid rgba(201,168,76,.16) !important;
+  box-shadow: 0 24px 64px rgba(10,28,53,.14), 0 4px 16px rgba(10,28,53,.06) !important;
+}
+.price-top {
+  background: linear-gradient(148deg, var(--navy-deep) 0%, #0d2040 60%, #112848 100%) !important;
+}
+.price-num {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -.03em !important;
+}
+
+/* ──────────────────────────────────────────
+   ⑧ UX：モバイル最適化
+────────────────────────────────────────── */
+@media (max-width: 600px) {
+  section {
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  .sh-title {
+    font-size: clamp(20px, 6.5vw, 26px) !important;
+  }
+  .stat-n {
+    font-size: clamp(32px, 9vw, 44px) !important;
+  }
+  .why-grid,
+  .emp-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .stats {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .btn-gold,
+  .glp-btn-main {
+    font-size: 14px !important;
+    padding: 15px 28px !important;
+    border-radius: 12px !important;
+  }
+  .dodont-cols {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .price-body {
+    padding: 24px 20px 28px !important;
+  }
+  .price-top {
+    padding: 28px 24px 24px !important;
+  }
+  .why-card {
+    padding: 22px 18px !important;
+  }
+  .hero-body {
+    padding: 0 24px 56px !important;
+  }
+  .page-wrap {
+    padding: 0 16px 80px !important;
+  }
+}
+
+/* ──────────────────────────────────────────
+   ⑨ マーケ：レビューセクション強化
+────────────────────────────────────────── */
+section#reviews .page-wrap {
+  max-width: 860px !important;
+}
+
+/* ──────────────────────────────────────────
+   ⑩ デザイナー：スクロールアニメーション（軽量）
+────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .why-card,
+  .emp-card,
+  .stat,
+  .glp-card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity .5s ease, transform .5s ease, box-shadow .2s !important;
+  }
+  .why-card.visible,
+  .emp-card.visible,
+  .stat.visible,
+  .glp-card.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+  .why-card:nth-child(2), .emp-card:nth-child(2), .stat:nth-child(2) { transition-delay: .08s !important; }
+  .why-card:nth-child(3), .emp-card:nth-child(3), .stat:nth-child(3) { transition-delay: .16s !important; }
+  .why-card:nth-child(4), .emp-card:nth-child(4) { transition-delay: .24s !important; }
+}
+
+/* ──────────────────────────────────────────
+   ⑪ ページラッパー余白統一
+────────────────────────────────────────── */
+.page-wrap {
+  max-width: 860px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
+/* フッター */
+.site-foot {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, #0d2040 100%) !important;
+  border-top: 1px solid rgba(201,168,76,.14) !important;
+}
+
+/* ── BIG CTA セクション ── */
+.big-cta {
+  background: linear-gradient(135deg, var(--navy-deep) 0%, #0d2040 50%, #0a1f40 100%) !important;
+}
+.big-cta-inner {
+  border: 1px solid rgba(201,168,76,.14) !important;
+  border-radius: 28px !important;
+  padding: 48px 36px !important;
+}
+.big-cta-inner h2 {
+  color: #fff !important;
+  font-weight: 900 !important;
+  font-size: clamp(20px, 4vw, 28px) !important;
+}
+.big-cta-inner p {
+  color: rgba(255,255,255,.7) !important;
+}
+.big-cta-note {
+  color: rgba(255,255,255,.45) !important;
+  font-size: 11px !important;
+}

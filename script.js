@@ -463,3 +463,39 @@
     boot();
   }
 })();
+
+/* ============================================================
+   スクロールアニメーション（モダンリデザイン2026）
+   IntersectionObserver でカードを順番に表示
+============================================================ */
+(function() {
+  'use strict';
+  function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) {
+      // 非対応ブラウザは全部表示
+      document.querySelectorAll('.why-card,.emp-card,.stat,.glp-card').forEach(function(el) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.why-card,.emp-card,.stat,.glp-card').forEach(function(el) {
+      observer.observe(el);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initScrollReveal);
+  } else {
+    initScrollReveal();
+  }
+})();
