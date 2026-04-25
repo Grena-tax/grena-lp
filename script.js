@@ -191,7 +191,7 @@
       menuGroupsEl.appendChild(groupEl);
     });
 
-    const rest = allSections.filter((s) => !used.has(s.id));
+    const rest = sections.filter((s) => !used.has(s.id));
     if (rest.length > 0) {
       const groupEl = document.createElement("div");
       groupEl.className = "menu-group";
