@@ -1543,3 +1543,82 @@ section.container:last-of-type { border-bottom:none; }
   .why-card:nth-child(3),.emp-card:nth-child(3),.stat:nth-child(3) { transition-delay:.16s; }
   .why-card:nth-child(4),.emp-card:nth-child(4) { transition-delay:.24s; }
 }
+
+/* ── Inline CSS → クラス化 (2026-04-27) ── */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, rgba(0,0,0,.00) 0%, rgba(0,0,0,.00) 30%, rgba(0,0,0,.35) 58%, rgba(0,0,0,.75) 100%);
+  pointer-events: none;
+}
+section[data-title] { margin: 0; }
+.cta-center-wrap { text-align: center; padding: 36px 16px 8px; }
+.cta-sub-note { text-align: center; margin-top: 10px; }
+.text-sm.muted { margin-top: .5rem; }
+.solo-plan-price { font-size: 18px; }
+.link-gold { color: var(--gold-d); text-decoration: underline; }
+.btn-gold-lg { font-size: 16px !important; padding: 18px 52px !important; }
+.note { margin-top: 8px; }
+.steps-title {
+  font-family: 'Shippori Mincho B1', serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--navy);
+  margin: 32px 0 18px;
+}
+.h2-serif { font-family: 'Shippori Mincho B1', serif; }
+.founder-proof-bar a { color: var(--gold-d); text-decoration: underline; }
+.incl-label.ng { margin-top: 18px; }
+.td-note { color: #8a9ab8; font-size: 11px; }
+
+/* Tax Table */
+.tax-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.tax-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 10px;
+  font-size: 12px;
+  text-align: left;
+}
+.tax-table th:not(:first-child) { text-align: center; }
+.tax-table td {
+  padding: 10px;
+  border: 1px solid var(--border);
+}
+.tax-table td:not(:first-child) { text-align: center; }
+.tax-table tr:nth-child(even) td { background: #f8faff; }
+
+/* ── Authority Badge Bar ── */
+.badge-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 24px;
+  background: var(--navy-deep);
+  border-bottom: 1px solid rgba(201,168,76,.15);
+}
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: rgba(201,168,76,.08);
+  border: 1px solid rgba(201,168,76,.25);
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--gold-l);
+  letter-spacing: .03em;
+  white-space: nowrap;
+}
+.badge-icon { font-size: 14px; line-height: 1; }
+@media (max-width:600px) {
+  .badge-bar { padding: 14px 16px; gap: 8px; }
+  .badge-item { font-size: 10.5px; padding: 6px 11px; }
+}
