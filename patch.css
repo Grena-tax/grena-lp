@@ -1571,7 +1571,13 @@ section#pricing .note { color: rgba(255,255,255,0.82) !important; }
 }
 
 /* ── band ── */
-.band { padding: 32px 32px 28px !important; margin: 0 !important; }
+.band {
+  padding: 32px 32px 28px !important;
+  margin: 0 0 32px !important;
+  background: linear-gradient(135deg, #0a1c35 0%, #0f2845 100%) !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(201,168,76,0.20) !important;
+}
 .band-title {
   font-size: 16px !important;
   font-weight: 800 !important;
