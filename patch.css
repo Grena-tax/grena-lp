@@ -2127,3 +2127,14 @@ section.hero {
   .solo-plans { grid-template-columns: 1fr !important; }
   .solo-amex-body { grid-template-columns: 1fr !important; }
 }
+
+/* solo-cost-table: 偶数行の白背景グローバルルールを上書き */
+.solo-cost-table tr:nth-child(even) td {
+  background: rgba(255,255,255,0.04) !important;
+}
+.solo-cost-table .solo-cost-note-row td {
+  background: rgba(255,255,255,0.04) !important;
+  color: rgba(255,255,255,0.38) !important;
+  font-size: 10.5px !important;
+  font-style: italic !important;
+}
