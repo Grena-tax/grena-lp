@@ -152,20 +152,20 @@
 
     const groupDefs = [
       {
-        title: lang === "en" ? "Services" : "📋 サービス",
-        ids: ["personal-account", "solo-bank", "corp-setup", "sole-setup", "pricing"]
+        title: lang === "en" ? "About Georgia" : "🌐 ジョージアとは",
+        ids: ["why-georgia", "about-georgia"]
       },
       {
-        title: lang === "en" ? "About Georgia" : "📌 GRENAについて",
-        ids: ["why-georgia", "about-georgia", "service", "founder-story"]
+        title: lang === "en" ? "Services & Pricing" : "📋 サービス・料金",
+        ids: ["service", "personal-account", "solo-bank", "corp-setup", "sole-setup", "pricing"]
       },
       {
         title: lang === "en" ? "Reviews & FAQ" : "⭐ 口コミ・FAQ",
-        ids: ["reviews", "faq", "other-services"]
+        ids: ["reviews", "faq", "founder-story"]
       },
       {
-        title: lang === "en" ? "Terms" : "📄 規約・確認",
-        ids: ["not-for", "disclaimer"]
+        title: lang === "en" ? "Others" : "📄 その他",
+        ids: ["other-services", "not-for", "disclaimer"]
       }
     ];
 
