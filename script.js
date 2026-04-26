@@ -222,10 +222,9 @@
     if (!ul || !sectionEl || !sectionEl.id) return;
     ul.appendChild(makeMenuItem(sectionEl.id, getSectionTitle(sectionEl, lang), closeMenuFn, { isSub: false }));
 
-    let detailsList = $$(".accordion > details", sectionEl);
-    if (detailsList.length === 0) detailsList = $$("details", sectionEl);
-
-    detailsList.forEach((d, i) => {
+    // .accordion > details のみサブ項目化（fallback廃止 — 不要な詳細が大量出力するのを防ぐ）
+    const detailsList = $$(".accordion > details", sectionEl);
+    detailsList.slice(0, 6).forEach((d, i) => {
       const did = ensureDetailsId(d, sectionEl.id, i);
       ul.appendChild(makeMenuItem(did, getDetailsTitle(d, lang), closeMenuFn, { isSub: true }));
     });
