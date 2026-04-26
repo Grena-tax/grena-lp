@@ -2138,3 +2138,167 @@ section.hero {
   font-size: 10.5px !important;
   font-style: italic !important;
 }
+
+/* ========================================================
+   HERO QUICK INFO BAR
+   ======================================================== */
+.hero-quick-info {
+  display: flex;
+  gap: 0;
+  margin: 20px 0 24px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 420px;
+  backdrop-filter: blur(6px);
+}
+.hero-qi-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  gap: 3px;
+}
+.hero-qi-item:last-child { border-right: none; }
+.hero-qi-icon { font-size: 17px; line-height: 1; }
+.hero-qi-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.hero-qi-lbl {
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.52);
+  letter-spacing: 0.05em;
+}
+
+/* ========================================================
+   URGENCY BANNER
+   ======================================================== */
+.urgency-banner {
+  background: linear-gradient(90deg, #b8960c 0%, #d4a017 40%, #b8960c 100%);
+  color: #fff;
+  text-align: center;
+  padding: 9px 16px;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  position: relative;
+  z-index: 10;
+}
+.urgency-banner span {
+  opacity: 0.85;
+  font-weight: 400;
+  margin-left: 8px;
+  font-size: 11px;
+}
+
+/* ========================================================
+   REVIEWS — FULL REDESIGN
+   ======================================================== */
+.review-card {
+  background: #fff !important;
+  border: 1px solid #e4eaf5 !important;
+  border-radius: 18px !important;
+  padding: 22px 20px 18px !important;
+  box-shadow: 0 3px 18px rgba(10,28,53,0.07) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.review-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold-d, #9a7a1e), var(--gold-ll, #e2c060));
+}
+.review-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #eef7f1;
+  color: #1a7a42;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 20px;
+  padding: 4px 10px;
+  margin-bottom: 12px;
+  letter-spacing: 0.04em;
+  border: 1px solid #c5e8d3;
+}
+.review-completed-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: linear-gradient(135deg, #eef7f1, #d4f0e0);
+  border: 1px solid #b8e4cc;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1a7a42;
+  padding: 4px 9px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.review-stars {
+  color: #d4a017 !important;
+  font-size: 15px !important;
+  letter-spacing: 2px !important;
+  margin-bottom: 4px !important;
+}
+.review-text {
+  font-size: 13.5px !important;
+  color: #2d3748 !important;
+  line-height: 1.85 !important;
+  margin-bottom: 0 !important;
+}
+.review-author {
+  display: flex !important;
+  align-items: center !important;
+  margin-top: 16px !important;
+  padding-top: 14px !important;
+  border-top: 1px solid #f0f4fb !important;
+}
+.review-avatar-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0a1c35, #1a3d6b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  flex-shrink: 0;
+  margin-right: 11px;
+  box-shadow: 0 2px 8px rgba(10,28,53,0.18);
+}
+.review-name {
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  color: #1a2d4a !important;
+  display: block !important;
+}
+.review-tag {
+  font-size: 11px !important;
+  color: #7a8fa6 !important;
+  display: block !important;
+  margin-top: 2px !important;
+}
+.review-outcome-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: #eef3ff;
+  color: #2a55b0;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-top: 6px;
+  letter-spacing: 0.04em;
+}
