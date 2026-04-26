@@ -1882,3 +1882,248 @@ section.hero {
   .hero-btns { flex-direction: column !important; align-items: stretch !important; }
   .hero-btns .btn-gold, .hero-btns .btn-ghost { width: 100% !important; text-align: center !important; }
 }
+
+/* ══════════════════════════════════════════════════
+   SOLO BANK SECTION — Plan Cards + Benefits
+   (CSS deleted in bc31d17 clean rewrite, restored 2026-04-26u)
+   ══════════════════════════════════════════════════ */
+
+/* AMEXキャッチバナー */
+.solo-catch {
+  background: rgba(201,168,76,0.08) !important;
+  border: 1px solid rgba(201,168,76,0.25) !important;
+  border-radius: 16px !important;
+  margin: 0 0 36px !important;
+  padding: 22px 26px !important;
+  text-align: center !important;
+}
+.solo-catch-badge {
+  display: inline-block !important;
+  background: rgba(201,168,76,0.15) !important;
+  border: 1px solid rgba(201,168,76,0.40) !important;
+  color: #e8cb7a !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  border-radius: 999px !important;
+  padding: 4px 14px !important;
+  margin-bottom: 12px !important;
+}
+.solo-catch-title {
+  color: #fff !important;
+  font-size: clamp(14px, 2vw, 17px) !important;
+  font-weight: 800 !important;
+  line-height: 1.55 !important;
+  margin-bottom: 8px !important;
+}
+.solo-catch-note {
+  color: rgba(255,255,255,0.55) !important;
+  font-size: 12px !important;
+  line-height: 1.75 !important;
+  margin: 0 !important;
+}
+
+/* 3プラン比較グリッド */
+.solo-plans {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+  margin-bottom: 44px !important;
+  align-items: start !important;
+}
+.solo-plan {
+  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.13) !important;
+  border-radius: 20px !important;
+  padding: 28px 22px !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.solo-plan--rec {
+  background: rgba(201,168,76,0.09) !important;
+  border-color: rgba(201,168,76,0.38) !important;
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.18), 0 8px 32px rgba(0,0,0,0.38) !important;
+}
+.solo-rec-badge {
+  position: absolute !important;
+  top: -14px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: linear-gradient(90deg, #9a7c2e, #e8cb7a) !important;
+  color: #0a1c35 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .08em !important;
+  border-radius: 999px !important;
+  padding: 4px 16px !important;
+  white-space: nowrap !important;
+}
+.solo-plan-label {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+  color: #e8cb7a !important;
+}
+.solo-plan-name {
+  font-size: clamp(13px, 2vw, 16px) !important;
+  font-weight: 800 !important;
+  color: #fff !important;
+  line-height: 1.35 !important;
+}
+.solo-plan-price {
+  font-family: 'Inter', sans-serif !important;
+  font-size: clamp(17px, 2.8vw, 22px) !important;
+  font-weight: 900 !important;
+  color: #e8cb7a !important;
+  line-height: 1.15 !important;
+}
+.solo-plan-tax {
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.45) !important;
+  font-weight: 400 !important;
+}
+.solo-plan-note {
+  font-size: 11px !important;
+  color: rgba(255,255,255,0.42) !important;
+  margin-bottom: 4px !important;
+}
+.solo-plan-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 4px 0 16px !important;
+  flex: 1 !important;
+}
+.solo-plan-list li {
+  color: rgba(255,255,255,0.75) !important;
+  font-size: 12px !important;
+  padding: 5px 0 5px 18px !important;
+  position: relative !important;
+  line-height: 1.5 !important;
+}
+.solo-plan-list li::before {
+  content: "✓" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #c9a84c !important;
+  font-weight: 700 !important;
+}
+
+/* solo-bank内CTAボタン */
+.btn-solo-plain {
+  display: block !important;
+  text-align: center !important;
+  padding: 11px 18px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255,255,255,0.22) !important;
+  color: rgba(255,255,255,0.82) !important;
+  text-decoration: none !important;
+  background: transparent !important;
+}
+.btn-solo-gold {
+  display: block !important;
+  text-align: center !important;
+  padding: 11px 18px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  background: linear-gradient(90deg, #9a7c2e, #e8cb7a) !important;
+  color: #0a1c35 !important;
+  text-decoration: none !important;
+  border: none !important;
+}
+
+/* SOLO CLUB 特典詳細 */
+.solo-amex {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  border-radius: 16px !important;
+  padding: 26px 26px !important;
+  margin-bottom: 28px !important;
+}
+.solo-amex-title {
+  color: #e8cb7a !important;
+  font-size: clamp(13px, 1.8vw, 15px) !important;
+  font-weight: 800 !important;
+  margin-bottom: 18px !important;
+}
+.solo-amex-body {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 24px !important;
+}
+.solo-amex-lead {
+  color: rgba(255,255,255,0.50) !important;
+  font-size: 11.5px !important;
+  line-height: 1.75 !important;
+  margin-bottom: 12px !important;
+}
+.solo-amex-list {
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.solo-amex-list li {
+  color: rgba(255,255,255,0.75) !important;
+  font-size: 12.5px !important;
+  padding: 5px 0 5px 18px !important;
+  position: relative !important;
+  line-height: 1.5 !important;
+}
+.solo-amex-list li::before {
+  content: "✦" !important;
+  position: absolute !important;
+  left: 0 !important;
+  color: #c9a84c !important;
+  font-size: 9px !important;
+  top: 7px !important;
+}
+.solo-amex-cost-title {
+  color: #e8cb7a !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  margin-bottom: 12px !important;
+}
+.solo-cost-table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 12px !important;
+}
+.solo-cost-table td {
+  padding: 8px 6px !important;
+  border-bottom: 1px solid rgba(255,255,255,0.07) !important;
+  color: rgba(255,255,255,0.70) !important;
+  vertical-align: top !important;
+}
+.solo-cost-table td:first-child { color: rgba(255,255,255,0.48) !important; width: 55% !important; }
+
+/* solo-service-box / solo-partner-box / solo-notice */
+.solo-service-box,
+.solo-partner-box {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.09) !important;
+  border-radius: 14px !important;
+  padding: 20px 24px !important;
+  margin-bottom: 18px !important;
+  color: rgba(255,255,255,0.78) !important;
+  font-size: 13px !important;
+  line-height: 1.75 !important;
+}
+.solo-notice {
+  font-size: 11.5px !important;
+  color: rgba(255,255,255,0.42) !important;
+  line-height: 1.9 !important;
+  padding: 16px 0 0 !important;
+  border-top: 1px solid rgba(255,255,255,0.08) !important;
+}
+
+/* solo-bank レスポンシブ */
+@media (max-width: 720px) {
+  .solo-plans { grid-template-columns: 1fr !important; }
+  .solo-amex-body { grid-template-columns: 1fr !important; }
+}
