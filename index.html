@@ -39,7 +39,7 @@
   <button type="button" class="notranslate" id="lpJpBtn" aria-pressed="true" onclick="localStorage.setItem('lp_lang','ja');location.reload();">
     <span class="notranslate">JP</span>
   </button>
-  <button type="button" class="notranslate" id="lpEnBtn" aria-pressed="false" onclick="alert('English version coming soon. Please use the language switcher (🌐) for auto-translation.')">
+  <button type="button" class="notranslate" id="lpEnBtn" aria-pressed="false" disabled title="English version coming soon — please use 🌐 for auto-translation" style="opacity:0.45;cursor:not-allowed;">
     <span class="notranslate">EN</span>
   </button>
 </div>
@@ -135,7 +135,7 @@
 <div class="trust-bar">
   <div class="ti"><div class="ti-ic">⚖️</div><span data-i18n="ti1"><strong>TREX LEGAL</strong> 提携（MoU締結済）</span></div>
   <div class="ti-sep"></div>
-  <div class="ti"><div class="ti-ic">🌍</div><span data-i18n="ti2"><strong>多言語対応</strong> 日・英・中 他、全世界から相談可</span></div>
+  <div class="ti"><div class="ti-ic">🌍</div><span data-i18n="ti2"><strong>日本語・英語対応</strong> リモート完結</span></div>
   <div class="ti-sep"></div>
   <div class="ti"><div class="ti-ic">🌐</div><span data-i18n="ti3">渡航不要 日本語完結</span></div>
   <div class="ti-sep"></div>
@@ -185,7 +185,7 @@
         <div class="result-item">
           <span class="result-num">言語対応</span>
           <span class="result-val">多言語</span>
-          <span class="result-label">日・英・中など<br>全世界から相談可</span>
+          <span class="result-label">日本語・英語<br>対応</span>
         </div>
         <div class="result-item">
           <span class="result-num">現地提携</span>
@@ -763,7 +763,7 @@
   <!-- 大CTA -->
   <div class="big-cta">
     <div class="big-cta-inner">
-      <h2 data-i18n="big-cta-h2">海外口座という「武器」を、<br>今年中に手に入れませんか。</h2>
+      <h2 data-i18n="big-cta-h2">国際送金に対応した海外口座を、<br>今年中に整えませんか。</h2>
       <p data-i18n="big-cta-p">「まだ検討段階」で構いません。<br>あなたの状況に最適なプランを、一緒に整理します。</p>
       <a href="https://line.me/R/ti/p/@georgia-tax" class="btn-gold btn-gold-lg" data-i18n="big-cta-btn">
         📩 30秒で無料相談を始める
@@ -808,7 +808,7 @@
         <li><strong>税務・法務の助言は行いません。</strong>必ず税理士・弁護士へご相談ください。</li>
         <li>ジョージア現地の税率区分は<strong>日本を含む居住国での最終的な税負担とは異なります。</strong></li>
         <li>口座開設の可否・条件は各銀行の審査・方針により変動し、保証できません。</li>
-        <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>であり、準拠法はジョージア法です。</li>
+        <li>提供主体は<strong>GRENA GROUP LLC（ジョージア法人）</strong>です。日本居住の消費者の方には、消費者契約法をはじめとする日本の消費者保護法令が適用される場合があります。詳細は日本の弁護士にご確認ください。</li>
         <li>日本居住者の方は国外財産調書・CFC税制等の対象となり得ます。必ず日本の税理士にご確認ください。</li>
       </ul></div></details>
       <details><summary>キャンセルポリシー</summary><div class="content"><ul>
@@ -816,7 +816,7 @@
         <li>現地パートナーへの依頼開始後〜現地手続き着手前：当社作業費（サービス料の30%を上限）を控除した残額を返金いたします。</li>
         <li>現地手続き着手後：当社作業費および現地パートナーへの支払い済み実費を控除した残額を返金いたします。</li>
         <li>当社の明確な不履行がある場合は、状況に応じた返金・再対応等の措置を講じます。</li>
-        <li>本サービスの準拠法はジョージア法です。特定商取引法等の適用可能性については、日本の弁護士にご確認ください。</li>
+        <li>日本居住の消費者の方には、日本の消費者保護法令（消費者契約法・特定商取引法等）が適用される場合があります。詳細は日本の弁護士にご確認ください。</li>
       </ul></div></details>
     </div>
   </section>
@@ -824,8 +824,7 @@
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="操作バー">
     <div class="row">
       <a class="btn neutral" id="toTop" href="#page-top">↑ トップ</a>
-      <a class="btn secondary" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-consult">💬 無料相談</a>
-      <a class="btn success" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-apply">📩 今すぐLINEで相談</a>
+      <a class="btn success" href="https://line.me/R/ti/p/@georgia-tax" target="_blank" rel="noopener noreferrer" data-i18n="cta-apply">📩 今すぐ無料相談する</a>
     </div>
   </div>
 
