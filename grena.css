@@ -1729,3 +1729,13 @@ section[data-title] { margin: 0; }
 @media (max-width: 600px) {
   .glossary-grid { grid-template-columns: 1fr; padding: 0 16px; }
 }
+
+/* term-note: 用語説明インライン */
+.term-note {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.45);
+  margin-top: 3px;
+  line-height: 1.5;
+  font-style: normal;
+}
