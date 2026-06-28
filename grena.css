@@ -1746,3 +1746,9 @@ section[data-title] { margin: 0; }
 .why-icon svg{width:30px;height:30px}
 .fact-ico svg{width:22px;height:22px}
 .review-avatar-icon svg{width:22px;height:22px}
+/* 固定バー：モバイルで3ボタン（トップ/LINE/申込）を収める（2026-06） */
+@media (max-width:480px){
+  .fixed-cta .row{ gap:.4rem; padding:.55rem .6rem; justify-content:space-between; }
+  .fixed-cta .btn{ font-size:12.5px; padding:.55rem .5rem; white-space:nowrap; }
+  .fixed-cta .btn.neutral{ flex:0 0 auto; padding:.55rem .55rem; }
+}
