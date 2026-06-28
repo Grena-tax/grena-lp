@@ -324,7 +324,7 @@
       </p>
     <div class="hero-quick-info">
       <div class="hero-qi-item">
-        <span class="hero-qi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M9 8l3 4 3-4M12 12v6M9.5 15h5M9.5 17.5h5"/></svg></span>
+        <span class="hero-qi-icon">💰</span>
         <span class="hero-qi-val">¥258,000〜</span>
         <span class="hero-qi-lbl">口座開設費用</span>
       </div>
@@ -334,7 +334,7 @@
         <span class="hero-qi-lbl">完成目安<br><small style="font-size:0.8em;opacity:0.75">※書類揃い後・銀行審査除く</small></span>
       </div>
       <div class="hero-qi-item">
-        <span class="hero-qi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M21 15.5 14 11V4.5a2 2 0 0 0-4 0V11l-7 4.5V18l7-2v3l-2 1.5V22l4-1 4 1v-1.5L14 19v-3l7 2z"/></svg></span>
+        <span class="hero-qi-icon">✈️</span>
         <span class="hero-qi-val">原則渡航不要</span>
         <span class="hero-qi-lbl">日本語完結<br><small style="font-size:0.8em;opacity:0.75">※銀行審査状況による</small></span>
       </div>
@@ -342,7 +342,6 @@
 
     <div class="hero-btns">
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSfrd1BglyF7m2O5cFe2lnylRcFD29_z5B38eLWXMk5Y29x_ZQ/viewform" target="_blank" rel="noopener noreferrer" class="btn-gold">📝 30秒で無料お申し込み</a>
-      <a href="https://line.me/R/ti/p/@grena-tax.ge" target="_blank" rel="noopener noreferrer" class="btn-ghost">💬 LINEで相談する</a>
       <a href="#why-georgia" class="btn-ghost" data-i18n="hero-btn2">なぜジョージア？ →</a>
     </div>
   </div>
@@ -353,29 +352,29 @@
 </section>
 <!-- ===== URGENCY BANNER ===== -->
 <div class="urgency-banner">
-  GRENA GROUP LLC（ジョージア）2026年 受付中 — ジョージア口座開設・法人設立：随時受付<span>｜ご相談は無料・返信2営業日以内</span>
+  🔔 GRENA GROUP LLC（ジョージア）2026年 受付中 — ジョージア口座開設・法人設立：随時受付<span>｜ご相談は無料・返信2営業日以内</span>
 </div>
 <!-- ===== TRUST BAR ===== -->
 <div class="trust-bar">
-  <div class="ti"><div class="ti-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-2.5 5a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 5a2.5 2.5 0 0 0 5 0z"/></svg></div><span data-i18n="ti1"><strong>TREX LEGAL</strong> 提携（MoU締結済）</span></div>
+  <div class="ti"><div class="ti-ic">⚖️</div><span data-i18n="ti1"><strong>TREX LEGAL</strong> 提携（MoU締結済）</span></div>
   <div class="ti-sep"></div>
-  <div class="ti"><div class="ti-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div><span data-i18n="ti2"><strong>日本語・英語対応</strong> リモート完結</span></div>
+  <div class="ti"><div class="ti-ic">🌍</div><span data-i18n="ti2"><strong>日本語・英語対応</strong> リモート完結</span></div>
   <div class="ti-sep"></div>
-  <div class="ti"><div class="ti-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div><span data-i18n="ti3">渡航不要 日本語完結</span></div>
+  <div class="ti"><div class="ti-ic">🌐</div><span data-i18n="ti3">渡航不要 日本語完結</span></div>
   <div class="ti-sep"></div>
-  <div class="ti"><div class="ti-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><span data-i18n="ti4">銀行から紹介料を受領しません</span></div>
+  <div class="ti"><div class="ti-ic">🔒</div><span data-i18n="ti4">銀行から紹介料を受領しません</span></div>
 <div class="ti-sep"></div>
-<div class="ti"><div class="ti-ic"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg></div><span>法人登記番号 <strong>400433768</strong> ／ ジョージア政府登録済</span></div>
+<div class="ti"><div class="ti-ic">🏛️</div><span>法人登記番号 <strong>400433768</strong> ／ ジョージア政府登録済</span></div>
 </div>
 <div id="glp-landing">
 <div class="page-wrap">
   <div class="stats">
     <div class="stat">
-      <span class="stat-n"><em>日本語</em></span>
-      <span class="stat-l" data-i18n="stat1">渡航不要で<br>完結</span>
+      <span class="stat-n"><em>多言語</em></span>
+      <span class="stat-l" data-i18n="stat1">全言語<br>対応</span>
     </div>
     <div class="stat">
-      <span class="stat-n">2<em>週間</em></span>
+      <span class="stat-n">2<em>w</em></span>
       <span class="stat-l" data-i18n="stat2">最短<br>口座開設目安</span>
     </div>
     <div class="stat">
@@ -424,12 +423,12 @@
         </div>
       </div>
 <div class="emp-grid">
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/></svg></div><p class="emp-tx" data-i18n="emp1">「SWIFTコードを教えて」と言われ、答えられなかった</p></div>
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div><p class="emp-tx" data-i18n="emp2">Wiseで受け取っているが、金額が大きくなって不安を感じている</p></div>
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div><p class="emp-tx" data-i18n="emp3">海外展開を本格化したいが、法人口座がなくて頼みにくい</p></div>
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M21 15.5 14 11V4.5a2 2 0 0 0-4 0V11l-7 4.5V18l7-2v3l-2 1.5V22l4-1 4 1v-1.5L14 19v-3l7 2z"/></svg></div><p class="emp-tx" data-i18n="emp4">海外口座を作りたいが、現地に行く時間も費用もない</p></div>
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 13h6M9 17h5"/></svg></div><p class="emp-tx" data-i18n="emp5">公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からない</p></div>
-      <div class="emp-card"><div class="emp-ico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M4 12a8 8 0 0 1 14-5l2 2"/><path d="M20 12a8 8 0 0 1-14 5l-2-2"/><path d="M18 4v4h-4M6 20v-4h4"/></svg></div><p class="emp-tx" data-i18n="emp6">ドバイ・シンガポールの口座は審査が通らなかった経験がある</p></div>
+      <div class="emp-card"><div class="emp-ico">💬</div><p class="emp-tx" data-i18n="emp1">「SWIFTコードを教えて」と言われ、答えられなかった</p></div>
+      <div class="emp-card"><div class="emp-ico">📦</div><p class="emp-tx" data-i18n="emp2">Wiseで受け取っているが、金額が大きくなって不安を感じている</p></div>
+      <div class="emp-card"><div class="emp-ico">🌏</div><p class="emp-tx" data-i18n="emp3">海外展開を本格化したいが、法人口座がなくて頼みにくい</p></div>
+      <div class="emp-card"><div class="emp-ico">✈️</div><p class="emp-tx" data-i18n="emp4">海外口座を作りたいが、現地に行く時間も費用もない</p></div>
+      <div class="emp-card"><div class="emp-ico">📄</div><p class="emp-tx" data-i18n="emp5">公証・アポスティーユ・英文書類……何をどの順番でやればいいか分からない</p></div>
+      <div class="emp-card"><div class="emp-ico">🔄</div><p class="emp-tx" data-i18n="emp6">ドバイ・シンガポールの口座は審査が通らなかった経験がある</p></div>
     </div>
   <div class="band">
     <p class="band-title" data-i18n="band-title">ジョージアの制度に沿った書類整備サポート</p>
@@ -461,22 +460,22 @@
     </p>
     <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem auto;max-width:720px;">
       <div style="background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;padding:1rem;">
-        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div>
+        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;">🌍</div>
         <div style="font-weight:700;color:#fff;margin-bottom:0.3rem;">SWIFT対応</div>
         <div style="font-size:0.85rem;color:#aaa;">国際送金・受取に対応。海外取引・フリーランス報酬受取に活用できます。</div>
       </div>
       <div style="background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;padding:1rem;">
-        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M21 15.5 14 11V4.5a2 2 0 0 0-4 0V11l-7 4.5V18l7-2v3l-2 1.5V22l4-1 4 1v-1.5L14 19v-3l7 2z"/></svg></div>
+        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;">✈️</div>
         <div style="font-weight:700;color:#fff;margin-bottom:0.3rem;">原則渡航不要</div>
         <div style="font-size:0.85rem;color:#aaa;">書類整備・申請は日本からリモートで完結。現地に行かずに海外口座を開設できます。</div>
       </div>
       <div style="background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;padding:1rem;">
-        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/></svg></div>
+        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;">💬</div>
         <div style="font-weight:700;color:#fff;margin-bottom:0.3rem;">日本語完結</div>
         <div style="font-size:0.85rem;color:#aaa;">英語不要。日本語でのLINE相談・書類説明・手続きサポートに対応しています。</div>
       </div>
       <div style="background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;padding:1rem;">
-        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f5c842" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-2.5 5a2.5 2.5 0 0 0 5 0z"/><path d="M19 7l-2.5 5a2.5 2.5 0 0 0 5 0z"/></svg></div>
+        <div style="color:#f5c842;font-size:1.4rem;margin-bottom:0.5rem;">⚖️</div>
         <div style="font-weight:700;color:#fff;margin-bottom:0.3rem;">現地法律事務所提携</div>
         <div style="font-size:0.85rem;color:#aaa;">TREX LEGAL（MoU締結済）と連携。書類整備から申請までの事務サポート。</div>
       </div>
@@ -500,10 +499,10 @@
         <thead>
           <tr>
             <th>比較項目</th>
-            <th class="th-hl">ジョージア</th>
-            <th>ドバイ</th>
-            <th>シンガポール</th>
-            <th>タイ</th>
+            <th class="th-hl">🇬🇪 ジョージア</th>
+            <th>🇦🇪 ドバイ</th>
+            <th>🇸🇬 シンガポール</th>
+            <th>🇹🇭 タイ</th>
           </tr>
         </thead>
         <tbody>
@@ -517,10 +516,10 @@
     </div>
     <p class="cmp-note" data-i18n="cmp-note">※ 各国当局・金融機関の公開情報をもとにした一般的傾向です（当社調査・2026年4月時点）。個別の状況や開設可否を保証するものではありません。制度は随時変更されます。出典：各国金融監督機関公式サイト・主要銀行公開FAQ。</p>
     <div class="why-grid">
-      <div class="why-card"><div class="why-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><p class="why-title" data-i18n="why1t">注目度が急上昇中</p><p class="why-text" data-i18n="why1d">他国が厳格化する中、ジョージアは外国人ビジネスに開放的な制度を維持。実務家の間で急速に広まっています。</p></div>
-      <div class="why-card"><div class="why-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><rect x="3" y="5" width="18" height="11" rx="1"/><path d="M2 20h20"/></svg></div><p class="why-title" data-i18n="why2t">渡航不要で完結</p><p class="why-text" data-i18n="why2d">文面ベース・日本語でのやりとりで書類整備が進められます。海外在住の方も対応可能です。</p></div>
-      <div class="why-card"><div class="why-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><polygon points="12 3 14 9 20 9 15 13 17 19 12 15 7 19 9 13 4 9 10 9"/></svg></div><p class="why-title" data-i18n="why3t">EU加盟候補国（2023年認定）</p><p class="why-text" data-i18n="why3d">2023年に欧州委員会がEU加盟候補国として認定。欧州基準に沿った法制度のもと、国際ビジネスに対応した環境が整備されています。※加盟時期・可否は未確定です。</p></div>
-      <div class="why-card"><div class="why-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><p class="why-title" data-i18n="why4t">スピーディーな手続き</p><p class="why-text" data-i18n="why4d">書類整備の目安は7〜10営業日程度。他国と比べてスムーズに進められます。</p></div>
+      <div class="why-card"><div class="why-icon">📈</div><p class="why-title" data-i18n="why1t">注目度が急上昇中</p><p class="why-text" data-i18n="why1d">他国が厳格化する中、ジョージアは外国人ビジネスに開放的な制度を維持。実務家の間で急速に広まっています。</p></div>
+      <div class="why-card"><div class="why-icon">💻</div><p class="why-title" data-i18n="why2t">渡航不要で完結</p><p class="why-text" data-i18n="why2d">文面ベース・日本語でのやりとりで書類整備が進められます。海外在住の方も対応可能です。</p></div>
+      <div class="why-card"><div class="why-icon">🇪🇺</div><p class="why-title" data-i18n="why3t">EU加盟候補国（2023年認定）</p><p class="why-text" data-i18n="why3d">2023年に欧州委員会がEU加盟候補国として認定。欧州基準に沿った法制度のもと、国際ビジネスに対応した環境が整備されています。※加盟時期・可否は未確定です。</p></div>
+      <div class="why-card"><div class="why-icon">⚡</div><p class="why-title" data-i18n="why4t">スピーディーな手続き</p><p class="why-text" data-i18n="why4d">書類整備の目安は7〜10営業日程度。他国と比べてスムーズに進められます。</p></div>
     </div>
   </section>
 <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
@@ -537,10 +536,10 @@
       <img src="Untitled%20design%202.jpg" alt="ジョージア法人設立・首都トビリシの広場 — EU加盟候補国2023年認定" loading="lazy" width="800" height="600" onerror="this.onerror=null;this.style.background='#c8d0e0'">
     </div>
     <div class="facts">
-      <div class="fact"><span class="fact-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 21h18"/><path d="M5 21V8l5-3v16"/><path d="M14 21V11l5-3v13"/><path d="M8 10h.01M8 13h.01"/></svg></span><div><p class="fact-tt" data-i18n="fact1t">首都トビリシ</p><p class="fact-tx" data-i18n="fact1d">コーカサスの中心都市。安全で物価が低く、欧米企業や日本人ノマドの移住先として注目されています。</p></div></div>
-      <div class="fact"><span class="fact-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><polygon points="12 3 14 9 20 9 15 13 17 19 12 15 7 19 9 13 4 9 10 9"/></svg></span><div><p class="fact-tt" data-i18n="fact2t">EU加盟候補国（2023年認定）</p><p class="fact-tx" data-i18n="fact2d">2023年に欧州委員会がEU加盟候補国として認定。欧州基準に沿った法制度が整備されています。※加盟の時期・可否は未確定であり、政治状況により変動します。</p></div></div>
-      <div class="fact"><span class="fact-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 10l9-6 9 6"/><path d="M4 10v8M9 10v8M15 10v8M20 10v8"/><path d="M3 21h18"/></svg></span><div><p class="fact-tt" data-i18n="fact3t">外国人に開かれた銀行制度</p><p class="fact-tx" data-i18n="fact3d">非居住者でも口座開設が可能な数少ない国のひとつ。SWIFTコード対応で国際送金にも使えます。</p></div></div>
-      <div class="fact"><span class="fact-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/><path d="M9 12h6M9 16h4"/></svg></span><div><p class="fact-tt" data-i18n="fact4t">シンプルな法人制度</p><p class="fact-tx" data-i18n="fact4d">法人設立は早ければ7〜10営業日。個人事業主（IE）制度もあり、フリーランスの選択肢として注目されています。</p></div></div>
+      <div class="fact"><span class="fact-ico">🏙️</span><div><p class="fact-tt" data-i18n="fact1t">首都トビリシ</p><p class="fact-tx" data-i18n="fact1d">コーカサスの中心都市。安全で物価が低く、欧米企業や日本人ノマドの移住先として注目されています。</p></div></div>
+      <div class="fact"><span class="fact-ico">🇪🇺</span><div><p class="fact-tt" data-i18n="fact2t">EU加盟候補国（2023年認定）</p><p class="fact-tx" data-i18n="fact2d">2023年に欧州委員会がEU加盟候補国として認定。欧州基準に沿った法制度が整備されています。※加盟の時期・可否は未確定であり、政治状況により変動します。</p></div></div>
+      <div class="fact"><span class="fact-ico">🏦</span><div><p class="fact-tt" data-i18n="fact3t">外国人に開かれた銀行制度</p><p class="fact-tx" data-i18n="fact3d">非居住者でも口座開設が可能な数少ない国のひとつ。SWIFTコード対応で国際送金にも使えます。</p></div></div>
+      <div class="fact"><span class="fact-ico">📋</span><div><p class="fact-tt" data-i18n="fact4t">シンプルな法人制度</p><p class="fact-tx" data-i18n="fact4d">法人設立は早ければ7〜10営業日。個人事業主（IE）制度もあり、フリーランスの選択肢として注目されています。</p></div></div>
     </div>
   </section>
 <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
@@ -874,7 +873,7 @@
           <div class="review-stars">★★★★★</div>
           <p class="review-text">海外でのビジネス展開を考え、会社設立と口座開設をお願いしました。会社の税務申告はWEBで月次対応するだけ、口座もスマホアプリで完結するので思っていたより全然ラクです。自国にいながら手続きが完了するのは、渡航費や時間のことを考えると本当にコスパが高い。何より、担当の方が実際にご自身で経験されているので、不安な点も具体的に相談できたのが良かったです。</p>
           <div class="review-author">
-            <div class="review-avatar-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+            <div class="review-avatar-icon">👔</div>
             <div class="review-author-info">
               <span class="review-name">40代・男性</span>
               <span class="review-tag">海外ビジネス展開</span>
@@ -886,7 +885,7 @@
           <div class="review-stars">★★★★☆</div>
           <p class="review-text">ドバイやシンガポールで審査が通らなかった経験があり、ジョージアに切り替えました。担当者が自身の経験をもとに話してくれるので信頼できました。書類の不備もその都度丁寧に教えてもらえました。無事に口座が開設できて、海外取引の選択肢が広がりました。思っていたよりずっとシンプルでした。</p>
           <div class="review-author">
-            <div class="review-avatar-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><rect x="3" y="5" width="18" height="11" rx="1"/><path d="M2 20h20"/></svg></div>
+            <div class="review-avatar-icon">💻</div>
             <div class="review-author-info">
               <span class="review-name">30代・男性</span>
               <span class="review-tag">フリーランス・海外クライアント対応</span>
@@ -898,7 +897,7 @@
           <div class="review-stars">★★★★★</div>
           <p class="review-text">SOLO Clubにしたら専属のバンカーがついて、空港でのファストトラックも使えるようになりました。コンシェルジュがいるのでリモートで完結できるのが本当に助かっています。定期預金の金利も思ったより良く、ポイントも貯まります。日本語で全部サポートしてもらえるので、語学の不安なく進められました。</p>
           <div class="review-author">
-            <div class="review-avatar-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div>
+            <div class="review-avatar-icon">🌏</div>
             <div class="review-author-info">
               <span class="review-name">40代・女性</span>
               <span class="review-tag">輸出入ビジネス・法人口座</span>
@@ -1052,8 +1051,7 @@
 <div class="fixed-cta" id="ctaBar" role="region" aria-label="操作バー">
     <div class="row">
       <a class="btn neutral" id="toTop" href="#page-top">↑ トップ</a>
-      <a class="btn secondary" href="https://line.me/R/ti/p/@grena-tax.ge" target="_blank" rel="noopener noreferrer">💬 LINE相談</a>
-      <a class="btn success" href="https://docs.google.com/forms/d/e/1FAIpQLSfrd1BglyF7m2O5cFe2lnylRcFD29_z5B38eLWXMk5Y29x_ZQ/viewform" target="_blank" rel="noopener noreferrer">📝 申し込む</a>
+      <a class="btn success" href="https://docs.google.com/forms/d/e/1FAIpQLSfrd1BglyF7m2O5cFe2lnylRcFD29_z5B38eLWXMk5Y29x_ZQ/viewform" target="_blank" rel="noopener noreferrer">📝 今すぐ申し込む</a>
     </div>
   </div>
 <footer class="site-foot" role="contentinfo">
