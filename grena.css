@@ -1739,3 +1739,10 @@ section[data-title] { margin: 0; }
   line-height: 1.5;
   font-style: normal;
 }
+/* 絵文字→ゴールド線アイコン化（2026-06） */
+.ti-ic svg{width:15px;height:15px}
+.hero-qi-icon svg{width:18px;height:18px;vertical-align:-3px}
+.emp-ico svg{width:26px;height:26px}
+.why-icon svg{width:30px;height:30px}
+.fact-ico svg{width:22px;height:22px}
+.review-avatar-icon svg{width:22px;height:22px}
