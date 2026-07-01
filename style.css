@@ -1,18 +1,4 @@
-/* ===== patch.css（完全置換版：11/11ベース＋翻訳メニュー封じ＋HERO統合）===== */
 
-/* --- スクロール/安全域/CTA高さ --------------------- */
-:root{
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-right: env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h: 72px;
-  --menu-head-h: 56px; /* ハンバーガー見出しの想定高さ */
-
-  /* footer */
-  --foot-bg:#0b1220;
-  --foot-fg:#cbd5e1;
-  --foot-border:#1f2937;
-}
 
 html,body{margin:0;padding:0}
 html, body { overflow:auto !important; height:auto !important; }
@@ -38,11 +24,6 @@ details .content{
 .muted{color:#475569;}
 .note{display:block;font-size:.82em;color:#475569;margin-top:.35rem;}
 .smallish{font-size:clamp(20px,3.6vw,24px);margin-bottom:.75rem;font-weight:800;}
-.security-note{
-  font-size:.9em;color:#334155;background:#f1f5f9;
-  border:1px solid #e2e8f0;border-radius:10px;
-  padding:.8rem 1rem;margin-top:.6rem;
-}
 
 /* --- 価格ボックス ------------------------------- */
 .price-promo{
@@ -83,14 +64,11 @@ details .content{
 /* --- テーブル共通 ------------------------------- */
 table{width:100%;border-collapse:collapse;margin:.5rem 0;}
 th,td{border:1px solid #e5e7eb;padding:.5rem .6rem;text-align:right;}
-th:first-child,td:first-child{text-align:left;}
-
-@media (max-width:480px){
+th:first-child,td:first-child{text-align:left;}@media (max-width:480px){
   h2{
     font-size:clamp(18px,5.6vw,22px);
     line-height:1.28;margin:0 0 .8rem;
-  }
-}
+  }}
 
 /* --- KYCと料金の隙間調整 ------------------------- */
 #corp-setup{padding-bottom:0!important;}
@@ -176,19 +154,6 @@ html.menu-open .menu-button .bars span{
   -webkit-overflow-scrolling: touch;
 }
 
-.menu-group{padding:8px 10px 6px;}
-.menu-group h4{
-  margin:0 0 6px;padding:0 6px;
-  font-size:.92rem;color:#111827;font-weight:700;opacity:.9;
-}
-.menu-list{list-style:none;margin:0;padding:0;}
-.menu-list li a{
-  display:block;padding:7px 10px;margin:0 6px 6px;
-  border-radius:8px;text-decoration:none;
-  color:#334155;background:#fff;border:1px solid #e5e7eb;
-}
-.menu-list li a:hover{background:#eef2f7;border-color:#d4d8de;}
-
 /* ★追加：detailsの子項目 */
 .menu-list li.sub a{
   padding-left: 22px;
@@ -270,12 +235,9 @@ html.gtbar body{ padding-top:44px; }
   text-underline-offset:2px;
 }
 .site-foot .foot-pc{ display:none; }
-.site-foot .foot-sp{ display:block; }
-
-@media (min-width:640px){
+.site-foot .foot-sp{ display:block; }@media (min-width:640px){
   .site-foot .foot-pc{ display:inline; }
-  .site-foot .foot-sp{ display:none; }
-}
+  .site-foot .foot-sp{ display:none; }}
 
 /* --- アンカー位置調整 ---------------------------- */
 section[id],
@@ -305,13 +267,6 @@ h1, .hero h1, .page-title, .hero .lead {
   text-wrap: balance;
 }
 
-/* 為替シミュレーション表：横スク時にヘッダー固定 */
-.fx-wrap{ overflow:auto; -webkit-overflow-scrolling: touch; }
-.fx-sim thead th{
-  position: sticky; top: 0; z-index: 1;
-  background: #ffffff;
-}
-
 /* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
   *{
@@ -326,9 +281,6 @@ h1, .hero h1, .page-title, .hero .lead {
   outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
-
-/* 改行させたくない語用 */
-.nowrap { white-space: nowrap; }
 
 /* === コンプライアンス文の視認性補助 ============= */
 #disclaimer .accordion > details > summary {
@@ -384,15 +336,10 @@ h1, .hero h1, .page-title, .hero .lead {
   display:grid;grid-template-columns:180px 1fr;
   gap:6px 10px;
 }
-.cf-out h5{margin:.3rem 0 .4rem;font-weight:800;}
-.cf-links{list-style:none;margin:.4rem 0 0;padding-left:1rem;}
-.cf-links li{margin:.2rem 0;}
-
-@media (max-width:640px){
+.cf-out h5{margin:.3rem 0 .4rem;font-weight:800;}@media (max-width:640px){
   .cf-grid{grid-template-columns:1fr;gap:8px;}
   .cf-subrow{grid-column:auto;}
-  .cf-out .cf-kv{grid-template-columns:1fr;}
-}
+  .cf-out .cf-kv{grid-template-columns:1fr;}}
 
 /* --- 要点リストの行間 ---------------------------- */
 .quick-summary .qs-list{
@@ -424,13 +371,11 @@ h1, .hero h1, .page-title, .hero .lead {
   padding-left: 0.9rem;
   padding-right: 0.9rem;
   white-space: nowrap;
-}
-@media (max-width: 480px){
+}@media (max-width: 480px){
   #plans .plan-table-wrap th:nth-child(2),
   #plans .plan-table-wrap td:nth-child(2){
     font-size: 0.90em;
-  }
-}
+  }}
 #plans .plan-table-wrap table th:nth-child(1),
 #plans .plan-table-wrap table td:nth-child(1){
   width: 32%;
@@ -444,97 +389,4 @@ h1, .hero h1, .page-title, .hero .lead {
 #plans .plan-table-wrap table th:nth-child(3),
 #plans .plan-table-wrap table td:nth-child(3){
   width: 40%;
-}
-
-/* =========================================================
-   TOPヒーロー（統合版：カード無し／暗すぎない／文字強め／iPhoneモザイク回避）
-   ========================================================= */
-
-.glp-hero{
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  margin: 0 0 24px;
-  min-height: min(560px, 92vh);
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(0,0,0,0.35);
-  display: flex;
-  align-items: flex-end;
-}
-
-.glp-hero-bg{
-  position:absolute;
-  inset:0;
-  z-index:0;
-}
-
-.glp-hero-img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-  object-position: 50% 22%;
-  transform: translateZ(0);
-  filter: none;
-}
-
-.glp-hero-gradient{
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(2, 6, 23, 0.10) 0%,
-      rgba(2, 6, 23, 0.18) 40%,
-      rgba(2, 6, 23, 0.55) 78%,
-      rgba(2, 6, 23, 0.72) 100%
-    );
-}
-
-.glp-hero-content{
-  position: relative;
-  z-index: 1;
-  padding: 24px 18px 26px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  max-width: 620px;
-}
-
-.glp-hero-title{
-  font-size: 20px;
-  font-weight: 800;
-  line-height: 1.4;
-  margin: 0 0 8px;
-  letter-spacing: .06em;
-  text-shadow: 0 2px 14px rgba(0,0,0,0.25);
-}
-.glp-hero-lead{
-  font-size: 13px;
-  line-height: 1.7;
-  margin: 0 0 10px;
-  text-shadow: 0 2px 14px rgba(0,0,0,0.22);
-}
-.glp-hero-note{
-  font-size: 11px;
-  line-height: 1.6;
-  color: #e5e7eb;
-  margin: 0 0 14px;
-}
-.glp-hero-actions{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-@media (min-width: 768px) {
-  .glp-hero{ border-radius: 18px; }
-  .glp-hero-content{ padding: 32px 32px 34px; }
-  .glp-hero-title{ font-size: 26px; }
-  .glp-hero-lead{ font-size: 14px; }
-  .glp-hero-note{ font-size: 12px; }
-}
-
-@supports (-webkit-touch-callout: none) {
-  .glp-hero-img{ backface-visibility: hidden; }
 }

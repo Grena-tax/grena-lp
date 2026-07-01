@@ -1,47 +1,4 @@
-/* ============================================================
-   patch.css — GRENA LP リニューアル版（2026年3月）
-   デザイン：高級感・信頼感・コンバージョン重視
-   カラー：濃紺 × ゴールド × 白
-============================================================ */
 
-
-/* ============================================================
-   CSS変数
-============================================================ */
-:root {
-  --navy:        #0b1f3a;
-  --navy-mid:    #132f58;
-  --navy-light:  #1a4578;
-  --gold:        #c9a84c;
-  --gold-light:  #e8cb7a;
-  --gold-dark:   #a07830;
-  --gold-bg:     rgba(201,168,76,0.08);
-  --gold-border: rgba(201,168,76,0.30);
-  --white:       #ffffff;
-  --off-white:   #f7f8fc;
-  --gray-light:  #eef0f6;
-  --gray-mid:    #6b7a99;
-  --text:        #0d1b2e;
-  --text-mid:    #3d4f6e;
-  --text-light:  #7a8faa;
-  --border:      rgba(11,31,58,0.10);
-  --shadow-sm:   0 2px 12px rgba(11,31,58,0.07);
-  --shadow-md:   0 6px 24px rgba(11,31,58,0.12);
-  --shadow-lg:   0 16px 48px rgba(11,31,58,0.18);
-  --shadow-xl:   0 24px 64px rgba(11,31,58,0.22);
-
-  --navy-deep:   #08172e;
-  --safe-top:    env(safe-area-inset-top, 0px);
-  --safe-right:  env(safe-area-inset-right, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
-  --cta-h:       72px;
-  --menu-head-h: 60px;
-
-  --r-sm:  8px;
-  --r-md:  14px;
-  --r-lg:  20px;
-  --r-xl:  28px;
-}
 
 /* ============================================================
    ベース
@@ -111,401 +68,6 @@ h1, h2, h3, h4, h5, h6,
   color: var(--navy);
   margin-bottom: .75rem;
   font-family: 'Noto Serif JP', serif !important;
-}
-.nowrap { white-space: nowrap; }
-
-/* ============================================================
-   glp-wrapper（LP全体ラッパー）
-============================================================ */
-.glp-wrapper {
-  background: var(--off-white);
-}
-.glp-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: 0 16px 48px;
-}
-
-/* ============================================================
-   ヒーロー
-============================================================ */
-.glp-hero {
-  position: relative;
-  border-radius: 0 0 var(--r-xl) var(--r-xl);
-  overflow: hidden;
-  margin: 0 0 0;
-  min-height: min(640px, 95vh);
-  color: var(--white);
-  display: flex;
-  align-items: flex-end;
-  box-shadow: var(--shadow-xl);
-}
-.glp-hero-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-.glp-hero-img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: 50% 25%;
-  transform: translateZ(0) scale(1.02);
-  transition: transform 8s ease;
-}
-.glp-hero:hover .glp-hero-img {
-  transform: translateZ(0) scale(1.0);
-}
-.glp-hero-gradient {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(11,31,58,0.15) 0%,
-      rgba(11,31,58,0.05) 30%,
-      transparent 60%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(11,31,58,0.05) 0%,
-      rgba(11,31,58,0.30) 45%,
-      rgba(11,31,58,0.75) 78%,
-      rgba(11,31,58,0.92) 100%
-    );
-}
-.glp-hero-content {
-  position: relative;
-  z-index: 1;
-  padding: 32px 24px 40px;
-  max-width: 680px;
-  animation: fadeUp 0.9s ease both;
-}
-.glp-hero-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
-  border-radius: 999px;
-  background: rgba(201,168,76,0.18);
-  border: 1px solid rgba(201,168,76,0.45);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .06em;
-  color: var(--gold-light);
-  margin-bottom: 14px;
-  backdrop-filter: blur(4px);
-}
-.glp-hero-title {
-  font-size: clamp(24px, 5vw, 38px) !important;
-  font-weight: 900 !important;
-  line-height: 1.3 !important;
-  margin: 0 0 12px !important;
-  letter-spacing: .02em;
-  text-shadow: 0 3px 20px rgba(0,0,0,0.25);
-  color: var(--white) !important;
-}
-.glp-hero-lead {
-  font-size: 14px;
-  line-height: 1.85;
-  margin: 0 0 14px;
-  color: rgba(255,255,255,0.88);
-}
-.glp-hero-note {
-  font-size: 11px;
-  line-height: 1.7;
-  color: rgba(255,255,255,0.60);
-  margin: 0 0 20px;
-  background: rgba(11,31,58,0.35);
-  border-radius: var(--r-sm);
-  padding: 10px 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(4px);
-}
-.glp-hero-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.glp-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 14px 26px;
-  border-radius: 999px;
-  font-size: 14px;
-  font-weight: 800;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: .04em;
-  white-space: nowrap;
-}
-.glp-btn-main {
-  background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 60%, var(--gold-dark) 100%);
-  color: var(--navy);
-  box-shadow: 0 8px 24px rgba(201,168,76,0.45), 0 2px 8px rgba(0,0,0,0.12);
-  animation: pulse 2.5s ease infinite;
-}
-.glp-btn-main:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(201,168,76,0.55);
-}
-.glp-btn-sub {
-  background: rgba(255,255,255,0.12);
-  color: var(--white);
-  border: 1.5px solid rgba(255,255,255,0.40);
-  backdrop-filter: blur(4px);
-}
-.glp-btn-sub:hover {
-  background: rgba(255,255,255,0.22);
-}
-.glp-btn-green {
-  background: linear-gradient(135deg, #1eb86a, #0f9a52);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(30,184,106,0.35);
-}
-.glp-btn-gray {
-  background: var(--gray-light);
-  color: var(--text-mid);
-}
-
-/* ============================================================
-   信頼バッジ（ヒーロー下）
-============================================================ */
-.glp-trust-bar {
-  background: var(--navy);
-  padding: 16px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 32px;
-  flex-wrap: wrap;
-  margin: 0 0 0;
-}
-.glp-trust-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255,255,255,0.80);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-.glp-trust-item span:first-child {
-  font-size: 16px;
-}
-.glp-trust-divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255,255,255,0.15);
-}
-
-/* ============================================================
-   帯（インフォバンド）
-============================================================ */
-.glp-band {
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-  color: var(--off-white);
-  border-radius: var(--r-lg);
-  padding: 24px 24px 20px;
-  margin: 24px 0 20px;
-  border: 1px solid rgba(201,168,76,0.20);
-  position: relative;
-  overflow: hidden;
-}
-.glp-band::before {
-  content: "";
-  position: absolute;
-  top: -40px;
-  right: -40px;
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
-}
-.glp-band-title {
-  font-size: 16px !important;
-  font-weight: 800 !important;
-  margin: 0 0 12px !important;
-  color: var(--gold-light) !important;
-  font-family: 'Noto Serif JP', serif !important;
-}
-.glp-band-list {
-  font-size: 13px;
-  margin: 0;
-  padding-left: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.glp-band-list li {
-  padding-left: 20px;
-  position: relative;
-  color: rgba(255,255,255,0.88);
-  line-height: 1.6;
-}
-.glp-band-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--gold);
-  font-weight: 900;
-}
-.glp-band-note {
-  font-size: 10px;
-  color: rgba(255,255,255,0.45);
-  margin-top: 12px;
-  border-top: 1px solid rgba(255,255,255,0.10);
-  padding-top: 10px;
-  line-height: 1.6;
-}
-
-/* ============================================================
-   国紹介写真
-============================================================ */
-.glp-country {
-  margin: 0 0 24px;
-}
-.glp-country-title {
-  font-size: 15px !important;
-  font-weight: 800 !important;
-  color: var(--navy) !important;
-  margin: 0 0 12px !important;
-  font-family: 'Noto Serif JP', serif !important;
-}
-.glp-country-photos {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-.glp-country-photos img {
-  width: 100%;
-  height: 110px;
-  object-fit: cover;
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.glp-country-photos img:hover {
-  transform: scale(1.03);
-  box-shadow: var(--shadow-lg);
-}
-
-/* ============================================================
-   カードグリッド
-============================================================ */
-.glp-cardgrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  margin-bottom: 8px;
-}
-.glp-card {
-  background: var(--white);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-sm);
-  padding: 20px 16px 16px;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--border);
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
-  position: relative;
-  overflow: hidden;
-}
-.glp-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
-  opacity: 0;
-  transition: opacity 0.25s;
-}
-.glp-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--gold-border);
-}
-.glp-card:hover::before {
-  opacity: 1;
-}
-.glp-card-flag {
-  width: 36px;
-  height: 28px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  box-shadow: var(--shadow-sm);
-}
-.glp-card-title {
-  font-size: 13px !important;
-  font-weight: 800 !important;
-  color: var(--navy) !important;
-  margin: 0 0 8px !important;
-  line-height: 1.4;
-}
-.glp-card-text {
-  font-size: 11.5px;
-  line-height: 1.65;
-  color: var(--text-mid);
-  margin: 0 0 12px;
-  flex: 1;
-}
-.glp-card .glp-btn {
-  font-size: 12px;
-  padding: 10px 14px;
-  border-radius: var(--r-sm);
-  width: 100%;
-  justify-content: center;
-}
-.glp-card .glp-btn-sub {
-  background: var(--navy);
-  color: var(--white);
-  border: none;
-  box-shadow: 0 4px 12px rgba(11,31,58,0.25);
-}
-.glp-card .glp-btn-sub:hover {
-  background: var(--navy-mid);
-  transform: translateY(-1px);
-}
-
-/* ============================================================
-   免責ボックス
-============================================================ */
-.glp-disclaimer-box {
-  background: #fffdf0;
-  border: 1px solid #e8d870;
-  border-left: 5px solid var(--gold);
-  border-radius: var(--r-md);
-  padding: 14px 18px;
-  font-size: 12.5px;
-  line-height: 1.75;
-  margin-bottom: 20px;
-  color: #3a2e00;
-}
-.glp-disclaimer-box strong { color: #7a5500; }
-
-/* ============================================================
-   セクションラベル
-============================================================ */
-.glp-section-label {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gold);
-  background: var(--gold-bg);
-  border: 1px solid var(--gold-border);
-  border-radius: 4px;
-  padding: 3px 10px;
-  margin-bottom: 8px;
 }
 
 /* ============================================================
@@ -736,12 +298,6 @@ tr:nth-child(even) td { background: #f8faff; }
   .glp-trust-bar { gap: 16px; padding: 14px 16px; }
   .glp-trust-divider { display: none; }
 }
-@media (min-width: 768px) {
-  .glp-hero { border-radius: 0 0 var(--r-xl) var(--r-xl); }
-  .glp-hero-content { padding: 40px 48px 52px; }
-  .glp-country-photos img { height: 140px; }
-  .glp-cardgrid { grid-template-columns: repeat(3, 1fr); }
-}
 
 /* ============================================================
    KYCと料金の隙間
@@ -844,34 +400,6 @@ html.menu-open .menu-button .bars span    { opacity: 0; }
   height: auto !important;
   padding: 12px 0 20px;
   -webkit-overflow-scrolling: touch;
-}
-.menu-group { padding: 10px 14px 8px; }
-.menu-group h4 {
-  margin: 0 0 7px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  color: var(--gold-dark);
-}
-.menu-list { list-style: none; margin: 0; padding: 0; }
-.menu-list li a {
-  display: block;
-  padding: 9px 14px;
-  margin: 0 0 4px;
-  border-radius: var(--r-sm);
-  text-decoration: none;
-  color: var(--text);
-  background: var(--off-white);
-  font-size: 13px;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  transition: all 0.14s;
-}
-.menu-list li a:hover {
-  background: var(--gold-bg);
-  border-color: var(--gold-border);
-  color: var(--navy);
 }
 .menu-list li.sub a {
   padding-left: 26px;
@@ -1005,19 +533,15 @@ body > .skiptranslate { display: none !important; }
 }
 .site-foot a { color: var(--gold-light); text-decoration: underline; }
 .site-foot .foot-pc { display: none; }
-.site-foot .foot-sp { display: block; }
-@media (min-width: 640px) {
+.site-foot .foot-sp { display: block; }@media (min-width: 640px) {
   .site-foot .foot-pc { display: inline; }
-  .site-foot .foot-sp { display: none; }
-}
+  .site-foot .foot-sp { display: none; }}
 
 /* ============================================================
    アンカー位置調整 & スマホ上辺
 ============================================================ */
-section[id], details[id] { scroll-margin-top: 72px; }
-@media (max-width: 480px) {
-  body { padding-top: 0; }
-}
+section[id], details[id] { scroll-margin-top: 72px; }@media (max-width: 480px) {
+  body { padding-top: 0; }}
 
 /* ============================================================
    セクション装飾
@@ -1145,23 +669,16 @@ section.container:last-of-type { border-bottom: none; }
   gap: 7px 14px;
   font-size: 13px;
 }
-.cf-out h5 { margin: .3rem 0 .7rem; font-weight: 800; color: var(--navy); }
-.cf-links { list-style: none; margin: .4rem 0 0; padding-left: 1rem; }
-.cf-links li { margin: .3rem 0; }
-
-@media (max-width: 640px) {
+.cf-out h5 { margin: .3rem 0 .7rem; font-weight: 800; color: var(--navy); }@media (max-width: 640px) {
   .cf-grid { grid-template-columns: 1fr; gap: 8px; }
   .cf-subrow { grid-column: auto; }
-  .cf-out .cf-kv { grid-template-columns: 1fr; }
-}
+  .cf-out .cf-kv { grid-template-columns: 1fr; }}
 
 /* ============================================================
    アクセシビリティ
 ============================================================ */
-:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-}
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }}
 
 /* ============================================================
    文字折り返し
@@ -1170,19 +687,6 @@ h1, h2, h3, .glp-hero-title {
   word-break: keep-all;
   overflow-wrap: anywhere;
   line-break: strict;
-}
-
-/* ============================================================
-   security-note
-============================================================ */
-.security-note {
-  font-size: .88em;
-  color: var(--text-mid);
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: .8rem 1rem;
-  margin-top: .6rem;
 }
 
 
@@ -1231,18 +735,6 @@ section#disclaimer       { background: #faf8f3; border-top: 1px solid rgba(184,1
   max-width: 860px;
   padding-left: 24px;
   padding-right: 24px;
-}
-.glp-inner {
-  max-width: 880px;
-}
-
-/* ── ヒーロー typography ── */
-.glp-hero-title {
-  font-family: 'Inter', 'Noto Sans JP', sans-serif !important;
-  font-size: clamp(26px, 5.5vw, 46px) !important;
-  font-weight: 900 !important;
-  line-height: 1.15 !important;
-  letter-spacing: -.03em !important;
 }
 .hero-lead {
   max-width: min(640px, 92vw) !important;
@@ -1447,9 +939,6 @@ section#disclaimer       { background: #faf8f3; border-top: 1px solid rgba(184,1
 }
 .cmp tbody td { font-size: 13px !important; font-weight: 500 !important; }
 .cmp tbody td:first-child { font-weight: 700 !important; }
-.why-table th { background: #0a1c35 !important; color: #fff !important; font-size: 13px !important; padding: 12px 16px !important; }
-.why-table td { font-size: 13px !important; padding: 11px 16px !important; color: #0a1c35 !important; }
-.why-table tr:hover td { background: rgba(10,28,53,0.03) !important; }
 
 /* ── 料金 ── */
 .price-box {
@@ -1609,60 +1098,6 @@ section#pricing .note { color: rgba(255,255,255,0.82) !important; }
   margin-bottom: 12px !important;
   background: #fffdf0 !important;
 }
-.notice-summary {
-  padding: 14px 16px !important;
-  cursor: pointer !important;
-  font-size: 13px !important;
-  font-weight: 700 !important;
-  color: #7a5500 !important;
-  list-style: none !important;
-  border-left: 5px solid #c9a84c !important;
-}
-.notice-summary::-webkit-details-marker { display: none !important; }
-.notice-inner {
-  background: #fffdf0 !important;
-  padding: 16px 18px 18px 23px !important;
-  font-size: 12px !important;
-  line-height: 1.80 !important;
-  color: #5a4800 !important;
-  border-left: 5px solid #c9a84c !important;
-}
-
-/* ── results-row（社会的証明） ── */
-.results-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: rgba(10,28,53,0.10);
-  border-radius: 16px;
-  overflow: hidden;
-  margin: 20px 0 32px;
-  box-shadow: 0 2px 16px rgba(10,28,53,0.07);
-}
-.result-item {
-  background: #ffffff;
-  padding: 20px 16px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.result-num {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .10em;
-  color: #b8973e;
-  text-transform: uppercase;
-}
-.result-val {
-  font-size: clamp(18px, 2.5vw, 26px);
-  font-weight: 900;
-  color: #0a1c35;
-  line-height: 1.1;
-  font-family: 'Inter', sans-serif;
-}
-.result-label { font-size: 11px; color: #6b7a99; line-height: 1.5; margin-top: 2px; }
 
 /* ── スクロールアニメーション ── */
 @media (prefers-reduced-motion: no-preference) {
@@ -1692,9 +1127,6 @@ section#pricing .note { color: rgba(255,255,255,0.82) !important; }
   .price-num { font-size: clamp(44px, 12vw, 64px) !important; }
   .results-row { grid-template-columns: repeat(2, 1fr); }
 }
-@media (max-width: 380px) {
-  .results-row { grid-template-columns: 1fr; }
-}
 
 /* ============================================================
    MOBILE TAP TARGETS & READABILITY — 2026-04-26
@@ -1722,11 +1154,6 @@ details summary {
   min-height: 40px !important;
   padding: 8px 16px !important;
   display: inline-flex !important;
-  align-items: center !important;
-}
-.menu-list li a {
-  min-height: 44px !important;
-  display: flex !important;
   align-items: center !important;
 }
 
@@ -1764,13 +1191,6 @@ details summary {
   color: var(--gold-light, #e8cb7a) !important;
   font-weight: 900 !important;
   letter-spacing: .02em;
-}
-
-/* ── results-row TREX LEGAL 強調 ── */
-.result-val {
-  font-family: 'Inter', sans-serif !important;
-  font-weight: 900 !important;
-  letter-spacing: -.02em !important;
 }
 
 /* ── CTA ボタン「30秒で完了」訴求強化 ── */
@@ -1874,14 +1294,12 @@ section.hero {
   flex-wrap: wrap !important;
   gap: 12px !important;
   align-items: center !important;
-}
-@media (max-width: 600px) {
+}@media (max-width: 600px) {
   section.hero { min-height: min(520px, 88vh) !important; align-items: flex-end !important; }
   .hero-body { padding: 24px 16px 40px !important; }
   .hero-h1-main { font-size: clamp(22px, 7vw, 32px) !important; }
   .hero-btns { flex-direction: column !important; align-items: stretch !important; }
-  .hero-btns .btn-gold, .hero-btns .btn-ghost { width: 100% !important; text-align: center !important; }
-}
+  .hero-btns .btn-gold, .hero-btns .btn-ghost { width: 100% !important; text-align: center !important; }}
 
 /* ══════════════════════════════════════════════════
    SOLO BANK SECTION — Plan Cards + Benefits
@@ -2140,65 +1558,6 @@ section.hero {
 }
 
 /* ========================================================
-   HERO QUICK INFO BAR
-   ======================================================== */
-.hero-quick-info {
-  display: flex;
-  gap: 0;
-  margin: 20px 0 24px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 14px;
-  overflow: hidden;
-  max-width: 420px;
-  backdrop-filter: blur(6px);
-}
-.hero-qi-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 12px 8px;
-  border-right: 1px solid rgba(255,255,255,0.12);
-  gap: 3px;
-}
-.hero-qi-item:last-child { border-right: none; }
-.hero-qi-icon { font-size: 17px; line-height: 1; }
-.hero-qi-val {
-  font-size: 13px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: 0.01em;
-  line-height: 1.2;
-}
-.hero-qi-lbl {
-  font-size: 9.5px;
-  color: rgba(255,255,255,0.52);
-  letter-spacing: 0.05em;
-}
-
-/* ========================================================
-   URGENCY BANNER
-   ======================================================== */
-.urgency-banner {
-  background: linear-gradient(90deg, #b8960c 0%, #d4a017 40%, #b8960c 100%);
-  color: #fff;
-  text-align: center;
-  padding: 9px 16px;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  position: relative;
-  z-index: 10;
-}
-.urgency-banner span {
-  opacity: 0.85;
-  font-weight: 400;
-  margin-left: 8px;
-  font-size: 11px;
-}
-
-/* ========================================================
    REVIEWS — FULL REDESIGN
    ======================================================== */
 .review-card {
@@ -2216,34 +1575,6 @@ section.hero {
   top: 0; left: 0; right: 0;
   height: 3px;
   background: linear-gradient(90deg, var(--gold-d, #9a7a1e), var(--gold-ll, #e2c060));
-}
-.review-verified-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #eef7f1;
-  color: #1a7a42;
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 20px;
-  padding: 4px 10px;
-  margin-bottom: 12px;
-  letter-spacing: 0.04em;
-  border: 1px solid #c5e8d3;
-}
-.review-completed-badge {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: linear-gradient(135deg, #eef7f1, #d4f0e0);
-  border: 1px solid #b8e4cc;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  color: #1a7a42;
-  padding: 4px 9px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
 }
 .review-stars {
   color: #d4a017 !important;
@@ -2302,49 +1633,6 @@ section.hero {
   margin-top: 6px;
   letter-spacing: 0.04em;
 }
-
-/* ========================================================
-   FOUNDER REGISTRY PROOF
-   ======================================================== */
-.founder-proof-bar {
-  background: rgba(184,151,62,0.10);
-  border: 1px solid rgba(184,151,62,0.30);
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-size: 11.5px;
-  color: rgba(255,255,255,0.70);
-  margin: 0 0 28px;
-  line-height: 1.7;
-  letter-spacing: 0.03em;
-}
-.founder-registry {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255,255,255,0.10);
-}
-.founder-registry-label {
-  font-size: 10px;
-  color: rgba(255,255,255,0.45);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.founder-registry-num {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--gold-ll, #e2c060);
-  letter-spacing: 0.12em;
-  font-family: 'Courier New', monospace;
-}
-.founder-registry-link {
-  font-size: 11px;
-  color: rgba(255,255,255,0.55);
-  text-decoration: underline;
-  transition: color 0.2s;
-}
-.founder-registry-link:hover { color: var(--gold-ll, #e2c060); }
 
 /* ========================================================
    MOBILE CRITICAL FIXES
