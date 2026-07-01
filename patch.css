@@ -2364,3 +2364,13 @@ section.hero {
   .trust-bar { flex-wrap: wrap; gap: 8px 0; padding: 12px 16px; }
   .ti-sep { display: none; }
 }
+
+/* === EN版SOLOセクション: grena.cssから欠落分を移植しJPと表示一致（濃紺背景前提・追加のみ） === */
+#solo-bank .solo-chk { color:#e6c260; font-weight:900; margin-right:6px; }
+#solo-bank .solo-service-title { font-weight:800; color:#e6c260; margin-bottom:10px; }
+#solo-bank .solo-service-list { list-style:none; padding:0; }
+#solo-bank .solo-service-note { font-size:11px; color:rgba(255,255,255,.55); margin-top:8px; }
+#solo-bank .solo-partner-label { font-size:10px; color:rgba(255,255,255,.55); letter-spacing:.08em; text-transform:uppercase; margin-bottom:6px; }
+#solo-bank .solo-partner-name { font-weight:800; color:#fff; margin-bottom:6px; }
+#solo-bank .solo-partner-info { font-size:12.5px; color:rgba(255,255,255,.70); line-height:1.7; }
+#solo-bank .solo-amex-disclaimer { font-size:11px; color:rgba(255,255,255,.55); line-height:1.75; margin-top:12px; }
