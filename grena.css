@@ -1826,3 +1826,27 @@ section[data-title] { margin: 0; }
 .founder-honesty p{
   font-size:14px; line-height:1.95; color:#37415a; margin:0;
 }
+
+/* [2026-07-01] 濃紺セクションで文字が沈む/不可視の是正（明るいセクションは不変。スコープ限定＋!importantでインライン色も上書き） */
+.price-note-sm{ color:rgba(255,255,255,.75) !important; }
+#solo-bank .sh-title{ color:#ffffff !important; }
+#solo-bank .sh-sub{ color:rgba(255,255,255,.86) !important; }
+#solo-bank .solo-catch-note,
+#solo-bank .solo-plan-note,
+#solo-bank .solo-plan-tax,
+#solo-bank .solo-amex-lead,
+#solo-bank .solo-amex-disclaimer,
+#solo-bank .solo-service-note,
+#solo-bank .solo-partner-label,
+#solo-bank .term-note{ color:rgba(255,255,255,.72) !important; }
+#solo-bank small,
+#solo-bank .solo-amex-fee span,
+#solo-bank .solo-fee-note,
+#solo-bank .solo-legal,
+#solo-bank .solo-legal *{ color:rgba(255,255,255,.72) !important; }
+
+/* [2026-07-01 追補] 白文字×白背景で不可視だった要素の是正＋比較表の打消しを可読化 */
+.cys-note{ color:#3a4660 !important; }
+.founder-proof-bar{ background:#0d2040 !important; border:1px solid rgba(184,151,62,.45) !important; color:rgba(255,255,255,.92) !important; }
+.founder-proof-bar a{ color:#f5c842 !important; }
+.td-note{ color:#4a5875 !important; }
