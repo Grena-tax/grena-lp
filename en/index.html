@@ -1391,6 +1391,89 @@ section[id],details[id]{scroll-margin-top:72px;}
   <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
   <!-- なぜジョージア？ -->
+  <section id="fit-check" class="container mx-auto max-w-4xl px-4 py-10">
+  <style>
+    #fit-check .gd-quiz{max-width:760px;margin:0 auto;background:linear-gradient(160deg,#0d2040,#0a1830);border:1px solid rgba(201,168,76,.35);border-radius:16px;padding:26px 22px;color:#eef2f9;}
+    #fit-check .gd-eye{color:#c9a84c;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;text-align:center;margin-bottom:6px;}
+    #fit-check .gd-title{text-align:center;font-weight:800;font-size:clamp(1.15rem,3.4vw,1.5rem);margin:0 0 4px;color:#fff;}
+    #fit-check .gd-sub{text-align:center;font-size:.86rem;color:rgba(255,255,255,.72);margin:0 0 20px;line-height:1.6;}
+    #fit-check .gd-q{margin:0 0 16px;}
+    #fit-check .gd-qt{font-weight:700;font-size:.95rem;margin:0 0 8px;color:#fff;}
+    #fit-check .gd-qt span{color:#c9a84c;margin-right:6px;}
+    #fit-check .gd-opts{display:flex;flex-wrap:wrap;gap:8px;}
+    #fit-check .gd-opt{flex:1 1 auto;min-width:calc(50% - 8px);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#eef2f9;border-radius:10px;padding:11px 12px;font-size:.86rem;line-height:1.4;cursor:pointer;text-align:left;transition:.15s;}
+    #fit-check .gd-opt:hover{border-color:rgba(201,168,76,.6);}
+    #fit-check .gd-opt.sel{background:rgba(201,168,76,.20);border-color:#c9a84c;color:#fff;font-weight:700;}
+    #fit-check .gd-go{display:block;width:100%;margin-top:6px;background:linear-gradient(90deg,#c9a84c,#e6c260);color:#0a1830;font-weight:800;border:none;border-radius:12px;padding:14px;font-size:1rem;cursor:pointer;}
+    #fit-check .gd-go[disabled]{opacity:.45;cursor:not-allowed;}
+    #fit-check .gd-result{display:none;margin-top:18px;background:rgba(255,255,255,.06);border:1px solid rgba(201,168,76,.4);border-radius:12px;padding:18px;text-align:center;}
+    #fit-check .gd-result.show{display:block;}
+    #fit-check .gd-rt{font-weight:800;font-size:1.1rem;color:#fff;margin:0 0 6px;}
+    #fit-check .gd-rn{font-size:.8rem;color:rgba(255,255,255,.75);line-height:1.75;margin:0 0 14px;}
+    #fit-check .gd-cta{display:inline-block;background:#06C755;color:#fff;font-weight:800;text-decoration:none;border-radius:12px;padding:13px 26px;font-size:1rem;}
+    #fit-check .gd-cta2{display:block;margin-top:10px;color:rgba(255,255,255,.72);font-size:.82rem;text-decoration:underline;}
+  </style>
+  <div class="gd-quiz">
+    <div class="gd-eye">30-second Quick Check</div>
+    <p class="gd-title">Can we help with your case?</p>
+    <p class="gd-sub">Just pick 3. If Dubai or Singapore turned you down, start here.</p>
+    <div class="gd-q" data-q="1">
+      <p class="gd-qt"><span>Q1</span>What's your main goal?</p>
+      <div class="gd-opts">
+        <button type="button" class="gd-opt">A receiving account for cross-border e-commerce / overseas sales</button>
+        <button type="button" class="gd-opt">Receiving payments from overseas clients</button>
+        <button type="button" class="gd-opt">Doing overseas business through a company</button>
+        <button type="button" class="gd-opt">Holding assets abroad as well</button>
+      </div>
+    </div>
+    <div class="gd-q" data-q="2">
+      <p class="gd-qt"><span>Q2</span>Whose name is the account in?</p>
+      <div class="gd-opts">
+        <button type="button" class="gd-opt">Personal</button>
+        <button type="button" class="gd-opt">Company</button>
+        <button type="button" class="gd-opt">Not decided yet</button>
+      </div>
+    </div>
+    <div class="gd-q" data-q="3">
+      <p class="gd-qt"><span>Q3</span>What's your situation?</p>
+      <div class="gd-opts">
+        <button type="button" class="gd-opt">I live outside my home country</button>
+        <button type="button" class="gd-opt">I live in my home country</button>
+        <button type="button" class="gd-opt">I've been turned down by another country</button>
+      </div>
+    </div>
+    <button type="button" class="gd-go" disabled>Please pick 3 more</button>
+    <div class="gd-result">
+      <p class="gd-rt">There's a good chance we can help.</p>
+      <p class="gd-rn">Cases like the above may be eligible for our document-preparation support in Georgia.<br>※ Whether an account actually opens is subject to the bank's review. We provide document-preparation and informational support; we do not guarantee that an account will be opened. In the free assessment, we'll walk you through the specifics for your situation.</p>
+      <a href="https://lin.ee/QGHmD7i" target="_blank" rel="noopener noreferrer" class="gd-cta">Free 30-sec assessment on LINE</a>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfrd1BglyF7m2O5cFe2lnylRcFD29_z5B38eLWXMk5Y29x_ZQ/viewform" target="_blank" rel="noopener noreferrer" class="gd-cta2">Or use the application form (fine to do after the assessment)</a>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var root=document.getElementById('fit-check'); if(!root) return;
+    var ans={}, go=root.querySelector('.gd-go'), res=root.querySelector('.gd-result');
+    root.querySelectorAll('.gd-q').forEach(function(q){
+      q.querySelectorAll('.gd-opt').forEach(function(b){
+        b.addEventListener('click',function(){
+          q.querySelectorAll('.gd-opt').forEach(function(x){x.classList.remove('sel');});
+          b.classList.add('sel'); ans[q.getAttribute('data-q')]=1;
+          var n=Object.keys(ans).length;
+          if(n>=3){ go.disabled=false; go.textContent='See your result →'; }
+          else { go.textContent='Please pick '+(3-n)+' more'; }
+        });
+      });
+    });
+    go.addEventListener('click',function(){
+      if(go.disabled) return;
+      res.classList.add('show');
+      res.scrollIntoView({behavior:'smooth',block:'center'});
+    });
+  })();
+  </script>
+</section>
+
   <section id="why-georgia" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Why Georgia</div>
@@ -1525,6 +1608,20 @@ section[id],details[id]{scroll-margin-top:72px;}
       <h2 class="sh-title" data-i18n="pricing-title">Our fee is a flat rate.</h2>
       <p class="sh-sub" data-i18n="pricing-sub">There are no extra GRENA fees on top of the service price. Actual costs such as notarization, apostille, and international shipping are settled separately.</p>
     </div>
+    <div style="max-width:880px;margin:0 auto 1.4rem;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+      <div style="flex:1 1 220px;min-width:220px;background:#fff;border:1px solid #e6dcbb;border-left:3px solid #c9a84c;border-radius:8px;padding:12px 14px;">
+        <div style="font-weight:800;color:#0d2040;font-size:.9rem;">✓ A real, registered company</div>
+        <div style="font-size:.8rem;color:#3a4660;line-height:1.6;margin-top:3px;">Georgia government registration No. 400433768. You can <a href="https://rul.moj.ge/" target="_blank" rel="noopener" style="color:#0d2040;font-weight:700;text-decoration:underline;">verify it in the government database</a>.</div>
+      </div>
+      <div style="flex:1 1 220px;min-width:220px;background:#fff;border:1px solid #e6dcbb;border-left:3px solid #c9a84c;border-radius:8px;padding:12px 14px;">
+        <div style="font-weight:800;color:#0d2040;font-size:.9rem;">✓ Full refund before we start</div>
+        <div style="font-size:.8rem;color:#3a4660;line-height:1.6;margin-top:3px;">If you cancel before the local side begins the procedure, we refund everything except the admin fee.</div>
+      </div>
+      <div style="flex:1 1 220px;min-width:220px;background:#fff;border:1px solid #e6dcbb;border-left:3px solid #c9a84c;border-radius:8px;padding:12px 14px;">
+        <div style="font-weight:800;color:#0d2040;font-size:.9rem;">✓ No referral fee from any bank</div>
+        <div style="font-size:.8rem;color:#3a4660;line-height:1.6;margin-top:3px;">We prepare your documents from a neutral standing. Local partner: TREX LEGAL (MoU signed).</div>
+      </div>
+    </div>
     <div class="price-box">
       <div class="price-top">
         <div class="price-badge" data-i18n="price-badge">Main Service</div>
@@ -1589,6 +1686,7 @@ section[id],details[id]{scroll-margin-top:72px;}
       <div class="faq-item"><div class="faq-q"data-i18n="faq2q">Is account opening guaranteed?</div><div class="faq-a" data-i18n="faq2a">Account approval is at each bank's discretion, so we cannot guarantee success. Our support checks documents for gaps and proper form (we do not judge eligibility or file applications on your behalf). The aim is to reduce document errors so the application can proceed more smoothly.</div></div>
       <div class="faq-item"><div class="faq-q"data-i18n="faq3q">Can I just consult without applying?</div><div class="faq-a" data-i18n="faq3a">Yes. "Still considering" is perfectly fine. We start with a listening session and propose only if you want us to. The first consultation is free.</div></div>
       <div class="faq-item"><div class="faq-q"data-i18n="faq4q">Can I cancel?</div><div class="faq-a" data-i18n="faq4a">Before we start the request: we refund the amount minus an administrative fee (¥10,000). After we start but before on-site work begins: we deduct our work fee (up to 30% of the service price). After on-site work has begun: we deduct any actual costs already paid and refund the remainder. See the cancellation policy for details.</div></div>
+      <div class="faq-item"><div class="faq-q">What happens to the fee if the account cannot be opened after review?</div><div class="faq-a">Our fee is not a success fee for opening an account; it is compensation for the <strong>work of preparing documents and forwarding your application</strong>. So even if the bank's review does not result in an account being opened, the fee for work already performed is non-refundable (a cancellation before we start is refunded except for a ¥10,000 admin fee; after we start, the cancellation policy above applies). In the free assessment before you apply, we will honestly tell you in advance if your case looks difficult.</div></div>
       <div class="faq-item"><div class="faq-q"data-i18n="faq5q">What about tax filing?</div><div class="faq-a" data-i18n="faq5a">We do not provide tax advice. Residents must consult a licensed tax professional in their country of residence.</div></div>
       <div class="faq-item"><div class="faq-q"data-i18n="faq6q">How is this different from company formation? Can an individual open a foreign account?</div><div class="faq-a" data-i18n="faq6a">An individual can open a foreign account. Account-opening support (from ¥258,000) is document preparation toward a personal bank account. Company formation support (from ¥330,000) is a separate service, and the two can also be used together.</div></div>
     </div>
