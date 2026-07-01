@@ -833,8 +833,18 @@
       <p class="sh-sub" data-i18n="pricing-sub">サービス料金に追加の当社手数料はありません。公証・アポスティーユ・国際郵送等の実費は別途精算となります。</p>
     </div>
     <!-- ===== 料金早見表 ===== -->
+    <!-- [lp-rewrite 2026-07-01] スマホ(≤600px)では4列テーブルを縦積みカード化して可読性UP(LP・CRO11:モバイルは縦積み)。この表(.sp-price-table)だけに限定。金額の値・内容は不変。 -->
+    <style>
+      @media (max-width:600px){
+        .sp-price-table thead{display:none;}
+        .sp-price-table tr{display:block;border-bottom:2px solid rgba(201,168,76,0.35);padding:0.5rem 0;}
+        .sp-price-table td{display:block;padding:0.25rem 0.9rem !important;border:none !important;white-space:normal !important;}
+        .sp-price-table td:first-child{font-size:1.08rem;padding-top:0.65rem !important;}
+        .sp-price-table td:nth-child(4){font-size:1.05rem;padding-bottom:0.55rem !important;}
+      }
+    </style>
     <div style="max-width:880px;margin:0 auto 2rem;overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;overflow:hidden;font-size:0.92rem;">
+      <table class="sp-price-table" style="width:100%;border-collapse:collapse;background:#0d2040;border:1px solid rgba(201,168,76,0.35);border-radius:8px;overflow:hidden;font-size:0.92rem;">
         <thead>
           <tr style="background:#0a1c35;color:#f5c842;">
             <th style="padding:0.7rem 0.6rem;text-align:left;border-bottom:1px solid rgba(201,168,76,0.35);">プラン</th>
