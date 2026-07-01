@@ -152,19 +152,19 @@
 
     const groupDefs = [
       {
-        title: lang === "en" ? "About Georgia" : "🌐 ジョージアとは",
+        title: lang === "en" ? "About Georgia" : "ジョージアとは",
         ids: ["why-georgia", "about-georgia"]
       },
       {
-        title: lang === "en" ? "Services & Pricing" : "📋 サービス・料金",
+        title: lang === "en" ? "Services & Pricing" : "サービス・料金",
         ids: ["service", "personal-account", "solo-bank", "corp-setup", "sole-setup", "pricing"]
       },
       {
-        title: lang === "en" ? "Reviews & FAQ" : "⭐ 口コミ・FAQ",
+        title: lang === "en" ? "Reviews & FAQ" : "口コミ・FAQ",
         ids: ["reviews", "faq", "founder-story"]
       },
       {
-        title: lang === "en" ? "Others" : "📄 その他",
+        title: lang === "en" ? "Others" : "その他",
         ids: ["other-services", "not-for", "disclaimer"]
       }
     ];

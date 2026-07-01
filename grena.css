@@ -630,6 +630,8 @@ section.hero:hover .hero-img { transform:scale(1.0); }
 .dodont-col.do   ul li::before { content:"✓"; position:absolute; left:0; color:var(--gold-l); font-weight:900; }
 .dodont-col.dont ul li { color:rgba(255,255,255,.42); }
 .dodont-col.dont ul li::before { content:"✕"; position:absolute; left:0; color:#e05050; }
+.incl-label.ok { color:#0a7a3e; }
+.incl-ul.ok li::before { content:"✓"; position:absolute; left:0; color:#0a7a3e; font-weight:900; }
 
 /* ============================================================
    FAQ
@@ -1100,6 +1102,21 @@ details .content strong { color:var(--navy); }
 .plan-table-wrap td { border:1px solid var(--border); padding:.55rem .85rem; text-align:right; font-size:13px; color:var(--text-2); }
 .plan-table-wrap td:first-child { text-align:left; color:var(--text); font-weight:600; }
 .plan-table-wrap tr:nth-child(even) td { background:#f8faff; }
+.cf-chip {
+  border:1px solid var(--gold-br); background:var(--gold-bg); border-radius:999px;
+  padding:.25rem .8rem; font-weight:800; font-size:12px; cursor:pointer; color:var(--navy);
+  transition:background .14s; min-height:40px;
+  display:inline-flex; align-items:center;
+}
+.cf-chip:hover { background:var(--gold); color:var(--navy); }
+.cf-ack {
+  display:flex; gap:10px; align-items:flex-start;
+  border:1px solid var(--border); background:var(--off); border-radius:10px;
+  padding:12px; margin:12px 0; font-size:12.5px; color:var(--text-3); line-height:1.65;
+}
+.cf-out { margin-top:10px; border:1px solid var(--border); border-radius:10px; padding:14px; background:var(--off); }
+.cf-out .cf-kv { display:grid; grid-template-columns:180px 1fr; gap:7px 14px; font-size:13px; }
+.cf-out h5 { margin:.3rem 0 .7rem; font-weight:800; color:var(--navy); }
 
 /* ============================================================
    SERVICE CARDS (svc-grid)
@@ -1171,8 +1188,8 @@ html.menu-open .menu-button .bars span    { opacity:0; }
 }
 .menu-panel {
   position:absolute; top:0; right:0; height:100%;
-  width:min(360px,92vw); background:#fff;
-  border-left:1px solid var(--border); box-shadow:var(--sh-xl);
+  width:min(360px,92vw); background:linear-gradient(180deg,#0d2040 0%,#0a1830 100%);
+  border-left:1px solid rgba(201,168,76,.35); box-shadow:var(--sh-xl);
   transform:translateX(100%); transition:transform .24s ease;
   display:flex; flex-direction:column;
 }
@@ -1193,9 +1210,25 @@ html.menu-open .menu-button .bars span    { opacity:0; }
   flex:1 1 auto; overflow:auto; height:auto !important;
   padding:12px 0 20px; -webkit-overflow-scrolling:touch;
 }
+.menu-group     { padding:10px 14px 8px; }
+.menu-group h4  {
+  margin:0 0 7px; font-size:10px; font-weight:900; letter-spacing:.12em;
+  text-transform:uppercase; color:#e6c260;
+}
+.menu-list { list-style:none; margin:0; padding:0; }
+.menu-list li a {
+  display:flex; align-items:center;
+  padding:9px 14px; margin:0 0 4px; border-radius:var(--r-sm);
+  text-decoration:none; color:#eef2f9; background:rgba(255,255,255,.05);
+  font-size:13px; font-weight:600; border:1px solid rgba(255,255,255,.10);
+  transition:all .14s; min-height:44px;
+}
+.menu-list li a:hover { background:rgba(201,168,76,.18); border-color:rgba(201,168,76,.6); color:#fff; }
+.menu-list li.sub a { padding-left:26px; font-size:12px; font-weight:500; }
 html.menu-open .menu-wrap     { pointer-events:auto; }
 html.menu-open .menu-backdrop { opacity:1; }
 html.menu-open .menu-panel    { transform:none; }
+html.menu-open,html.menu-open body { overflow:hidden; }
 
 /* ============================================================
    固定CTAバー
@@ -1225,6 +1258,7 @@ html.menu-open .menu-panel    { transform:none; }
 #goog-gt-tt,iframe#goog-te-banner-frame,.goog-te-banner-frame {
   display:none !important; visibility:hidden !important; height:0 !important;
 }
+body > .skiptranslate { display:none !important; }
 #google_translate_element {
   position:fixed; left:-9999px; top:-9999px;
   width:0; height:0; overflow:hidden; opacity:0; pointer-events:none;
