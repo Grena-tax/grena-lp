@@ -1850,3 +1850,8 @@ section[data-title] { margin: 0; }
 .founder-proof-bar{ background:#0d2040 !important; border:1px solid rgba(184,151,62,.45) !important; color:rgba(255,255,255,.92) !important; }
 .founder-proof-bar a{ color:#f5c842 !important; }
 .td-note{ color:#4a5875 !important; }
+
+/* [2026-07-01 パネル] 白背景のゴールド極小ラベル(sh-eye/result-num)がAA未満(実測~2.2:1)→濃ゴールドで可読化。濃紺セクションは明るいゴールド維持(スコープ限定) */
+.sh-eye, .result-num{ color:#7a5f16 !important; }
+.sh-eye::before, .sh-line{ }
+#solo-bank .sh-eye{ color:#e6c260 !important; }
