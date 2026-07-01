@@ -326,6 +326,11 @@
       <span class="hero-h1-top" data-i18n="hero-top">ドバイもシンガポールも断られた方へ。</span>
       <h1 class="hero-h1-main" data-i18n="hero-main">ジョージアに住んでいなくても、<br>銀行口座を開ける数少ない国。</h1>
     </div>
+    <div class="hero-trust-mini" style="display:flex;flex-wrap:wrap;gap:5px 16px;align-items:center;margin:16px 0 14px;font-size:12px;color:rgba(255,255,255,.8);">
+      <span style="white-space:nowrap"><span style="color:#e6c260">✓</span> ジョージア政府 登記番号 <strong style="color:#fff;font-weight:700">400433768</strong> <a href="https://rul.moj.ge/" target="_blank" rel="noopener" style="color:#f5c842;text-decoration:underline">政府DBで確認</a></span>
+      <span style="white-space:nowrap"><span style="color:#e6c260">✓</span> 現地法律事務所 TREX LEGAL 提携（MoU締結）</span>
+      <span style="white-space:nowrap"><span style="color:#e6c260">✓</span> 着手前なら返金</span>
+    </div>
     <p class="hero-lead" data-i18n="hero-lead">
         自国から一歩も出ず、SWIFT対応口座（＝海外送金の共通ネットワーク）の書類整備を進められます。現地法律事務所 TREX LEGAL と組み、日本語・英語を中心に翻訳ツールを併用して多言語でやりとり。書類が揃ってからの目安は2週間〜（銀行審査を除く／期間は銀行・個別事情により変動します）。越境ECの売上も海外クライアントの報酬も、会社名義の口座があると、海外の取引先に振込先を案内しやすくなります。
       </p>
@@ -1216,6 +1221,8 @@ document.querySelectorAll('a[href^="#"]').forEach(function(a){
 }
 /* SEOキーワードセクション本文の strong 強調も濃く */
 #kaigai-kouzakaikaitsu strong { color: #b8860b !important; }
+/* [Phase2] 明るい背景でも白文字が読めるよう軽い影（写真ヒーローの定石） */
+.hero-h1-main, .hero-h1-top, .hero-lead, .hero-trust-mini { text-shadow: 0 1px 3px rgba(0,0,0,.45); }
 </style>
 </body>
 </html>
