@@ -1326,8 +1326,8 @@ section.container:last-of-type { border-bottom:none; }
 ============================================================ */
 @media (max-width:600px) {
   section { padding:48px 0; }
-  .page-wrap { padding:0 20px 60px; }
-  .hero-body { padding:24px 20px 40px; }
+  .page-wrap { padding:0 16px 60px; }
+  .hero-body { padding:24px 16px 40px; }
   section.hero { min-height:min(520px,88vh); align-items:flex-end; }
   .hero-h1-main { font-size:clamp(22px,7vw,32px); }
   .hero-btns { flex-direction:column; align-items:stretch; }
@@ -1535,13 +1535,3 @@ section[data-title] { margin: 0; }
 .sh-eye, .result-num{ color:#7a5f16 !important; }
 .sh-eye::before, .sh-line{ }
 #solo-bank .sh-eye{ color:#e6c260 !important; }
-
-/* ── 2026-07-03 修正：Tailwind風クラス(max-w-4xl/px-4/mx-auto)が未読込で、
-   一部セクションの本文が画面端に張り付く/横に広がりすぎる問題を補完（8か所まとめて解消）
-   ※box-sizing:border-box前提。濃紺の箱は各セクション内側の要素に付いており影響なし ── */
-.max-w-4xl { max-width: 56rem; }                       /* 896px：本文の最大幅（読みやすさ＆左右余白の確保） */
-.mx-auto  { margin-left: auto; margin-right: auto; }   /* 中央寄せ */
-.px-4     { padding-left: 20px; padding-right: 20px; } /* 左右の内側余白（PC） */
-@media (max-width: 600px) {
-  .px-4 { padding-left: 16px; padding-right: 16px; }   /* モバイルはやや詰める */
-}

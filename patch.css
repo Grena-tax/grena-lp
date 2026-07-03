@@ -341,8 +341,8 @@ tr:nth-child(even) td { background: #f8faff; }
     line-height: 1.3;
     margin: 0 0 .8rem;
   }
-  .glp-inner { padding: 0 16px 40px; }
-  .glp-hero-content { padding: 24px 20px 32px; }
+  .glp-inner { padding: 0 12px 40px; }
+  .glp-hero-content { padding: 24px 16px 32px; }
   .glp-trust-bar { gap: 16px; padding: 14px 16px; }
   .glp-trust-divider { display: none; }
 }
