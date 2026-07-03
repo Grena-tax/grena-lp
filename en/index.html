@@ -1231,6 +1231,29 @@ section[id],details[id]{scroll-margin-top:72px;}
 .review-name{font-family:'Shippori Mincho B1',serif;font-size:14px;font-weight:800;color:var(--navy);}
 .review-tag{font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--text-3);font-weight:300;}
 
+/* ============================================================
+   2026-07-03  EN本文「画面端張り付き(パンパン)」修正
+   <main id="main">直下の6セクション(#corp-setup/#sole-setup/#personal-account/
+   #solo-bank/#not-for/#disclaimer)は上部の .page-wrap の外にあり、未定義のTailwind風
+   クラス(container/mx-auto/max-w-4xl/px-4 — grena.css依存でEN側は未読込)頼みのため、
+   本文が画面の左端〜右端(0〜1280)に張り付いていた。patch.cssの section{padding:60px 0}
+   は縦のみで左右0。
+   対策: セクション背景色(patch.css の section#... 各色)は全幅のまま維持し、
+   セクションに左右paddingを与えて中身を内側へ寄せ、直下の各要素を上部の .page-wrap
+   (max-width:920px/内容872px)と同じ横位置に中央寄せする。
+   子要素自身のpaddingは一切上書きしない(=カード内側の二重ガター回避)。
+   box-sizingは先頭の全称セレクタで border-box 済み。縦paddingや
+   #corp-setup{padding-bottom:0!important} 等の縦!importantには触れない(左右longhandのみ)。
+   ※ hero/固定CTA/隠しh1は main#main>section の対象外なので不変。patch.cssは未編集。
+   ============================================================ */
+main#main > section { padding-left: 24px; padding-right: 24px; }
+/* margin は auto を !important に。patch.css の .solo-catch{margin:0 0 36px!important} 等の
+   横!importantに勝って中央寄せを保証する(左右のみ。縦marginは各要素の値を維持)。 */
+main#main > section > * { max-width: 872px; margin-left: auto !important; margin-right: auto !important; }
+@media (max-width: 600px) {
+  main#main > section { padding-left: 16px; padding-right: 16px; }
+}
+
 </style>
 
 <script>
