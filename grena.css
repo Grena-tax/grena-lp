@@ -27,7 +27,7 @@
   --off:       #f0f4f8;
   --text:      #0a1c35;
   --text-2:    #374d66;
-  --text-3:    #6b7a99;
+  --text-3:    #5c6b87;
   --border:    rgba(10,28,53,.09);
 
   /* ─ 角丸 ─ */
@@ -644,6 +644,7 @@ section.hero:hover .hero-img { transform:scale(1.0); }
 }
 .faq-item:hover { box-shadow:0 4px 20px rgba(10,28,53,.10); }
 .faq-q {
+  width:100%; background:transparent; border:0; text-align:left; font-family:inherit; -webkit-appearance:none; appearance:none;
   padding:18px 20px;
   font-size:14.5px; font-weight:700; color:var(--navy);
   cursor:pointer; display:flex; justify-content:space-between;
@@ -1561,3 +1562,10 @@ section[data-title] > * {
 @media (max-width: 600px) {
   section[data-title] > * { padding-left: 16px; padding-right: 16px; }
 }
+
+/* ── 2026-07-04 専門家監査: アクセシビリティ(濃紺上の注記コントラスト＋本文の文字サイズ) ── */
+#solo-bank .solo-no     { color: rgba(255,255,255,.62) !important; }  /* 2.7→6.9:1 */
+#solo-bank .solo-notice { color: rgba(255,255,255,.72) !important; }  /* 免責は確実に読ませる */
+.big-cta-note           { color: rgba(255,255,255,.64) !important; }  /* CTA下の返金・無料サブ文言 */
+.hero-lead              { font-size: 16px; }                          /* 15→16(iOS可読性) */
+@media (max-width: 600px) { body { font-size: 16px; } }               /* モバイル本文 15→16 */

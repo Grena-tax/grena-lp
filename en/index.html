@@ -967,6 +967,7 @@ body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom));}
 }
 .faq-item:hover{box-shadow:var(--sh);}
 .faq-q{
+  width:100%; background:transparent; border:0; text-align:left; -webkit-appearance:none; appearance:none;
   padding:17px 20px;
   font-family:'Noto Sans JP',sans-serif;
   font-size:14px;font-weight:700;color:var(--navy);
@@ -1515,6 +1516,11 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
       <span class="hero-h1-top" data-i18n="hero-top">Turned down in Dubai and Singapore? Georgia may be your next move.</span>
       <h1 class="hero-h1-main" data-i18n="hero-main">One of the few countries where a non-resident can still apply for an account.</h1>
     </div>
+    <div class="hero-trust-mini" style="display:flex;flex-wrap:wrap;gap:5px 16px;margin:16px 0 14px;font-size:12px;color:rgba(255,255,255,.82);">
+      <span>✓ Georgia gov. registration No. 400433768 <a href="https://enreg.reestri.gov.ge/main.php?m=new_index&l=en" target="_blank" rel="noopener" style="color:#e2c472;text-decoration:underline;">verify in gov DB</a></span>
+      <span>✓ Partnered with local law firm TREX LEGAL (MoU)</span>
+      <span>✓ Full refund before we start (excl. admin fee)</span>
+    </div>
     <p class="hero-lead" data-i18n="hero-lead">
       Prepare the documents for a SWIFT-enabled account without leaving home, together with our local partner law firm TREX LEGAL.<br>
       Once your documents are ready, the guide is about 2 weeks (excluding bank review; timing varies by bank and by individual case).
@@ -1522,7 +1528,6 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
     <div class="hero-btns">
       <a href="https://lin.ee/QGHmD7i" target="_blank" rel="noopener noreferrer" class="btn-gold" data-i18n="hero-btn1">Get a free 30-sec assessment on LINE</a>
       <a href="https://docs.google.com/forms/d/e/1FAIpQLSfrd1BglyF7m2O5cFe2lnylRcFD29_z5B38eLWXMk5Y29x_ZQ/viewform" target="_blank" rel="noopener noreferrer" class="btn-ghost">Free application form</a>
-      <a href="#pricing" class="btn-ghost" data-i18n="hero-btn2">See pricing →</a>
     </div>
     <p class="hero-disc" data-i18n="hero-disc" style="margin-top:18px;">
       Whether an account can be opened is decided by the bank's review. GRENA provides administrative support for document preparation and general information only, and does not guarantee a successful account opening. We do not provide individual tax or legal advice, nor do we solicit, broker, or act as agents for any financial products or services.
@@ -1721,9 +1726,9 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
       <h2 class="sh-title" data-i18n="about-title">Georgia, an EU candidate gaining attention.</h2>
     </div>
     <div class="country-photos">
-      <img src="../georgia-church.jpg" alt="Georgia church and fortress" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
-      <img src="../Untitled%20design%203.jpg" alt="Georgian khachapuri" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
-      <img src="../Untitled%20design%202.jpg" alt="Tbilisi square, Georgia" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
+      <img src="../georgia-church.jpg" alt="Georgia church and fortress" width="800" height="600" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
+      <img src="../Untitled%20design%203.jpg" alt="Georgian khachapuri" width="800" height="600" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
+      <img src="../Untitled%20design%202.jpg" alt="Tbilisi square, Georgia" width="800" height="600" loading="lazy" onerror="this.onerror=null;this.style.background='#c8d0e0'">
     </div>
     <div class="facts">
       <div class="fact"><span class="fact-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><path d="M3 21h18"/><path d="M5 21V8l5-3v16"/><path d="M14 21V11l5-3v13"/><path d="M8 10h.01M8 13h.01"/></svg></span><div><p class="fact-tt" data-i18n="fact1t">Capital: Tbilisi</p><p class="fact-tx" data-i18n="fact1d">The central city of the Caucasus. Safe, with a low cost of living, and gaining attention as a base for Western businesses and remote workers.</p></div></div>
@@ -1799,6 +1804,105 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
 
   <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
+    <section id="founder-story" style="margin:0 0 0;">
+    <div style="font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--text-2);background:var(--off);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin:0 0 20px;line-height:1.7;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/></svg>Company registration No. 400433768 / LLC Grena Group / founded May 28, 2025 / <a href="https://enreg.reestri.gov.ge/main.php?m=new_index&l=en" target="_blank" rel="noopener" style="color:var(--gold-d);font-weight:700;">verifiable in the Georgian government registry</a></div>
+    <div class="sh">
+      <div class="sh-eye">Why We Started</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title" data-i18n="founder-title">From being turned away for a week.</h2>
+    </div>
+    <div class="founder-card">
+      <div class="founder-quote">
+        <div class="founder-quote-mark">"</div>
+        <p class="founder-quote-text" data-i18n="fq1">
+          I traveled to Georgia alone and visited the registry office every single day.<br>
+          But <strong>for an entire week, they never once processed my request.</strong>
+        </p>
+        <p class="founder-quote-text" data-i18n="fq2">
+          Weekends were closed. Outside the registry office were people saying
+          "leave it to me" — none of them trustworthy.
+          I couldn't communicate and had no one I could trust.
+          <strong>I was completely stuck.</strong>
+        </p>
+        <p class="founder-quote-text" data-i18n="fq3">
+          Then, the head of a law firm I'd been in contact with
+          sent me a message: "I happen to be at the registry office right now."
+          After explaining my situation, I was finally able to get
+          <strong>both my company and bank account set up — on the very last day of my 2-week stay.</strong>
+        </p>
+        <p class="founder-quote-text" data-i18n="fq4">
+          That lawyer then said to me:<br>
+          "Please introduce me to people around the world who want to set up companies and accounts."<br>
+          You don't have to go there. But <strong>the language barrier, the legal complexity — it's genuinely difficult.</strong><br>
+          "Your drive is remarkable. I want to work with you" — and that's how this service began.
+        </p>
+        <div class="founder-quote-close">"</div>
+      </div>
+      <div class="founder-meta">
+        <div class="founder-meta-inner">
+          <div class="founder-label">GRENA GROUP LLC</div>
+          <div class="founder-role" data-i18n="founder-role">Representative / personally went through Georgia company formation and account opening</div>
+          <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);">
+            <div style="font-family:'Noto Sans JP',sans-serif;font-size:11px;color:rgba(255,255,255,.55);margin-bottom:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M3 21h18M4 21V10l8-5 8 5v11"/><path d="M9 21v-6h6v6"/><path d="M4 10h16"/></svg>Georgian government company registration number</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold-ll);line-height:1;margin-bottom:6px;">400433768</div>
+            <a href="https://enreg.reestri.gov.ge/main.php?m=new_index&l=en" target="_blank" rel="noopener" style="font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--gold-ll);text-decoration:underline;">Verify on the government site →</a>
+          </div>
+          <div class="founder-facts">
+            <div class="founder-fact-item">
+              <span class="founder-fact-num">2</span>
+              <span class="founder-fact-label" data-i18n="ff1">weeks<br>spent on-site in Georgia</span>
+            </div>
+            <div class="founder-fact-item">
+              <span class="founder-fact-num">—</span>
+              <span class="founder-fact-label" data-i18n="ff3">no referral fees<br>received from banks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin:20px 0 0;">
+      <p style="font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text-2);line-height:1.85;">We're not a company that has handled hundreds of cases yet. GRENA grew out of the founder's own experience setting up a company and an account in Georgia, and it is an early-stage service. That is exactly why the founder personally handles each client one-on-one, from start to finish — not an outside call center. We've chosen to focus on getting one person through reliably rather than processing many.</p>
+    </div>
+  </section>
+    <section id="reviews" style="margin:0 0 0;">
+    <div class="sh">
+      <div class="sh-eye">Customer Voice</div>
+      <div class="sh-line"></div>
+      <h2 class="sh-title" data-i18n="review-title">Real voices from clients.</h2>
+      <p class="sh-sub" data-i18n="review-sub">Comments from people who have actually used our service.</p>
+      <p style="text-align:center;font-size:0.82rem;color:#888;margin-top:0.5rem;line-height:1.7;">
+        ※ Personal impressions that GRENA collected directly from the clients and published with their consent.<br>
+        Results differ by individual circumstances. We do not guarantee any effect, outcome, or successful account opening.<br>
+        ※ As we are still in an early stage, only a small number of client voices are shown.
+      </p>
+    </div>
+    <div class="review-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★<span style="font-size:0.62em;color:#8a8a8a;letter-spacing:0;margin-left:6px;font-weight:400;">※ early-stage, few voices</span></div>
+        <p class="review-text">Looking to expand my business overseas, I asked for help with company formation and account opening. Being able to move the paperwork forward from my own country was a big help. Most of all, the person in charge had actually been through it themselves, so I could discuss my worries in concrete terms.</p>
+        <div class="review-author">
+          <div class="review-avatar-icon" style="flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+          <div class="review-author-info">
+            <span class="review-name">40s / Male</span>
+            <span class="review-tag">International business expansion</span>
+            <span class="review-outcome-tag" style="opacity:0.6;font-size:0.8em;">Published: Sep 2025 / ※ a personal impression</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★<span style="font-size:0.62em;color:#8a8a8a;letter-spacing:0;margin-left:6px;font-weight:400;">※ early-stage, few voices</span></div>
+        <p class="review-text">With SOLO Club I was able to proceed largely remotely, which was a big help (card issuance and benefits such as a dedicated banker or airport fast track are subject to Bank of Georgia's review and policy). Being supported in my own language let me proceed without worrying about the language barrier.</p>
+        <div class="review-author">
+          <div class="review-avatar-icon" style="flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div>
+          <div class="review-author-info">
+            <span class="review-name">30s / Male</span>
+            <span class="review-tag">Import/export — corporate account</span>
+            <span class="review-outcome-tag" style="opacity:0.6;font-size:0.8em;">Published: Feb 2026 / ※ a personal impression</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="pricing" style="margin:0 0 0;">
     <div class="sh">
       <div class="sh-eye">Pricing</div>
@@ -1877,15 +1981,15 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
       <h2 class="sh-title" data-i18n="faq-title">Honest answers to your concerns.</h2>
     </div>
     <div class="faq">
-      <div class="faq-item"><div class="faq-q">Why do people choose Georgia for opening a foreign account?</div><div class="faq-a">Georgia is an EU candidate (recognized 2023; accession outcome/timing undetermined) with a banking system relatively open to foreigners, and you can prepare the documents remotely (whether an account opens is subject to bank review). It is SWIFT-enabled for international transfers. It is chosen by people for whom Dubai or Singapore proved difficult. ※ Local tax categories and taxation in your country of residence are separate; please consult a tax professional.</div></div>
-      <div class="faq-item"><div class="faq-q">What is the cost and timeline?</div><div class="faq-a">Document-preparation support for a personal account is from ¥258,000 (tax incl.). Once your documents are ready, the guide is about 2 weeks (excluding the bank's review period; it varies by case). Actual costs such as local registration fees are separate.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq1q">Is travel really not required?</div><div class="faq-a" data-i18n="faq1a">Document preparation and applications can generally be completed without traveling. However, some banks may require in-person procedures. We will advise in advance.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq2q">Is account opening guaranteed?</div><div class="faq-a" data-i18n="faq2a">Account approval is at each bank's discretion, so we cannot guarantee success. Our support checks documents for gaps and proper form (we do not judge eligibility or file applications on your behalf). The aim is to reduce document errors so the application can proceed more smoothly.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq3q">Can I just consult without applying?</div><div class="faq-a" data-i18n="faq3a">Yes. "Still considering" is perfectly fine. We start with a listening session and propose only if you want us to. The first consultation is free.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq4q">Can I cancel?</div><div class="faq-a" data-i18n="faq4a">Before we start the request: we refund the amount minus an administrative fee (¥10,000). After we start but before on-site work begins: we deduct our work fee (up to 30% of the service price). After on-site work has begun: we deduct any actual costs already paid and refund the remainder. See the cancellation policy for details.</div></div>
-      <div class="faq-item"><div class="faq-q">What happens to the fee if the account cannot be opened after review?</div><div class="faq-a">Our fee is not a success fee for opening an account; it is compensation for the <strong>work of preparing documents and forwarding your application</strong>. So even if the bank's review does not result in an account being opened, the fee for work already performed is non-refundable (a cancellation before we start is refunded except for a ¥10,000 admin fee; after we start, the cancellation policy above applies). In the free assessment before you apply, we will honestly tell you in advance if your case looks difficult.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq5q">What about tax filing?</div><div class="faq-a" data-i18n="faq5a">We do not provide tax advice. Residents must consult a licensed tax professional in their country of residence.</div></div>
-      <div class="faq-item"><div class="faq-q"data-i18n="faq6q">How is this different from company formation? Can an individual open a foreign account?</div><div class="faq-a" data-i18n="faq6a">An individual can open a foreign account. Account-opening support (from ¥258,000) is document preparation toward a personal bank account. Company formation support (from ¥330,000) is a separate service, and the two can also be used together.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false">Why do people choose Georgia for opening a foreign account?</button><div class="faq-a">Georgia is an EU candidate (recognized 2023; accession outcome/timing undetermined) with a banking system relatively open to foreigners, and you can prepare the documents remotely (whether an account opens is subject to bank review). It is SWIFT-enabled for international transfers. It is chosen by people for whom Dubai or Singapore proved difficult. ※ Local tax categories and taxation in your country of residence are separate; please consult a tax professional.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false">What is the cost and timeline?</button><div class="faq-a">Document-preparation support for a personal account is from ¥258,000 (tax incl.). Once your documents are ready, the guide is about 2 weeks (excluding the bank's review period; it varies by case). Actual costs such as local registration fees are separate.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq1q">Is travel really not required?</button><div class="faq-a" data-i18n="faq1a">Document preparation and applications can generally be completed without traveling. However, some banks may require in-person procedures. We will advise in advance.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq2q">Is account opening guaranteed?</button><div class="faq-a" data-i18n="faq2a">Account approval is at each bank's discretion, so we cannot guarantee success. Our support checks documents for gaps and proper form (we do not judge eligibility or file applications on your behalf). The aim is to reduce document errors so the application can proceed more smoothly.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq3q">Can I just consult without applying?</button><div class="faq-a" data-i18n="faq3a">Yes. "Still considering" is perfectly fine. We start with a listening session and propose only if you want us to. The first consultation is free.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq4q">Can I cancel?</button><div class="faq-a" data-i18n="faq4a">Before we start the request: we refund the amount minus an administrative fee (¥10,000). After we start but before on-site work begins: we deduct our work fee (up to 30% of the service price). After on-site work has begun: we deduct any actual costs already paid and refund the remainder. See the cancellation policy for details.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false">What happens to the fee if the account cannot be opened after review?</button><div class="faq-a">Our fee is not a success fee for opening an account; it is compensation for the <strong>work of preparing documents and forwarding your application</strong>. So even if the bank's review does not result in an account being opened, the fee for work already performed is non-refundable (a cancellation before we start is refunded except for a ¥10,000 admin fee; after we start, the cancellation policy above applies). In the free assessment before you apply, we will honestly tell you in advance if your case looks difficult.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq5q">What about tax filing?</button><div class="faq-a" data-i18n="faq5a">We do not provide tax advice. Residents must consult a licensed tax professional in their country of residence.</div></div>
+      <div class="faq-item"><button type="button" class="faq-q" aria-expanded="false"data-i18n="faq6q">How is this different from company formation? Can an individual open a foreign account?</button><div class="faq-a" data-i18n="faq6a">An individual can open a foreign account. Account-opening support (from ¥258,000) is document preparation toward a personal bank account. Company formation support (from ¥330,000) is a separate service, and the two can also be used together.</div></div>
     </div>
     <div class="cta-center-wrap" style="text-align:center;margin:24px 0 0;">
       <a href="https://lin.ee/QGHmD7i" target="_blank" rel="noopener noreferrer" class="main-cta-btn" style="max-width:520px;margin:0 auto;">Get a free 30-sec assessment on LINE</a>
@@ -1914,117 +2018,18 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
     <div class="svc-grid">
       <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M12 3v18M5 7l7-4 7 4M5 17l7 4 7-4M3 10l4 2-4 2M21 10l-4 2 4 2"/></svg></div><h3 class="svc-tt" data-i18n="svc1t">Company Formation — Document Support</h3><p class="svc-tx" data-i18n="svc1d">We work with our local law firm to assist with company registration documents and information. From ¥330,000</p><a href="#corp-setup" class="btn-navy svc-b">Learn More</a></div>
       <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="12" y2="15"/></svg></div><h3 class="svc-tt" data-i18n="svc2t">Sole Proprietor (IE) Registration Support</h3><p class="svc-tx" data-i18n="svc2d">General information and document support for IE registration (conditions apply). ¥288,000</p><a href="#sole-setup" class="btn-navy svc-b">Learn More</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><ellipse cx="12" cy="14" rx="8" ry="4"/><path d="M4 14c0-2 3.6-6 8-6s8 4 8 6"/><path d="M8 10c1-2 2-3 4-3s3 1 4 3"/></svg></div><h3 class="svc-tt" data-i18n="svc3t">Japanese Restaurant — Your Country</h3><p class="svc-tx" data-i18n="svc3d">Support for store launch, chef introduction, and contract information verification.</p><a href="https://line.me/R/ti/p/@grena-tax.ge" class="btn-green svc-b">Free Consultation</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><ellipse cx="12" cy="14" rx="8" ry="4"/><path d="M4 14c0-2 3.6-6 8-6s8 4 8 6"/><path d="M8 10c1-2 2-3 4-3s3 1 4 3"/></svg></div><h3 class="svc-tt" data-i18n="svc3t">Japanese Restaurant — Your Country</h3><p class="svc-tx" data-i18n="svc3d">Support for store launch, chef introduction, and contract information verification.</p><a href="https://lin.ee/QGHmD7i" class="btn-green svc-b">Free Consultation</a></div>
       <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 9.5L12 3l9 6.5V21H3V9.5z"/><rect x="9" y="14" width="6" height="7"/></svg></div><h3 class="svc-tt" data-i18n="svc4t">Overseas Real Estate — Buy or Rent</h3><p class="svc-tx" data-i18n="svc4d">Information on property selection and contract processes for Georgia and other overseas markets.</p><span class="btn-dim svc-b" aria-disabled="true">Coming Soon</span></div>
       <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><path d="M3 21h18M3 10h18M5 10V21M9 10V21M15 10V21M19 10V21M12 3L3 10h18L12 3z"/></svg></div><h3 class="svc-tt" data-i18n="svc5t">Corporate Bank Account Opening</h3><p class="svc-tx" data-i18n="svc5d">Document support for corporate account opening. Can be bundled with company formation.</p><a href="#personal-account" class="btn-navy svc-b">Learn More</a></div>
-      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 018 0v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></div><h3 class="svc-tt" data-i18n="svc6t">Other Business Support</h3><p class="svc-tx" data-i18n="svc6d">Help thinking through business ideas centered on Georgia.</p><a href="https://line.me/R/ti/p/@grena-tax.ge" class="btn-navy svc-b">Contact Us</a></div>
+      <div class="svc-card"><div class="svc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="24" height="24"><rect x="2" y="8" width="20" height="13" rx="2"/><path d="M8 8V6a4 4 0 018 0v2"/><line x1="2" y1="14" x2="22" y2="14"/></svg></div><h3 class="svc-tt" data-i18n="svc6t">Other Business Support</h3><p class="svc-tx" data-i18n="svc6d">Help thinking through business ideas centered on Georgia.</p><a href="https://lin.ee/QGHmD7i" class="btn-navy svc-b">Contact Us</a></div>
     </div>
   </section>
 
   <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
-  <section id="founder-story" style="margin:0 0 0;">
-    <div style="font-family:'Noto Sans JP',sans-serif;font-size:12px;color:var(--text-2);background:var(--off);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin:0 0 20px;line-height:1.7;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M9 3v3h6V3M9 11h6M9 15h4"/></svg>Company registration No. 400433768 / LLC Grena Group / founded May 28, 2025 / <a href="https://enreg.reestri.gov.ge/main.php?m=new_index&l=en" target="_blank" rel="noopener" style="color:var(--gold-d);font-weight:700;">verifiable in the Georgian government registry</a></div>
-    <div class="sh">
-      <div class="sh-eye">Why We Started</div>
-      <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="founder-title">From being turned away for a week.</h2>
-    </div>
-    <div class="founder-card">
-      <div class="founder-quote">
-        <div class="founder-quote-mark">"</div>
-        <p class="founder-quote-text" data-i18n="fq1">
-          I traveled to Georgia alone and visited the registry office every single day.<br>
-          But <strong>for an entire week, they never once processed my request.</strong>
-        </p>
-        <p class="founder-quote-text" data-i18n="fq2">
-          Weekends were closed. Outside the registry office were people saying
-          "leave it to me" — none of them trustworthy.
-          I couldn't communicate and had no one I could trust.
-          <strong>I was completely stuck.</strong>
-        </p>
-        <p class="founder-quote-text" data-i18n="fq3">
-          Then, the head of a law firm I'd been in contact with
-          sent me a message: "I happen to be at the registry office right now."
-          After explaining my situation, I was finally able to get
-          <strong>both my company and bank account set up — on the very last day of my 2-week stay.</strong>
-        </p>
-        <p class="founder-quote-text" data-i18n="fq4">
-          That lawyer then said to me:<br>
-          "Please introduce me to people around the world who want to set up companies and accounts."<br>
-          You don't have to go there. But <strong>the language barrier, the legal complexity — it's genuinely difficult.</strong><br>
-          "Your drive is remarkable. I want to work with you" — and that's how this service began.
-        </p>
-        <div class="founder-quote-close">"</div>
-      </div>
-      <div class="founder-meta">
-        <div class="founder-meta-inner">
-          <div class="founder-label">GRENA GROUP LLC</div>
-          <div class="founder-role" data-i18n="founder-role">Representative / personally went through Georgia company formation and account opening</div>
-          <div style="margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.08);">
-            <div style="font-family:'Noto Sans JP',sans-serif;font-size:11px;color:rgba(255,255,255,.55);margin-bottom:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M3 21h18M4 21V10l8-5 8 5v11"/><path d="M9 21v-6h6v6"/><path d="M4 10h16"/></svg>Georgian government company registration number</div>
-            <div style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold-ll);line-height:1;margin-bottom:6px;">400433768</div>
-            <a href="https://enreg.reestri.gov.ge/main.php?m=new_index&l=en" target="_blank" rel="noopener" style="font-family:'Noto Sans JP',sans-serif;font-size:11px;color:var(--gold-ll);text-decoration:underline;">Verify on the government site →</a>
-          </div>
-          <div class="founder-facts">
-            <div class="founder-fact-item">
-              <span class="founder-fact-num">2</span>
-              <span class="founder-fact-label" data-i18n="ff1">weeks<br>spent on-site in Georgia</span>
-            </div>
-            <div class="founder-fact-item">
-              <span class="founder-fact-num">—</span>
-              <span class="founder-fact-label" data-i18n="ff3">no referral fees<br>received from banks</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div style="background:var(--off);border:1px solid var(--border);border-radius:var(--r);padding:18px 22px;margin:20px 0 0;">
-      <p style="font-family:'Noto Sans JP',sans-serif;font-size:13px;color:var(--text-2);line-height:1.85;">We're not a company that has handled hundreds of cases yet. GRENA grew out of the founder's own experience setting up a company and an account in Georgia, and it is an early-stage service. That is exactly why the founder personally handles each client one-on-one, from start to finish — not an outside call center. We've chosen to focus on getting one person through reliably rather than processing many.</p>
-    </div>
-  </section>
   <div class="sec-ornament"><div class="sec-ornament-diamond"></div></div>
 
   
   <div class="orn"><div class="orn-d"></div></div>
-  <section id="reviews" style="margin:0 0 0;">
-    <div class="sh">
-      <div class="sh-eye">Customer Voice</div>
-      <div class="sh-line"></div>
-      <h2 class="sh-title" data-i18n="review-title">Real voices from clients.</h2>
-      <p class="sh-sub" data-i18n="review-sub">Comments from people who have actually used our service.</p>
-      <p style="text-align:center;font-size:0.82rem;color:#888;margin-top:0.5rem;line-height:1.7;">
-        ※ Personal impressions that GRENA collected directly from the clients and published with their consent.<br>
-        Results differ by individual circumstances. We do not guarantee any effect, outcome, or successful account opening.<br>
-        ※ As we are still in an early stage, only a small number of client voices are shown.
-      </p>
-    </div>
-    <div class="review-grid">
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">Looking to expand my business overseas, I asked for help with company formation and account opening. Being able to move the paperwork forward from my own country was a big help. Most of all, the person in charge had actually been through it themselves, so I could discuss my worries in concrete terms.</p>
-        <div class="review-author">
-          <div class="review-avatar-icon" style="flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
-          <div class="review-author-info">
-            <span class="review-name">40s / Male</span>
-            <span class="review-tag">International business expansion</span>
-            <span class="review-outcome-tag" style="opacity:0.6;font-size:0.8em;">Published: Sep 2025 / ※ a personal impression</span>
-          </div>
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">With SOLO Club I was able to proceed largely remotely, which was a big help (card issuance and benefits such as a dedicated banker or airport fast track are subject to Bank of Georgia's review and policy). Being supported in my own language let me proceed without worrying about the language barrier.</p>
-        <div class="review-author">
-          <div class="review-avatar-icon" style="flex-shrink:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></div>
-          <div class="review-author-info">
-            <span class="review-name">30s / Male</span>
-            <span class="review-tag">Import/export — corporate account</span>
-            <span class="review-outcome-tag" style="opacity:0.6;font-size:0.8em;">Published: Feb 2026 / ※ a personal impression</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
   <div class="orn"><div class="orn-d"></div></div>
 
   <div class="big-cta">
@@ -2267,14 +2272,14 @@ main#main > section > * { max-width: 872px; margin-left: auto !important; margin
 </main>
 
 <footer class="site-foot" role="contentinfo">
-  <small class="foot-pc">© 2025–2026 GRENA GROUP LLC | Company name: GRENA GROUP LLC (Georgian entity) | Company ID: 400433768 | Director: Tetsuya Shirai | Address: Erosi Manjgaladze St. N75a, Nadzaladevi district, Tbilisi, Georgia | Email: <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> | Phone: disclosed upon individual request (see <a href="/en/tokusho" target="_blank" rel="noopener noreferrer">Specified Commercial Transactions Notice</a>) | Japanese inquiries: <a href="https://line.me/R/ti/p/@grena-tax.ge" rel="noopener noreferrer">LINE Official Account</a> | This service provides document preparation and general information only. We do not provide tax/legal advice or solicit/intermediate/sell financial products. | Governing law: Japanese law / Jurisdiction: Tokyo District Court | <a href="/en/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a> | <a href="/en/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> | <a href="/en/tokusho" target="_blank" rel="noopener noreferrer">Specified Commercial Transactions Notice</a></small>
+  <small class="foot-pc">© 2025–2026 GRENA GROUP LLC | Company name: GRENA GROUP LLC (Georgian entity) | Company ID: 400433768 | Director: Tetsuya Shirai | Address: Erosi Manjgaladze St. N75a, Nadzaladevi district, Tbilisi, Georgia | Email: <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> | Phone: disclosed upon individual request (see <a href="/en/tokusho" target="_blank" rel="noopener noreferrer">Specified Commercial Transactions Notice</a>) | Japanese inquiries: <a href="https://lin.ee/QGHmD7i" rel="noopener noreferrer">LINE Official Account</a> | This service provides document preparation and general information only. We do not provide tax/legal advice or solicit/intermediate/sell financial products. | Governing law: Japanese law / Jurisdiction: Tokyo District Court | <a href="/en/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a> | <a href="/en/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> | <a href="/en/tokusho" target="_blank" rel="noopener noreferrer">Specified Commercial Transactions Notice</a></small>
   <small class="foot-sp">©2025–2026 GRENA GROUP LLC | ID:400433768 | Director: Tetsuya Shirai | <a href="mailto:info@grena-tax.ge">info@grena-tax.ge</a> | Document prep & general info only | Governing law: Japan / Jurisdiction: Tokyo</small>
 </footer>
 
 <script>
 // FAQ
 document.querySelectorAll('.faq-item').forEach(function(i){
-  i.querySelector('.faq-q').addEventListener('click',function(){i.classList.toggle('open');});
+  var q=i.querySelector('.faq-q');q.addEventListener('click',function(){i.classList.toggle('open');q.setAttribute('aria-expanded',i.classList.contains('open')?'true':'false');});
 });
 // スムーズスクロール
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
