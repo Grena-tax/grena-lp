@@ -1545,3 +1545,19 @@ section[data-title] { margin: 0; }
 @media (max-width: 600px) {
   .px-4 { padding-left: 16px; padding-right: 16px; }   /* モバイルはやや詰める */
 }
+
+/* ── 2026-07-03 追補：max-w-4xl クラスを持たないセクションの本文も中央幅に制限。
+   背景は<section>側にあるので全幅のまま、直接の中身(見出し.sh/比較表/カード等)だけ896px中央寄せ＋左右余白。
+   対象: why-georgia/about-georgia/service/flow/solo-bank/founder-story/pricing/faq/other-services 等
+   ※heroはdata-title無しのため対象外（フルブリードのまま） ── */
+section[data-title] > * {
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+@media (max-width: 600px) {
+  section[data-title] > * { padding-left: 16px; padding-right: 16px; }
+}
