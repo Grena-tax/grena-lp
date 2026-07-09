@@ -13,6 +13,17 @@ main h1{color:#8a6d1a!important}
 main h2,main th{color:#5c4d1f!important}
 main td,main li,main p{color:#33404f!important}
 main a{color:#b8860b!important;text-decoration:underline}
+/* 2026-07-09 レイアウト是正: 値が右端に見切れて読みにくい問題を修正
+   （原因: style.css の th,td{text-align:right} が全表を右寄せ→特商ページの値が画面右で切れる）
+   ※法的文言は不変。特商ページ内(main)だけに左寄せ＋読みやすい幅・折返しを適用 */
+main{max-width:820px!important;margin-left:auto!important;margin-right:auto!important;padding-left:20px!important;padding-right:20px!important;box-sizing:border-box;}
+main table{table-layout:fixed;width:100%;border-collapse:collapse;}
+main th{text-align:left!important;white-space:normal!important;width:32%!important;padding-right:16px!important;vertical-align:top;}
+main td{text-align:left!important;word-break:break-word;overflow-wrap:anywhere;vertical-align:top;}
+@media(max-width:560px){
+  main th{width:38%!important;font-size:0.82rem;}
+  main td{font-size:0.86rem;}
+}
 </style>
 </head>
 <body>
