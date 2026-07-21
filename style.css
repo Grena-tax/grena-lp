@@ -282,11 +282,7 @@ h1, .hero h1, .page-title, .hero .lead {
 
 /* 動きに弱い利用者への配慮 */
 @media (prefers-reduced-motion: reduce){
-  *{
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
+  *, *::before, *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
 }
 
 /* フォーカス輪郭 */
