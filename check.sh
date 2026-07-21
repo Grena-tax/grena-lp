@@ -37,7 +37,7 @@ for F in index.html en/index.html grena.css style.css patch.css script.js; do
   grep -q $'\xEF\xBF\xBD' "$F" 2>/dev/null && note "$F: 文字化け(置換文字)が混入"
 done
 # 8) HTMLが参照するCSSファイルが実在するか
-for F in index.html en/index.html privacy/index.html terms/index.html tokusho/index.html; do
+for F in index.html en/index.html privacy/index.html terms/index.html tokusho/index.html en/privacy/index.html en/terms/index.html en/tokusho/index.html; do
   d=$(dirname "$F")
   for c in $(grep -oE 'href="[^"]+\.css[^"]*"' "$F" | sed 's/href="//;s/"//;s/\?.*//'); do
     [ -f "$d/$c" ] || note "$F: 参照CSSが無い → $c"
