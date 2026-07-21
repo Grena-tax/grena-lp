@@ -494,3 +494,35 @@
     initScrollReveal();
   }
 })();
+
+/* ===== GA4 クリック計測（2026-07-19 追加）=====
+   目的：LP→LINE／申込フォームで「どこで何人落ちるか」を数字で見る。
+   方針：既存のリンクやデザインは一切変えず、クリックを聞くだけ（passive）。gtagが無い環境でも何も壊さない。 */
+(function () {
+  function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch (e) {}
+  }
+  function attach() {
+    var links = document.querySelectorAll('a[href]');
+    for (var i = 0; i < links.length; i++) {
+      (function (a) {
+        var h = a.getAttribute('href') || '';
+        var label = (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+        if (h.indexOf('lin.ee') > -1 || h.indexOf('line.me') > -1) {
+          a.addEventListener('click', function () {
+            track('line_click', { link_text: label, link_url: h });
+          }, { passive: true });
+        } else if (h.indexOf('docs.google.com/forms') > -1) {
+          a.addEventListener('click', function () {
+            track('generate_lead', { link_text: label, link_url: h });
+          }, { passive: true });
+        }
+      })(links[i]);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
