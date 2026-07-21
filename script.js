@@ -514,7 +514,7 @@
           }, { passive: true });
         } else if (h.indexOf('docs.google.com/forms') > -1) {
           a.addEventListener('click', function () {
-            track('generate_lead', { link_text: label, link_url: h });
+            track('form_open', { link_text: label, link_url: h });
           }, { passive: true });
         }
       })(links[i]);
@@ -525,4 +525,33 @@
   } else {
     attach();
   }
+})();
+
+
+/* ===== GA4 セクション到達計測（2026-07-22 追加・見た目不変）=====
+   どこまで読まれたかを記録する。各セクションは1回だけ送る。 */
+(function () {
+  function track(name, params) {
+    try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch (e) {}
+  }
+  var TARGETS = ['fit-check','why-georgia','service','flow','reviews','founder-story','pricing','faq','disclaimer'];
+  function init() {
+    if (!('IntersectionObserver' in window)) return;
+    var seen = {};
+    var io = new IntersectionObserver(function (entries) {
+      for (var i = 0; i < entries.length; i++) {
+        var en = entries[i];
+        if (en.isIntersecting && !seen[en.target.id]) {
+          seen[en.target.id] = 1;
+          track('section_view', { section_id: en.target.id });
+          io.unobserve(en.target);
+        }
+      }
+    }, { threshold: 0.25 });
+    for (var j = 0; j < TARGETS.length; j++) {
+      var el = document.getElementById(TARGETS[j]);
+      if (el) io.observe(el);
+    }
+  }
+  if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
 })();
