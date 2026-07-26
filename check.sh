@@ -3,6 +3,8 @@
 # 使い方: bash check.sh   （問題があれば非0で終了＝pre-pushで止められる）
 cd "$(dirname "$0")"
 ERR=0; note(){ echo "  ⚠️ $1"; ERR=1; }
+# info(): 事実として食い違うが「どちらが正か」は白井さんの判断＝pushは止めない
+INFO=0; info(){ echo "  ℹ️ $1"; INFO=1; }
 code(){ curl -sL -o /dev/null -w '%{http_code}' --max-time 12 "$1" 2>/dev/null || echo 000; }
 
 for F in index.html en/index.html; do
@@ -44,6 +46,48 @@ for F in index.html en/index.html privacy/index.html terms/index.html tokusho/in
   done
 done
 
+# 9) 同じ金額の書き方が全ページで揃っているか（2026-07-27追加）
+#    事故：¥198,000 が本番8か所にあり「〜」の有無がバラバラ／内訳を割って粗利が読める状態だった
+#    ★HTMLタグを外した"実際に見える文字"で判定する（タグをまたぐ ¥330,000</span><span>〜 を誤検知しないため）
+echo "=== 金額の表記ゆれチェック ==="
+JP_PAGES="index.html kiyaku/index.html tokusho/index.html"
+EN_PAGES="en/index.html en/tokusho/index.html"
+strip() { sed 's/<[^>]*>//g' "$1"; }
+
+# 9-1) 日本語：レンジ価格なのに「〜」が付いていない
+for F in $JP_PAGES; do
+  [ -f "$F" ] || continue
+  for AMT in "198,000/年" "330,000" "258,000"; do
+    n=$(strip "$F" | grep -o "¥${AMT}" | wc -l | tr -d ' ')
+    m=$(strip "$F" | grep -o "¥${AMT}〜" | wc -l | tr -d ' ')
+    if [ "$n" -gt "$m" ]; then
+      info "$F: ¥${AMT} が ${n} 件中 ${m} 件しか「〜」付き（どちらが正かは要判断。決めたら全ページ揃える）"
+    fi
+  done
+done
+
+# 9-2) 英語：from に統一されていない書き方
+for F in $EN_PAGES; do
+  [ -f "$F" ] || continue
+  n=$(strip "$F" | grep -o "¥198,000/yr\|¥330,000+\|¥258,000+\|¥288,000+" | wc -l | tr -d ' ')
+  [ "$n" -gt 0 ] && info "$F: 英語のレンジ価格が from に統一されていない（${n} 件）"
+done
+
+# 9-3) 料金の内訳を割って書いていないか（既決『内訳を分解しない』）
+for F in $JP_PAGES $EN_PAGES; do
+  [ -f "$F" ] || continue
+  n=$(strip "$F" | grep -o "などの実費＋\|の実費＋\|actual costs such as.*plus our\|rent & renewal, plus" | wc -l | tr -d ' ')
+  [ "$n" -gt 0 ] && note "$F: 料金の内訳を割って書いている（${n} 件）＝粗利が引き算で読まれる"
+done
+
+# 9-4) 提携先・第三者の"提示額"を公開していないか
+for F in $JP_PAGES $EN_PAGES; do
+  [ -f "$F" ] || continue
+  n=$(strip "$F" | grep -o "現地パートナー提示\|パートナー提示の実費\|a third-party actual cost" | wc -l | tr -d ' ')
+  [ "$n" -gt 0 ] && note "$F: 提携先の提示額を公開している（${n} 件）＝中抜き導線＋不当表示のもと"
+done
+
 echo ""
-if [ "$ERR" -eq 0 ]; then echo "✅ チェック合格（問題なし）"; else echo "❌ 問題あり（上記）— 修正するまで公開しないこと"; fi
+[ "$INFO" -eq 1 ] && echo "ℹ️ 表記ゆれの指摘あり（上記）— 止めないが、決めたら全ページ揃えること"
+if [ "$ERR" -eq 0 ]; then echo "✅ チェック合格（止める問題なし）"; else echo "❌ 問題あり（上記）— 修正するまで公開しないこと"; fi
 exit $ERR
