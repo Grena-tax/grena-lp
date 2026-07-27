@@ -99,6 +99,21 @@ for F in $JP_PAGES $EN_PAGES; do
   [ "$n" -gt 0 ] && note "$F: 提携先の提示額を公開している（${n} 件）＝中抜き導線＋不当表示のもと"
 done
 
+# 9-5) 「効かないCSS（死票）」検査（2026-07-28追加）
+#   事故：スマホ幅の崩れを直そうとインライン<style>に @media を足したが、patch.css が
+#   同じ物を !important で押さえていて【1ミリも効いていなかった】。見た目では気づけない。
+#   詳しい理由と絞り込みの根拠は check_deadcss.pl の冒頭に書いてある。
+if [ -f patch.css ] && [ -f check_deadcss.pl ]; then
+  echo ""
+  echo "=== 効かないCSS（死票）チェック ==="
+  for F in index.html en/index.html; do
+    [ -f "$F" ] || continue
+    for k in $(perl check_deadcss.pl "$F" patch.css); do
+      info "$F: @media の中の { ${k%|*} の ${k##*|} } は patch.css の !important に負けて効いていない（死票）"
+    done
+  done
+fi
+
 echo ""
 # 10) 同じ値が複数ページに散らばる物の一致検査（2026-07-27追加）
 #     事故の型＝1か所だけ直して他が古いまま／片方だけ書き換わって食い違う
@@ -207,6 +222,6 @@ if [ -f kiyaku/index.html ] && [ -f en/kiyaku/index.html ]; then
   done
 fi
 
-[ "$INFO" -eq 1 ] && echo "ℹ️ 表記ゆれの指摘あり（上記）— 止めないが、決めたら全ページ揃えること"
+[ "$INFO" -eq 1 ] && echo "ℹ️ 指摘あり（上記）— push は止めないが、放置せず直すか「これで良い」と決めること"
 if [ "$ERR" -eq 0 ]; then echo "✅ チェック合格（止める問題なし）"; else echo "❌ 問題あり（上記）— 修正するまで公開しないこと"; fi
 exit $ERR
