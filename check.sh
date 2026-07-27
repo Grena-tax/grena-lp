@@ -51,7 +51,7 @@ done
 #    ★HTMLタグを外した"実際に見える文字"で判定する（タグをまたぐ ¥330,000</span><span>〜 を誤検知しないため）
 echo "=== 金額の表記ゆれチェック ==="
 JP_PAGES="index.html kiyaku/index.html tokusho/index.html"
-EN_PAGES="en/index.html en/tokusho/index.html"
+EN_PAGES="en/index.html en/tokusho/index.html en/kiyaku/index.html"
 strip() { sed 's/<[^>]*>//g' "$1"; }
 
 # 9-1) 日本語：レンジ価格なのに「〜」が付いていない
@@ -99,7 +99,7 @@ echo ""
 # 10) 同じ値が複数ページに散らばる物の一致検査（2026-07-27追加）
 #     事故の型＝1か所だけ直して他が古いまま／片方だけ書き換わって食い違う
 echo "=== 散らばる値の一致チェック ==="
-ALL="index.html en/index.html kiyaku/index.html tokusho/index.html en/tokusho/index.html terms/index.html privacy/index.html en/terms/index.html en/privacy/index.html"
+ALL="index.html en/index.html kiyaku/index.html tokusho/index.html en/tokusho/index.html terms/index.html privacy/index.html en/terms/index.html en/privacy/index.html en/kiyaku/index.html"
 OWN_ID="400433768"          # 当社の法人ID（全ページ共通）
 PARTNER_ID="406365525"      # 提携先の法人ID（出してよいのはトップのみ）
 MAIL="info@grena-tax.com"
@@ -185,6 +185,23 @@ for F in index.html en/index.html; do
     grep -q "/$L\"\|/$L/\"\|\"$L\"\|\.\./$L" "$F" || note "$F: $L へのリンクが無い（特商法・規約・プライバシーは全ページから辿れること）"
   done
 done
+
+# 12) 日本語の契約書と英語の契約書がズレていないか（2026-07-27追加）
+#     英語版は「日本語版が正文」と自ら書いているので、金額がズレると自己矛盾になる
+if [ -f kiyaku/index.html ] && [ -f en/kiyaku/index.html ]; then
+  for AMT in "198,000" "258,000" "330,000" "288,000" "498,000" "358,000" "658,000"; do
+    j=$(sed 's/<[^>]*>//g' kiyaku/index.html    | grep -c "¥${AMT}")
+    e=$(sed 's/<[^>]*>//g' en/kiyaku/index.html | grep -c "¥${AMT}")
+    [ "$j" -eq "$e" ] || note "契約書の日英ズレ：¥${AMT} が 日本語${j}件 / 英語${e}件"
+  done
+  # レンジ（〜/from）の有無もそろっているか
+  for AMT in "198,000" "258,000" "330,000"; do
+    j=$(sed 's/<[^>]*>//g' kiyaku/index.html    | grep -c "¥${AMT}[^ ]*〜")
+    e=$(sed 's/<[^>]*>//g' en/kiyaku/index.html | grep -c "from ¥${AMT}")
+    { [ "$j" -eq 0 ] && [ "$e" -eq 0 ]; } || [ "$j" -gt 0 ] && [ "$e" -gt 0 ] || \
+      note "契約書の日英ズレ：¥${AMT} は 日本語が〜${j}件 なのに 英語のfromは${e}件（片方だけ定額に見える）"
+  done
+fi
 
 [ "$INFO" -eq 1 ] && echo "ℹ️ 表記ゆれの指摘あり（上記）— 止めないが、決めたら全ページ揃えること"
 if [ "$ERR" -eq 0 ]; then echo "✅ チェック合格（止める問題なし）"; else echo "❌ 問題あり（上記）— 修正するまで公開しないこと"; fi
