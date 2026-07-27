@@ -52,7 +52,11 @@ done
 echo "=== 金額の表記ゆれチェック ==="
 JP_PAGES="index.html kiyaku/index.html tokusho/index.html"
 EN_PAGES="en/index.html en/tokusho/index.html en/kiyaku/index.html"
-strip() { sed 's/<[^>]*>//g' "$1"; }
+# strip(): 本文だけを取り出す。タグに加えて【コメントも先に消す】。
+#   ★2026-07-28 事故：CSSコメントに金額を書いたら本文として数えられ、誤って警告が鳴った。
+#     逆向きが本当に危険＝コメントに "from ¥258,000" と書くと件数が釣り合って
+#     『警告が消える』＝不当表示を見逃す。だからコメントは本文から除外する。
+strip() { perl -0777 -pe 's/<!--.*?-->//gs; s{/\*.*?\*/}{}gs; s/<[^>]*>//gs' "$1"; }
 
 # 9-1) 日本語：レンジ価格なのに「〜」が付いていない
 for F in $JP_PAGES; do

@@ -861,7 +861,10 @@ body{padding-bottom:calc(var(--cta-h) + var(--safe-bottom));}
   font-family:'Noto Sans JP',sans-serif;
   font-size:15px;font-weight:400;
   color:rgba(255,255,255,.42);margin-left:8px;
+  white-space:nowrap;   /* 「(tax incl.)」が「(tax / incl.)」に割れるのを止める */
 }
+/* 320px幅：料金の前に from が付いた分、44pxのままだと約6pxはみ出す */
+@media (max-width:374px){ .price-num{ font-size:36px; } }
 .price-desc{font-size:12px;line-height:1.65;color:rgba(255,255,255,.72);margin:6px 0 10px;padding:0 8px;text-align:center;}
 .price-note-sm{
   font-family:'Noto Sans JP',sans-serif;
