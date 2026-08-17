@@ -19,4 +19,28 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://grena-tax.com/en/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://grena-tax.com/"/>
   </url>
+  <url>
+    <loc>https://grena-tax.com/articles/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://grena-tax.com/articles/georgia-bank-account-from-japan/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://grena-tax.com/articles/georgia-ie-small-business-status/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://grena-tax.com/articles/documents-you-prepare-in-japan/</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
